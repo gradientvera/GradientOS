@@ -41,6 +41,15 @@ in
       group = config.systemd.services.esphome.serviceConfig.Group;
       mode = "0777";
     };
+
+    "/var/lib/esphome/smart-doorbell-esp-wroom-32.yaml".C = {
+      argument = toString ./smart-doorbell-esp-wroom-32.yaml;
+      repoPath = "/etc/nixos/hosts/briah/esphome/smart-doorbell-esp-wroom-32.yaml";
+      doCheck = true;
+      user = config.systemd.services.esphome.serviceConfig.User;
+      group = config.systemd.services.esphome.serviceConfig.Group;
+      mode = "0777";
+    };
   };
 
   networking.firewall.interfaces.gradientnet.allowedTCPPorts = [ ports.esphome ];
