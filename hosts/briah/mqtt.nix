@@ -27,6 +27,11 @@ in
       frontend = {
         port = ports.zigbee2mqtt;
       };
+      advanced = {
+        cache_state = true;
+        last_seen = "ISO_8601";
+        elapsed = true;
+      };
     };  
   };
 
