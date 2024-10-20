@@ -24,6 +24,7 @@
     inkscape
     firefox
     discord
+    vesktop
     ventoy
     krita
     carla
