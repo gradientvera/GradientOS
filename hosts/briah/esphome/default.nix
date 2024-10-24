@@ -50,6 +50,15 @@ in
       group = config.systemd.services.esphome.serviceConfig.Group;
       mode = "0777";
     };
+
+    "/var/lib/esphome/bk7231n-ir-blaster.yaml".C = {
+      argument = toString ./bk7231n-ir-blaster.yaml;
+      repoPath = "/etc/nixos/hosts/briah/esphome/bk7231n-ir-blaster.yaml";
+      doCheck = true;
+      user = config.systemd.services.esphome.serviceConfig.User;
+      group = config.systemd.services.esphome.serviceConfig.Group;
+      mode = "0777";
+    };
   };
 
   networking.firewall.interfaces.gradientnet.allowedTCPPorts = [ ports.esphome ];

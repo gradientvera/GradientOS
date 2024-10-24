@@ -69,7 +69,7 @@ in
             if (ping vpn.gradient.moe -c 1 -W 5 && ping $VPN -c 1 -W 5); then
               if ((FAILURES > 2)); then
                 echo "Restarting VPN services..."
-                systemctl restart *wireguard*
+                systemctl restart *wireguard* || echo "Failed to restart wireguard!"
                 echo "Restarted VPN!"
               fi
               FAILURES=0

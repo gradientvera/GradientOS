@@ -42,7 +42,7 @@ bluetooth_proxy:
   active: true
 
 remote_transmitter:
-  pin: GPIO12
+  pin: 12
   carrier_duty_percent: 50%
 
 button:

@@ -33,6 +33,7 @@ in
       "image_upload"
       "media_source"
       "air_quality"
+      "nfandroidtv"
       "mobile_app"
       "xiaomi_ble"
       "bluetooth"

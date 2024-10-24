@@ -1,6 +1,7 @@
 esphome:
   name: smart-doorbell-esp-wroom-32
   friendly_name: smart-doorbell-esp-wroom-32
+  name_add_mac_suffix: true
 
 esp32:
   board: nodemcu-32s
