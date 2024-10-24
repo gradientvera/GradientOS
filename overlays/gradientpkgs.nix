@@ -3,6 +3,8 @@
 */
 final: prev:
 {
+  beyond-all-reason-launcher = prev.callPackage ../pkgs/beyond-all-reason-launcher.nix { }; 
+
   fna3d = prev.callPackage ../pkgs/fna3d.nix { };
 
   gradient-ansible-inventory = prev.writeText "ansible-inventory.yml" (builtins.toJSON (import ../misc/ansible/inventory.nix));
