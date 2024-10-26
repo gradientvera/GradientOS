@@ -33,6 +33,11 @@ in
 
     services.avahi.enable = true;
     services.avahi.nssmdns4 = true;
+    services.avahi.publish = {
+      enable = true;
+      domain = true;
+      addresses = true;
+    };
 
     # Performance and power saving
     services.auto-cpufreq.enable = true;
