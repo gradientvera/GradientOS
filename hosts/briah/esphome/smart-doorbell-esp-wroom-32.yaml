@@ -40,6 +40,8 @@ sensor:
   - platform: uptime
     type: seconds
     name: Uptime Sensor
+  - platform: internal_temperature
+    name: "ESP32 Internal Temperature"
 
 binary_sensor:
   - platform: analog_threshold
