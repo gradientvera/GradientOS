@@ -1,7 +1,8 @@
-{ config, pkgs, ... }:
+{ config, pkgs, self, ... }:
 let
   ports = import ./misc/service-ports.nix;
   addresses = import ../../misc/wireguard-addresses.nix;
+  kamp = self.inputs.klipper-adaptive-meshing-purging;
   cfgPath = "/var/lib/moonraker";
 in {
 
@@ -38,6 +39,7 @@ in {
 
       file_manager = {
         check_klipper_config_path = "False";
+        enable_object_processing = "True";
       };
 
       # Enable ustreamer camera support.
@@ -85,11 +87,43 @@ in {
     };
   };
 
-  systemd.tmpfiles.settings."10-klipper"."${cfgPath}/config/timelapse.cfg"."L+" = {
-    argument = pkgs.moonraker-timelapse.macroFile;
-    user = config.services.moonraker.user;
-    group = config.services.moonraker.group;
-    mode = "0777";
+  systemd.tmpfiles.settings."10-klipper" = {
+    "${cfgPath}/config/timelapse.cfg"."L+" = {
+      argument = pkgs.moonraker-timelapse.macroFile;
+      user = config.services.moonraker.user;
+      group = config.services.moonraker.group;
+      mode = "0777";
+    };
+
+    "${cfgPath}/config/KAMP_Settings.cfg"."L+" = {
+      argument = "${kamp}/Configuration/KAMP_Settings.cfg";
+      user = config.services.moonraker.user;
+      group = config.services.moonraker.group;
+      mode = "0777";
+    };
+
+    "${cfgPath}/config/Adaptive_Meshing.cfg"."L+" = {
+      argument = "${kamp}/Configuration/Adaptive_Meshing.cfg";
+      user = config.services.moonraker.user;
+      group = config.services.moonraker.group;
+      mode = "0777";
+    };
+
+    "${cfgPath}/config/Line_Purge.cfg"."L+" = {
+      argument = "${kamp}/Configuration/Line_Purge.cfg";
+      user = config.services.moonraker.user;
+      group = config.services.moonraker.group;
+      mode = "0777";
+    };
+
+    "${cfgPath}/config/Smart_Park.cfg"."L+" = {
+      argument = "${kamp}/Configuration/Smart_Park.cfg";
+      user = config.services.moonraker.user;
+      group = config.services.moonraker.group;
+      mode = "0777";
+    };
+
+    
   };
 
   networking.firewall.interfaces.gradientnet.allowedTCPPorts = [ ports.moonraker ];

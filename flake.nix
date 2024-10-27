@@ -82,6 +82,10 @@
 
     catppuccin.url = "github:catppuccin/nix";
 
+    klipper-adaptive-meshing-purging = {
+      url = "github:kyleisah/Klipper-Adaptive-Meshing-Purging";
+      flake = false;
+    };
   };
 
   outputs = { self, nixpkgs, home-manager, gradient-generator, jovian-nixos, sops-nix, nixos-hardware, nixos-generators, ss14-watchdog, declarative-flatpak, ... }:

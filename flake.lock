@@ -257,6 +257,22 @@
         "type": "github"
       }
     },
+    "klipper-adaptive-meshing-purging": {
+      "flake": false,
+      "locked": {
+        "lastModified": 1723517933,
+        "narHash": "sha256-05l1rXmjiI+wOj2vJQdMf/cwVUOyq5d21LZesSowuvc=",
+        "owner": "kyleisah",
+        "repo": "Klipper-Adaptive-Meshing-Purging",
+        "rev": "b0dad8ec9ee31cb644b94e39d4b8a8fb9d6c9ba0",
+        "type": "github"
+      },
+      "original": {
+        "owner": "kyleisah",
+        "repo": "Klipper-Adaptive-Meshing-Purging",
+        "type": "github"
+      }
+    },
     "lix": {
       "flake": false,
       "locked": {
@@ -554,6 +570,7 @@
         "gradient-moe": "gradient-moe",
         "home-manager": "home-manager",
         "jovian-nixos": "jovian-nixos",
+        "klipper-adaptive-meshing-purging": "klipper-adaptive-meshing-purging",
         "lix-module": "lix-module",
         "nix-gaming": "nix-gaming",
         "nixos-generators": "nixos-generators",
