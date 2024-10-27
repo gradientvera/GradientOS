@@ -75,9 +75,7 @@ in
       "my"
     ];
     customComponents = with pkgs.home-assistant-custom-components; [
-      midea-air-appliances-lan
       moonraker
-      smartir
     ];
     extraPackages = ps: with ps; [ psycopg2 ];
     config.telegram_bot = "!include telegram.yaml";

@@ -1,7 +1,7 @@
 esphome:
   name: bk7231n-ir-blaster
   friendly_name: BK7231N IR Blaster
-  name_add_mac_suffix: true
+  name_add_mac_suffix: false
 
 bk72xx:
   board: generic-bk7231n-qfn32-tuya
@@ -28,11 +28,6 @@ wifi:
 
 captive_portal:
 
-web_server:
-  port: 80
-  include_internal: true
-  local: true
-
 ota:
   - platform: esphome
     id: ota_esphome
@@ -41,10 +36,15 @@ ota:
 remote_transmitter:
   pin: GPIO7
   carrier_duty_percent: 50%
+  id: irtx
 
 remote_receiver:
-  pin: GPIO8
+  pin:
+    number: GPIO8 
+    inverted: true
   dump: all
+  tolerance: 50%
+  id: irrx
 
 uart:
   rx_pin: RX1
@@ -55,7 +55,3 @@ sensor:
   - platform: uptime
     type: seconds
     name: Uptime Sensor
-
-climate:
-  - platform: midea_ir
-    name: "Vera Bedroom AC"

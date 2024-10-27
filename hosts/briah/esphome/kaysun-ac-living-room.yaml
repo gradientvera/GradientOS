@@ -1,0 +1,70 @@
+esphome:
+  name: kaysun-ac-living-room
+  friendly_name: Kaysun AC Living Room
+  name_add_mac_suffix: false
+
+esp32:
+  board: nodemcu-32s
+  framework:
+    type: arduino
+    version: recommended
+
+logger:
+  baud_rate: 0
+
+api:
+
+ota:
+  - platform: esphome
+    id: ota_esphome
+    password: !secret ota_password
+
+wifi:
+  ssid: !secret wifi_ssid
+  password: !secret wifi_password
+  fast_connect: on
+  manual_ip:
+    static_ip: 192.168.1.104
+    gateway: 192.168.1.1
+    subnet: 255.255.255.0
+  ap:
+    ssid: "kaysun-ac-living-room"
+    password: !secret ap_password
+
+captive_portal:
+
+uart:
+  tx_pin: GPIO17
+  rx_pin: GPIO16
+  baud_rate: 9600
+
+climate:
+  - platform: midea
+    id: climate_control
+    name: Air Conditioner
+    autoconf: true
+    outdoor_temperature:
+      name: Outdoor Temperature
+      id: outdoor_temperature
+      accuracy_decimals: 1
+
+switch:
+  - platform: template
+    name: Beeper
+    id: beeper
+    icon: mdi:volume-source
+    restore_mode: RESTORE_DEFAULT_OFF
+    optimistic: true
+    turn_on_action:
+      midea_ac.beeper_on:
+    turn_off_action:
+      midea_ac.beeper_off:
+
+button:
+  - platform: restart
+    name: Restart
+
+sensor:
+  - platform: uptime
+    type: seconds
+    name: Uptime Sensor

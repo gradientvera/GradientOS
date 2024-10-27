@@ -60,6 +60,24 @@ in
       group = config.systemd.services.esphome.serviceConfig.Group;
       mode = "0777";
     };
+
+    "/var/lib/esphome/kaysun-ac-living-room.yaml".C = {
+      argument = toString ./kaysun-ac-living-room.yaml;
+      repoPath = "/etc/nixos/hosts/briah/esphome/kaysun-ac-living-room.yaml";
+      doCheck = true;
+      user = config.systemd.services.esphome.serviceConfig.User;
+      group = config.systemd.services.esphome.serviceConfig.Group;
+      mode = "0777";
+    };
+
+    "/var/lib/esphome/kaysun-ac-vera-bedroom.yaml".C = {
+      argument = toString ./kaysun-ac-vera-bedroom.yaml;
+      repoPath = "/etc/nixos/hosts/briah/esphome/kaysun-ac-vera-bedroom.yaml";
+      doCheck = true;
+      user = config.systemd.services.esphome.serviceConfig.User;
+      group = config.systemd.services.esphome.serviceConfig.Group;
+      mode = "0777";
+    };
   };
 
   networking.firewall.interfaces.gradientnet.allowedTCPPorts = [ ports.esphome ];
