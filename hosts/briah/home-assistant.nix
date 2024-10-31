@@ -76,6 +76,52 @@ in
     ];
     customComponents = with pkgs.home-assistant-custom-components; [
       moonraker
+      (let
+        owner = "uvejota";
+        version = "2024.07.6";
+      in pkgs.buildHomeAssistantComponent {
+        inherit version owner;
+        domain = "edata";
+
+        src = pkgs.fetchFromGitHub {
+          inherit owner;
+          repo = "homeassistant-edata";
+          rev = version;
+          hash = "sha256-HGCjwYf5aLFUMuh4InAjLZHHIU6aidjoAQuhH9W+pkw=";
+        };
+
+        propagatedBuildInputs = with pkgs.python312Packages; [
+          python-dateutil
+          (let
+            pname = "e-data";
+            version = "1.2.22";
+          in pkgs.python312.pkgs.buildPythonPackage {
+            inherit pname version;
+
+            src = pkgs.fetchFromGitHub {
+              inherit owner;
+              repo = "python-edata";
+              rev = "v${version}";
+              hash = "sha256-h7nqrFKsh97GIebGeIC5E1m1BROTu8ZZ1TrDSO4nFWk=";
+            };
+
+            build-system = [
+              pkgs.python312Packages.setuptools
+            ];
+
+            dependencies = with pkgs.python312Packages; [
+              dateparser
+              freezegun
+              holidays
+              pytest
+              python-dateutil
+              requests
+              voluptuous
+              jinja2
+            ];
+          })
+        ];
+      })
     ];
     extraPackages = ps: with ps; [ psycopg2 ];
     config.telegram_bot = "!include telegram.yaml";
