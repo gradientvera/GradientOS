@@ -58,28 +58,45 @@ in
         path = with pkgs; [ systemd unixtools.ping ];
         script = ''
           ${if config.networking.wireguard.interfaces ? "gradientnet" then ''
-          VPN=${addr.gradientnet.asiyah}
+          VPN="${addr.gradientnet.asiyah}"
           '' else if config.networking.wireguard.interfaces ? "lilynet" then ''
-          VPN=${addr.lilynet.asiyah}
+          VPN="${addr.lilynet.asiyah}"
           '' else if config.networking.wireguard.interfaces ? "slugcatnet" then ''
-          VPN=${addr.slugcatnet.asiyah}
+          VPN="${addr.slugcatnet.asiyah}"
           '' else "echo 'No Wireguard VPN configured!'; exit 1"}
           FAILURES=0
+          EXT_FAIL=false
+          VPN_FAIL=false
           while true; do
-            if (ping vpn.gradient.moe -c 1 -W 5 && ping $VPN -c 1 -W 5); then
-              if ((FAILURES > 2)); then
+            if(ping vpn.gradient.moe -c 1 -W 5); then
+              EXT_FAIL=false
+            else
+              EXT_FAIL=true
+            fi
+            if(ping $VPN -c 1 -W 5); then
+              VPN_FAIL=false
+            else
+              VPN_FAIL=true
+            fi
+
+            SLEEP_TIME=25
+            if [ EXT_FAIL = true ] || [ VPN_FAIL = true ]; then
+              FAILURES=$((FAILURES+1))
+              SLEEP_TIME=$((FAILURES>25 ? 60 : FAILURES))
+              echo "Failed to ping! Retrying in $SLEEP_TIME seconds..."
+            fi
+
+            if [ EXT_FAIL = false ]; then
+              if((FAILURES > 2)); then
                 echo "Restarting VPN services..."
                 systemctl restart *wireguard* || echo "Failed to restart wireguard!"
                 echo "Restarted VPN!"
+                FAILURES=0
+                SLEEP_TIME=25
               fi
-              FAILURES=0
-              sleep "25"
-            else
-              SLEEP_TIME=$((FAILURES>25 ? 60 : FAILURES))
-              echo "Failed to ping! Retrying in $SLEEP_TIME seconds..."
-              FAILURES=$((FAILURES+1))
-              sleep "$SLEEP_TIME"
             fi
+
+            sleep "$SLEEP_TIME"
           done
         '';
         serviceConfig = {
