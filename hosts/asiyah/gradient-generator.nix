@@ -7,8 +7,8 @@ in {
     enable = true;
     enableDiscordUpload = false;
     enableMastodonUpload = false;
-    enableMastodonBotUpload = true;
-    mastodonBotUrl = "https://botsin.space";
+    enableMastodonBotUpload = false;
+    #mastodonBotUrl = "https://botsin.space"; # RIP botsin.space :(
     user = "vera";
   };
 
