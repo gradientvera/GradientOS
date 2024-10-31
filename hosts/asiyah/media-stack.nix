@@ -26,8 +26,7 @@ in {
     openFirewall = true;
   };
   
-  services.jackett = {
-    inherit group;
+  services.prowlarr = {
     enable = true;
   };
 
@@ -85,7 +84,7 @@ in {
     jellyfin-https
     radarr
     sonarr
-    jackett
+    prowlarr
     bazarr
     flaresolverr
     deluge-web
@@ -99,7 +98,6 @@ in {
     jellyfin.user
     radarr.user
     sonarr.user
-    jackett.user
     bazarr.user
     deluge.user
   ];

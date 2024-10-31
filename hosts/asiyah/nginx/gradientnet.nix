@@ -11,6 +11,7 @@ let
       "@BEATRICE@"
       "@PORT-Z2M@"
       "@PORT-ESPHOME@"
+      "@PORT-PROWLARR@"
     ]
     [
       "asiyah.gradient"
@@ -18,9 +19,11 @@ let
       "beatrice.gradient"
       (toString briahPorts.zigbee2mqtt)
       (toString briahPorts.esphome)
+      (toString asiyahPorts.prowlarr)
     ]
     html;
   dashboardBaseHtml = (builtins.readFile ./dashboard.html);
+  asiyahPorts = import ../../asiyah/misc/service-ports.nix;
   briahPorts = import ../../briah/misc/service-ports.nix;
   ports = import ../misc/service-ports.nix;
   ips = import ../../../misc/wireguard-addresses.nix;

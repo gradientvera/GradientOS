@@ -19,7 +19,7 @@
   jellyfin-client-discovery = 7359;
   radarr = 7878;
   sonarr = 8989;
-  jackett = 9117;
+  prowlarr = 9696;
   bazarr = 6767;
   deluge-web = 8112;
   deluge-daemon = 58846;
