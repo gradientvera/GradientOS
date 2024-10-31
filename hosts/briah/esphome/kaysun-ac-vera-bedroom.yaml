@@ -70,3 +70,15 @@ sensor:
     name: Uptime Sensor
   - platform: internal_temperature
     name: "ESP32 Internal Temperature"
+  - platform: xiaomi_hhccjcy01
+    mac_address: '5C:85:7E:12:DD:4B'
+    temperature:
+      name: "Mushroom Temperature"
+    moisture:
+      name: "Mushroom Moisture"
+    illuminance:
+      name: "Mushroom Illuminance"
+    conductivity:
+      name: "Mushroom Soil Conductivity"
+    battery_level:
+      name: "Mushroom Battery Level"

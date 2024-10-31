@@ -34,24 +34,6 @@ in
   };
 
   systemd.tmpfiles.settings."10-esphome" = {
-    "/var/lib/esphome/atom-lite-vera-bedroom.yaml".C = {
-      argument = toString ./atom-lite-vera-bedroom.yaml;
-      repoPath = "/etc/nixos/hosts/briah/esphome/atom-lite-vera-bedroom.yaml.cfg";
-      doCheck = true;
-      user = config.systemd.services.esphome.serviceConfig.User;
-      group = config.systemd.services.esphome.serviceConfig.Group;
-      mode = "0777";
-    };
-
-    "/var/lib/esphome/smart-doorbell-esp-wroom-32.yaml".C = {
-      argument = toString ./smart-doorbell-esp-wroom-32.yaml;
-      repoPath = "/etc/nixos/hosts/briah/esphome/smart-doorbell-esp-wroom-32.yaml";
-      doCheck = true;
-      user = config.systemd.services.esphome.serviceConfig.User;
-      group = config.systemd.services.esphome.serviceConfig.Group;
-      mode = "0777";
-    };
-
     "/var/lib/esphome/bk7231n-ir-blaster.yaml".C = {
       argument = toString ./bk7231n-ir-blaster.yaml;
       repoPath = "/etc/nixos/hosts/briah/esphome/bk7231n-ir-blaster.yaml";
