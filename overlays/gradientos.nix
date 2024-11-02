@@ -22,7 +22,8 @@ let
       glib
       gdk-pixbuf
 
-      # Make games go brr
+      # Useful tools for games
+      gamescope # games cope hehehehehehehe
       gamemode
     ];
     extraArgs = "-console";

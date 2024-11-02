@@ -9,6 +9,10 @@
     remotePlay.openFirewall = true;
     dedicatedServer.openFirewall = true;
     extest.enable = true;
+    protontricks.enable = true;
+    extraCompatPackages = with pkgs; [
+      proton-ge-bin
+    ];
   };
 
   # Workaround https://github.com/NixOS/nixpkgs/issues/45492
