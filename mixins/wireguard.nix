@@ -54,6 +54,7 @@ in
         after = [ "network-pre.target" ];
         wants = [ "network.target" ];
         before = [ "network.target" ];
+        wantedBy = [ "multi-user.target" ];
         enable = !isAsiyah; # Asiyah shouldn't need this.
         path = with pkgs; [ systemd unixtools.ping ];
         script = ''
@@ -100,7 +101,7 @@ in
           done
         '';
         serviceConfig = {
-          Type = "simple";
+          Type = "exec";
           Restart = "always";
           RestartSec = 10;
         };
