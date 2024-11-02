@@ -61,6 +61,8 @@ in
         capSysNice = true;
       };
 
+      programs.gamemode.enable = true;
+
       # Remote gaming hell yeah! Must be started manually for "security"
       services.sunshine = {
         enable = true;

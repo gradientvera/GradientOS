@@ -21,6 +21,9 @@ let
       zlib
       glib
       gdk-pixbuf
+
+      # Make games go brr
+      gamemode
     ];
     extraArgs = "-console";
     extraEnv.ROBUST_SOUNDFONT_OVERRIDE = "${prev.soundfont-fluid}/share/soundfonts/FluidR3_GM2-2.sf2";
