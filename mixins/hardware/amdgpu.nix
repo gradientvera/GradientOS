@@ -8,6 +8,11 @@
 
   environment.variables.AMD_VULKAN_ICD = "RADV";
 
+  programs.corectrl = {
+    enable = true;
+    gpuOverclock.enable = true;
+  };
+
   systemd.packages = with pkgs; [
     lact
   ];
