@@ -95,13 +95,13 @@ in
       id = "default";
       versioning.type = "trashcan";
       path = "~/Documents/Sync";
-      devices = [ "bernkastel" "beatrice" "erika" "asiyah" "briah" "vera-phone" "work-laptop" "featherine" ];
+      devices = [ "bernkastel" "beatrice" "erika" "asiyah" "briah" "vera-phone" "work-laptop" "featherine" "ange" ];
     };
     music = {
       id = "y0fft-chww4";
       versioning.type = "trashcan";
       path = "~/Music";
-      devices = [ "bernkastel" "beatrice" "erika" "asiyah" "vera-phone" "work-laptop" "featherine" ];
+      devices = [ "bernkastel" "beatrice" "erika" "asiyah" "vera-phone" "work-laptop" "featherine" "ange" ];
     };
     retrodeck = {
       id = "9rctd-ets59";
