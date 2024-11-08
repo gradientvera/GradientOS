@@ -1,4 +1,4 @@
-{ config, ... }:
+{ config, lib, ... }:
 let
   ports = import ./misc/service-ports.nix;
 in
@@ -33,6 +33,11 @@ in
         elapsed = true;
       };
     };  
+  };
+
+  systemd.services.zigbee2mqtt.serviceConfig = {
+    Restart = lib.mkForce "always"; # Sometimes fails with successful exit code 
+    RestartSec = 10;
   };
 
   networking.firewall.interfaces.gradientnet.allowedTCPPorts = [ ports.mqtt ports.zigbee2mqtt ];
