@@ -11,6 +11,7 @@
     # ./ss14-watchdog.nix
     ./esphome/default.nix
     ./secrets/default.nix
+    ./hardware-configuration.nix
   ];
 
   gradient.presets.syncthing.enable = true;
@@ -23,16 +24,5 @@
     erika = "ssh-ng://nix-ssh@erika.gradient?priority=50";
     neith-deck = "ssh-ng://nix-ssh@neith-deck.lily?priority=100";
   };
-
-  hardware.raspberry-pi."4".fkms-3d = {
-    enable = true;
-    cma = 256;
-  };
-
-  boot.loader.raspberryPi.firmwareConfig = ''
-    arm_64bit=1
-    gpu_mem=256
-    hdmi_force_hotplug=1
-  '';
 
 }

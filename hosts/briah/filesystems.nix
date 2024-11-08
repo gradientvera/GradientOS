@@ -1,25 +1,27 @@
-{ ... }:
+{ lib, ... }:
 {
-  boot.loader.grub.enable = false;
+  boot.loader.systemd-boot.enable = true;
+  boot.loader.efi.canTouchEfiVariables = true;
+
+  boot.loader.grub.enable = lib.mkForce false;
+  boot.loader.generic-extlinux-compatible.enable = lib.mkForce false;
 
   fileSystems."/" = {
-    device = "/dev/disk/by-label/NIXOS_SD";
+    device = "/dev/disk/by-uuid/cfe1a8e0-8741-4baf-91d2-7ce49380512d";
     fsType = "ext4";
-    mountPoint = "/";
   };
 
-  # Stupid HDD died TODO: replace by a new one
-  #fileSystems."/data" = {
-  #  device = "/dev/disk/by-uuid/bf3b5f82-b859-4b22-9192-918e01ea7af1";
-  #  fsType = "ext4";
-  #  options = [ "rw" "auto" "noatime" "nofail" ];
-  #};
+  fileSystems."/boot" = {
+    device = "/dev/disk/by-uuid/8B8D-12F9";
+    fsType = "vfat";
+    options = [ "fmask=0022" "dmask=0022" ];
+  };
 
   swapDevices = [
-    #{
-    #  device = "/data/swapfile";
-    #  size = 16*1024;
-    #}
+    {
+      device = "/swapfile";
+      size = 16*1024;
+    }
   ];
 
 }
