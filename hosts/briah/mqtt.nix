@@ -21,8 +21,16 @@ in
     enable = true;
     settings = {
       homeassistant = config.services.home-assistant.enable;
-      mqtt.server = "mqtt://localhost:${toString ports.mqtt}";
-      serial.port = "/dev/serial/by-id/usb-ITEAD_SONOFF_Zigbee_3.0_USB_Dongle_Plus_V2_20231121193348-if00";
+      mqtt = {
+        server = "mqtt://localhost:${toString ports.mqtt}";
+        include_device_information = true;
+        version = 5;
+      };
+      serial = {
+        port = "/dev/serial/by-id/usb-ITEAD_SONOFF_Zigbee_3.0_USB_Dongle_Plus_V2_20231121193348-if00";
+        baudrate = 115200;
+        rtscts = true;
+      };
       availability = true;
       frontend = {
         port = ports.zigbee2mqtt;
