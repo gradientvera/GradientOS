@@ -29,7 +29,7 @@ in
       serial = {
         port = "/dev/serial/by-id/usb-ITEAD_SONOFF_Zigbee_3.0_USB_Dongle_Plus_V2_20231121193348-if00";
         baudrate = 115200;
-        rtscts = true;
+        adapter = "ember";
       };
       availability = true;
       frontend = {
