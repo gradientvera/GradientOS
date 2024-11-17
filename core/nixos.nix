@@ -74,6 +74,11 @@ in
     # systemd-based initrd
     boot.initrd.systemd.enable = true;
 
+    boot.kernel.sysctl = {
+      "net.core.default_qdisc" = "fq";
+      "net.ipv4.tcp_congestion_control" = "bbr";
+    };
+
     boot.supportedFilesystems = [ "ntfs" ];
 
     # This value determines the NixOS release from which the default

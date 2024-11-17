@@ -8,6 +8,9 @@
     torsocks.enable = true;
   };
 
+  systemd.services.tor.after = [ "network-online.target" ];
+  systemd.services.tor.wants = [ "network-online.target" ];
+
   environment.systemPackages = with pkgs; [
     tor-browser
   ];

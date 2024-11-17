@@ -70,7 +70,6 @@ in
       "sun"
       "usb"
       "ios"
-      "map"
       "sql"
       "my"
     ];
