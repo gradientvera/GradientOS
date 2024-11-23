@@ -5,27 +5,6 @@
 flake: final: prev:
 let
   steam-override = {
-    extraPkgs = pkgs: with pkgs; [
-      # Extra Steam game dependencies go here.
-      ffmpeg-full
-      cups
-
-      # Needed for Space Station 14 MIDI support.
-      fluidsynth
-
-      # Needed for GTK file dialogs in certain games.
-      gtk3
-      pango
-      cairo
-      atk
-      zlib
-      glib
-      gdk-pixbuf
-
-      # Useful tools for games
-      gamescope # games cope hehehehehehehe
-      gamemode
-    ];
     extraArgs = "-console";
     extraEnv.ROBUST_SOUNDFONT_OVERRIDE = "${prev.soundfont-fluid}/share/soundfonts/FluidR3_GM2-2.sf2";
   };
