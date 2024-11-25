@@ -29,6 +29,13 @@
         restartUnits = [ "duckdns" ];
       };
 
+      searx = {
+        mode = "0440";
+        owner = config.users.users.searx.name;
+        group = config.users.users.searx.group;
+        restartUnits = [ "searx.service" "searx-init.service" ];
+      };
+
       syncthing-cert = {
         format = "binary";
         sopsFile = ./syncthing-cert.pem;

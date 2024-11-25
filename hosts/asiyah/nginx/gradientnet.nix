@@ -12,6 +12,7 @@ let
       "@PORT-Z2M@"
       "@PORT-ESPHOME@"
       "@PORT-PROWLARR@"
+      "@PORT-SEARX@"
     ]
     [
       "asiyah.gradient"
@@ -20,6 +21,7 @@ let
       (toString briahPorts.zigbee2mqtt)
       (toString briahPorts.esphome)
       (toString asiyahPorts.prowlarr)
+      (toString asiyahPorts.searx)
     ]
     html;
   dashboardBaseHtml = (builtins.readFile ./dashboard.html);

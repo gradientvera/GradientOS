@@ -3,6 +3,7 @@
 
   imports = [
     # WIP: ./mediamtx.nix
+    ./searx.nix
     ./backups.nix
     ./grafana.nix
     ./duckdns.nix

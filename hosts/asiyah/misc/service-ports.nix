@@ -29,6 +29,7 @@
   # misc
   redis-oauth2 = 6380;
   trilium = 8081;
+  searx = 8089;
 
   # grafana
   grafana = 8083;
