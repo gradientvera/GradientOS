@@ -6,7 +6,7 @@
     nixpkgs-stable.url = "github:NixOS/nixpkgs/nixos-23.11";
 
     lix-module = {
-      url = "https://git.lix.systems/lix-project/nixos-module/archive/2.91.1-1.tar.gz";
+      url = "https://git.lix.systems/lix-project/nixos-module/archive/2.91.1-2.tar.gz";
       inputs.nixpkgs.follows = "nixpkgs";
     };
 
@@ -53,7 +53,6 @@
     sops-nix = {
       url = "github:Mic92/sops-nix";
       inputs.nixpkgs.follows = "nixpkgs";
-      inputs.nixpkgs-stable.follows = "nixpkgs-stable";
     };
 
     nix-gaming = {
@@ -386,7 +385,6 @@
           mixins.hardware-bluetooth
           mixins.hardware-raspberrypi4
           mixins.restic-repository-hokma
-          ({ pkgs, ... }: { nix.package = pkgs.lix; })
         ];
 
         users.vera.modules = [

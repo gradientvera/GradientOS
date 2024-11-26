@@ -14,6 +14,9 @@
     ./hardware-configuration.nix
   ];
 
+  # Workaround, cross-compiling doesn't work so use the one from nixpkgs for now
+  nix.package = pkgs.lix;
+
   gradient.presets.syncthing.enable = true;
   gradient.profiles.catppuccin.enable = true;
 
