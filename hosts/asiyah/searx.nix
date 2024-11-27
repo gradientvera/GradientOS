@@ -1,11 +1,24 @@
-{ config, ... }:
+{ config, lib, pkgs, ... }:
 let
   ports = import ./misc/service-ports.nix;
+  faviconSettings = (pkgs.writeText "favicons.toml" ''
+    [favicons]
+    cfg_schema = 1
+
+    [favicons.cache]
+    db_url = "/var/cache/searxng/faviconcache.db"
+    LIMIT_TOTAL_BYTES = 10737418240 # 10 GB
+    HOLD_TIME = 5184000
+
+    [favicons.proxy.resolver_map]
+    "duckduckgo" = "searx.favicons.resolvers.duckduckgo"
+  '');
 in
 {
 
   services.searx = {
     enable = true;
+    package = pkgs.master.searxng;
     redisCreateLocally = true;
     environmentFile = config.sops.secrets.searx.path;
     settings = {
@@ -27,7 +40,7 @@ in
       search = {
         default_lang = "en";
         autocomplete = "duckduckgo";
-        favicon_resolver = "google";
+        favicon_resolver = "duckduckgo";
       };
 
       server = {
@@ -87,26 +100,33 @@ in
     };  
   };
 
-  environment.etc."searxng/limiter.toml".text = "";
-  environment.etc."searxng/favicons.toml".text = ''
-    [favicons]
-    cfg_schema = 1
+  systemd.services.searx-init-favicon = {
+    description = "Initialise Searxng favicon settings";
+    serviceConfig = {
+      Type = "oneshot";
+      RemainAfterExit = true;
+      User = "searx";
+      RuntimeDirectory = "searx";
+      RuntimeDirectoryMode = "750";
+    };
+    script = ''
+      cd /run/searx
 
-    [favicons.cache]
-    db_url = "/var/cache/searxng/faviconcache.db"
-    LIMIT_TOTAL_BYTES = 10737418240 # 10 GB
-    HOLD_TIME = 5184000
+      umask 077
+      cp --no-preserve=mode ${faviconSettings} favicons.toml
+    '';
+  };
 
-    [favicons.proxy.resolver_map]
-    "google" = "searx.favicons.resolvers.google"
-    "duckduckgo" = "searx.favicons.resolvers.duckduckgo"
-  '';
+  systemd.services.searx = {
+    requires = [ "searx-init-favicon.service" ];
+    after = [ "searx-init-favicon.service" ];
+  };
 
   systemd.tmpfiles.settings."10-searxng.conf" = {
     "/var/cache/searxng".d = {
       user = config.users.users.searx.name;
       group = config.users.users.searx.group;
-      mode = "0777";
+      mode = "0770";
     };
   };
 
