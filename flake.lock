@@ -476,6 +476,22 @@
         "url": "https://github.com/NixOS/nixpkgs/archive/cc2f28000298e1269cea6612cd06ec9979dd5d7f.tar.gz"
       }
     },
+    "nixpkgs-master": {
+      "locked": {
+        "lastModified": 1732704728,
+        "narHash": "sha256-BnQnFoJBTVWPv8HJXO1ggwOVRDDx6ztchB4p6TVgvLA=",
+        "owner": "NixOS",
+        "repo": "nixpkgs",
+        "rev": "078f1251c02e162844fe42e9fcc65fd4fe3e3bce",
+        "type": "github"
+      },
+      "original": {
+        "owner": "NixOS",
+        "ref": "master",
+        "repo": "nixpkgs",
+        "type": "github"
+      }
+    },
     "nixpkgs-stable": {
       "locked": {
         "lastModified": 1720535198,
@@ -598,6 +614,7 @@
         "nixos-generators": "nixos-generators",
         "nixos-hardware": "nixos-hardware",
         "nixpkgs": "nixpkgs_4",
+        "nixpkgs-master": "nixpkgs-master",
         "nixpkgs-stable": "nixpkgs-stable",
         "polycule-constellation-moe": "polycule-constellation-moe",
         "sops-nix": "sops-nix",
