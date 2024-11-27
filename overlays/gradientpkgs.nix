@@ -7,6 +7,8 @@ final: prev:
 
   fna3d = prev.callPackage ../pkgs/fna3d.nix { };
 
+  force-xwayland = prev.callPackage ../pkgs/scripts/force-xwayland.nix { };
+
   gradient-ansible-inventory = prev.writeText "ansible-inventory.yml" (builtins.toJSON (import ../misc/ansible/inventory.nix));
   gradient-ansible-playbook = prev.writeText "ansible-playbook.yml" (builtins.toJSON (import ../misc/ansible/playbook.nix));
 

@@ -21,6 +21,10 @@ in
 
       # Enable touchpad support
       services.libinput.enable = true;
+
+      environment.systemPackages = [
+        pkgs.force-xwayland
+      ];
     })
   ];
 
