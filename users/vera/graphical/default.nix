@@ -8,12 +8,12 @@
 
   home.packages = with pkgs; [
     stable.gimp-with-plugins
+    stable.libreoffice-fresh
     lxqt.pavucontrol-qt
     whatsapp-for-linux
     kdePackages.okular
-    libreoffice-fresh
     element-desktop
-    discord-canary
+    master.discord-canary
     google-chrome
     qbittorrent
     glabels-qt

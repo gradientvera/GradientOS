@@ -9,7 +9,7 @@ let
     extraEnv.ROBUST_SOUNDFONT_OVERRIDE = "${prev.soundfont-fluid}/share/soundfonts/FluidR3_GM2-2.sf2";
   };
 in {
-  discord = (prev.discord.override {
+  discord = (final.master.discord.override {
     withOpenASAR = true;
     withVencord = true;
     withTTS = true;
@@ -72,6 +72,13 @@ in {
 
   # Stable nixpkgs overlay.
   stable = import flake.inputs.nixpkgs-stable {
+    inherit (prev) system;
+    config.allowUnfree = true;
+  };
+
+  # master branch nixpkgs overlay.
+  # ...because why the hell not, I want to use discord screensharing with audio now aaa
+  master = import flake.inputs.nixpkgs-master {
     inherit (prev) system;
     config.allowUnfree = true;
   };
