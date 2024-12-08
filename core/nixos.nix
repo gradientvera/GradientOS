@@ -79,6 +79,9 @@ in
       "net.ipv4.tcp_congestion_control" = "bbr";
     };
 
+    # Automatically restart 30 seconds after a kernel panic
+    boot.kernelParams = [ "panic=30" ];
+
     boot.supportedFilesystems = [ "ntfs" ];
 
     # This value determines the NixOS release from which the default
