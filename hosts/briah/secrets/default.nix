@@ -12,6 +12,11 @@
 
       nix-private-key = { };
 
+      hostapd-password = {
+        mode = "0444";
+        restartUnits = [ "hostapd.service" ];
+      };
+
       #pong-api-token = {
       #  mode = "0440";
       #  owner = config.users.users.ss14-watchdog.name;
