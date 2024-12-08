@@ -1,31 +1,14 @@
-{ self, config, ... }:
+{ config, self, ... }:
 let
   ports = import ../misc/service-ports.nix;
-  oauth2-config = ''
-    auth_request /oauth2/auth;
-    error_page 401 = /oauth2/sign_in;
-    # pass information via X-User and X-Email headers to backend,
-    # requires running with --set-xauthrequest flag
-    auth_request_set $user   $upstream_http_x_auth_request_user;
-    auth_request_set $email  $upstream_http_x_auth_request_email;
-    proxy_set_header X-User  $user;
-    proxy_set_header X-Email $email;
-    # if you enabled --cookie-refresh, this is needed for it to work with auth_request
-    auth_request_set $auth_cookie $upstream_http_set_cookie;
-    add_header Set-Cookie $auth_cookie;
-  '';
 in {
 
   services.nginx.virtualHosts."polycule.constellation.moe" = {
     root = self.inputs.polycule-constellation-moe;
     enableACME = true;
     addSSL = true;
-    /*extraConfig = ''
-      # Set for whole server.
-      ${oauth2-config}
-    '';*/
 
-    locations."/stream/" = {
+    locations."/vdo-ninja/" = {
       proxyPass = "http://127.0.0.1:${toString ports.vdo-ninja}/";
       proxyWebsockets = true;
       extraConfig = ''
@@ -33,54 +16,153 @@ in {
       '';
     };
 
+    locations."/ersatztv/".extraConfig = ''
+      return 302 $scheme://ersatztv.constellation.moe/;
+    '';
+
     locations."/jellyfin".extraConfig = ''
       return 302 $scheme://$host/jellyfin/;
     '';
 
     locations."/jellyfin/".extraConfig = ''
+      return 302 $scheme://jellyfin.constellation.moe/;
+    '';
+  };
+
+  services.nginx.virtualHosts."jellyfin.constellation.moe" = {
+    enableACME = true;
+    addSSL = true;
+    
+    extraConfig = ''
+      # # https://jellyfin.org/docs/general/networking/nginx/
+      ## The default `client_max_body_size` is 1M, this might not be enough for some posters, etc.
+      client_max_body_size 20M;
+    
+      # Security / XSS Mitigation Headers
+      # NOTE: X-Frame-Options may cause issues with the webOS app
+      # add_header X-Frame-Options "SAMEORIGIN";
+      # add_header X-Content-Type-Options "nosniff";
+
+      # Permissions policy. May cause issues with some clients
+      # add_header Permissions-Policy "accelerometer=(), ambient-light-sensor=(), battery=(), bluetooth=(), camera=(), clipboard-read=(), display-capture=(), document-domain=(), encrypted-media=(), gamepad=(), geolocation=(), gyroscope=(), hid=(), idle-detection=(), interest-cohort=(), keyboard-map=(), local-fonts=(), magnetometer=(), microphone=(), payment=(), publickey-credentials-get=(), serial=(), sync-xhr=(), usb=(), xr-spatial-tracking=()" always;
+
+      # Content Security Policy
+      # See: https://developer.mozilla.org/en-US/docs/Web/HTTP/CSP
+      # Enforces https content and restricts JS/CSS to origin
+      # External Javascript (such as cast_sender.js for Chromecast) must be whitelisted.
+      # NOTE: The default CSP headers may cause issues with the webOS app
+      # add_header Content-Security-Policy "default-src https: data: blob: ; img-src 'self' https://* ; style-src 'self' 'unsafe-inline'; script-src 'self' 'unsafe-inline' https://www.gstatic.com https://www.youtube.com blob:; worker-src 'self' blob:; connect-src 'self'; object-src 'none'; frame-ancestors 'self'";
+    '';
+
+    locations."/".extraConfig = ''
       # https://jellyfin.org/docs/general/networking/nginx/
-      proxy_pass http://127.0.0.1:${toString ports.jellyfin-http}/jellyfin/;
-      proxy_pass_request_headers on;
+      # Proxy main Jellyfin traffic
+      proxy_pass http://127.0.0.1:${toString ports.jellyfin-http};
       proxy_set_header Host $host;
       proxy_set_header X-Real-IP $remote_addr;
       proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;
       proxy_set_header X-Forwarded-Proto $scheme;
+      proxy_set_header X-Forwarded-Protocol $scheme;
       proxy_set_header X-Forwarded-Host $http_host;
-      proxy_set_header Upgrade $http_upgrade;
-      proxy_set_header Connection $http_connection;
+
+      # Disable buffering when the nginx proxy gets very resource heavy upon streaming
       proxy_buffering off;
     '';
 
-    locations."~* ^/Videos/(.*)/(?!live)".extraConfig = ''
+    locations."/socket".extraConfig = ''
       # https://jellyfin.org/docs/general/networking/nginx/
-      slice 2m;
-      proxy_cache jellyfin-videos;
-      proxy_cache_valid 200 206 301 302 30d;
-      proxy_ignore_headers Expires Cache-Control Set-Cookie X-Accel-Expires;
-      proxy_cache_use_stale error timeout invalid_header updating http_500 http_502 http_503 http_504;
-      proxy_connect_timeout 15s;
-      proxy_http_version 1.1;
-      proxy_set_header Connection "";
-      proxy_set_header Range $slice_range;
-      proxy_cache_lock on;
-      proxy_cache_lock_age 60s;
+      # Proxy Jellyfin Websockets traffic
       proxy_pass http://127.0.0.1:${toString ports.jellyfin-http};
-      proxy_cache_key "jellyvideo$uri?MediaSourceId=$arg_MediaSourceId&VideoCodec=$arg_VideoCodec&AudioCodec=$arg_AudioCodec&AudioStreamIndex=$arg_AudioStreamIndex&VideoBitrate=$arg_VideoBitrate&AudioBitrate=$arg_AudioBitrate&SubtitleMethod=$arg_SubtitleMethod&TranscodingMaxAudioChannels=$arg_TranscodingMaxAudioChannels&RequireAvc=$arg_RequireAvc&SegmentContainer=$arg_SegmentContainer&MinSegments=$arg_MinSegments&BreakOnNonKeyFrames=$arg_BreakOnNonKeyFrames&h264-profile=$h264Profile&h264-level=$h264Level&slicerange=$slice_range";
+      proxy_http_version 1.1;
+      proxy_set_header Upgrade $http_upgrade;
+      proxy_set_header Connection "upgrade";
+      proxy_set_header Host $host;
+      proxy_set_header X-Real-IP $remote_addr;
+      proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;
+      proxy_set_header X-Forwarded-Proto $scheme;
+      proxy_set_header X-Forwarded-Protocol $scheme;
+      proxy_set_header X-Forwarded-Host $http_host;
     '';
   };
 
-  services.nginx.appendHttpConfig = ''
-    # https://jellyfin.org/docs/general/networking/nginx/
-    proxy_cache_path  /var/cache/nginx/jellyfin-videos levels=1:2 keys_zone=jellyfin-videos:100m inactive=90d max_size=35000m;
-    map $request_uri $h264Level { ~(h264-level=)(.+?)& $2; }
-    map $request_uri $h264Profile { ~(h264-profile=)(.+?)& $2; }
-  '';
+  services.nginx.virtualHosts."ersatztv.constellation.moe" = {
+    enableACME = true;
+    addSSL = true;
+    locations."/" = {
+      proxyPass = "http://127.0.0.1:${toString ports.ersatztv}";
+      proxyWebsockets = true;
+    };
+  };
 
-  systemd.tmpfiles.settings."10-nginx.conf" = {
-    "/var/cache/nginx/jellyfin-videos".d = {
-      user = config.services.nginx.user;
-      group = config.services.nginx.group;
-      mode = "0777";
+  services.nginx.virtualHosts."jellyseerr.constellation.moe" = {
+    enableACME = true;
+    addSSL = true;
+    locations."/" = {
+      proxyPass = "http://127.0.0.1:${toString ports.jellyseerr}";
+      proxyWebsockets = true;
+    };
+  };
+
+  services.nginx.virtualHosts."radarr.constellation.moe" = {
+    enableACME = true;
+    addSSL = true;
+    locations."/" = {
+      proxyPass = "http://127.0.0.1:${toString ports.radarr}";
+      proxyWebsockets = true;
+    };
+  };
+
+  services.nginx.virtualHosts."sonarr.constellation.moe" = {
+    enableACME = true;
+    addSSL = true;
+    locations."/" = {
+      proxyPass = "http://127.0.0.1:${toString ports.sonarr}";
+      proxyWebsockets = true;
+    };
+  };
+
+  services.nginx.virtualHosts."bazarr.constellation.moe" = {
+    enableACME = true;
+    addSSL = true;
+    locations."/" = {
+      proxyPass = "http://127.0.0.1:${toString ports.bazarr}";
+      proxyWebsockets = true;
+    };
+  };
+
+  services.nginx.virtualHosts."prowlarr.constellation.moe" = {
+    enableACME = true;
+    addSSL = true;
+    locations."/" = {
+      proxyPass = "http://127.0.0.1:${toString ports.prowlarr}";
+      proxyWebsockets = true;
+    };
+  };
+
+  services.nginx.virtualHosts."tdarr.constellation.moe" = {
+    enableACME = true;
+    addSSL = true;
+    locations."/" = {
+      proxyPass = "http://127.0.0.1:${toString ports.tdarr-webui}";
+      proxyWebsockets = true;
+    };
+  };
+
+  services.nginx.virtualHosts."torrent.constellation.moe" = {
+    enableACME = true;
+    addSSL = true;
+    locations."/" = {
+      proxyPass = "http://127.0.0.1:${toString ports.qbittorrent-webui}";
+      proxyWebsockets = true;
+    };
+  };
+
+  services.nginx.virtualHosts."search.constellation.moe" = {
+    enableACME = true;
+    addSSL = true;
+    locations."/" = {
+      proxyPass = "http://127.0.0.1:${toString ports.searx}";
+      proxyWebsockets = true;
     };
   };
   

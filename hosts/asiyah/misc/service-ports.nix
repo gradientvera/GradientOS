@@ -21,10 +21,13 @@
   sonarr = 8989;
   prowlarr = 9696;
   bazarr = 6767;
-  deluge-web = 8112;
-  deluge-daemon = 58846;
-  deluge-listen = [ 6881 6891 ];
+  jellyseerr = 5055;
+  qbittorrent-webui = 8090;
+  qbittorrent-peer = 6881;
   flaresolverr = 8191;
+  ersatztv = 8409;
+  tdarr-webui = 8265;
+  tdarr-server = 8266;
 
   # misc
   redis-oauth2 = 6380;

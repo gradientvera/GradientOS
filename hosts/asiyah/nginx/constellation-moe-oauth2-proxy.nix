@@ -24,7 +24,19 @@ in {
       session-store-type = "redis";
       redis-connection-url = "redis://127.0.0.1:${toString ports.redis-oauth2}/0";
     };
-    nginx.virtualHosts = [ "polycule.constellation.moe" ];
+    nginx.virtualHosts = {
+      "polycule.constellation.moe" = {};
+      "jellyfin.constellation.moe" = {};
+      "jellyseerr.constellation.moe" = {};
+      "ersatztv.constellation.moe" = {};
+      "radarr.constellation.moe" = {};
+      "sonarr.constellation.moe" = {};
+      "bazarr.constellation.moe" = {};
+      "prowlarr.constellation.moe" = {};
+      "tdarr.constellation.moe" = {};
+      "torrent.constellation.moe" = {};
+      "search.constellation.moe" = {};
+    };
     nginx.domain = "polycule.constellation.moe";
   };
 

@@ -14,12 +14,6 @@
 
       nix-private-key = { };
       
-      deluge-auth = {
-        mode = "0440";
-        group = config.services.deluge.group;
-        restartUnits = [ "deluge.service" ];
-      };
-
       oauth2-proxy-secrets = { restartUnits = [ "oauth2_proxy.service" ]; };
 
       duckdns = {
