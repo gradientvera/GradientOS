@@ -94,10 +94,12 @@ in
     (lib.mkIf cfg.core.nix.pinChannelsToFlakeInputs {
       # Pin channels to flake inputs.
       nix.registry.nixpkgs.flake = self.inputs.nixpkgs;
+      nix.registry.nixpkgs-master.flake = self.inputs.nixpkgs-master;
       nix.registry.nixpkgs-stable.flake = self.inputs.nixpkgs-stable;
       nix.registry.self.flake = self;
 
       environment.etc."nix/inputs/nixpkgs".source = "${self.inputs.nixpkgs}";
+      environment.etc."nix/inputs/nixpkgs-master".source = "${self.inputs.nixpkgs-master}";
       environment.etc."nix/inputs/nixpkgs-stable".source = "${self.inputs.nixpkgs-stable}";
       environment.etc."nix/inputs/self".source = "${self}";
 
