@@ -47,14 +47,12 @@ in
     # Convenience
     services.envfs.enable = true;
     
-    # Do NOT reenable until https://gitlab.com/ananicy-cpp/ananicy-cpp/-/issues/40
-    # or systemd will eat your fucking face due to the cgroups v1 deprecation
-    #services.ananicy = {
-    #  enable = true;
-    #  package = pkgs.ananicy-cpp;
-    #  rulesProvider = pkgs.ananicy-rules-cachyos;
-    #  extraRules = import ./ananicy-rules.nix;
-    #};
+    services.ananicy = {
+      enable = true;
+      package = pkgs.ananicy-cpp;
+      rulesProvider = pkgs.ananicy-rules-cachyos;
+      extraRules = import ./ananicy-rules.nix;
+    };
 
     security.rtkit.enable = true;
     security.polkit.enable = true;
@@ -75,6 +73,7 @@ in
     boot.initrd.systemd.enable = true;
 
     boot.kernel.sysctl = {
+      "kernel.sysrq" = 1;
       "net.core.default_qdisc" = "fq";
       "net.ipv4.tcp_congestion_control" = "bbr";
     };
