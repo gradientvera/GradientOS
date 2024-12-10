@@ -42,6 +42,13 @@
         restartUnits = [ "syncthing.service" ];
       };
 
+      mediarr-wireguard = {
+        mode = "0440";
+        owner = config.users.users.mediarr.name;
+        group = config.users.users.mediarr.group;
+        restartUnits = [ "podman-wireguard.service" ];
+      };
+
     };
   };
 

@@ -28,6 +28,7 @@
   ersatztv = 8409;
   tdarr-webui = 8265;
   tdarr-server = 8266;
+  whisper = 9000;
 
   # misc
   redis-oauth2 = 6380;
