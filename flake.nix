@@ -339,7 +339,7 @@
 
         modules = [
           nixos-hardware.nixosModules.common-cpu-intel
-          # nixos-hardware.nixosModules.common-gpu-intel
+          nixos-hardware.nixosModules.common-gpu-intel
           gradient-generator.nixosModules.default
 
           mixins.tor

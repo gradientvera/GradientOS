@@ -26,7 +26,7 @@ in {
     };
     nginx.virtualHosts = {
       "polycule.constellation.moe" = {};
-      "jellyfin.constellation.moe" = {};
+      # "jellyfin.constellation.moe" = {}; # Use built-in auth
       "jellyseerr.constellation.moe" = {};
       "ersatztv.constellation.moe" = {};
       "radarr.constellation.moe" = {};

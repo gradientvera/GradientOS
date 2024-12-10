@@ -70,6 +70,7 @@ in {
     uid = userUid;
     homeMode = "777";
     group = config.users.groups.${groupName}.name;
+    extraGroups = [ "render" ]; # QSV
   };
 
   users.groups.${groupName} = {
