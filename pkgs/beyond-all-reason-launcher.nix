@@ -6,6 +6,7 @@ let
   version = "1.2988.0";
 in
 appimageTools.wrapType2 {
+  inherit pname version;
   name = "${pname}-${version}";
 
   src = fetchurl {
