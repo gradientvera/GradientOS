@@ -45,11 +45,13 @@ in
       lm_sensors
       ssh-to-age
       distrobox
+      nfs-utils
       usbutils
       pciutils
       colmena
       sysstat
       python3
+      screen
       yt-dlp
       p7zip
       sops

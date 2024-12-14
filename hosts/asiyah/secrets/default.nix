@@ -42,11 +42,39 @@
         restartUnits = [ "syncthing.service" ];
       };
 
-      mediarr-wireguard = {
+      mediarr-gluetun-env = {
         mode = "0440";
         owner = config.users.users.mediarr.name;
         group = config.users.users.mediarr.group;
-        restartUnits = [ "podman-wireguard.service" ];
+        restartUnits = [ "podman-gluetun.service" ];
+      };
+
+      mediarr-iptv-env = {
+        mode = "0440";
+        owner = config.users.users.mediarr.name;
+        group = config.users.users.mediarr.group;
+        restartUnits = [ "podman-ersatztv.service" ];
+      };
+
+      mediarr-postgres-env = {
+        mode = "0440";
+        owner = config.users.users.mediarr.name;
+        group = config.users.users.mediarr.group;
+        restartUnits = [ "podman-postgres.service" "podman-bitmagnet.service" ];
+      };
+
+      mediarr-unpackerr-env = {
+        mode = "0440";
+        owner = config.users.users.mediarr.name;
+        group = config.users.users.mediarr.group;
+        restartUnits = [ "podman-unpackerr.service" ];
+      };
+
+      mediarr-qbittorrent-script = {
+        mode = "0550";
+        owner = config.users.users.mediarr.name;
+        group = config.users.users.mediarr.group;
+        restartUnits = [ "podman-qbittorrent.service" ];
       };
 
     };

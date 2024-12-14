@@ -94,11 +94,29 @@ in {
     };
   };
 
+  services.nginx.virtualHosts."iptv.constellation.moe" = {
+    enableACME = true;
+    addSSL = true;
+    locations."/iptv" = {
+      proxyPass = "http://127.0.0.1:${toString ports.ersatztv}/iptv";
+      proxyWebsockets = true;
+    };
+  };
+
   services.nginx.virtualHosts."jellyseerr.constellation.moe" = {
     enableACME = true;
     addSSL = true;
     locations."/" = {
       proxyPass = "http://127.0.0.1:${toString ports.jellyseerr}";
+      proxyWebsockets = true;
+    };
+  };
+
+  services.nginx.virtualHosts."unpackerr.constellation.moe" = {
+    enableACME = true;
+    addSSL = true;
+    locations."/" = {
+      proxyPass = "http://127.0.0.1:${toString ports.unpackerr}";
       proxyWebsockets = true;
     };
   };
@@ -117,6 +135,24 @@ in {
     addSSL = true;
     locations."/" = {
       proxyPass = "http://127.0.0.1:${toString ports.sonarr}";
+      proxyWebsockets = true;
+    };
+  };
+
+  services.nginx.virtualHosts."lidarr.constellation.moe" = {
+    enableACME = true;
+    addSSL = true;
+    locations."/" = {
+      proxyPass = "http://127.0.0.1:${toString ports.lidarr}";
+      proxyWebsockets = true;
+    };
+  };
+
+  services.nginx.virtualHosts."readarr.constellation.moe" = {
+    enableACME = true;
+    addSSL = true;
+    locations."/" = {
+      proxyPass = "http://127.0.0.1:${toString ports.readarr}";
       proxyWebsockets = true;
     };
   };
@@ -157,11 +193,38 @@ in {
     };
   };
 
+  services.nginx.virtualHosts."bitmagnet.constellation.moe" = {
+    enableACME = true;
+    addSSL = true;
+    locations."/" = {
+      proxyPass = "http://127.0.0.1:${toString ports.bitmagnet-webui}";
+      proxyWebsockets = true;
+    };
+  };
+
+  services.nginx.virtualHosts."sabnzbd.constellation.moe" = {
+    enableACME = true;
+    addSSL = true;
+    locations."/" = {
+      proxyPass = "http://127.0.0.1:${toString ports.sabnzbd}";
+      proxyWebsockets = true;
+    };
+  };
+
   services.nginx.virtualHosts."search.constellation.moe" = {
     enableACME = true;
     addSSL = true;
     locations."/" = {
       proxyPass = "http://127.0.0.1:${toString ports.searx}";
+      proxyWebsockets = true;
+    };
+  };
+
+  services.nginx.virtualHosts."files.constellation.moe" = {
+    enableACME = true;
+    addSSL = true;
+    locations."/" = {
+      proxyPass = "http://127.0.0.1:${toString ports.mikochi}";
       proxyWebsockets = true;
     };
   };

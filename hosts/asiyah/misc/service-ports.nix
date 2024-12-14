@@ -12,16 +12,19 @@
   lilynet = 1195;
   slugcatnet = 1196;
 
-  # media stack
+  # mediarr stack
   jellyfin-http = 8096;
   jellyfin-https = 8920;
   jellyfin-service-discovery = 1900;
   jellyfin-client-discovery = 7359;
   radarr = 7878;
   sonarr = 8989;
+  lidarr = 8686;
+  readarr = 8787;
   prowlarr = 9696;
   bazarr = 6767;
   jellyseerr = 5055;
+  unpackerr = 5656;
   qbittorrent-webui = 8090;
   qbittorrent-peer = 6881;
   flaresolverr = 8191;
@@ -29,6 +32,17 @@
   tdarr-webui = 8265;
   tdarr-server = 8266;
   whisper = 9000;
+  bitmagnet-webui = 3333;
+  bitmagnet-peer = 3334;
+  mikochi = 8091;
+  cross-seed = 2468;
+  sabnzbd = 8092;
+
+  # NFS
+  nfsd = 2049;
+  statd = 4000;
+  lockd = 4001;
+  mountd = 4002;
 
   # misc
   redis-oauth2 = 6380;

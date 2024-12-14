@@ -12,6 +12,7 @@
   podman = ./mixins/podman.nix;
   steamcmd = ./mixins/steamcmd.nix;
   system76-scheduler = ./mixins/system76-scheduler.nix;
+  tdarr-node = ./mixins/tdarr-node.nix;
   tor = ./mixins/tor.nix;
   upgrade-diff = ./mixins/upgrade-diff.nix;
   uwu-style = ./mixins/uwu-style.nix;

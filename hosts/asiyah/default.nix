@@ -1,8 +1,9 @@
-{ config, ... }:
+{ config, pkgs, ... }:
 {
 
   imports = [
     # WIP: ./mediamtx.nix
+    ./nfs.nix
     ./searx.nix
     ./backups.nix
     ./grafana.nix
@@ -19,9 +20,15 @@
     ./trilium-memory-repository.nix
   ];
 
+  networking.hostId = "b4ed7361";
+
   gradient.presets.syncthing.enable = true;
   gradient.profiles.catppuccin.enable = true;
   gradient.profiles.graphics.enable = true;
+
+  environment.systemPackages = with pkgs; [
+    jdupes
+  ];
 
   gradient.substituters = {
     briah = "ssh-ng://nix-ssh@briah.gradient?priority=60";

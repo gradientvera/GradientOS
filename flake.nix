@@ -114,6 +114,7 @@
           mixins.plymouth
           mixins.wireguard
           mixins.uwu-style
+          mixins.tdarr-node
           mixins.upgrade-diff
           mixins.v4l2loopback
           mixins.vera-locale
@@ -206,6 +207,7 @@
           mixins.gnupg
           mixins.wireguard
           mixins.uwu-style
+          mixins.tdarr-node
           mixins.vera-locale
           mixins.upgrade-diff
           mixins.v4l2loopback
@@ -300,6 +302,7 @@
           mixins.plymouth
           mixins.wireguard
           mixins.uwu-style
+          mixins.tdarr-node
           mixins.vera-locale
           mixins.upgrade-diff
           mixins.v4l2loopback

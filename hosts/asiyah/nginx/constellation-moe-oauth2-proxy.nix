@@ -27,14 +27,20 @@ in {
     nginx.virtualHosts = {
       "polycule.constellation.moe" = {};
       # "jellyfin.constellation.moe" = {}; # Use built-in auth
-      "jellyseerr.constellation.moe" = {};
+      #"jellyseerr.constellation.moe" = {}; # Use built-in auth
+      "unpackerr.constellation.moe" = {};
       "ersatztv.constellation.moe" = {};
       "radarr.constellation.moe" = {};
       "sonarr.constellation.moe" = {};
+      "lidarr.constellation.moe" = {};
+      "readarr.constellation.moe" = {};
       "bazarr.constellation.moe" = {};
       "prowlarr.constellation.moe" = {};
       "tdarr.constellation.moe" = {};
       "torrent.constellation.moe" = {};
+      "bitmagnet.constellation.moe" = {};
+      "sabnzbd.constellation.moe" = {};
+      "files.constellation.moe" = {};
       "search.constellation.moe" = {};
     };
     nginx.domain = "polycule.constellation.moe";

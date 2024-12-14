@@ -81,7 +81,11 @@ in
     # Automatically restart 30 seconds after a kernel panic
     boot.kernelParams = [ "panic=30" ];
 
-    boot.supportedFilesystems = [ "ntfs" ];
+    boot.supportedFilesystems = {
+      "ntfs" = true;
+      "nfs" = true;
+      "nfs4" = true;
+    };
 
     # This value determines the NixOS release from which the default
     # settings for stateful data, like file locations and database versions
