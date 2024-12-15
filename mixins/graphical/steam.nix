@@ -13,27 +13,6 @@
     extraCompatPackages = with pkgs; [
       proton-ge-bin
     ];
-    extraPackages = with pkgs; [
-      # Extra Steam game dependencies go here.
-      ffmpeg-full
-      cups
-
-      # Needed for Space Station 14 MIDI support.
-      fluidsynth
-
-      # Needed for GTK file dialogs in certain games.
-      gtk3
-      pango
-      cairo
-      atk
-      zlib
-      glib
-      gdk-pixbuf
-
-      # Useful tools for games
-      gamescope # games cope hehehehehehehe
-      gamemode
-    ];
   };
 
   # Workaround https://github.com/NixOS/nixpkgs/issues/45492

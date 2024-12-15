@@ -7,6 +7,30 @@ let
   steam-override = {
     extraArgs = "-console";
     extraEnv.ROBUST_SOUNDFONT_OVERRIDE = "${prev.soundfont-fluid}/share/soundfonts/FluidR3_GM2-2.sf2";
+    extraPkgs = pkgs: with pkgs; [
+      ffmpeg-full
+      cups # Needed by Cookie Clicker because electron lol
+      
+      # Useful tools for games
+      gamescope # games cope hehehehehehehe
+      gamemode
+    ];
+    extraLibraries = pkgs: with pkgs; [
+      # Extra Steam game dependencies go here.
+      nss
+
+      # Needed for Space Station 14 MIDI support.
+      fluidsynth
+
+      # Needed for GTK file dialogs in certain games.
+      gtk3
+      pango
+      cairo
+      atk
+      zlib
+      glib
+      gdk-pixbuf
+    ];
   };
 in {
   discord = (final.master.discord.override {
