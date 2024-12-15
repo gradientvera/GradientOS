@@ -1,5 +1,6 @@
 { pkgs, config, lib, ... }:
 let
+  keys = import ../../misc/ssh-pub-keys.nix;
   ports = import ./misc/service-ports.nix;
   userName = "mediarr";
   userUid = 976;
@@ -34,6 +35,7 @@ let
     mikochi
     cross-seed
     sabnzbd
+    mediarr-openssh
   ];
 in {
 
@@ -70,6 +72,7 @@ in {
         -p ${toString ports.mikochi}:${toString ports.mikochi} \
         -p ${toString ports.cross-seed}:2468 \
         -p ${toString ports.sabnzbd}:8080 \
+        -p ${toString ports.mediarr-openssh}:2222 \
         --sysctl="net.ipv4.ip_forward=1" \
         --sysctl="net.ipv4.conf.all.src_valid_mark=1" \
         --userns=keep-id \
@@ -545,7 +548,29 @@ in {
         TZ = config.time.timeZone;
         PUID = toString userUid;
         PGID = toString groupGid;
+      };
+      extraOptions = [] ++ defaultOptions;
+      dependsOn = [ "create-mediarr-pod" "gluetun" ];
+    };
 
+    # sftp://mediarr@ftp.constellation.moe:2222
+    mediarr-openssh = {
+      image = "lscr.io/linuxserver/openssh-server:latest";
+      volumes = [
+        "${builtins.toFile "neith.pub" keys.neith}:/pubkeys/neith.pub"
+        # TODO: "${builtins.toFile "neith.pub" keys.remie}:/pubkeys/remie.pub"
+        "${builtins.toFile "vera.pub" keys.vera}:/pubkeys/vera.pub"
+        "/var/lib/${userName}:/config"
+        "/data/downloads:/downloads"
+      ];
+      environment = {
+        TZ = config.time.timeZone;
+        PUID = toString userUid;
+        PGID = toString groupGid;
+        SUDO_ACCESS = "false";
+        PASSWORD_ACCESS = "false";
+        USER_NAME = userName;
+        PUBLIC_KEY_DIR = "/pubkeys";
       };
       extraOptions = [] ++ defaultOptions;
       dependsOn = [ "create-mediarr-pod" "gluetun" ];
@@ -559,4 +584,8 @@ in {
     gradientnet.allowedTCPPorts = allowedPorts;
     gradientnet.allowedUDPPorts = allowedPorts;
   };
+
+  networking.firewall.allowedTCPPorts = with ports; [
+    mediarr-openssh
+  ];
 }

@@ -37,6 +37,7 @@
   mikochi = 8091;
   cross-seed = 2468;
   sabnzbd = 8092;
+  mediarr-openssh = 2222;
 
   # NFS
   nfsd = 2049;
