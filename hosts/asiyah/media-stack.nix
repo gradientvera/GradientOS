@@ -297,8 +297,7 @@ in {
       dependsOn = [ "create-mediarr-pod" "gluetun" ];
     };
 
-    qbittorrent =
-    {
+    qbittorrent = {
       image = "lscr.io/linuxserver/qbittorrent:latest";
       volumes = [
         "${config.sops.secrets.mediarr-qbittorrent-script.path}:/notify.sh"
@@ -313,6 +312,48 @@ in {
       };
       extraOptions = [] ++ defaultOptions;
       dependsOn = [ "create-mediarr-pod" "gluetun" ];
+    };
+
+    decluttarr = {
+      image = "ghcr.io/manimatter/decluttarr:latest";
+      environment = {
+        TZ = config.time.timeZone;
+        PUID = toString userUid;
+        PGID = toString groupGid;
+        LOG_LEVEL = "INFO";
+        REMOVE_TIMER = "10";
+        REMOVE_FAILED = "True";
+        REMOVE_FAILED_IMPORTS = "True";
+        REMOVE_METADATA_MISSING = "True";
+        REMOVE_MISSING_FILES = "True";
+        REMOVE_ORPHANS = "True";
+        REMOVE_SLOW = "True";
+        REMOVE_STALLED = "True";
+        REMOVE_UNMONITORED = "True";
+        RUN_PERIODIC_RESCANS = ''
+          {
+          "SONARR": {"MISSING": true, "CUTOFF_UNMET": true, "MAX_CONCURRENT_SCANS": 3, "MIN_DAYS_BEFORE_RESCAN": 7},
+          "RADARR": {"MISSING": true, "CUTOFF_UNMET": true, "MAX_CONCURRENT_SCANS": 3, "MIN_DAYS_BEFORE_RESCAN": 7}
+          }
+        '';
+        PERMITTED_ATTEMPTS = "3";
+        NO_STALLED_REMOVAL_QBIT_TAG = "Don't Kill";
+        MIN_DOWNLOAD_SPEED = "100";
+        FAILED_IMPORT_MESSAGE_PATTERNS = ''
+          [
+          "Not a Custom Format upgrade for existing",
+          "Not an upgrade for existing"
+          ]
+        '';
+        RADARR_URL = "http://127.0.0.1:7878";
+        SONARR_URL = "http://127.0.0.1:8989";
+        LIDARR_URL = "http://127.0.0.1:8686";
+        READARR_URL = "http://127.0.0.1:8787";
+        QBITTORRENT_URL = "http://127.0.0.1:${toString ports.qbittorrent-webui}";
+      };
+      environmentFiles = [ config.sops.secrets.mediarr-decluttarr-env.path ];
+      extraOptions = [] ++ defaultOptions;
+      dependsOn = [ "create-mediarr-pod" "gluetun" "radarr" "sonarr" "lidarr" "readarr" "qbittorrent" ];
     };
 
     tdarr = {
@@ -462,12 +503,17 @@ in {
         UN_DIR_MODE = "0775";
         UN_WEBSERVER_METRICS = "true";
         UN_WEBSERVER_LISTEN_ADDR = "0.0.0.0:${toString ports.unpackerr}";
+        UN_SONARR_0_URL = "http://127.0.0.1:8989";
+        UN_RADARR_0_URL = "http://127.0.0.1:7878";
+        UN_LIDARR_0_URL = "http://127.0.0.1:8686";
+        UN_READARR_0_URL = "http://127.0.0.1:8787";
+        UN_WEBHOOK_0_TEMPLATE = "discord";
       };
       environmentFiles = [
         config.sops.secrets.mediarr-unpackerr-env.path
       ];
       extraOptions = [] ++ defaultOptions ++ userOptions;
-      dependsOn = [ "create-mediarr-pod" "gluetun" ];
+      dependsOn = [ "create-mediarr-pod" "gluetun" "sonarr" "radarr" "lidarr" "readarr" ];
     };
 
     cross-seed = {
