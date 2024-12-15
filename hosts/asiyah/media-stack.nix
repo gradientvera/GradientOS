@@ -415,7 +415,8 @@ in {
         PGID = toString groupGid;
         VPN_SERVICE_PROVIDER = "mullvad";
         VPN_TYPE = "wireguard";
-        SERVER_CITIES = "Amsterdam, Madrid, Paris";
+        SERVER_CITIES = "Amsterdam, Paris, Denmark, Helsinki, Berlin, Zurich, London";
+        OWNED_ONLY = "yes";
         FIREWALL_INPUT_PORTS = builtins.concatStringsSep "," (builtins.map (p: toString p) allowedPorts);
         FIREWALL_OUTBOUND_SUBNETS="192.168.24.0/24,10.88.0.0/24";
       };
