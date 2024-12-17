@@ -362,6 +362,7 @@ in {
     tdarr = {
       image = "ghcr.io/haveagitgat/tdarr:latest";
       volumes = [
+        "${config.sops.secrets.mediarr-custom-axios.path}:/app/Tdarr_Server/node_modules/axios/lib/core/Axios.js:ro"
         "/var/lib/${userName}/tdarr/server:/app/server"
         "/var/lib/${userName}/tdarr/config:/app/configs"
         "/var/lib/${userName}/tdarr/logs:/app/logs"
@@ -471,7 +472,7 @@ in {
         "--health-cmd" "pg_isready"
         "--health-start-period" "20s"
         "--health-interval" "10s"
-      ] ++ defaultOptions;
+      ] ++ defaultOptions ++ userOptions;
       dependsOn = [ "create-mediarr-pod" "gluetun" ];
     };
 

@@ -84,6 +84,15 @@
         restartUnits = [ "podman-decluttarr.service" ];
       };
 
+      mediarr-custom-axios = {
+        mode = "0440";
+        format = "binary";
+        sopsFile = ./Axios.js;
+        owner = config.users.users.mediarr.name;
+        group = config.users.users.mediarr.group;
+        restartUnits = [ "podman-tdarr.service" ];
+      };
+
     };
   };
 
