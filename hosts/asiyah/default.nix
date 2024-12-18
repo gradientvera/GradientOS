@@ -5,6 +5,7 @@
     # WIP: ./mediamtx.nix
     ./nfs.nix
     ./searx.nix
+    ./clamav.nix
     ./backups.nix
     ./grafana.nix
     ./duckdns.nix

@@ -143,6 +143,8 @@ in {
     "/var/lib/${userName}/sabnzbd/incomplete".d = rule;
   };
 
+  services.clamav.scanner.scanDirectories = [ "/data/downloads" ]; # /var/lib already scanned by default
+
   # -- Container Setup --
   virtualisation.oci-containers.containers = {
 
