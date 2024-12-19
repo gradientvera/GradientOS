@@ -584,11 +584,11 @@
     "polycule-constellation-moe": {
       "flake": false,
       "locked": {
-        "lastModified": 1734216048,
-        "narHash": "sha256-KhdfjaqGBF3G4OKP2NmuSm1S4DY69+losem2zYGRXe0=",
+        "lastModified": 1734555492,
+        "narHash": "sha256-NvcxBowk5vitTDbWErN//FYQr5Xavm+cdY6qiQGiZzI=",
         "ref": "refs/heads/main",
-        "rev": "2a6d6578d20c89f4e89d250c3905114524b951fa",
-        "revCount": 9,
+        "rev": "1ec77ddc4052de9dc41644e3c6870d700283db08",
+        "revCount": 10,
         "type": "git",
         "url": "ssh://git@github.com/ConstellationNRV/polycule.constellation.moe"
       },

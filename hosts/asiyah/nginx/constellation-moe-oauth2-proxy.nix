@@ -35,6 +35,7 @@ in {
       "lidarr.constellation.moe" = {};
       "readarr.constellation.moe" = {};
       "bazarr.constellation.moe" = {};
+      "bazarrembedded.constellation.moe" = {};
       "prowlarr.constellation.moe" = {};
       "tdarr.constellation.moe" = {};
       "torrent.constellation.moe" = {};

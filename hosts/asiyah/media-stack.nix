@@ -58,6 +58,7 @@ in {
         -p ${toString ports.readarr}:8787 \
         -p ${toString ports.prowlarr}:9696 \
         -p ${toString ports.bazarr}:6767 \
+        -p ${toString ports.bazarr-embedded}:6768 \
         -p ${toString ports.jellyseerr}:5055 \
         -p ${toString ports.unpackerr}:${toString ports.unpackerr} \
         -p ${toString ports.qbittorrent-peer}:6881 \
@@ -122,6 +123,7 @@ in {
     "/var/lib/${userName}/readarr".d = rule;
     "/var/lib/${userName}/prowlarr".d = rule;
     "/var/lib/${userName}/bazarr".d = rule;
+    "/var/lib/${userName}/bazarr-embedded".d = rule;
     "/var/lib/${userName}/whisper".d = rule;
     "/var/lib/${userName}/jellyseerr".d = rule;
     "/var/lib/${userName}/unpackerr".d = rule;
@@ -141,6 +143,7 @@ in {
     "/var/lib/${userName}/cross-seed".d = rule;
     "/var/lib/${userName}/sabnzbd".d = rule;
     "/var/lib/${userName}/sabnzbd/incomplete".d = rule;
+    "/var/lib/${userName}/recyclarr".d = rule;
   };
 
   services.clamav.scanner.scanDirectories = [ "/data/downloads" ]; # /var/lib already scanned by default
@@ -276,6 +279,22 @@ in {
       image = "lscr.io/linuxserver/bazarr:latest";
       volumes = [
         "/var/lib/${userName}/bazarr:/config"
+        "/data/downloads/movies:/movies"
+        "/data/downloads/tv:/tv"
+      ];
+      environment = {
+        TZ = config.time.timeZone;
+        PUID = toString userUid;
+        PGID = toString groupGid;
+      };
+      extraOptions = [] ++ defaultOptions;
+      dependsOn = [ "create-mediarr-pod" "gluetun" ];
+    };
+
+    bazarr-embedded = {
+      image = "lscr.io/linuxserver/bazarr:latest";
+      volumes = [
+        "/var/lib/${userName}/bazarr-embedded:/config"
         "/data/downloads/movies:/movies"
         "/data/downloads/tv:/tv"
       ];
@@ -578,6 +597,22 @@ in {
       };
       extraOptions = [] ++ defaultOptions;
       dependsOn = [ "create-mediarr-pod" "gluetun" ];
+    };
+
+    recyclarr = {
+      image = "ghcr.io/recyclarr/recyclarr:latest";
+      volumes = [
+        "/var/lib/${userName}/recyclarr:/config"
+      ];
+      environment = {
+        TZ = config.time.timeZone;
+        PUID = toString userUid;
+        PGID = toString groupGid;
+        RECYCLARR_CREATE_CONFIG = "true";
+        CRON_SCHEDULE = "@daily";
+      };
+      extraOptions = [] ++ defaultOptions ++ userOptions;
+      dependsOn = [ "create-mediarr-pod" "gluetun" "sonarr" "radarr" ];
     };
 
   };

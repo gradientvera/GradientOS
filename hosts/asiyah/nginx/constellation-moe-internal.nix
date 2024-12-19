@@ -166,6 +166,15 @@ in {
     };
   };
 
+  services.nginx.virtualHosts."bazarrembedded.constellation.moe" = {
+    enableACME = true;
+    addSSL = true;
+    locations."/" = {
+      proxyPass = "http://127.0.0.1:${toString ports.bazarr-embedded}";
+      proxyWebsockets = true;
+    };
+  };
+
   services.nginx.virtualHosts."prowlarr.constellation.moe" = {
     enableACME = true;
     addSSL = true;

@@ -23,6 +23,7 @@
   readarr = 8787;
   prowlarr = 9696;
   bazarr = 6767;
+  bazarr-embedded = 6768;
   jellyseerr = 5055;
   unpackerr = 5656;
   qbittorrent-webui = 8090;
