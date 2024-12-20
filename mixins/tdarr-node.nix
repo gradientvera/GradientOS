@@ -34,7 +34,9 @@ in
       "nfsvers=4.2"
       "x-systemd.automount"
       "noauto"
+      "nofail"
       "noatime"
+      "_netdev"
     ];
   in
   {
