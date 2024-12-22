@@ -39,6 +39,8 @@
   cross-seed = 2468;
   sabnzbd = 8092;
   mediarr-openssh = 2222;
+  slskd = 5030;
+  slskd-peer = 50300;
 
   # NFS
   nfsd = 2049;

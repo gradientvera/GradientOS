@@ -33,6 +33,7 @@ in {
       "radarr.constellation.moe" = {};
       "sonarr.constellation.moe" = {};
       "lidarr.constellation.moe" = {};
+      "slskd.constellation.moe" = {};
       "readarr.constellation.moe" = {};
       "bazarr.constellation.moe" = {};
       "bazarrembedded.constellation.moe" = {};

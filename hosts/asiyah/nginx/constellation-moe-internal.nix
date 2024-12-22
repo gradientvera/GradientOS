@@ -148,6 +148,15 @@ in {
     };
   };
 
+  services.nginx.virtualHosts."slskd.constellation.moe" = {
+    enableACME = true;
+    addSSL = true;
+    locations."/" = {
+      proxyPass = "http://127.0.0.1:${toString ports.slskd}";
+      proxyWebsockets = true;
+    };
+  };
+
   services.nginx.virtualHosts."readarr.constellation.moe" = {
     enableACME = true;
     addSSL = true;

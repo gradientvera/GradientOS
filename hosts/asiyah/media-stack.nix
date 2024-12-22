@@ -55,6 +55,8 @@ in {
         -p ${toString ports.radarr}:7878 \
         -p ${toString ports.sonarr}:8989 \
         -p ${toString ports.lidarr}:8686 \
+        -p ${toString ports.slskd}:5030 \
+        -p ${toString ports.slskd-peer}:50300 \
         -p ${toString ports.readarr}:8787 \
         -p ${toString ports.prowlarr}:9696 \
         -p ${toString ports.bazarr}:6767 \
@@ -114,12 +116,16 @@ in {
     "/data/downloads/music".d = rule;
     "/data/downloads/books".d = rule;
     "/data/downloads/torrents".d = rule;
+    "/data/downloads/slskd".d = rule;
     "/data/downloads/cross-seeds".d = rule;
+    "/data/downloads/cross-seeds/links".d = rule;
     "/data/downloads/sabnzbd-incomplete".d = rule;
     "/var/lib/${userName}".d = rule;
     "/var/lib/${userName}/radarr".d = rule;
     "/var/lib/${userName}/sonarr".d = rule;
     "/var/lib/${userName}/lidarr".d = rule;
+    "/var/lib/${userName}/slskd".d = rule;
+    "/var/lib/${userName}/soularr".d = rule;
     "/var/lib/${userName}/readarr".d = rule;
     "/var/lib/${userName}/prowlarr".d = rule;
     "/var/lib/${userName}/bazarr".d = rule;
@@ -243,6 +249,38 @@ in {
       };
       extraOptions = [] ++ defaultOptions;
       dependsOn = [ "create-mediarr-pod" "gluetun" ];
+    };
+
+    slskd = {
+      image = "slskd/slskd:latest";
+      volumes = [
+        "/var/lib/${userName}/slskd:/app"
+        "/data/downloads:/downloads"
+      ];
+      environment = {
+        TZ = config.time.timeZone;
+        PUID = toString userUid;
+        PGID = toString groupGid;
+        SLSKD_REMOTE_CONFIGURATION = "true";
+      };  
+      extraOptions = [] ++ defaultOptions ++ userOptions;
+      dependsOn = [ "create-mediarr-pod" "gluetun" ];
+    };
+
+    soularr = {
+      image = "mrusse08/soularr:latest";
+      volumes = [
+        "/var/lib/${userName}/soularr:/data"
+        "/data/downloads:/downloads"
+      ];
+      environment = {
+        TZ = config.time.timeZone;
+        PUID = toString userUid;
+        PGID = toString groupGid;
+        SCRIPT_INTERVAL = "300";
+      };  
+      extraOptions = [] ++ defaultOptions ++ userOptions;
+      dependsOn = [ "create-mediarr-pod" "gluetun" "lidarr" "slskd" ];
     };
 
     readarr = {
@@ -546,6 +584,7 @@ in {
       image = "ghcr.io/cross-seed/cross-seed:6";
       volumes = [
         "/var/lib/${userName}/cross-seed:/config"
+        "/data/downloads:/downloads:ro"
         "/data/downloads/torrents:/torrents:ro"
         "/data/downloads/cross-seeds:/cross-seeds"
       ];
@@ -557,7 +596,7 @@ in {
       };
       cmd = [ "daemon" ];
       extraOptions = [] ++ defaultOptions ++ userOptions;
-      dependsOn = [ "create-mediarr-pod" "gluetun" ];
+      dependsOn = [ "create-mediarr-pod" "gluetun" "prowlarr" "sonarr" "radarr" ];
     };
 
     sabnzbd = {
