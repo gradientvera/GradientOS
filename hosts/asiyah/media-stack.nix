@@ -56,15 +56,16 @@ in {
         -p ${toString ports.sonarr}:8989 \
         -p ${toString ports.lidarr}:8686 \
         -p ${toString ports.slskd}:5030 \
-        -p ${toString ports.slskd-peer}:50300 \
+        -p ${toString ports.slskd-peer}:26156 \
+        -p ${toString ports.slskd-peer}:26156/udp \
         -p ${toString ports.readarr}:8787 \
         -p ${toString ports.prowlarr}:9696 \
         -p ${toString ports.bazarr}:6767 \
         -p ${toString ports.bazarr-embedded}:6768 \
         -p ${toString ports.jellyseerr}:5055 \
         -p ${toString ports.unpackerr}:${toString ports.unpackerr} \
-        -p ${toString ports.qbittorrent-peer}:6881 \
-        -p ${toString ports.qbittorrent-peer}:6881/udp \
+        -p ${toString ports.qbittorrent-peer}:36494 \
+        -p ${toString ports.qbittorrent-peer}:36494/udp \
         -p ${toString ports.qbittorrent-webui}:${toString ports.qbittorrent-webui} \
         -p ${toString ports.tdarr-webui}:8265 \
         -p ${toString ports.tdarr-server}:8266 \
@@ -473,12 +474,12 @@ in {
         TZ = config.time.timeZone;
         PUID = toString userUid;
         PGID = toString groupGid;
-        VPN_SERVICE_PROVIDER = "mullvad";
+        VPN_SERVICE_PROVIDER = "airvpn";
         VPN_TYPE = "wireguard";
-        SERVER_CITIES = "Amsterdam, Paris, Denmark, Helsinki, Berlin, Zurich, London";
-        OWNED_ONLY = "yes";
         FIREWALL_INPUT_PORTS = builtins.concatStringsSep "," (builtins.map (p: toString p) allowedPorts);
-        FIREWALL_OUTBOUND_SUBNETS="192.168.24.0/24,10.88.0.0/24";
+        FIREWALL_VPN_INPUT_PORTS = "${toString ports.qbittorrent-peer},${toString ports.slskd-peer}";
+        FIREWALL_OUTBOUND_SUBNETS="10.88.0.0/24";
+        SERVER_COUNTRIES = "Netherlands,Switzerland,Sweden";
       };
       environmentFiles = [ config.sops.secrets.mediarr-gluetun-env.path ];
       extraOptions = [
@@ -620,7 +621,7 @@ in {
       image = "lscr.io/linuxserver/openssh-server:latest";
       volumes = [
         "${builtins.toFile "neith.pub" keys.neith}:/pubkeys/neith.pub"
-        # TODO: "${builtins.toFile "neith.pub" keys.remie}:/pubkeys/remie.pub"
+        # TODO: "${builtins.toFile "remie.pub" keys.remie}:/pubkeys/remie.pub"
         "${builtins.toFile "vera.pub" keys.vera}:/pubkeys/vera.pub"
         "/var/lib/${userName}:/config"
         "/data/downloads:/downloads"
@@ -665,5 +666,12 @@ in {
 
   networking.firewall.allowedTCPPorts = with ports; [
     mediarr-openssh
+    qbittorrent-peer
+    slskd-peer
+  ];
+
+  networking.firewall.allowedUDPPorts = with ports; [
+    qbittorrent-peer
+    slskd-peer
   ];
 }

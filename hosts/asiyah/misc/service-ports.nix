@@ -27,7 +27,7 @@
   jellyseerr = 5055;
   unpackerr = 5656;
   qbittorrent-webui = 8090;
-  qbittorrent-peer = 6881;
+  qbittorrent-peer = 36494;
   flaresolverr = 8191;
   ersatztv = 8409;
   tdarr-webui = 8265;
@@ -40,7 +40,7 @@
   sabnzbd = 8092;
   mediarr-openssh = 2222;
   slskd = 5030;
-  slskd-peer = 50300;
+  slskd-peer = 26156;
 
   # NFS
   nfsd = 2049;

@@ -5,7 +5,6 @@
     gradient-generator
     stable.freecad
     prusa-slicer
-    mullvad-vpn
     openscad
   ];
 
