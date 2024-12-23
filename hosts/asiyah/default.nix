@@ -9,7 +9,7 @@
     ./backups.nix
     ./grafana.nix
     ./duckdns.nix
-    ./scrutiny.nix
+    # ./scrutiny.nix # Buggy with my external HDDs :(
     ./filesystem.nix
     ./media-stack.nix
     ./nginx/default.nix

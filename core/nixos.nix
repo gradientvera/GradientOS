@@ -25,7 +25,6 @@ in
 
   config = lib.mkIf cfg.core.nixos.enable {
     services.fstrim.enable = true;
-    services.smartd.enable = true;
     services.fwupd.enable = true;
 
     services.devmon.enable = true;
