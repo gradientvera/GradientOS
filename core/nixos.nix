@@ -25,6 +25,7 @@ in
 
   config = lib.mkIf cfg.core.nixos.enable {
     services.fstrim.enable = true;
+    services.smartd.enable = true;
     services.fwupd.enable = true;
 
     services.devmon.enable = true;
@@ -64,6 +65,10 @@ in
     programs.firejail.enable = true;
 
     hardware.enableRedistributableFirmware = true;
+
+    systemd.extraConfig = ''
+      DefaultTimeoutStopSec=30s
+    '';
 
     environment.shells = with pkgs; [
       nushell

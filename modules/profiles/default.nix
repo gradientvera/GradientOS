@@ -38,6 +38,7 @@ in
       gradientos-upgrade-boot
       gradientos-upgrade-test
       gradientos-colmena
+      smartmontools
       appimage-run
       imagemagick
       ffmpeg-full
