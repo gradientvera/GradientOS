@@ -61,6 +61,10 @@
   loki = 8086;
   promtail = 8087;
   
+  # scrutiny
+  scrutiny = 8093;
+  influxdb = 8094;
+
   # game servers
   palworld = 8211;
   project-zomboid = 16261;

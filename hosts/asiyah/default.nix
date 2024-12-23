@@ -9,6 +9,7 @@
     ./backups.nix
     ./grafana.nix
     ./duckdns.nix
+    ./scrutiny.nix
     ./filesystem.nix
     ./media-stack.nix
     ./nginx/default.nix
