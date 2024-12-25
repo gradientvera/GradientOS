@@ -23,7 +23,6 @@
   readarr = 8787;
   prowlarr = 9696;
   bazarr = 6767;
-  bazarr-embedded = 6768;
   jellyseerr = 5055;
   unpackerr = 5656;
   qbittorrent-webui = 8090;
@@ -41,6 +40,7 @@
   mediarr-openssh = 2222;
   slskd = 5030;
   slskd-peer = 26156;
+  romm = 8095;
 
   # NFS
   nfsd = 2049;

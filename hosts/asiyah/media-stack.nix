@@ -61,7 +61,6 @@ in {
         -p ${toString ports.readarr}:8787 \
         -p ${toString ports.prowlarr}:9696 \
         -p ${toString ports.bazarr}:6767 \
-        -p ${toString ports.bazarr-embedded}:6768 \
         -p ${toString ports.jellyseerr}:5055 \
         -p ${toString ports.unpackerr}:${toString ports.unpackerr} \
         -p ${toString ports.qbittorrent-peer}:36494 \
@@ -75,8 +74,9 @@ in {
         -p ${toString ports.bitmagnet-peer}:3334/udp \
         -p ${toString ports.mikochi}:${toString ports.mikochi} \
         -p ${toString ports.cross-seed}:2468 \
-        -p ${toString ports.sabnzbd}:8080 \
+        -p ${toString ports.sabnzbd}:${toString ports.sabnzbd} \
         -p ${toString ports.mediarr-openssh}:2222 \
+        -p ${toString ports.romm}:8080 \
         --sysctl="net.ipv4.ip_forward=1" \
         --sysctl="net.ipv4.conf.all.src_valid_mark=1" \
         --userns=keep-id \
@@ -116,11 +116,12 @@ in {
     "/data/downloads/movies".d = rule;
     "/data/downloads/music".d = rule;
     "/data/downloads/books".d = rule;
+    "/data/downloads/games".d = rule;
+    "/data/downloads/game-assets".d = rule;
     "/data/downloads/torrents".d = rule;
     "/data/downloads/slskd".d = rule;
     "/data/downloads/cross-seeds".d = rule;
     "/data/downloads/cross-seeds/links".d = rule;
-    "/data/downloads/sabnzbd-incomplete".d = rule;
     "/var/lib/${userName}".d = rule;
     "/var/lib/${userName}/radarr".d = rule;
     "/var/lib/${userName}/sonarr".d = rule;
@@ -130,7 +131,6 @@ in {
     "/var/lib/${userName}/readarr".d = rule;
     "/var/lib/${userName}/prowlarr".d = rule;
     "/var/lib/${userName}/bazarr".d = rule;
-    "/var/lib/${userName}/bazarr-embedded".d = rule;
     "/var/lib/${userName}/whisper".d = rule;
     "/var/lib/${userName}/jellyseerr".d = rule;
     "/var/lib/${userName}/unpackerr".d = rule;
@@ -151,6 +151,10 @@ in {
     "/var/lib/${userName}/sabnzbd".d = rule;
     "/var/lib/${userName}/sabnzbd/incomplete".d = rule;
     "/var/lib/${userName}/recyclarr".d = rule;
+    "/var/lib/${userName}/romm".d = rule;
+    "/var/lib/${userName}/romm/redis".d = rule;
+    "/var/lib/${userName}/romm/resources".d = rule;
+    "/var/lib/${userName}/mariadb".d = rule;
   };
 
   services.clamav.scanner.scanDirectories = [ "/data/downloads" ]; # /var/lib already scanned by default
@@ -330,22 +334,6 @@ in {
       dependsOn = [ "create-mediarr-pod" "gluetun" ];
     };
 
-    bazarr-embedded = {
-      image = "lscr.io/linuxserver/bazarr:latest";
-      volumes = [
-        "/var/lib/${userName}/bazarr-embedded:/config"
-        "/data/downloads/movies:/movies"
-        "/data/downloads/tv:/tv"
-      ];
-      environment = {
-        TZ = config.time.timeZone;
-        PUID = toString userUid;
-        PGID = toString groupGid;
-      };
-      extraOptions = [] ++ defaultOptions;
-      dependsOn = [ "create-mediarr-pod" "gluetun" ];
-    };
-
     jellyseerr = {
       image = "fallenbagel/jellyseerr:latest";
       volumes = [
@@ -479,7 +467,6 @@ in {
         FIREWALL_INPUT_PORTS = builtins.concatStringsSep "," (builtins.map (p: toString p) allowedPorts);
         FIREWALL_VPN_INPUT_PORTS = "${toString ports.qbittorrent-peer},${toString ports.slskd-peer}";
         FIREWALL_OUTBOUND_SUBNETS="10.88.0.0/24";
-        SERVER_COUNTRIES = "Netherlands,Switzerland,Sweden";
       };
       environmentFiles = [ config.sops.secrets.mediarr-gluetun-env.path ];
       extraOptions = [
@@ -522,7 +509,7 @@ in {
         TZ = config.time.timeZone;
         PUID = toString userUid;
         PGID = toString groupGid;
-        POSTGRES_DB = "bitmagnet";
+        POSTGRES_DB = "mediarr";
       };
       environmentFiles = [ config.sops.secrets.mediarr-postgres-env.path ];
       extraOptions = [
@@ -621,7 +608,7 @@ in {
       image = "lscr.io/linuxserver/openssh-server:latest";
       volumes = [
         "${builtins.toFile "neith.pub" keys.neith}:/pubkeys/neith.pub"
-        # TODO: "${builtins.toFile "remie.pub" keys.remie}:/pubkeys/remie.pub"
+        "${builtins.toFile "remie.pub" keys.remie}:/pubkeys/remie.pub"
         "${builtins.toFile "vera.pub" keys.vera}:/pubkeys/vera.pub"
         "/var/lib/${userName}:/config"
         "/data/downloads:/downloads"
@@ -653,6 +640,46 @@ in {
       };
       extraOptions = [] ++ defaultOptions ++ userOptions;
       dependsOn = [ "create-mediarr-pod" "gluetun" "sonarr" "radarr" ];
+    };
+
+    romm = {
+      image = "rommapp/romm:3.7.0-alpha.1";
+      volumes = [
+        "/data/downloads/games:/romm/library"
+        "/data/downloads/game-assets:/romm/assets"
+        "/var/lib/${userName}/romm:/romm/config"
+        "/var/lib/${userName}/romm/resources:/romm/resources"
+        "/var/lib/${userName}/romm/redis:/redis-data"
+      ];
+      environment = {
+        DB_HOST = "127.0.0.1";
+        DB_PORT = "3808";
+        DB_NAME = "romm";
+      };
+      environmentFiles = [ config.sops.secrets.mediarr-romm-env.path ];
+      extraOptions = [] ++ defaultOptions ++ userOptions;
+      dependsOn = [ "create-mediarr-pod" "gluetun" "mariadb" ];
+    };
+
+    mariadb = {
+      image = "mariadb:latest";
+      volumes = [
+        "/var/lib/${userName}/mariadb:/var/lib/mysql"
+      ];
+      environment = {
+        MARIADB_DATABASE = "romm";
+      };
+      environmentFiles = [ config.sops.secrets.mediarr-mariadb-env.path ];
+      cmd = [ "--port" "3808" ];
+      extraOptions = [
+        "--health-cmd" "CMD"
+        "--health-cmd" "healthcheck.sh"
+        "--health-cmd='--connect'"
+        "--health-cmd='--innodb_initialized'"
+        "--health-start-period" "30s"
+        "--health-interval" "10s"
+      ] ++ defaultOptions ++ userOptions;
+      dependsOn = [ "create-mediarr-pod" "gluetun" ];
     };
 
   };

@@ -93,6 +93,20 @@
         restartUnits = [ "podman-tdarr.service" ];
       };
 
+      mediarr-romm-env = {
+        mode = "0440";
+        owner = config.users.users.mediarr.name;
+        group = config.users.users.mediarr.group;
+        restartUnits = [ "podman-romm.service" ];
+      };
+
+      mediarr-mariadb-env = {
+        mode = "0440";
+        owner = config.users.users.mediarr.name;
+        group = config.users.users.mediarr.group;
+        restartUnits = [ "podman-mariadb.service" ];
+      };
+
     };
   };
 
