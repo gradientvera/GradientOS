@@ -59,6 +59,22 @@
         "url": "ssh://git@github.com/ConstellationNRV/constellation.moe"
       }
     },
+    "crp3092": {
+      "flake": false,
+      "locked": {
+        "lastModified": 1735228866,
+        "narHash": "sha256-HyXRvp9RtGM88jm6IPise9CvbRNul94C/JnmnCMS2BE=",
+        "ref": "refs/heads/main",
+        "rev": "9d12f1011846e79d2d8f926745d47c2f2156e130",
+        "revCount": 1,
+        "type": "git",
+        "url": "ssh://git@github.com/CRP3092/Portafolio.git"
+      },
+      "original": {
+        "type": "git",
+        "url": "ssh://git@github.com/CRP3092/Portafolio.git"
+      }
+    },
     "declarative-flatpak": {
       "inputs": {
         "home-manager": "home-manager",
@@ -638,6 +654,7 @@
         "catppuccin": "catppuccin",
         "colmena": "colmena",
         "constellation-moe": "constellation-moe",
+        "crp3092": "crp3092",
         "declarative-flatpak": "declarative-flatpak",
         "flake-compat": "flake-compat",
         "gradient-generator": "gradient-generator",

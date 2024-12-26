@@ -86,6 +86,11 @@
       url = "github:kyleisah/Klipper-Adaptive-Meshing-Purging";
       flake = false;
     };
+
+    crp3092 = {
+      url = "git+ssh://git@github.com/CRP3092/Portafolio.git";
+      flake = false;
+    };
   };
 
   outputs = { self, nixpkgs, home-manager, gradient-generator, jovian-nixos, sops-nix, nixos-hardware, nixos-generators, ss14-watchdog, declarative-flatpak, ... }:
