@@ -68,7 +68,6 @@ in {
         -p ${toString ports.qbittorrent-webui}:${toString ports.qbittorrent-webui} \
         -p ${toString ports.tdarr-webui}:8265 \
         -p ${toString ports.tdarr-server}:8266 \
-        -p ${toString ports.whisper}:9000 \
         -p ${toString ports.bitmagnet-webui}:3333 \
         -p ${toString ports.bitmagnet-peer}:3334/tcp \
         -p ${toString ports.bitmagnet-peer}:3334/udp \
@@ -434,22 +433,6 @@ in {
       extraOptions = [
         "--device=/dev/dri/:/dev/dri/"
       ] ++ defaultOptions;
-      dependsOn = [ "create-mediarr-pod" "gluetun" ];
-    };
-
-    whisper = {
-      image = "onerahmet/openai-whisper-asr-webservice:latest";
-      volumes = [
-        "/var/lib/${userName}/whisper:/root/.cache/whisper"
-      ];
-      environment = {
-        TZ = config.time.timeZone;
-        PUID = toString userUid;
-        PGID = toString groupGid;
-        ASR_MODEL = "base";
-        ASR_ENGINE = "faster_whisper";
-      };
-      extraOptions = [] ++ defaultOptions;
       dependsOn = [ "create-mediarr-pod" "gluetun" ];
     };
 
