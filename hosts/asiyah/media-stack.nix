@@ -163,6 +163,7 @@ in {
 
     jellyfin = {
       image = "lscr.io/linuxserver/jellyfin:latest";
+      pull = "newer";
       volumes = [
         "/var/lib/${userName}/jellyfin/config:/config"
         "/var/lib/${userName}/jellyfin/cache:/cache"
@@ -182,6 +183,7 @@ in {
 
     flaresolverr = {
       image = "ghcr.io/flaresolverr/flaresolverr:latest";
+      pull = "newer";
       environment = {
         TZ = config.time.timeZone;
         LOG_LEVEL="info";
@@ -192,6 +194,7 @@ in {
 
     ersatztv = {
       image = "jasongdove/ersatztv:latest-vaapi";
+      pull = "newer";
       volumes = [
         "/var/lib/${userName}/ersatztv:/root/.local/share/ersatztv"
         "/data/downloads:/media:ro"
@@ -211,6 +214,7 @@ in {
 
     radarr = {
       image = "lscr.io/linuxserver/radarr:latest";
+      pull = "newer";
       volumes = [
         "/var/lib/${userName}/radarr:/config"
         "/data/downloads:/downloads"
@@ -226,6 +230,7 @@ in {
 
     sonarr = {
       image = "lscr.io/linuxserver/sonarr:latest";
+      pull = "newer";
       volumes = [
         "/var/lib/${userName}/sonarr:/config"
         "/data/downloads:/downloads"
@@ -241,6 +246,7 @@ in {
 
     lidarr = {
       image = "lscr.io/linuxserver/lidarr:latest";
+      pull = "newer";
       volumes = [
         "/var/lib/${userName}/lidarr:/config"
         "/data/downloads/music:/music"
@@ -257,6 +263,7 @@ in {
 
     slskd = {
       image = "slskd/slskd:latest";
+      pull = "newer";
       volumes = [
         "/var/lib/${userName}/slskd:/app"
         "/data/downloads:/downloads"
@@ -273,6 +280,7 @@ in {
 
     soularr = {
       image = "mrusse08/soularr:latest";
+      pull = "newer";
       volumes = [
         "/var/lib/${userName}/soularr:/data"
         "/data/downloads:/downloads"
@@ -289,6 +297,7 @@ in {
 
     readarr = {
       image = "lscr.io/linuxserver/readarr:develop";
+      pull = "newer";
       volumes = [
         "/var/lib/${userName}/readarr:/config"
         "/data/downloads/books:/books"
@@ -305,6 +314,7 @@ in {
 
     prowlarr = {
       image = "lscr.io/linuxserver/prowlarr:latest";
+      pull = "newer";
       volumes = [
         "/var/lib/${userName}/prowlarr:/config"
       ];
@@ -319,6 +329,7 @@ in {
 
     bazarr = {
       image = "lscr.io/linuxserver/bazarr:latest";
+      pull = "newer";
       volumes = [
         "/var/lib/${userName}/bazarr:/config"
         "/data/downloads/movies:/movies"
@@ -335,6 +346,7 @@ in {
 
     jellyseerr = {
       image = "fallenbagel/jellyseerr:latest";
+      pull = "newer";
       volumes = [
         "/var/lib/${userName}/jellyseerr:/app/config"
       ];
@@ -349,6 +361,7 @@ in {
 
     qbittorrent = {
       image = "lscr.io/linuxserver/qbittorrent:latest";
+      pull = "newer";
       volumes = [
         "${config.sops.secrets.mediarr-qbittorrent-script.path}:/notify.sh"
         "/var/lib/${userName}/qbittorrent:/config"
@@ -366,6 +379,7 @@ in {
 
     decluttarr = {
       image = "ghcr.io/manimatter/decluttarr:latest";
+      pull = "newer";
       environment = {
         TZ = config.time.timeZone;
         PUID = toString userUid;
@@ -408,6 +422,7 @@ in {
 
     tdarr = {
       image = "ghcr.io/haveagitgat/tdarr:latest";
+      pull = "newer";
       volumes = [
         "${config.sops.secrets.mediarr-custom-axios.path}:/app/Tdarr_Server/node_modules/axios/lib/core/Axios.js:ro"
         "/var/lib/${userName}/tdarr/server:/app/server"
@@ -438,6 +453,7 @@ in {
 
     gluetun = {
       image = "qmcgaw/gluetun:latest";
+      pull = "newer";
       volumes = [
         "/var/lib/${userName}/gluetun:/gluetun"
       ];
@@ -464,6 +480,7 @@ in {
 
     bitmagnet = {
       image = "ghcr.io/bitmagnet-io/bitmagnet:latest";
+      pull = "newer";
       volumes = [
         "/var/lib/${userName}/bitmagnet:/root/.config/bitmagnet"
       ];
@@ -485,6 +502,7 @@ in {
 
     postgres = {
       image = "postgres:16-alpine";
+      pull = "newer";
       volumes = [
         "/var/lib/${userName}/postgres:/var/lib/postgresql/data"
       ];
@@ -508,6 +526,7 @@ in {
 
     mikochi = {
       image = "zer0tonin/mikochi:latest";
+      pull = "newer";
       volumes = [
         "/data/downloads:/data"
       ];
@@ -525,6 +544,7 @@ in {
 
     unpackerr = {
       image = "golift/unpackerr";
+      pull = "newer";
       volumes = [
         "/var/lib/${userName}/unpackerr:/config"
         "/data/downloads:/downloads"
@@ -553,6 +573,7 @@ in {
 
     cross-seed = {
       image = "ghcr.io/cross-seed/cross-seed:6";
+      pull = "newer";
       volumes = [
         "/var/lib/${userName}/cross-seed:/config"
         "/data/downloads:/downloads:ro"
@@ -572,6 +593,7 @@ in {
 
     sabnzbd = {
       image = "lscr.io/linuxserver/sabnzbd:latest";
+      pull = "newer";
       volumes = [
         "/var/lib/${userName}/sabnzbd:/config"
         "/var/lib/${userName}/sabnzbd/incomplete:/incomplete-downloads"
@@ -589,6 +611,7 @@ in {
     # sftp://mediarr@ftp.constellation.moe:2222
     mediarr-openssh = {
       image = "lscr.io/linuxserver/openssh-server:latest";
+      pull = "newer";
       volumes = [
         "${builtins.toFile "neith.pub" keys.neith}:/pubkeys/neith.pub"
         "${builtins.toFile "remie.pub" keys.remie}:/pubkeys/remie.pub"
@@ -611,6 +634,7 @@ in {
 
     recyclarr = {
       image = "ghcr.io/recyclarr/recyclarr:latest";
+      pull = "newer";
       volumes = [
         "/var/lib/${userName}/recyclarr:/config"
       ];
@@ -627,6 +651,7 @@ in {
 
     romm = {
       image = "rommapp/romm:3.7.0-alpha.1";
+      pull = "newer";
       volumes = [
         "/data/downloads/games:/romm/library"
         "/data/downloads/game-assets:/romm/assets"
@@ -646,6 +671,7 @@ in {
 
     mariadb = {
       image = "mariadb:latest";
+      pull = "newer";
       volumes = [
         "/var/lib/${userName}/mariadb:/var/lib/mysql"
       ];
