@@ -49,7 +49,9 @@ in
       nfs-utils
       usbutils
       pciutils
+      nettools
       colmena
+      tcpdump
       sysstat
       python3
       screen
