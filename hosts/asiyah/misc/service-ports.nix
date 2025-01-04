@@ -61,6 +61,7 @@
   prometheus-node-exporter = 8085;
   loki = 8086;
   promtail = 8087;
+  victoriametrics = 8428;
   
   # scrutiny
   scrutiny = 8093;

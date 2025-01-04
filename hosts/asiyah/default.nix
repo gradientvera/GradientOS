@@ -15,6 +15,7 @@
     ./media-stack.nix
     ./nginx/default.nix
     ./home-assistant.nix
+    ./victoriametrics.nix
     ./palworld-server.nix
     ./secrets/default.nix
     ./redbot-stardream.nix

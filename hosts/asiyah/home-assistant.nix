@@ -134,14 +134,19 @@ in
       ip_ban_enabled = true;
       login_attempts_threshold = 10;
     };
-
     config.lovelace.mode = "storage";
     config.default_config = {};
     config.mobile_app = {};
     config.history = {};
     config.recorder = {
-      purge_keep_days = 365;
+      purge_keep_days = 10;
       db_url = "postgresql://@/hass";
+    };
+    config.influxdb = {
+      api_version = "1";
+      host = "127.0.0.1";
+      port = toString ports.victoriametrics;
+      max_retries = 3;
     };
     config.zha.zigpy_config.ota.z2m_remote_index = "https://raw.githubusercontent.com/Koenkk/zigbee-OTA/master/index.json";
   };

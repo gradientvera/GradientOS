@@ -13,6 +13,5 @@
 
   neith = "VK93plqvZl1SOkgSjIuTCZBxj3TKw5it/NCZUTv8Ank=";
   remie = "5H/fvb3jGGoUBwp0c+OAUbsj0ujuIf+FBOwFxCNkPgc=";
-  luna = "vmBKfmh0hnqfnU8LLXpHf0Tx71QLIgiHfT7TfCVdzmU=";
 
 }
