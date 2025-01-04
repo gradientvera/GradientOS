@@ -1,28 +1,17 @@
 { config, lib, ... }:
 let
+  addresses = config.gradient.const.wireguard.addresses;
   ports = import ./misc/service-ports.nix;
+  asiyahPorts = import ../asiyah/misc/service-ports.nix;
 in
 {
-
-  services.mosquitto = {
-    enable = true;
-    listeners = [
-      # Listener for internal gradientnet purposes only. Do NOT expose.
-      {
-        acl = [ "pattern readwrite #" ];
-        port = ports.mqtt;
-        omitPasswordAuth = true;
-        settings.allow_anonymous = true;
-      }
-    ];
-  };  
 
   services.zigbee2mqtt = {
     enable = true;
     settings = {
       homeassistant = config.services.home-assistant.enable;
       mqtt = {
-        server = "mqtt://localhost:${toString ports.mqtt}";
+        server = "mqtt://${addresses.gradientnet.asiyah}:${toString asiyahPorts.mqtt}";
         include_device_information = true;
         version = 5;
       };
@@ -48,7 +37,7 @@ in
     RestartSec = 10;
   };
 
-  networking.firewall.interfaces.gradientnet.allowedTCPPorts = [ ports.mqtt ports.zigbee2mqtt ];
-  networking.firewall.interfaces.gradientnet.allowedUDPPorts = [ ports.mqtt ports.zigbee2mqtt ];
+  networking.firewall.interfaces.gradientnet.allowedTCPPorts = [ ports.zigbee2mqtt ];
+  networking.firewall.interfaces.gradientnet.allowedUDPPorts = [ ports.zigbee2mqtt ];
 
 }

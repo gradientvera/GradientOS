@@ -29,6 +29,9 @@ in {
     ports = [ "127.0.0.1:${toString ports.trilium}:8080" ];
     volumes = [ "/data/trilium:/home/node/trilium-data" ];
     environment = { TZ = config.time.timeZone; };
+    extraOptions = [
+      "--ip" "10.88.0.4"
+    ];
   };
 
 }

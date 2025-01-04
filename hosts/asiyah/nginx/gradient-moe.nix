@@ -5,7 +5,7 @@
 */
 { self, pkgs, config, ... }:
 let
-  ports = import ../../briah/misc/service-ports.nix;
+  ports = import ../../asiyah/misc/service-ports.nix;
 in
 {
 
@@ -31,7 +31,7 @@ in
       proxy_buffering off;
     '';
     locations."/".extraConfig = ''
-      proxy_pass http://${config.gradient.const.wireguard.addresses.gradientnet.briah}:${toString ports.home-assistant};
+      proxy_pass http://127.0.0.1:${toString ports.home-assistant};
       proxy_set_header Host $host;
       proxy_redirect http:// https://;
       proxy_http_version 1.1;

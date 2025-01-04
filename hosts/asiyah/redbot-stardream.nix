@@ -9,6 +9,9 @@
       OWNER = "132502019981180928";
       EXTRA_ARGS = "--dev";
     };
+    extraOptions = [
+      "--ip" "10.88.0.3"
+    ];
   };
 
 }

@@ -48,9 +48,12 @@
   mountd = 4002;
 
   # misc
+  home-assistant = 8123;
   redis-oauth2 = 6380;
+  postgresql = 5432;
   trilium = 8081;
   searx = 8089;
+  mqtt = 1883;
   tor = 9050;
 
   # grafana

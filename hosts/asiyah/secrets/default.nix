@@ -56,13 +56,6 @@
         restartUnits = [ "podman-ersatztv.service" ];
       };
 
-      mediarr-postgres-env = {
-        mode = "0440";
-        owner = config.users.users.mediarr.name;
-        group = config.users.users.mediarr.group;
-        restartUnits = [ "podman-postgres.service" "podman-bitmagnet.service" ];
-      };
-
       mediarr-unpackerr-env = {
         mode = "0440";
         owner = config.users.users.mediarr.name;

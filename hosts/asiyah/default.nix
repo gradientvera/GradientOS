@@ -2,17 +2,19 @@
 {
 
   imports = [
-    # WIP: ./mediamtx.nix
     ./nfs.nix
+    ./mqtt.nix
     ./searx.nix
     ./clamav.nix
     ./backups.nix
     ./grafana.nix
     ./duckdns.nix
+    ./postgres.nix
     # ./scrutiny.nix # Buggy with my external HDDs :(
     ./filesystem.nix
     ./media-stack.nix
     ./nginx/default.nix
+    ./home-assistant.nix
     ./palworld-server.nix
     ./secrets/default.nix
     ./redbot-stardream.nix

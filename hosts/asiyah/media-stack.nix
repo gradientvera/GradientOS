@@ -44,6 +44,8 @@ in {
   {
     wantedBy = [ "multi-user.target" ];
     path = [ pkgs.podman ];
+    # Static IP is needed because changing published ports and recreating the pod
+    # will NOT clear the old NAT rules, because podman fucking sucks.
     script = ''
       podman pod create \
         -p ${toString ports.jellyfin-http}:8096 \
@@ -76,15 +78,23 @@ in {
         -p ${toString ports.sabnzbd}:${toString ports.sabnzbd} \
         -p ${toString ports.mediarr-openssh}:2222 \
         -p ${toString ports.romm}:8080 \
+        --ip "10.88.0.2" \
         --sysctl="net.ipv4.ip_forward=1" \
         --sysctl="net.ipv4.conf.all.src_valid_mark=1" \
+        --sysctl="net.ipv4.ping_group_range=0 2000000" \
         --userns=keep-id \
         --replace \
         --name=${userName}
     '';
+    preStop = ''
+      podman pod rm --force --ignore ${userName}
+      podman network reload --all
+    '';
     serviceConfig.Type = "oneshot";
     serviceConfig.RemainAfterExit = "yes";
   };
+
+  networking.firewall.logRefusedPackets = true;
 
   # -- User and Group Setup --
   users.users.${userName} = {
@@ -144,7 +154,6 @@ in {
     "/var/lib/${userName}/tdarr/logs".d = rule;
     "/var/lib/${userName}/tdarr/temp".d = rule;
     "/var/lib/${userName}/bitmagnet".d = rule;
-    "/var/lib/${userName}/postgres".d = rule;
     "/var/lib/${userName}/gluetun".d = rule;
     "/var/lib/${userName}/cross-seed".d = rule;
     "/var/lib/${userName}/sabnzbd".d = rule;
@@ -488,39 +497,15 @@ in {
         TZ = config.time.timeZone;
         PUID = toString userUid;
         PGID = toString groupGid;
-        POSTGRES_HOST="127.0.0.1";
+        POSTGRES_HOST = "host.containers.internal";
+        POSTGRES_USER = "bitmagnet";
       };
-      environmentFiles = [ config.sops.secrets.mediarr-postgres-env.path ];
       cmd = [
         "worker"
         "run"
         "--all"
       ];
       extraOptions = [] ++ defaultOptions;
-      dependsOn = [ "create-mediarr-pod" "gluetun" "postgres" ];
-    };
-
-    postgres = {
-      image = "postgres:16-alpine";
-      pull = "newer";
-      volumes = [
-        "/var/lib/${userName}/postgres:/var/lib/postgresql/data"
-      ];
-      environment = {
-        TZ = config.time.timeZone;
-        PUID = toString userUid;
-        PGID = toString groupGid;
-        POSTGRES_DB = "mediarr";
-      };
-      environmentFiles = [ config.sops.secrets.mediarr-postgres-env.path ];
-      extraOptions = [
-        "--shm-size" "1g"
-        "--health-cmd" "CMD-SHELL"
-        "--health-cmd" "pg_isready"
-        "--health-cmd" "pg_isready"
-        "--health-start-period" "20s"
-        "--health-interval" "10s"
-      ] ++ defaultOptions ++ userOptions;
       dependsOn = [ "create-mediarr-pod" "gluetun" ];
     };
 
