@@ -62,8 +62,6 @@ in
           VPN="${addr.gradientnet.asiyah}"
           '' else if config.networking.wireguard.interfaces ? "lilynet" then ''
           VPN="${addr.lilynet.asiyah}"
-          '' else if config.networking.wireguard.interfaces ? "slugcatnet" then ''
-          VPN="${addr.slugcatnet.asiyah}"
           '' else "echo 'No Wireguard VPN configured!'; exit 1"}
           FAILURES=0
           EXT_FAIL=false
@@ -118,8 +116,8 @@ in
       };
 
       networking.firewall = {
-        allowedTCPPorts = with asiyahPorts; [ gradientnet lilynet slugcatnet ];
-        allowedUDPPorts = with asiyahPorts; [ gradientnet lilynet slugcatnet ];
+        allowedTCPPorts = with asiyahPorts; [ gradientnet lilynet ];
+        allowedUDPPorts = with asiyahPorts; [ gradientnet lilynet ];
       };
     })
 
@@ -245,57 +243,6 @@ in
         ]);
       };
     })
-
-    ( lib.mkIf (builtins.any (v: hostName == v) [ asiyahHost briahHost bernkastelHost neithDeckHost ]) {
-        systemd.network.wait-online.ignoredInterfaces = [ "slugcatnet" ];
-
-        networking.hosts = generateHosts ".slugcat" addr.slugcatnet;
-        
-        networking.wireguard.interfaces.slugcatnet = with addr.slugcatnet; {
-          ips = ["${addr.slugcatnet.${hostName}}/${if isAsiyah then "24" else "32"}"];
-          listenPort = lib.mkIf isAsiyah asiyahPorts.slugcatnet;
-          postSetup = lib.mkIf isAsiyah (gen-post-setup "slugcatnet" "eno1");
-          postShutdown = lib.mkIf isAsiyah (gen-post-shutdown "slugcatnet" "eno1");
-          privateKeyFile = private-key;
-          peers = (if isAsiyah then [
-            {
-              allowedIPs = [ "${briah}/32" ];
-              publicKey = keys.briah;
-            }
-            {
-              allowedIPs = [ "${remie}/32" ];
-              publicKey = keys.remie;
-            }
-            {
-              allowedIPs = [ "${bernkastel}/32" ];
-              publicKey = keys.bernkastel;
-            }
-            {
-              allowedIPs = [ "${luna}/32" ];
-              publicKey = keys.luna;
-            }
-            {
-              allowedIPs = [ "${neith-deck}/32" ];
-              publicKey = keys.neith-deck;
-            }
-          ] else [
-            {
-              allowedIPs = [ "${slugcatnet}/24" ];
-              endpoint = "vpn.gradient.moe:${toString asiyahPorts.slugcatnet}";
-              publicKey = keys.asiyah;
-              persistentKeepalive = 25;
-              dynamicEndpointRefreshSeconds = 25;
-              dynamicEndpointRefreshRestartSeconds = 10;
-            }
-            {
-              allowedIPs = [ "${slugcatnet}/24" ];
-              endpoint = "192.168.1.48:${toString asiyahPorts.slugcatnet}";
-              publicKey = keys.asiyah;
-            }
-          ]);
-        };
-      }
-    )
 
   ];
 

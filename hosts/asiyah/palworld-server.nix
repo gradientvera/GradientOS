@@ -50,11 +50,11 @@ in {
     };
   };
 
-  networking.firewall.interfaces.slugcatnet.allowedTCPPorts = with ports; [
+  networking.firewall.interfaces.lilynet.allowedTCPPorts = with ports; [
     palworld
   ];
 
-  networking.firewall.interfaces.slugcatnet.allowedUDPPorts = with ports; [
+  networking.firewall.interfaces.lilynet.allowedUDPPorts = with ports; [
     palworld
   ];
 }

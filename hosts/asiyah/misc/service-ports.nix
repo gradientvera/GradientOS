@@ -10,7 +10,6 @@
   # wireguard
   gradientnet = 1194;
   lilynet = 1195;
-  slugcatnet = 1196;
 
   # mediarr stack
   jellyfin-http = 8096;
@@ -73,10 +72,4 @@
   project-zomboid-direct = 16262;
   project-zomboid-steam-1 = 21971;
   project-zomboid-steam-2 = 21972;
-
-  # DNS
-  dns-lan = 54;
-  dns-gradientnet = 55;
-  dns-lilynet = 56;
-  dns-slugcatnet = 57;
 }
