@@ -80,6 +80,7 @@ in
       
       environment.systemPackages = with pkgs; [
         space-station-14-launcher
+        ryujinx-greemdev
         osu-lazer-bin
         prismlauncher
         dolphin-emu
