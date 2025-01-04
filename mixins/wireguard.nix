@@ -217,12 +217,16 @@ in
             publicKey = keys.erika;
           }
           {
-            allowedIPs = [ "${hadal-rainbow}/32" ];
-            publicKey = keys.hadal-rainbow;
-          }
-          {
             allowedIPs = [ "${featherine}/32" ];
             publicKey = keys.featherine;
+          }
+          {
+            allowedIPs = [ "${neith}/32" ];
+            publicKey = keys.neith;
+          }
+          {
+            allowedIPs = [ "${remie}/32" ];
+            publicKey = keys.remie;
           }
         ] else [
           {
