@@ -23,10 +23,12 @@ in
                     "node.description" = "Virtual Sink";
                     "media.name" = "Virtual Sink";
                     "capture.props" = {
+                        "node.name" = "capture.virtual_sink";
                         "audio.position" = [ "FL" "FR" ];
                         "media.class" = "Audio/Sink";
                     };
                     "playback.props" = {
+                        "node.name" = "output.virtual_sink";
                         "audio.position" = [ "FL" "FR" ];
                         "stream.dont-remix" = true;
                         "node.passive" = true;
