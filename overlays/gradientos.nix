@@ -39,8 +39,8 @@ in {
     withTTS = true;
   }).overrideAttrs (prevAttrs: {
     desktopItem = prevAttrs.desktopItem.override (prevDesktopAttrs: {
-      # Fixes xwaylandvideobridge.
-      exec = "env NIXOS_OZONE_WL=0 XDG_SESSION_TYPE=x11 ${prevDesktopAttrs.exec}";
+      # Force wayland, enable middle click
+      exec = "env NIXOS_OZONE_WL=1 ELECTRON_OZONE_PLATFORM_HINT=wayland ${prevDesktopAttrs.exec} --enable-blink-features=MiddleClickAutoscroll";
     });
   });
 
