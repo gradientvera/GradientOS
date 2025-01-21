@@ -17,10 +17,10 @@ in
       catppuccin.enable = true;
       catppuccin.flavor = lib.mkDefault "mocha";
       
-      boot.plymouth.catppuccin.enable = true;
-      boot.loader.grub.catppuccin.enable = true;
+      catppuccin.plymouth.enable = true;
+      catppuccin.grub.enable = true;
 
-      services.displayManager.sddm.catppuccin.enable = true;
+      catppuccin.sddm.enable = true;
 
       environment.systemPackages = with pkgs; [
         (catppuccin-kde.override {

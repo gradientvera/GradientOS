@@ -14,9 +14,9 @@
 
   catppuccin.enable = true;
   catppuccin.flavor = "mocha";
-  gtk.catppuccin.enable = true;
-  qt.style.catppuccin.enable = true;
-  qt.style.catppuccin.apply = true;
+  catppuccin.gtk.enable = true;
+  catppuccin.kvantum.enable = true;
+  catppuccin.kvantum.apply = true;
 
   home.sessionPath = [
     "$HOME/bin"
