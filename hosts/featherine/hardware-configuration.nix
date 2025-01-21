@@ -6,12 +6,17 @@
   ];
 
   boot.kernelPackages = pkgs.linuxPackages_zen;
-  boot.initrd.availableKernelModules = [ "nvme" "xhci_pci" "ahci" "usbhid" "usb_storage" "sd_mod" "amdgpu" "xhci_hcd" ];
+  boot.initrd.availableKernelModules = [ "nvme" "xhci_pci" "ahci" "thunderbolt" "usbhid" "usb_storage" "sd_mod" "amdgpu" "xhci_hcd" ];
   boot.initrd.kernelModules = [ "amdgpu" ];
   boot.kernelModules = [ "kvm-amd" "i2c-dev" ];
-  boot.kernelParams = [];
+  boot.kernelParams = [
+    "pci=nommconf"
+    "rtc_cmos.use_acpi_alarm=1"
+  ];
   boot.extraModulePackages = with config.boot.kernelPackages; [ ];
   boot.extraModprobeConfig = "";
+
+  hardware.sensor.iio.enable = true;
 
   nixpkgs.hostPlatform = "x86_64-linux";
 
