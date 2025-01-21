@@ -8,6 +8,10 @@
 
   hardware.cpu.amd.updateMicrocode = lib.mkDefault config.hardware.enableRedistributableFirmware;
 
+  # System Management Unit
+  hardware.cpu.amd.ryzen-smu.enable = true;
+  programs.ryzen-monitor-ng.enable = true;
+
   environment.systemPackages = with pkgs; [
     ryzenadj
     zenstates
