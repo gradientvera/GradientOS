@@ -32,11 +32,14 @@ in
   let
     nfsOptions = [
       "nfsvers=4.2"
-      "x-systemd.automount"
+      "_netdev"
       "noauto"
+      "x-systemd.automount"
+      "x-systemd.mount-timeout=10"
+      "x-systemd.idle-timeout=1min"
+      "timeo=14"
       "nofail"
       "noatime"
-      "_netdev"
     ];
   in
   {
