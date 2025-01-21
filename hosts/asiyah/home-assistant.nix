@@ -12,7 +12,7 @@ in
       "homeassistant_alerts"
       "bluetooth_le_tracker"
       "pvpc_hourly_pricing"
-      "private_ble_device"
+      #"private_ble_device" # Build failure
       "bluetooth_adapters"
       "bluetooth_tracker"
       "mqtt_eventstream"
@@ -35,7 +35,7 @@ in
       "air_quality"
       "nfandroidtv"
       "mobile_app"
-      "xiaomi_ble"
+      #"xiaomi_ble" # Build failure
       "bluetooth"
       "mqtt_json"
       "mqtt_room"
@@ -89,12 +89,12 @@ in
           hash = "sha256-HGCjwYf5aLFUMuh4InAjLZHHIU6aidjoAQuhH9W+pkw=";
         };
 
-        propagatedBuildInputs = with pkgs.python312Packages; [
+        propagatedBuildInputs = with pkgs.python313Packages; [
           python-dateutil
           (let
             pname = "e-data";
             version = "1.2.22";
-          in pkgs.python312.pkgs.buildPythonPackage {
+          in pkgs.python313.pkgs.buildPythonPackage {
             inherit pname version;
 
             src = pkgs.fetchFromGitHub {
@@ -105,10 +105,10 @@ in
             };
 
             build-system = [
-              pkgs.python312Packages.setuptools
+              pkgs.python313Packages.setuptools
             ];
 
-            dependencies = with pkgs.python312Packages; [
+            dependencies = with pkgs.python313Packages; [
               dateparser
               freezegun
               holidays

@@ -119,7 +119,7 @@
           mixins.plymouth
           mixins.wireguard
           mixins.uwu-style
-          mixins.tdarr-node
+          #mixins.tdarr-node
           mixins.upgrade-diff
           mixins.v4l2loopback
           mixins.vera-locale
@@ -212,7 +212,7 @@
           mixins.gnupg
           mixins.wireguard
           mixins.uwu-style
-          mixins.tdarr-node
+          #mixins.tdarr-node
           mixins.vera-locale
           mixins.upgrade-diff
           mixins.v4l2loopback
@@ -307,7 +307,7 @@
           mixins.plymouth
           mixins.wireguard
           mixins.uwu-style
-          mixins.tdarr-node
+          #mixins.tdarr-node
           mixins.vera-locale
           mixins.upgrade-diff
           mixins.v4l2loopback
@@ -442,7 +442,7 @@
             imports = [ (modulesPath + "/installer/cd-dvd/installation-cd-graphical-calamares-plasma6.nix") ];
             jovian.devices.steamdeck.enable = true;
             jovian.devices.steamdeck.enableXorgRotation = false;
-            hardware.pulseaudio.enable = lib.mkForce false;
+            services.pulseaudio.enable = lib.mkForce false;
             boot.initrd.systemd.enable = lib.mkForce false;
           })
         ];
