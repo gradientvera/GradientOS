@@ -18,6 +18,11 @@
         ReconnectIntervals = "1,1,2,3,5,8,13,21,34,55";
         AutoEnable = true;
       };
+      LE = {
+        MinConnectionInterval = "7";
+        MaxConnectionInterval = "9";
+        ConnectionLatency = "0";
+      };
     };
   };
 
