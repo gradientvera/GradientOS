@@ -32,7 +32,10 @@
   gradient.profiles.graphics.enable = true;
 
   environment.systemPackages = with pkgs; [
+    numactl
+    numatop
     jdupes
+    numad
   ];
 
   gradient.substituters = {

@@ -14,7 +14,7 @@
   };
 
   fileSystems."/" = {
-    device = "/dev/disk/by-uuid/599884aa-ad46-44e0-8616-3ef644cf6fab";
+    device = "/dev/disk/by-partuuid/c9299d68-3b61-43d7-b234-e92ad1c47e78";
     fsType = "ext4";
     mountPoint = "/";
   };
@@ -26,13 +26,13 @@
   };
 
   fileSystems."/boot" = { 
-    device = "/dev/disk/by-uuid/2B43-E0C0";
+    device = "/dev/disk/by-partuuid/77de2f8b-6eea-49cc-b0d4-d13291232a45";
     fsType = "vfat";
     mountPoint = "/boot";
   };
 
   swapDevices = [
-    { device = "/dev/disk/by-uuid/57eb5b85-fd37-4345-ba94-5ac155c89a46"; priority = 100; }
+    { device = "/dev/disk/by-partuuid/94a96e54-d944-4240-a59b-71c642a9e07e"; priority = 100; }
   ];
 
 }

@@ -14,7 +14,7 @@ in
       "pvpc_hourly_pricing"
       #"private_ble_device" # Build failure
       "bluetooth_adapters"
-      "bluetooth_tracker"
+      #"bluetooth_tracker" # Build failure
       "mqtt_eventstream"
       "mqtt_statestream"
       "androidtv_remote"
@@ -89,8 +89,8 @@ in
           hash = "sha256-HGCjwYf5aLFUMuh4InAjLZHHIU6aidjoAQuhH9W+pkw=";
         };
 
-        propagatedBuildInputs = with pkgs.python313Packages; [
-          python-dateutil
+        propagatedBuildInputs = [
+          pkgs.python313Packages.python-dateutil
           (let
             pname = "e-data";
             version = "1.2.22";

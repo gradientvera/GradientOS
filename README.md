@@ -37,7 +37,7 @@ Flake for different NixOS system configurations.
 - **[erika](hosts/erika)**: Steam Deck OLED.
 - **[beatrice](hosts/beatrice)**: Steam Deck LCD used as a Server.
 - **[neith-deck](hosts/neith-deck)**: Steam Deck LCD.
-- **[asiyah](hosts/asiyah)**: ThinkCentre M900 Tiny Home Server.
+- **[asiyah](hosts/asiyah)**: Custom Home Server.
 - **[briah](hosts/briah)**: Raspberry Pi 4 Home Server.
 - **[atziluth](hosts/atziluth)**: BigTechTree CB1 running Armbian, Voron 2.4r2. (Managed with Ansible)
 
