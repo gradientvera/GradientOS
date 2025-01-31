@@ -133,6 +133,12 @@ in
       path = "~/.ImportantDocuments_encfs/";
       devices = [ "bernkastel" "asiyah" ];
     };
+    gradientos = {
+      id = "gradientos";
+      versioning.type = "trashcan";
+      path = "/etc/nixos";
+      devices = [ "bernkastel" "featherine" ];
+    };
   }));
 
 }
