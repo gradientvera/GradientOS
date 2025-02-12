@@ -1,4 +1,4 @@
-{ config, pkgs, lib, ... }:
+{ config, pkgs, lib, modulesPath, ... }:
 let
   cfg = config.gradient;
 in
@@ -90,6 +90,8 @@ in
       "nfs" = true;
       "nfs4" = true;
     };
+
+    boot.loader.systemd-boot.netbootxyz.enable = true;
 
     # This value determines the NixOS release from which the default
     # settings for stateful data, like file locations and database versions

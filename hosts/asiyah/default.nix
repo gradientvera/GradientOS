@@ -2,15 +2,18 @@
 {
 
   imports = [
+    ./ups.nix
     ./nfs.nix
     ./mqtt.nix
     ./searx.nix
+    ./numad.nix
     ./clamav.nix
     ./backups.nix
     ./grafana.nix
     ./duckdns.nix
     ./postgres.nix
-    # ./scrutiny.nix # Buggy with my external HDDs :(
+    ./cloudflare.nix
+    ./scrutiny.nix
     ./filesystem.nix
     ./media-stack.nix
     ./nginx/default.nix

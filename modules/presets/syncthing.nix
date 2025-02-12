@@ -137,7 +137,7 @@ in
       id = "gradientos";
       versioning.type = "trashcan";
       path = "/etc/nixos";
-      devices = [ "bernkastel" "featherine" ];
+      devices = [ "bernkastel" "featherine" "asiyah" ];
     };
   }));
 

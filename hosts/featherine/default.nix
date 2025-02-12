@@ -19,16 +19,28 @@
   # Android app support with waydroid.
   virtualisation.waydroid.enable = true;
 
-  # Use Jovian's steam deck UI autostart.
-  services.displayManager.sddm.enable = lib.mkForce false;
-  jovian.devices.steamdeck.enable = lib.mkForce false;
-  jovian.steamos.useSteamOSConfig = lib.mkForce false;
+  # Enable automatic login for the user.
+  services.displayManager.autoLogin.enable = true;
+  services.displayManager.autoLogin.user = "vera";
+  services.displayManager.defaultSession = lib.mkDefault "plasma";
+
+  specialisation.deck-ui.configuration = { ... }:
+  {
+    # Use Jovian's steam deck UI autostart.
+    services.displayManager.sddm.enable = lib.mkForce false;
+    services.displayManager.autoLogin.enable = lib.mkForce false;
+    jovian.steam.autoStart = lib.mkForce true;
+  };
+
   jovian.steam.enable = true;
-  jovian.steam.autoStart = true;
+  jovian.steam.autoStart = false;
   jovian.steam.user = "vera";
   jovian.decky-loader.enable = true;
   jovian.decky-loader.user = "vera";
   jovian.steam.desktopSession = "plasma";
+
+  jovian.devices.steamdeck.enable = lib.mkForce false;
+  jovian.steamos.useSteamOSConfig = lib.mkForce false;
 
   services.openssh.openFirewall = true;
 

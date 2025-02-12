@@ -100,6 +100,10 @@
         restartUnits = [ "podman-mariadb.service" ];
       };
 
+      upsmon-password = {};
+
+      cfdyndns-token = {};
+
     };
   };
 
