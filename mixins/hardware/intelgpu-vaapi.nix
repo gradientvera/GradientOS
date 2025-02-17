@@ -21,9 +21,10 @@
       (intel-vaapi-driver.override { enableHybridCodec = true; })
       intel-compute-runtime
       intel-media-driver
+      libva-vdpau-driver
       intel-media-sdk
       libvdpau-va-gl
-      libva-vdpau-driver
+      vpl-gpu-rt
     ];
     extraPackages32 = with pkgs.driversi686Linux; [
       (intel-vaapi-driver.override { enableHybridCodec = true; })

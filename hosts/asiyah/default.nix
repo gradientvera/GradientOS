@@ -2,7 +2,6 @@
 {
 
   imports = [
-    ./ups.nix
     ./nfs.nix
     ./mqtt.nix
     ./searx.nix

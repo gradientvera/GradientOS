@@ -39,6 +39,9 @@
   slskd = 5030;
   slskd-peer = 26156;
   romm = 8095;
+  neko = 8097;
+  neko-epr-start = 52000;
+  neko-epr-end = 52100;
 
   # NFS
   nfsd = 2049;

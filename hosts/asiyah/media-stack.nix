@@ -35,6 +35,7 @@ let
     mikochi
     cross-seed
     sabnzbd
+    neko
     mediarr-openssh
   ];
 in {
@@ -78,11 +79,14 @@ in {
         -p ${toString ports.sabnzbd}:${toString ports.sabnzbd} \
         -p ${toString ports.mediarr-openssh}:2222 \
         -p ${toString ports.romm}:8080 \
+        -p ${toString ports.neko}:${toString ports.neko} \
+        -p ${toString ports.neko-epr-start}-${toString ports.neko-epr-end}:${toString ports.neko-epr-start}-${toString ports.neko-epr-end}/udp \
         --ip "10.88.0.2" \
         --sysctl="net.ipv4.ip_forward=1" \
         --sysctl="net.ipv4.conf.all.src_valid_mark=1" \
         --sysctl="net.ipv4.ping_group_range=0 2000000" \
         --userns=keep-id \
+        --shm-size=2g \
         --replace \
         --name=${userName}
     '';
@@ -676,6 +680,28 @@ in {
       dependsOn = [ "create-mediarr-pod" "gluetun" ];
     };
 
+    neko = {
+      image = "ghcr.io/m1k1o/neko/firefox:latest";
+      pull = "newer";
+      environment = {
+        NEKO_SCREEN = "1920x1080@30";
+        NEKO_BIND = ":${toString ports.neko}";
+        NEKO_EPR = "${toString ports.neko-epr-start}-${toString ports.neko-epr-end}";
+        NEKO_UDPMUX = "${toString ports.neko-epr-start}";
+        NEKO_PROXY = "true";
+        NEKO_IPFETCH = "https://checkip.amazonaws.com";
+        NEKO_CORS = "127.0.0.1 neko.constellation.moe"; 
+        NEKO_ICESERVER = "stun:stun.l.google.com:19302";
+        NEKO_IMPLICIT_CONTROL = "true";
+        NEKO_CONTROL_PROTECTION = "true";
+      };
+      environmentFiles = [ config.sops.secrets.mediarr-neko-env.path ];
+      extraOptions = [
+        "--device=/dev/dri/:/dev/dri/"
+      ] ++ defaultOptions;
+      dependsOn = [ "create-mediarr-pod" "gluetun" ];
+    };
+
   };
 
   # -- Firewall Setup --
@@ -695,4 +721,12 @@ in {
     qbittorrent-peer
     slskd-peer
   ];
+
+  networking.firewall.allowedUDPPortRanges = [
+    {
+      from = ports.neko-epr-start;
+      to = ports.neko-epr-end;
+    }
+  ];
+
 }

@@ -100,8 +100,13 @@
         restartUnits = [ "podman-mariadb.service" ];
       };
 
-      upsmon-password = {};
-
+      mediarr-neko-env = {
+        mode = "0440";
+        owner = config.users.users.mediarr.name;
+        group = config.users.users.mediarr.group;
+        restartUnits = [ "podman-neko.service" ];
+      };
+      
       cfdyndns-token = {};
 
     };

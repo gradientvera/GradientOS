@@ -246,5 +246,14 @@ in {
       proxyWebsockets = true;
     };
   };
+
+  services.nginx.virtualHosts."neko.constellation.moe" = {
+    enableACME = true;
+    addSSL = true;
+    locations."/" = {
+      proxyPass = "http://127.0.0.1:${toString ports.neko}";
+      proxyWebsockets = true;
+    };
+  };
   
 }
