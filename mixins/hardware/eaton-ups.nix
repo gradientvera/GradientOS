@@ -3,11 +3,11 @@
   power.ups = {
     enable = true;
 
-    ups."5E900UD" = {
+    ups."Eaton" = {
       driver = "usbhid-ups";
       port = "auto";
       summary = ''
-              vendorid = 0463
+        vendorid = 0463
       '';
     };
 
@@ -16,7 +16,7 @@
       upsmon = "primary";
     };
 
-    upsmon.monitor."5E900UD".user = "upsmon";
+    upsmon.monitor."Eaton".user = "upsmon";
   };
 
 }

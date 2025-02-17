@@ -25,6 +25,9 @@ in
       hokma-environment = {
         sopsFile = ./secrets.yml;
       };
+      upsmon-password = {
+        sopsFile = ./secrets.yml;
+      };
     };
   });
 

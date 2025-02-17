@@ -140,6 +140,7 @@
           mixins.hardware-amdgpu
           mixins.hardware-webcam
           mixins.hardware-bluetooth
+          mixins.hardware-eaton-ups
           mixins.hardware-openrazer
           mixins.hardware-home-dcp-l2530dw
           mixins.hardware-xbox-one-controller
@@ -362,6 +363,7 @@
           mixins.virtualisation
           mixins.nix-store-serve
           mixins.aarch64-emulation
+          mixins.hardware-eaton-ups
           mixins.hardware-intelgpu-vaapi
           mixins.restic-repository-hokma
         ];
