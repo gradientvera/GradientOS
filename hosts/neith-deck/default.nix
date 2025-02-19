@@ -26,6 +26,7 @@
   jovian.steam.desktopSession = "plasma";
 
   services.handheld-daemon.enable = true;
+  services.handheld-daemon.user = "vera";
 
   gradient.substituters = {
     asiyah = "ssh-ng://nix-ssh@asiyah.lily?priority=50";

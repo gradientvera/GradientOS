@@ -45,6 +45,7 @@
   services.openssh.openFirewall = true;
 
   services.handheld-daemon.enable = true;
+  services.handheld-daemon.user = "vera";
 
   gradient.substituters = {
     asiyah = "ssh-ng://nix-ssh@asiyah.gradient?priority=40";
