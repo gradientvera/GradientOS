@@ -81,10 +81,12 @@ in
         remove = [
           "(.*\.)?facebook.com$"
           "(.*\.)?softonic.com$"
+          "(.*\.)?nixos.wiki$"
         ];
         high_priority = [
           "(.*\.)?wikipedia.com$"
           "(.*\.)?reddit.com$"
+          "(.*\.)?github.com$"
         ];
         low_priority = [
 
