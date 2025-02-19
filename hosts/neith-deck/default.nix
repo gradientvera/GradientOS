@@ -25,6 +25,8 @@
   jovian.decky-loader.user = "neith";
   jovian.steam.desktopSession = "plasma";
 
+  services.handheld-daemon.enable = true;
+
   gradient.substituters = {
     asiyah = "ssh-ng://nix-ssh@asiyah.lily?priority=50";
     briah = "ssh-ng://nix-ssh@briah.lily?priority=60";

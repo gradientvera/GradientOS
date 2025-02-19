@@ -44,6 +44,8 @@
 
   services.openssh.openFirewall = true;
 
+  services.handheld-daemon.enable = true;
+
   gradient.substituters = {
     asiyah = "ssh-ng://nix-ssh@asiyah.gradient?priority=40";
     briah = "ssh-ng://nix-ssh@briah.gradient?priority=60";
