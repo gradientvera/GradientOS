@@ -61,6 +61,7 @@ in
       gmic
       lsof
       htop
+      btop
       file
       cloc
       nil
