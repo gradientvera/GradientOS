@@ -1,4 +1,4 @@
-{ config, ... }:
+{ config, pkgs, ... }:
 {
   power.ups = {
     enable = true;
@@ -18,5 +18,9 @@
 
     upsmon.monitor."Eaton".user = "upsmon";
   };
+
+  environment.systemPackages = [
+    pkgs.nut
+  ];
 
 }
