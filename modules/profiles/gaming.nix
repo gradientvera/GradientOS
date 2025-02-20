@@ -70,7 +70,8 @@ in
       type = lib.types.str;
       default = "vera";
       description = ''
-        TODO
+        User that will own the folders.
+        Emulator configs are based on this user's home directory.
       '';
     };
 
@@ -78,7 +79,7 @@ in
       type = lib.types.str;
       default = "users";
       description = ''
-        TODO
+        Group that will own the folders.
       '';
     };
 
