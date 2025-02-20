@@ -10,6 +10,7 @@
   ];
 
   gradient.profiles.gaming.enable = true;
+  gradient.profiles.gaming.emulation.romPath = "/data/roms";
   gradient.profiles.desktop.enable = true;
   gradient.profiles.development.enable = true;
   gradient.profiles.catppuccin.enable = true;

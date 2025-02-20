@@ -55,6 +55,14 @@ in
         Path to the key file.
       '';
     };
+
+    gradient.presets.syncthing.folders = lib.mkOption {
+      type = lib.types.attrsOf lib.types.anything;
+      default = {};
+      description = ''
+        Syncthing folders to be added, if current host is in "devices".
+      '';
+    };
   };
 
   config = lib.mkMerge ([
@@ -84,61 +92,50 @@ in
 
       networking.firewall.interfaces.gradientnet.allowedTCPPorts = [ 22000 21027 8384 ];
       networking.firewall.interfaces.gradientnet.allowedUDPPorts = [ 22000 21027 8384 ];
+
+      systemd.services.syncthing.serviceConfig.AmbientCapabilities = [ "+CAP_CHOWN" ];
+
+      services.syncthing.settings.folders = builtins.mapAttrs (_: v: v // { devices = builtins.filter (d: d != hostName) v.devices; })
+      (lib.attrsets.filterAttrs (name: value: builtins.any (device: device == hostName) value.devices) ({
+        default = {
+          id = "default";
+          versioning.type = "trashcan";
+          path = "~/Documents/Sync";
+          devices = [ "bernkastel" "beatrice" "erika" "asiyah" "briah" "vera-phone" "work-laptop" "featherine" "ange" ];
+        };
+        music = {
+          id = "y0fft-chww4";
+          versioning.type = "trashcan";
+          path = "~/Music";
+          devices = [ "bernkastel" "beatrice" "erika" "asiyah" "vera-phone" "work-laptop" "featherine" "ange" ];
+        };
+        ffxiv-config = {
+          id = "ujgmj-wkmsh";
+          versioning.type = "trashcan";
+          path = "~/.xlcore/ffxivConfig";
+          devices = [ "bernkastel" "asiyah" "beatrice" "erika" "featherine" ];
+        };
+        the-midnight-hall = {
+          id = "ykset-ue2ke";
+          versioning.type = "trashcan";
+          path = "~/Documents/TheMidnightHall";
+          devices = [ "bernkastel" "asiyah" "featherine" "neith-deck" "hadal-rainbow" ];
+        };
+        important-documents = {
+          id = "egytl-udh2q";
+          versioning.type = "trashcan";
+          path = "~/.ImportantDocuments_encfs/";
+          devices = [ "bernkastel" "asiyah" ];
+        };
+        gradientos = {
+          id = "gradientos";
+          versioning.type = "trashcan";
+          path = "/etc/nixos";
+          devices = [ "bernkastel" "featherine" "asiyah" ];
+        };
+      } // config.gradient.presets.syncthing.folders)
+      );
     })
-  ] ++ (lib.attrsets.mapAttrsToList (name: value: (lib.mkIf (cfg.enable && builtins.any (v: v == hostName) value.devices) {
-    services.syncthing.settings.folders.${name} = value 
-      // { devices = builtins.filter (v: v != hostName) value.devices; };
-      # ^ Remove the current machine from the devices ^
-  })) 
-  {
-    default = {
-      id = "default";
-      versioning.type = "trashcan";
-      path = "~/Documents/Sync";
-      devices = [ "bernkastel" "beatrice" "erika" "asiyah" "briah" "vera-phone" "work-laptop" "featherine" "ange" ];
-    };
-    music = {
-      id = "y0fft-chww4";
-      versioning.type = "trashcan";
-      path = "~/Music";
-      devices = [ "bernkastel" "beatrice" "erika" "asiyah" "vera-phone" "work-laptop" "featherine" "ange" ];
-    };
-    retrodeck = {
-      id = "9rctd-ets59";
-      versioning.type = "trashcan";
-      path = config.gradient.lib.switch hostName [
-        { case = "bernkastel"; value = "/data/retrodeck"; }
-        { case = "featherine"; value = "/data/retrodeck"; }
-        { case = "asiyah"; value = "/data/retrodeck"; }
-        { case = "erika"; value = "/run/media/deck/mmcblk0p1/retrodeck"; }
-        { case = null; value = throw "Did not match any hostname..."; }
-      ];
-      devices = [ "asiyah" "bernkastel" "erika" "featherine" ];
-    };
-    ffxiv-config = {
-      id = "ujgmj-wkmsh";
-      versioning.type = "trashcan";
-      path = "~/.xlcore/ffxivConfig";
-      devices = [ "bernkastel" "asiyah" "beatrice" "erika" "featherine" ];
-    };
-    the-midnight-hall = {
-      id = "ykset-ue2ke";
-      versioning.type = "trashcan";
-      path = "~/Documents/TheMidnightHall";
-      devices = [ "bernkastel" "asiyah" "featherine" "neith-deck" "hadal-rainbow" ];
-    };
-    important-documents = {
-      id = "egytl-udh2q";
-      versioning.type = "trashcan";
-      path = "~/.ImportantDocuments_encfs/";
-      devices = [ "bernkastel" "asiyah" ];
-    };
-    gradientos = {
-      id = "gradientos";
-      versioning.type = "trashcan";
-      path = "/etc/nixos";
-      devices = [ "bernkastel" "featherine" "asiyah" ];
-    };
-  }));
+  ]);
 
 }

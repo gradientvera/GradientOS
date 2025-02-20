@@ -8,6 +8,7 @@
   ];
 
   gradient.profiles.gaming.enable = true;
+  gradient.profiles.gaming.emulation.enable = false;
   gradient.profiles.desktop.enable = true;
 
   # Disable 3D printer stuff

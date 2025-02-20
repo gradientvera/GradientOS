@@ -171,6 +171,16 @@ in {
 
   services.clamav.scanner.scanDirectories = [ "/data/downloads" ]; # /var/lib already scanned by default
 
+  # -- ROM sync --
+  gradient.profiles.gaming.emulation = {
+    enable = true;
+    installEmulators = false;
+    user = userName;
+    group = groupName;
+    sync.enable = true;
+    romPath = "/data/downloads/games/roms";
+  };
+
   # -- Container Setup --
   virtualisation.oci-containers.containers = {
 

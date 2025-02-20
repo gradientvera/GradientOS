@@ -44,6 +44,8 @@ in {
     });
   });
 
+  emulationstation-de = (prev.emulationstation-de.override { libgit2 = final.stable.libgit2; });
+
   moonlight-qt = prev.moonlight-qt.overrideAttrs (prevAttrs: {
     nativeBuildInputs = prevAttrs.nativeBuildInputs ++ [ prev.copyDesktopItems ];
     postInstall = prevAttrs.postInstall + ''
