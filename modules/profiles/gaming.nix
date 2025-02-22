@@ -114,45 +114,209 @@ in
       '';
     };
 
-    gradient.profiles.gaming.emulation.sync.roms.folders = lib.mkOption {
+    gradient.profiles.gaming.emulation.systems = lib.mkOption {
       type = lib.types.listOf lib.types.str;
-      default = cfg.profiles.gaming.emulation.sync.roms.defaultFolders;
+      default = cfg.profiles.gaming.emulation.defaultSystems;
       description = ''
-        Folders under the base ROM folder to sync, using Syncthing.
+        Folders under the base ROM folder to create and sync using Syncthing if enabled.
       '';
     };
 
-    gradient.profiles.gaming.emulation.sync.roms.defaultFolders = lib.mkOption {
+    gradient.profiles.gaming.emulation.defaultSystems = lib.mkOption {
       type = lib.types.listOf lib.types.str;
+      readOnly = true;
       description = ''
-        Default ROM folders to be synced.
+        Default systems supported by ES-DE.
       '';
       default = [
+        "3do"
+        "adam"
+        "ags"
+        "amiga"
+        "amiga1200"
+        "amiga600"
+        "amigacd32"
+        "amstradcpc"
+        "apple2"
+        "apple2gs"
+        "arcade"
+        "arcadia"
+        "archimedes"
+        "arduboy"
+        "astrocde"
+        "atari2600"
+        "atari5200"
+        "atari7800"
+        "atari800"
+        "atarijaguar"
+        "atarijaguarcd"
+        "atarilynx"
+        "atarist"
+        "atarixe"
+        "atomiswave"
+        "bbcmicro"
+        "c64"
+        "cdimono1"
+        "cdtv"
+        "chailove"
+        "channelf"
+        "coco"
+        "colecovision"
+        "consolearcade"
+        "cps"
+        "cps1"
+        "cps2"
+        "cps3"
+        "crvision"
+        "daphne"
+        "desktop"
+        "doom"
+        "dos"
+        "dragon32"
+        "dreamcast"
+        "easyrpg"
+        "electron"
+        "emulators"
+        "epic"
+        "famicom"
+        "fba"
+        "fbneo"
+        "fds"
         "flash"
+        "fm7"
+        "fmtowns"
+        "gamate"
+        "gameandwatch"
+        "gamecom"
+        "gamegear"
         "gb"
-        "gbc"
         "gba"
+        "gbc"
         "gc"
         "genesis"
+        "gmaster"
+        "gx4000"
+        "intellivision"
+        "j2me"
+        "kodi"
+        "laserdisc"
+        "lcdgames"
+        "lowresnx"
+        "lutris"
+        "lutro"
+        "macintosh"
         "mame"
+        "mame-advmame"
+        "mastersystem"
         "megacd"
+        "megacdjp"
         "megadrive"
+        "megadrivejp"
+        "megaduck"
+        "mess"
+        "model2"
+        "model3"
+        "moto"
+        "msx"
+        "msx1"
+        "msx2"
+        "msxturbor"
+        "mugen"
+        "multivision"
         "n3ds"
         "n64"
         "n64dd"
+        "naomi"
+        "naomi2"
+        "naomigd"
         "nds"
+        "neogeo"
+        "neogeocd"
+        "neogeocdjp"
         "nes"
-        "psx"
+        "ngage"
+        "ngp"
+        "ngpc"
+        "odyssey2"
+        "openbor"
+        "oric"
+        "palm"
+        "pc"
+        "pc88"
+        "pc98"
+        "pcarcade"
+        "pcengine"
+        "pcenginecd"
+        "pcfx"
+        "pico8"
+        "plus4"
+        "pokemini"
+        "ports"
         "ps2"
         "ps3"
         "ps4"
         "psp"
+        "psvita"
+        "psx"
+        "pv1000"
+        "quake"
+        "samcoupe"
+        "satellaview"
         "saturn"
+        "saturnjp"
+        "scummvm"
+        "scv"
+        "sega32x"
+        "sega32xjp"
+        "sega32xna"
         "segacd"
+        "sfc"
+        "sg-1000"
+        "sgb"
         "snes"
+        "snesna"
+        "solarus"
+        "spectravideo"
+        "steam"
+        "stv"
+        "sufami"
+        "supergrafx"
+        "supervision"
+        "supracan"
         "switch"
+        "symbian"
+        "tanodragon"
+        "tg-cd"
+        "tg16"
+        "ti99"
+        "tic80"
+        "to8"
+        "triforce"
+        "trs-80"
+        "type-x"
+        "uzebox"
+        "vectrex"
+        "vic20"
+        "videopac"
+        "virtualboy"
+        "vpinball"
+        "vsmile"
+        "wasm4"
         "wii"
         "wiiu"
+        "windows"
+        "windows3x"
+        "windows9x"
+        "wonderswan"
+        "wonderswancolor"
+        "x1"
+        "x68000"
+        "xbox"
+        "xbox360"
+        "zmachine"
+        "zx81"
+        "zxnext"
+        "zxspectrum"
       ];
     };
 
@@ -216,88 +380,20 @@ in
 
     (lib.mkIf cfg.profiles.gaming.emulation.enable {
       # Create needed folders for ROM path etc
-      systemd.tmpfiles.settings."10-emulation.conf" = {
+      systemd.tmpfiles.settings."10-emulation.conf" = 
+      {
         "${ESDEDataPath}".d = tmpFilesRule;
-        # -- Roms --
         "${romPath}".d = tmpFilesRule;
-        "${romPath}/flash".d = tmpFilesRule;
-        "${romPath}/gb".d = tmpFilesRule;
-        "${romPath}/gbc".d = tmpFilesRule;
-        "${romPath}/gba".d = tmpFilesRule;
-        "${romPath}/gc".d = tmpFilesRule;
-        "${romPath}/genesis".d = tmpFilesRule;
-        "${romPath}/mame".d = tmpFilesRule;
-        "${romPath}/megacd".d = tmpFilesRule;
-        "${romPath}/megadrive".d = tmpFilesRule;
-        "${romPath}/n3ds".d = tmpFilesRule;
-        "${romPath}/n64".d = tmpFilesRule;
-        "${romPath}/n64dd".d = tmpFilesRule;
-        "${romPath}/nds".d = tmpFilesRule;
-        "${romPath}/nes".d = tmpFilesRule;
-        "${romPath}/psx".d = tmpFilesRule;
-        "${romPath}/ps2".d = tmpFilesRule;
-        "${romPath}/ps3".d = tmpFilesRule;
-        "${romPath}/ps4".d = tmpFilesRule;
-        "${romPath}/psp".d = tmpFilesRule;
-        "${romPath}/saturn".d = tmpFilesRule;
-        "${romPath}/segacd".d = tmpFilesRule;
-        "${romPath}/snes".d = tmpFilesRule;
-        "${romPath}/switch".d = tmpFilesRule;
-        "${romPath}/wii".d = tmpFilesRule;
-        "${romPath}/wiiu".d = tmpFilesRule;
-        # Syncthing marker
-        "${romPath}/flash/.stfolder".d = tmpFilesRule;
-        "${romPath}/gb/.stfolder".d = tmpFilesRule;
-        "${romPath}/gbc/.stfolder".d = tmpFilesRule;
-        "${romPath}/gba/.stfolder".d = tmpFilesRule;
-        "${romPath}/gc/.stfolder".d = tmpFilesRule;
-        "${romPath}/genesis/.stfolder".d = tmpFilesRule;
-        "${romPath}/mame/.stfolder".d = tmpFilesRule;
-        "${romPath}/megacd/.stfolder".d = tmpFilesRule;
-        "${romPath}/megadrive/.stfolder".d = tmpFilesRule;
-        "${romPath}/n3ds/.stfolder".d = tmpFilesRule;
-        "${romPath}/n64/.stfolder".d = tmpFilesRule;
-        "${romPath}/n64dd/.stfolder".d = tmpFilesRule;
-        "${romPath}/nds/.stfolder".d = tmpFilesRule;
-        "${romPath}/nes/.stfolder".d = tmpFilesRule;
-        "${romPath}/psx/.stfolder".d = tmpFilesRule;
-        "${romPath}/ps2/.stfolder".d = tmpFilesRule;
-        "${romPath}/ps3/.stfolder".d = tmpFilesRule;
-        "${romPath}/ps4/.stfolder".d = tmpFilesRule;
-        "${romPath}/psp/.stfolder".d = tmpFilesRule;
-        "${romPath}/saturn/.stfolder".d = tmpFilesRule;
-        "${romPath}/segacd/.stfolder".d = tmpFilesRule;
-        "${romPath}/snes/.stfolder".d = tmpFilesRule;
-        "${romPath}/switch/.stfolder".d = tmpFilesRule;
-        "${romPath}/wii/.stfolder".d = tmpFilesRule;
-        "${romPath}/wiiu/.stfolder".d = tmpFilesRule;
-      };
+      } // (builtins.listToAttrs
+        (builtins.map
+          (f: { name = "${romPath}/${f}"; value = { d = tmpFilesRule; }; })
+          cfg.profiles.gaming.emulation.systems));
     })
 
     (lib.mkIf cfg.profiles.gaming.emulation.installEmulators {
       environment.systemPackages = with pkgs; [
         # -- Retroarch --
-        (pkgs.retroarch-bare.wrapper {
-          cores = with pkgs.libretro; [
-            fbneo # Arcade
-            mame # Arcade
-            mupen64plus # N64
-            melonds # NDS
-            sameboy # GB/GBC
-            mgba # GBA
-            mesen # NES
-            snes9x # SNES
-            picodrive # 32X
-            genesis-plus-gx # Genesis
-            beetle-saturn # Saturn
-            swanstation # PSX
-            ppsspp # PSP
-          ];
-          settings = {
-
-          };
-        })
-
+        retroarch-full # A lot of systems
         # -- Standalone emulators --
         stable.lime3ds # 3DS
         dolphin-emu # Wii / GC
@@ -307,10 +403,9 @@ in
         rpcs3 # PS3
         shadps4 # PS4
         ruffle # Flash
-
         # -- Utilities --
         (emulationstation-de.overrideAttrs (prevAttrs: {
-          nativeBuildInputs = prevAttrs.nativeBuildInputs ++ [ pkgs.makeWrapper ];
+          nativeBuildInputs = prevAttrs.nativeBuildInputs ++ [ makeWrapper ];
           postInstall = ''
             wrapProgram $out/bin/es-de --set ESDE_APPDATA_DIR ${ESDEDataPath}
           '';
@@ -560,11 +655,18 @@ in
           id = "roms-${f}";
           versioning.type = "trashcan";
           path = "${romPath}/${f}";
+          copyOwnershipFromParent = true;
         };
       in builtins.listToAttrs 
         (builtins.map
           (f: { name = "roms-${f}"; value = mkSyncFolder f; })
-          cfg.profiles.gaming.emulation.sync.roms.folders);
+          cfg.profiles.gaming.emulation.systems);
+
+      # Generate syncthing markers for ROM folders.
+      systemd.tmpfiles.settings."10-emulation.conf" = builtins.listToAttrs
+        (builtins.map
+          (f: { name = "${romPath}/${f}/.stfolder"; value = { d = tmpFilesRule; }; })
+          cfg.profiles.gaming.emulation.systems);
     })
   ];
 
