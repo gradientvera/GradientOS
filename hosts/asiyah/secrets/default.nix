@@ -107,7 +107,9 @@
         restartUnits = [ "podman-neko.service" ];
       };
       
-      cfdyndns-token = {};
+      cfdyndns-token = {
+        restartUnits = [ "ddclient.service" ];
+      };
 
     };
   };
