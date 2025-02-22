@@ -24,6 +24,14 @@ in
       '';
     };
 
+    gradient.presets.syncthing.extraGroups = lib.mkOption {
+      type = lib.types.listOf lib.types.str;
+      default = [];
+      description = ''
+        Extra groups to add to the Syncthing service.
+      '';
+    };
+
     gradient.presets.syncthing.dataDir = lib.mkOption {
       type = lib.types.str;
       default = "/home/${cfg.user}";
@@ -93,7 +101,11 @@ in
       networking.firewall.interfaces.gradientnet.allowedTCPPorts = [ 22000 21027 8384 ];
       networking.firewall.interfaces.gradientnet.allowedUDPPorts = [ 22000 21027 8384 ];
 
-      systemd.services.syncthing.serviceConfig.AmbientCapabilities = [ "+CAP_CHOWN" ];
+      systemd.services.syncthing.serviceConfig = {
+        SupplementaryGroups = lib.concatStringsSep " " cfg.extraGroups;
+        AmbientCapabilities = ["CAP_CHOWN" "CAP_FOWNER"];
+        PrivateUsers = lib.mkForce false; # Needed for above capabilities to work
+      };
 
       services.syncthing.settings.folders = builtins.mapAttrs (_: v: v // { devices = builtins.filter (d: d != hostName) v.devices; })
       (lib.attrsets.filterAttrs (name: value: builtins.any (device: device == hostName) value.devices) ({

@@ -181,6 +181,8 @@ in {
     romPath = "/data/downloads/games/roms";
   };
 
+  gradient.presets.syncthing.extraGroups = [ "mediarr" "users" ];
+
   # -- Container Setup --
   virtualisation.oci-containers.containers = {
 
