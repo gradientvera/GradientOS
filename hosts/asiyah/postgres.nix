@@ -13,6 +13,7 @@ in
     ensureDatabases = [
       "hass"
       "bitmagnet"
+      "pufferpanel"
     ];
     ensureUsers = [
       {
@@ -23,6 +24,10 @@ in
         name = "bitmagnet";
         ensureDBOwnership = true;
       }
+      {
+        name = "pufferpanel";
+        ensureDBOwnership = true;
+      }
     ];
     authentication = ''
       # Home Assistant
@@ -30,6 +35,10 @@ in
       
       # Podman network
       host bitmagnet bitmagnet 10.88.0.0/24 trust
+
+      # PufferPanel
+      host pufferpanel pufferpanel 127.0.0.1/32 trust
+      host pufferpanel pufferpanel ::1/128 trust
     '';
     # PGTune settings
     settings = {

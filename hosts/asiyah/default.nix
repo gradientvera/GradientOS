@@ -11,9 +11,10 @@
     ./grafana.nix
     ./duckdns.nix
     ./postgres.nix
-    ./cloudflare.nix
     ./scrutiny.nix
+    ./cloudflare.nix
     ./filesystem.nix
+    ./pufferpanel.nix
     ./media-stack.nix
     ./nginx/default.nix
     ./home-assistant.nix

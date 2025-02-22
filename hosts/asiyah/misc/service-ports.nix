@@ -57,6 +57,8 @@
   searx = 8089;
   mqtt = 1883;
   tor = 9050;
+  pufferpanel = 8098;
+  pufferpanel-sftp = 5657;
 
   # grafana
   grafana = 8083;

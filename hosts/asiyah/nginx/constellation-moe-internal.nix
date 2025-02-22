@@ -255,5 +255,14 @@ in {
       proxyWebsockets = true;
     };
   };
+
+  services.nginx.virtualHosts."pufferpanel.constellation.moe" = {
+    enableACME = true;
+    addSSL = true;
+    locations."/" = {
+      proxyPass = "http://127.0.0.1:${toString ports.pufferpanel}";
+      proxyWebsockets = true;
+    };
+  };
   
 }
