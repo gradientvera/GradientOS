@@ -12,6 +12,8 @@
   networking.hostName = "neith-deck";
 
   gradient.profiles.gaming.enable = true;
+  gradient.profiles.gaming.emulation.enable = false;
+  gradient.profiles.gaming.emulation.user = "neith";
   gradient.profiles.desktop.enable = true;
   gradient.profiles.catppuccin.enable = false;
 
