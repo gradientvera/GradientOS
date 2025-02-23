@@ -1,4 +1,4 @@
-{ ... }:
+{ pkgs, ... }:
 let
   ports = import ./misc/service-ports.nix;
 in
@@ -6,6 +6,9 @@ in
 
   services.pufferpanel = {
     enable = true;
+    extraPackages = [ 
+      pkgs.gnutar
+    ];
     environment = {
       PUFFER_WEB_HOST = ":${toString ports.pufferpanel}";
       PUFFER_DAEMON_SFTP_HOST = ":${toString ports.pufferpanel-sftp}";
