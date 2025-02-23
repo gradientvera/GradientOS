@@ -357,6 +357,7 @@ in
         space-station-14-launcher
         osu-lazer-bin
         prismlauncher
+        vintagestory
         xivlauncher
         steam-run
         heroic

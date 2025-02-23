@@ -57,6 +57,7 @@ rec {
           allowUnfree = true;
           allowBroken = true;
           permittedInsecurePackages = [
+            "dotnet-runtime-7.0.20" # TODO: Remove when not needed anymore
             "dotnet-sdk-7.0.410" # TODO: Remove when not needed anymore
             "dotnet-sdk-wrapped-7.0.410" # TODO: Remove when not needed anymore
             "dotnet-sdk-6.0.428" # TODO: Remove when not needed anymore
