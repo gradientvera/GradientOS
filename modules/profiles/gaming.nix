@@ -426,6 +426,8 @@ in
         "${home}/.config/retroarch/saves/.stfolder".d = tmpFilesRule;
         "${home}/.config/retroarch/states".d = tmpFilesRule;
         "${home}/.config/retroarch/states/.stfolder".d = tmpFilesRule;
+        "${home}/.config/retroarch/roms".d = tmpFilesRule;
+        "${home}/.config/retroarch/roms/.stfolder".d = tmpFilesRule;
         # ES-DE
         "${ESDEDataPath}/gamelists".d = tmpFilesRule;
         "${ESDEDataPath}/downloaded_media".d = tmpFilesRule;
@@ -504,6 +506,12 @@ in
           id = "retroarch-states";
           versioning.type = "trashcan";
           path = "${home}/.config/retroarch/states";
+        };
+        retroarch-roms = {
+          inherit devices;
+          id = "retroarch-roms";
+          versioning.type = "trashcan";
+          path = "${home}/.config/retroarch/roms";
         };
         # ES-DE
         es-de-gamelists = {
