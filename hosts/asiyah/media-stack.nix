@@ -167,6 +167,8 @@ in {
     "/var/lib/${userName}/romm/redis".d = rule;
     "/var/lib/${userName}/romm/resources".d = rule;
     "/var/lib/${userName}/mariadb".d = rule;
+    "/var/lib/${userName}/.mozilla".d = rule;
+    "/var/lib/${userName}/.mozilla/firefox".d = rule;
   };
 
   services.clamav.scanner.scanDirectories = [ "/data/downloads" ]; # /var/lib already scanned by default
@@ -696,6 +698,9 @@ in {
     neko = {
       image = "ghcr.io/m1k1o/neko/firefox:latest";
       pull = "newer";
+      volumes = [
+        "/var/lib/${userName}/.mozilla:/home/neko/.mozilla"
+      ];
       environment = {
         NEKO_SCREEN = "1920x1080@30";
         NEKO_BIND = ":${toString ports.neko}";
