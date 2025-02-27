@@ -16,6 +16,12 @@
   boot.extraModulePackages = with config.boot.kernelPackages; [ ];
   boot.extraModprobeConfig = "";
 
+  # Breaks suspend due to ppfeaturemask
+  programs.corectrl = {
+    enable = lib.mkForce false;
+    gpuOverclock.enable = lib.mkForce false;
+  };
+
   hardware.sensor.iio.enable = true;
 
   nixpkgs.hostPlatform = "x86_64-linux";
