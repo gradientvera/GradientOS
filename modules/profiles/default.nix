@@ -50,6 +50,7 @@ in
       usbutils
       pciutils
       nettools
+      pmutils
       colmena
       tcpdump
       sysstat

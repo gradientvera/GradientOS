@@ -3,6 +3,7 @@
 
   environment.systemPackages = with pkgs; [
     gradient-generator
+    losslesscut-bin
     stable.freecad
     prusa-slicer
     openscad
