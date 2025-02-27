@@ -614,9 +614,11 @@ in {
       image = "lscr.io/linuxserver/openssh-server:latest";
       pull = "newer";
       volumes = [
-        "${builtins.toFile "neith.pub" keys.neith}:/pubkeys/neith.pub"
-        "${builtins.toFile "remie.pub" keys.remie}:/pubkeys/remie.pub"
-        "${builtins.toFile "vera.pub" keys.vera}:/pubkeys/vera.pub"
+        "${builtins.toFile "authorized_keys" ''
+          ${keys.neith}
+          ${keys.remie}
+          ${keys.vera}
+        ''}:/config/.ssh/authorized_keys:ro"
         "/var/lib/${userName}:/config"
         "/data/downloads:/downloads"
       ];
@@ -627,7 +629,6 @@ in {
         SUDO_ACCESS = "false";
         PASSWORD_ACCESS = "false";
         USER_NAME = userName;
-        PUBLIC_KEY_DIR = "/pubkeys";
       };
       extraOptions = [] ++ defaultOptions;
       dependsOn = [ "create-mediarr-pod" "gluetun" ];
