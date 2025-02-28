@@ -8,7 +8,7 @@
   boot.kernelPackages = pkgs.linuxPackages_xanmod_latest;
   boot.initrd.availableKernelModules = [ "xhci_pci" "ehci_pci" "ahci" "nvme" "usbhid" "usb_storage" "sd_mod" "xhci_hcd" ];
   boot.initrd.kernelModules = [ ];
-  boot.kernelModules = [ "kvm-intel" "nfs" "corsair-psu" ];
+  boot.kernelModules = [ "kvm-intel" "nfs" "corsair-psu" "iTCO_wdt" ];
   boot.extraModulePackages = [ ];
 
   boot.kernelParams = [ "pcie_aspm=off" ];

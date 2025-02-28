@@ -73,13 +73,40 @@ in
       nushell
     ]; 
 
+    # Enable systemd watchdog.
+    systemd.watchdog = {
+      runtimeTime = "10s";
+      rebootTime = "45s";
+      kexecTime = "45s";
+    };
+
     # systemd-based initrd
     boot.initrd.systemd.enable = true;
 
     boot.kernel.sysctl = {
-      "kernel.sysrq" = 1;
-      "net.core.default_qdisc" = "fq";
+      "kernel.sysrq" = "1";
+      
+      # Enable the BBR congestion control algorithm
+      "net.core.default_qdisc" = "cake";
       "net.ipv4.tcp_congestion_control" = "bbr";
+      
+      # Enable TCP Fast Open
+      "net.ipv4.tcp_fastopen" = "3";
+      
+      # Enable MTU probing
+      "net.ipv4.tcp_mtu_probing" = lib.mkDefault true;
+
+      # Log martian packets
+      "net.ipv4.conf.default.log_martians" = "1";
+      "net.ipv4.conf.all.log_martians" = "1";
+
+      # DOS prevention
+      "net.ipv4.tcp_max_syn_backlog" = "8192";
+      "net.ipv4.tcp_max_tw_buckets" = "2000000";
+      "net.ipv4.tcp_tw_reuse" = "1";
+      "net.ipv4.tcp_fin_timeout" = "10";
+      "net.ipv4.tcp_slow_start_after_idle" = "0";
+      "net.ipv4.tcp_syncookies" = "1";
     };
 
     # For handhelds etc
