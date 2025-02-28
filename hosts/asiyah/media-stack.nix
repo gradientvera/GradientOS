@@ -655,7 +655,7 @@ in {
     };
 
     romm = {
-      image = "rommapp/romm:3.7.0-alpha.1";
+      image = "rommapp/romm:latest";
       pull = "newer";
       volumes = [
         "/data/downloads/games:/romm/library"
