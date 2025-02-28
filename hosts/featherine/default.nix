@@ -42,6 +42,7 @@
 
   jovian.devices.steamdeck.enable = lib.mkForce false;
   jovian.steamos.useSteamOSConfig = lib.mkForce false;
+  jovian.hardware.amd.gpu.enableBacklightControl = true;
 
   services.openssh.openFirewall = true;
 
