@@ -58,6 +58,7 @@ in
 
   virtualisation.oci-containers.containers.tdarrNode = {
     image = "ghcr.io/haveagitgat/tdarr_node:latest";
+    pull = "newer";
     volumes = [
       "/var/lib/tdarr/server:/app/server"
       "/var/lib/tdarr/config:/app/configs"

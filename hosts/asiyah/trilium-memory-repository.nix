@@ -7,6 +7,7 @@ in {
 
   virtualisation.oci-containers.containers.memory-repository = {
     image = "${name}:${tag}";
+    pull = "newer";
     imageFile = with pkgs.dockerTools;
       buildImage {
         inherit name tag;

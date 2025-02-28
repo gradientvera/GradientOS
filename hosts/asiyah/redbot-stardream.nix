@@ -2,7 +2,8 @@
 {
 
   virtualisation.oci-containers.containers.stardream = {
-    image = "phasecorex/red-discordbot:extra-audio";
+    image = "ghcr.io/phasecorex/red-discordbot:extra-audio";
+    pull = "newer";
     volumes = [ "/data/stardream:/data" ];
     environment = {
       TZ = config.time.timeZone;
