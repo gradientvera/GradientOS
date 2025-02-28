@@ -9,6 +9,7 @@ let
   mkConstantBase = description: file: type: lib.mkOption {
     inherit type;
     default = import file;
+    readOnly = true;
     description = mkDescription description;
   };
   mkDescription = description: 
