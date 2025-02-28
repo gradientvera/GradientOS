@@ -469,7 +469,7 @@ in {
         webUIPort = toString ports.tdarr-webui;
         internalNode = "true";
         inContainer = "true";
-        ffmpegVersion = "6";
+        ffmpegVersion = "7";
         nodeName = config.networking.hostName;
       };
       extraOptions = [
@@ -574,7 +574,8 @@ in {
       dependsOn = [ "create-mediarr-pod" "gluetun" "sonarr" "radarr" "lidarr" "readarr" ];
     };
 
-    cross-seed = {
+    # TODO: Broken! Fix sometime
+    /*cross-seed = {
       image = "ghcr.io/cross-seed/cross-seed:6";
       pull = "newer";
       volumes = [
@@ -592,7 +593,7 @@ in {
       cmd = [ "daemon" ];
       extraOptions = [] ++ defaultOptions ++ userOptions;
       dependsOn = [ "create-mediarr-pod" "gluetun" "prowlarr" "sonarr" "radarr" ];
-    };
+    };*/
 
     sabnzbd = {
       image = "lscr.io/linuxserver/sabnzbd:latest";
@@ -685,12 +686,13 @@ in {
       environmentFiles = [ config.sops.secrets.mediarr-mariadb-env.path ];
       cmd = [ "--port" "3808" ];
       extraOptions = [
-        "--health-cmd" "CMD"
+        # TODO: Broken! Fix sometime...
+        /*"--health-cmd" "CMD"
         "--health-cmd" "healthcheck.sh"
         "--health-cmd='--connect'"
         "--health-cmd='--innodb_initialized'"
         "--health-start-period" "30s"
-        "--health-interval" "10s"
+        "--health-interval" "10s"*/
       ] ++ defaultOptions ++ userOptions;
       dependsOn = [ "create-mediarr-pod" "gluetun" ];
     };
