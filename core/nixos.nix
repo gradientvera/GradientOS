@@ -40,8 +40,9 @@ in
     };
 
     # Performance and power saving
-    services.auto-cpufreq.enable = true;
-    services.power-profiles-daemon.enable = lib.mkForce false;
+    powerManagement.powertop.enable = true;
+    services.power-profiles-daemon.enable = true; # Replace with "tuned" when available
+    services.thermald.enable = true;
     services.irqbalance.enable = true;
 
     # Convenience

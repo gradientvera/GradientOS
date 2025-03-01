@@ -111,7 +111,6 @@
         modules = [
           declarative-flatpak.nixosModules.default
 
-          mixins.tor
           mixins.wine
           mixins.gnupg
           mixins.monado

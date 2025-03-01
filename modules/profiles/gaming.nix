@@ -352,6 +352,8 @@ in
         openFirewall = true;
         autoStart = lib.mkDefault false;
       };
+
+      services.joycond.enable = true;
       
       environment.systemPackages = with pkgs; [
         space-station-14-launcher
