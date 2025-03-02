@@ -42,7 +42,7 @@ in
     # Performance and power saving
     powerManagement.powertop.enable = true;
     services.power-profiles-daemon.enable = true; # Replace with "tuned" when available
-    services.thermald.enable = true;
+    services.thermald.enable = lib.mkIf (pkgs.system != "aarch64-linux") true;
     services.irqbalance.enable = true;
 
     # Convenience
