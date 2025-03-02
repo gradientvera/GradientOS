@@ -7,6 +7,7 @@
     kdePackages.kolourpaint
     lxqt.pavucontrol-qt
     kdePackages.okular
+    kdePackages.kate
     discord-canary
     google-chrome
     moonlight-qt
@@ -18,7 +19,6 @@
     discord
     spotify
     carla
-    kate
     vlc
     mpv
   ];

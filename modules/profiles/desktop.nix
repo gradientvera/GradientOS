@@ -88,7 +88,7 @@ in
       programs.xwayland.enable = true;
 
       environment.systemPackages = with pkgs; [
-        xwaylandvideobridge
+        kdePackages.xwaylandvideobridge
         wlr-randr
         waypipe
       ];

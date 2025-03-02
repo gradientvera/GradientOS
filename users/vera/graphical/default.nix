@@ -15,6 +15,7 @@
     kdePackages.okular
     element-desktop
     master.discord-canary
+    kdePackages.kate
     google-chrome
     qbittorrent
     glabels-qt
@@ -29,7 +30,6 @@
     ventoy
     krita
     carla
-    kate
     vmpk
     peek
     vlc
