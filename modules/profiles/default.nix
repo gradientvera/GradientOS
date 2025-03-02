@@ -47,6 +47,7 @@ in
       ssh-to-age
       distrobox
       nfs-utils
+      powertop
       usbutils
       pciutils
       nettools
