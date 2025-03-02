@@ -8,11 +8,8 @@
 
   hardware.cpu.amd.updateMicrocode = lib.mkDefault config.hardware.enableRedistributableFirmware;
 
-  services.auto-epp.enable = true;
-
   # System Management Unit
   hardware.cpu.amd.ryzen-smu.enable = true;
-
 
   environment.systemPackages = with pkgs; [
     ryzenadj
