@@ -44,7 +44,7 @@ in {
     });
   });
 
-  emulationstation-de = (prev.emulationstation-de.override { libgit2 = final.stable.libgit2; });
+  emulationstation-de = (prev.emulationstation-de.override { libgit2 = final.stable.libgit2; icu = final.icu75; });
 
   moonlight-qt = prev.moonlight-qt.overrideAttrs (prevAttrs: {
     nativeBuildInputs = prevAttrs.nativeBuildInputs ++ [ prev.copyDesktopItems ];
