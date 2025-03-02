@@ -9,6 +9,7 @@
 
   gradient.profiles.gaming.enable = true;
   gradient.profiles.gaming.emulation.enable = false;
+  gradient.profiles.gaming.emulation.romPath = "/run/media/deck/mmcblk0p1/roms";
   gradient.profiles.desktop.enable = true;
 
   # Disable 3D printer stuff

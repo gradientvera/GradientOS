@@ -92,7 +92,7 @@ in
 
     gradient.profiles.gaming.emulation.sync.enable = lib.mkOption {
       type = lib.types.bool;
-      default = cfg.profiles.gaming.enable;
+      default = cfg.profiles.gaming.emulation.enable;
       description = ''
         Whether to enable savedata synchronization, using Syncthing.
       '';
@@ -327,13 +327,13 @@ in
       gradient.profiles.desktop.enable = true;
     })
 
-    (lib.mkIf (cfg.profiles.gaming.enable && cfg.profiles.gaming.openFirewall) {
+    (lib.mkIf (cfg.profiles.gaming.openFirewall) {
       # For games and such.
       networking.firewall.allowedTCPPortRanges = [ { from=7777; to=7787; } ];
       networking.firewall.allowedUDPPortRanges = [ { from=7777; to=7787; } ];
     })
 
-    (lib.mkIf (cfg.profiles.gaming.enable && cfg.profiles.gaming.installGames) {
+    (lib.mkIf (cfg.profiles.gaming.installGames) {
       # Conflicting definition for capSysNice behavior
       programs.gamescope = if (config ? "jovian" && config.jovian.steam.enable) then {
         enable = true;
@@ -367,7 +367,7 @@ in
       ];
     })
 
-    (lib.mkIf (cfg.profiles.gaming.enable && cfg.profiles.gaming.kernelTweaksEnabled) {
+    (lib.mkIf (cfg.profiles.gaming.kernelTweaksEnabled) {
       # Performance tweaks based on CryoUtilities
       gradient.kernel = {
         hugepages = {
@@ -381,7 +381,7 @@ in
       };
     })
 
-    (lib.mkIf cfg.profiles.gaming.emulation.enable {
+    (lib.mkIf (cfg.profiles.gaming.emulation.enable) {
       # Create needed folders for ROM path etc
       systemd.tmpfiles.settings."10-emulation.conf" = 
       {
@@ -393,7 +393,7 @@ in
           cfg.profiles.gaming.emulation.systems));
     })
 
-    (lib.mkIf cfg.profiles.gaming.emulation.installEmulators {
+    (lib.mkIf (cfg.profiles.gaming.emulation.installEmulators) {
       environment.systemPackages = with pkgs; [
         # -- Retroarch --
         retroarch-full # A lot of systems
