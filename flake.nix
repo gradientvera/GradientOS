@@ -313,6 +313,7 @@
           mixins.v4l2loopback
           mixins.virtualisation
           #mixins.nix-store-serve
+          mixins.jovian-decky-loader
           mixins.system76-scheduler
           mixins.declarative-flatpak
           
