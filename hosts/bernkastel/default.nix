@@ -7,7 +7,7 @@
     ./programs.nix
     ./filesystems.nix
     ./secrets/default.nix
-    ./libvirtd/default.nix
+    # ./libvirtd/default.nix
     ./hardware-configuration.nix
   ];
 
