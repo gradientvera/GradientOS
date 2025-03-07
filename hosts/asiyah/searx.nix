@@ -87,6 +87,10 @@ in
           "(.*\.)?wikipedia.com$"
           "(.*\.)?reddit.com$"
           "(.*\.)?github.com$"
+
+          # For wiki articles
+          "(.*\.)?nixos.org$"
+          "(.*\.)archlinux.org$"
         ];
         low_priority = [
 
