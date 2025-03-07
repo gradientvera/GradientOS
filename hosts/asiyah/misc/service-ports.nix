@@ -59,6 +59,7 @@
   tor = 9050;
   pufferpanel = 8098;
   pufferpanel-sftp = 5657;
+  ange-spice = 5900;
 
   # grafana
   grafana = 8083;

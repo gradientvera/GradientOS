@@ -11,7 +11,10 @@
   boot.kernelModules = [ "kvm-intel" "nfs" "corsair-psu" "iTCO_wdt" ];
   boot.extraModulePackages = [ ];
 
-  boot.kernelParams = [ "pcie_aspm=off" ];
+  boot.kernelParams = [
+    "pcie_aspm=off"
+    "intel_iommu=on"
+  ];
 
   # We've got enough RAM to do this LET'S GOOO
   boot.tmp.useTmpfs = true;

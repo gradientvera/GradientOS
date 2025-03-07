@@ -21,6 +21,7 @@
     ./victoriametrics.nix
     ./palworld-server.nix
     ./secrets/default.nix
+    ./libvirtd/default.nix
     ./redbot-stardream.nix
     ./gradient-generator.nix
     # ./project-zomboid-server.nix
