@@ -79,6 +79,7 @@ in
           "(.*\.)?redd\.it$"    = "old.reddit.com";
         };
         remove = [
+          "(.*\.)?redditmedia.com$"
           "(.*\.)?facebook.com$"
           "(.*\.)?softonic.com$"
           "(.*\.)?nixos.wiki$"
