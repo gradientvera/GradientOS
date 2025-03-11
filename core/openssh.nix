@@ -25,6 +25,7 @@ Host *
     settings = {
       PasswordAuthentication = false;
       PermitRootLogin = lib.mkForce "prohibit-password";
+      LogLevel = "VERBOSE";
     };
 
     knownHosts = {
@@ -48,5 +49,4 @@ Host *
   users.users.root.openssh.authorizedKeys.keys = with ssh-pub-keys; [
     vera
   ];
-
 }

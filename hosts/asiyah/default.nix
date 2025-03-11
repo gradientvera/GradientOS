@@ -12,6 +12,7 @@
     ./duckdns.nix
     ./postgres.nix
     ./scrutiny.nix
+    ./fail2ban.nix
     ./cloudflare.nix
     ./filesystem.nix
     ./pufferpanel.nix
