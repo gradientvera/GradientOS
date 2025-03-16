@@ -44,7 +44,7 @@ in
               ms-dotnettools.csharp
 
               # rust
-              # rust-lang.rust-analyzer # TODO: Uncomment when it builds
+              rust-lang.rust-analyzer
 
               # nushell
               thenuprojectcontributors.vscode-nushell-lang
