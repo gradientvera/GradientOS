@@ -8,8 +8,9 @@ in
     enable = true;
     settings = {
       server = {
-        root_url = "%(protocol)s://%(domain)s:%(http_port)s/grafana/";
-        serve_from_sub_path = true;
+        domain = "grafana.asiyah.gradient.moe";
+        root_url = "%(protocol)s://%(domain)s/";
+        serve_from_sub_path = false;
         http_port = ports.grafana;
         http_addr = "127.0.0.1";
       };

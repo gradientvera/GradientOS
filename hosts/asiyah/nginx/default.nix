@@ -1,4 +1,4 @@
-{ pkgs, ... }:
+{ pkgs, config, ... }:
 let
   ports = import ../misc/service-ports.nix;
 in {
@@ -30,6 +30,9 @@ in {
     acceptTerms = true;
     defaults = {
       email = "gradientvera+acme@outlook.com";
+      dnsResolver = "1.1.1.1:53";
+      # dnsProvider = "cloudflare"; # Apparently this default doesn't work lmao
+      credentialFiles."CF_DNS_API_TOKEN_FILE" = config.sops.secrets.acme-cf-token.path;
     };
   };
 

@@ -3,16 +3,32 @@
   Public gradient.moe website.
 
 */
-{ self, pkgs, config, ... }:
+{ self, pkgs, lib, config, ... }:
 let
   ports = import ../../asiyah/misc/service-ports.nix;
 in
 {
 
+  security.acme.certs."gradient.moe" = {
+    dnsProvider = "cloudflare";
+    extraDomainNames = lib.mkForce [
+      "*.gradient.moe"
+      "*.asiyah.gradient.moe"
+      "*.briah.gradient.moe"
+      "*.beatrice.gradient.moe"
+      "*.bernkastel.gradient.moe"
+      # TODO: Add the rest meh
+      
+      "zumorica.es"
+      "*.zumorica.es"
+    ];
+  };
+
   services.nginx.virtualHosts."gradient.moe" = {
     root = toString self.inputs.gradient-moe.packages.${pkgs.system}.default;
     default = true;
     enableACME = true;
+    acmeRoot = null;
     addSSL = true;
     serverAliases = [
       "www.gradient.moe"
@@ -25,7 +41,7 @@ in
   };
 
   services.nginx.virtualHosts."hass.gradient.moe" = {
-    enableACME = true;
+    useACMEHost = "gradient.moe";
     addSSL = true;
     extraConfig = ''
       proxy_buffering off;

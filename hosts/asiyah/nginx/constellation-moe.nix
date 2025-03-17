@@ -1,14 +1,23 @@
 /*
   Public constellation.moe website.
 */
-{ self, ... }:
+{ self, lib, ... }:
 {
+
+  security.acme.certs."constellation.moe" = {
+    dnsProvider = "cloudflare";
+    extraDomainNames = lib.mkForce [
+      "*.constellation.moe"
+      "*.asiyah.constellation.moe"
+    ];
+  };
 
   services.nginx.virtualHosts = {
   
     "constellation.moe" = {
       root = self.inputs.constellation-moe;
       enableACME = true;
+      acmeRoot = null;
       addSSL = true;
       serverAliases = [
         "www.constellation.moe"
@@ -16,7 +25,7 @@
     };
 
     "neith.constellation.moe" = {
-      enableACME = true;
+      useACMEHost = "constellation.moe";
       addSSL = true;
 
       locations."/" = {
@@ -29,7 +38,7 @@
     };
 
     "remie.constellation.moe" = {
-      enableACME = true;
+      useACMEHost = "constellation.moe";
       addSSL = true;
       
       locations."/" = {
@@ -42,7 +51,7 @@
     };
 
     "vera.constellation.moe" = {
-      enableACME = true;
+      useACMEHost = "constellation.moe";
       addSSL = true;
       
       locations."/" = {

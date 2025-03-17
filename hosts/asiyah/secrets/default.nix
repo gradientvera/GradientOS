@@ -111,6 +111,14 @@
         restartUnits = [ "ddclient.service" ];
       };
 
+      acme-cf-email = {
+        restartUnits = [ "*acme*.service" ];
+      };
+
+      acme-cf-token = {
+        restartUnits = [ "*acme*.service" ];
+      };
+
     };
   };
 

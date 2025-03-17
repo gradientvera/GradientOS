@@ -5,7 +5,7 @@ in {
 
   services.nginx.virtualHosts."polycule.constellation.moe" = {
     root = self.inputs.polycule-constellation-moe;
-    enableACME = true;
+    useACMEHost = "constellation.moe";
     addSSL = true;
 
     locations."/vdo-ninja/" = {
@@ -30,7 +30,7 @@ in {
   };
 
   services.nginx.virtualHosts."jellyfin.constellation.moe" = {
-    enableACME = true;
+    useACMEHost = "constellation.moe";
     addSSL = true;
     
     extraConfig = ''
@@ -86,7 +86,7 @@ in {
   };
 
   services.nginx.virtualHosts."ersatztv.constellation.moe" = {
-    enableACME = true;
+    useACMEHost = "constellation.moe";
     addSSL = true;
     locations."/" = {
       proxyPass = "http://127.0.0.1:${toString ports.ersatztv}";
@@ -95,7 +95,7 @@ in {
   };
 
   services.nginx.virtualHosts."iptv.constellation.moe" = {
-    enableACME = true;
+    useACMEHost = "constellation.moe";
     addSSL = true;
     locations."/iptv" = {
       proxyPass = "http://127.0.0.1:${toString ports.ersatztv}/iptv";
@@ -104,7 +104,7 @@ in {
   };
 
   services.nginx.virtualHosts."jellyseerr.constellation.moe" = {
-    enableACME = true;
+    useACMEHost = "constellation.moe";
     addSSL = true;
     locations."/" = {
       proxyPass = "http://127.0.0.1:${toString ports.jellyseerr}";
@@ -112,17 +112,8 @@ in {
     };
   };
 
-  services.nginx.virtualHosts."unpackerr.constellation.moe" = {
-    enableACME = true;
-    addSSL = true;
-    locations."/" = {
-      proxyPass = "http://127.0.0.1:${toString ports.unpackerr}";
-      proxyWebsockets = true;
-    };
-  };
-
   services.nginx.virtualHosts."radarr.constellation.moe" = {
-    enableACME = true;
+    useACMEHost = "constellation.moe";
     addSSL = true;
     locations."/" = {
       proxyPass = "http://127.0.0.1:${toString ports.radarr}";
@@ -131,7 +122,7 @@ in {
   };
 
   services.nginx.virtualHosts."sonarr.constellation.moe" = {
-    enableACME = true;
+    useACMEHost = "constellation.moe";
     addSSL = true;
     locations."/" = {
       proxyPass = "http://127.0.0.1:${toString ports.sonarr}";
@@ -140,7 +131,7 @@ in {
   };
 
   services.nginx.virtualHosts."lidarr.constellation.moe" = {
-    enableACME = true;
+    useACMEHost = "constellation.moe";
     addSSL = true;
     locations."/" = {
       proxyPass = "http://127.0.0.1:${toString ports.lidarr}";
@@ -149,7 +140,7 @@ in {
   };
 
   services.nginx.virtualHosts."slskd.constellation.moe" = {
-    enableACME = true;
+    useACMEHost = "constellation.moe";
     addSSL = true;
     locations."/" = {
       proxyPass = "http://127.0.0.1:${toString ports.slskd}";
@@ -158,7 +149,7 @@ in {
   };
 
   services.nginx.virtualHosts."readarr.constellation.moe" = {
-    enableACME = true;
+    useACMEHost = "constellation.moe";
     addSSL = true;
     locations."/" = {
       proxyPass = "http://127.0.0.1:${toString ports.readarr}";
@@ -167,7 +158,7 @@ in {
   };
 
   services.nginx.virtualHosts."bazarr.constellation.moe" = {
-    enableACME = true;
+    useACMEHost = "constellation.moe";
     addSSL = true;
     locations."/" = {
       proxyPass = "http://127.0.0.1:${toString ports.bazarr}";
@@ -176,7 +167,7 @@ in {
   };
 
   services.nginx.virtualHosts."prowlarr.constellation.moe" = {
-    enableACME = true;
+    useACMEHost = "constellation.moe";
     addSSL = true;
     locations."/" = {
       proxyPass = "http://127.0.0.1:${toString ports.prowlarr}";
@@ -185,7 +176,7 @@ in {
   };
 
   services.nginx.virtualHosts."tdarr.constellation.moe" = {
-    enableACME = true;
+    useACMEHost = "constellation.moe";
     addSSL = true;
     locations."/" = {
       proxyPass = "http://127.0.0.1:${toString ports.tdarr-webui}";
@@ -194,7 +185,7 @@ in {
   };
 
   services.nginx.virtualHosts."torrent.constellation.moe" = {
-    enableACME = true;
+    useACMEHost = "constellation.moe";
     addSSL = true;
     locations."/" = {
       proxyPass = "http://127.0.0.1:${toString ports.qbittorrent-webui}";
@@ -203,7 +194,7 @@ in {
   };
 
   services.nginx.virtualHosts."bitmagnet.constellation.moe" = {
-    enableACME = true;
+    useACMEHost = "constellation.moe";
     addSSL = true;
     locations."/" = {
       proxyPass = "http://127.0.0.1:${toString ports.bitmagnet-webui}";
@@ -212,7 +203,7 @@ in {
   };
 
   services.nginx.virtualHosts."sabnzbd.constellation.moe" = {
-    enableACME = true;
+    useACMEHost = "constellation.moe";
     addSSL = true;
     locations."/" = {
       proxyPass = "http://127.0.0.1:${toString ports.sabnzbd}";
@@ -221,7 +212,7 @@ in {
   };
 
   services.nginx.virtualHosts."romm.constellation.moe" = {
-    enableACME = true;
+    useACMEHost = "constellation.moe";
     addSSL = true;
     locations."/" = {
       proxyPass = "http://127.0.0.1:${toString ports.romm}";
@@ -230,7 +221,7 @@ in {
   };
 
   services.nginx.virtualHosts."search.constellation.moe" = {
-    enableACME = true;
+    useACMEHost = "constellation.moe";
     addSSL = true;
     locations."/" = {
       proxyPass = "http://127.0.0.1:${toString ports.searx}";
@@ -239,7 +230,7 @@ in {
   };
 
   services.nginx.virtualHosts."files.constellation.moe" = {
-    enableACME = true;
+    useACMEHost = "constellation.moe";
     addSSL = true;
     locations."/" = {
       proxyPass = "http://127.0.0.1:${toString ports.mikochi}";
@@ -248,7 +239,7 @@ in {
   };
 
   services.nginx.virtualHosts."neko.constellation.moe" = {
-    enableACME = true;
+    useACMEHost = "constellation.moe";
     addSSL = true;
     locations."/" = {
       proxyPass = "http://127.0.0.1:${toString ports.neko}";
@@ -257,12 +248,38 @@ in {
   };
 
   services.nginx.virtualHosts."pufferpanel.constellation.moe" = {
-    enableACME = true;
+    useACMEHost = "constellation.moe";
     addSSL = true;
     locations."/" = {
       proxyPass = "http://127.0.0.1:${toString ports.pufferpanel}";
       proxyWebsockets = true;
     };
+  };
+
+  # TODO: Figure out a way to automate the below list eugh
+
+  services.oauth2_proxy.nginx.virtualHosts = {
+    "polycule.constellation.moe" = {};
+    # "jellyfin.constellation.moe" = {}; # Use built-in auth
+    "ersatztv.constellation.moe" = {};
+    "iptv.constellation.moe" = {};
+    # "jellyseerr.constellation.moe" = {}; # Use built-in auth
+    "radarr.constellation.moe" = {};
+    "sonarr.constellation.moe" = {};
+    "lidarr.constellation.moe" = {};
+    "slskd.constellation.moe" = {};
+    "readarr.constellation.moe" = {};
+    "bazarr.constellation.moe" = {};
+    "prowlarr.constellation.moe" = {};
+    "tdarr.constellation.moe" = {};
+    "torrent.constellation.moe" = {};
+    "bitmagnet.constellation.moe" = {};
+    "sabnzbd.constellation.moe" = {};
+    "romm.constellation.moe" = {};
+    "search.constellation.moe" = {};
+    "files.constellation.moe" = {};
+    "neko.constellation.moe" = {};
+    "pufferpanel.constellation.moe" = {};
   };
   
 }
