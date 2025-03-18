@@ -49,6 +49,13 @@
         restartUnits = [ "podman-gluetun.service" ];
       };
 
+      mediarr-gluetun-uk-env = {
+        mode = "0440";
+        owner = config.users.users.mediarr.name;
+        group = config.users.users.mediarr.group;
+        restartUnits = [ "podman-gluetun.service" ];
+      };
+
       mediarr-iptv-env = {
         mode = "0440";
         owner = config.users.users.mediarr.name;

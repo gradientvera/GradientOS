@@ -37,6 +37,8 @@ let
     sabnzbd
     neko
     mediarr-openssh
+    proxy-vpn
+    proxy-vpn-uk
   ];
 in {
 
@@ -81,6 +83,7 @@ in {
         -p ${toString ports.romm}:8080 \
         -p ${toString ports.neko}:${toString ports.neko} \
         -p ${toString ports.neko-epr-start}-${toString ports.neko-epr-end}:${toString ports.neko-epr-start}-${toString ports.neko-epr-end}/udp \
+        -p ${toString ports.proxy-vpn}:${toString ports.proxy-vpn} \
         --ip "10.88.0.2" \
         --sysctl="net.ipv4.ip_forward=1" \
         --sysctl="net.ipv4.conf.all.src_valid_mark=1" \
@@ -159,6 +162,7 @@ in {
     "/var/lib/${userName}/tdarr/temp".d = rule;
     "/var/lib/${userName}/bitmagnet".d = rule;
     "/var/lib/${userName}/gluetun".d = rule;
+    "/var/lib/${userName}/gluetun-uk".d = rule;
     "/var/lib/${userName}/cross-seed".d = rule;
     "/var/lib/${userName}/sabnzbd".d = rule;
     "/var/lib/${userName}/sabnzbd/incomplete".d = rule;
@@ -493,16 +497,72 @@ in {
         FIREWALL_INPUT_PORTS = builtins.concatStringsSep "," (builtins.map (p: toString p) allowedPorts);
         FIREWALL_VPN_INPUT_PORTS = "${toString ports.qbittorrent-peer},${toString ports.slskd-peer}";
         FIREWALL_OUTBOUND_SUBNETS="10.88.0.0/24";
+        WIREGUARD_MTU = "1320";
+        WIREGUARD_PERSISTENT_KEEPALIVE_INTERVAL = "15s";
       };
       environmentFiles = [ config.sops.secrets.mediarr-gluetun-env.path ];
       extraOptions = [
         "--privileged"
         "--cap-add=NET_ADMIN"
-        "--device=/dev/net/tun:/dev/net/tun"
         "--dns=1.1.1.1"
         "--dns=1.0.0.1"
       ] ++ (builtins.filter (e: e != "--network=container:gluetun") defaultOptions);
       dependsOn = [ "create-mediarr-pod" ];
+    };
+
+    proxy-vpn-socks5 = {
+      image = "serjs/go-socks5-proxy:latest";
+      pull = "newer";
+      environment = {
+        PROXY_PORT = toString ports.proxy-vpn;
+      };
+      extraOptions = [] ++ defaultOptions;
+      dependsOn = [ "create-mediarr-pod" "gluetun" ];
+    };
+
+    gluetun-uk = {
+      image = "qmcgaw/gluetun:latest";
+      pull = "newer";
+      volumes = [
+        "/var/lib/${userName}/gluetun-uk:/gluetun"
+      ];
+      ports = [
+        # Ports for things connected to this VPN go here
+        "${toString ports.proxy-vpn-uk}:${toString ports.proxy-vpn-uk}"
+      ];
+      environment = {
+        TZ = config.time.timeZone;
+        PUID = toString userUid;
+        PGID = toString groupGid;
+        VPN_SERVICE_PROVIDER = "airvpn";
+        VPN_TYPE = "wireguard";
+        FIREWALL_INPUT_PORTS = builtins.concatStringsSep "," (builtins.map (p: toString p) allowedPorts);
+        FIREWALL_VPN_INPUT_PORTS = "";
+        FIREWALL_OUTBOUND_SUBNETS="10.88.0.0/24";
+        WIREGUARD_MTU = "1320";
+        WIREGUARD_PERSISTENT_KEEPALIVE_INTERVAL = "15s";
+        HTTP_CONTROL_SERVER_ADDRESS = "127.0.0.1:8001";
+        HEALTH_SERVER_ADDRESS = "127.0.0.1:9998";
+      };
+      environmentFiles = [ config.sops.secrets.mediarr-gluetun-uk-env.path ];
+      extraOptions = [
+        "--ip" "10.88.0.5"
+        "--privileged"
+        "--cap-add=NET_ADMIN"
+        "--dns=1.1.1.1"
+        "--dns=1.0.0.1"
+      ];
+      dependsOn = [  ];
+    };
+
+    proxy-vpn-uk-socks5 = {
+      image = "serjs/go-socks5-proxy:latest";
+      pull = "newer";
+      environment = {
+        PROXY_PORT = toString ports.proxy-vpn-uk;
+      };
+      extraOptions = [ "--network=container:gluetun-uk" ];
+      dependsOn = [ "gluetun-uk" ];
     };
 
     bitmagnet = {
@@ -718,8 +778,8 @@ in {
       environmentFiles = [ config.sops.secrets.mediarr-neko-env.path ];
       extraOptions = [
         "--device=/dev/dri/:/dev/dri/"
-      ] ++ defaultOptions;
-      dependsOn = [ "create-mediarr-pod" "gluetun" ];
+      ] ++ (builtins.filter (e: e != "--network=container:gluetun") defaultOptions);
+      dependsOn = [ "create-mediarr-pod" ];
     };
 
   };
@@ -733,13 +793,10 @@ in {
 
   networking.firewall.allowedTCPPorts = with ports; [
     mediarr-openssh
-    qbittorrent-peer
-    slskd-peer
   ];
 
   networking.firewall.allowedUDPPorts = with ports; [
     qbittorrent-peer
-    slskd-peer
   ];
 
   networking.firewall.allowedUDPPortRanges = [

@@ -42,6 +42,8 @@
   neko = 8097;
   neko-epr-start = 52000;
   neko-epr-end = 52100;
+  proxy-vpn = 1080;
+  proxy-vpn-uk = 1081;
 
   # NFS
   nfsd = 2049;
