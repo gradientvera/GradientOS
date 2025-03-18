@@ -68,5 +68,6 @@ in
   services.nginx.virtualHosts."grafana.asiyah.gradient.moe" = mkInternalVHost { port = config.services.grafana.settings.server.http_port; };
   services.nginx.virtualHosts."syncthing.asiyah.gradient.moe" = mkInternalVHost { port = ports.syncthing; };
   services.nginx.virtualHosts."scrutiny.asiyah.gradient.moe" = mkInternalVHost { port = ports.scrutiny; };
+  services.nginx.virtualHosts."llm.asiyah.gradient.moe" = mkInternalVHost { port = ports.open-webui; };
 
 }

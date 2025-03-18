@@ -6,6 +6,7 @@
     ./mqtt.nix
     ./searx.nix
     ./numad.nix
+    ./ollama.nix
     ./clamav.nix
     ./backups.nix
     ./grafana.nix

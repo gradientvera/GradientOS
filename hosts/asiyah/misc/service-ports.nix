@@ -61,6 +61,8 @@
   pufferpanel-sftp = 5657;
   ange-spice = 5900;
   syncthing = 8384;
+  ollama = 11434;
+  open-webui = 8079;
 
   # grafana
   grafana = 8083;
