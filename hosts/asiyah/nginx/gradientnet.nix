@@ -69,5 +69,6 @@ in
   services.nginx.virtualHosts."syncthing.asiyah.gradient.moe" = mkInternalVHost { port = ports.syncthing; };
   services.nginx.virtualHosts."scrutiny.asiyah.gradient.moe" = mkInternalVHost { port = ports.scrutiny; };
   services.nginx.virtualHosts."llm.asiyah.gradient.moe" = mkInternalVHost { port = ports.open-webui; };
+  services.nginx.virtualHosts."bitwarden.asiyah.gradient.moe" = mkInternalVHost { port = ports.vaultwarden; };
 
 }

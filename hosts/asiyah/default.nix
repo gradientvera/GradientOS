@@ -16,6 +16,7 @@
     ./fail2ban.nix
     ./cloudflare.nix
     ./filesystem.nix
+    ./vaultwarden.nix
     ./pufferpanel.nix
     ./media-stack.nix
     ./nginx/default.nix

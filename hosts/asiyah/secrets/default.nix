@@ -118,12 +118,12 @@
         restartUnits = [ "ddclient.service" ];
       };
 
-      acme-cf-email = {
-        restartUnits = [ "*acme*.service" ];
+      acme-cf-token = {
+        restartUnits = [ "acme-gradient.moe.service" "acme-constellation.moe.service" ];
       };
 
-      acme-cf-token = {
-        restartUnits = [ "*acme*.service" ];
+      vaultwarden-env = {
+        restartUnits = [ "vaultwarden.service" ];
       };
 
     };

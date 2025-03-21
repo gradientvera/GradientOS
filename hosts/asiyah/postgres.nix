@@ -14,6 +14,7 @@ in
       "hass"
       "bitmagnet"
       "pufferpanel"
+      "vaultwarden"
     ];
     ensureUsers = [
       {
@@ -28,10 +29,17 @@ in
         name = "pufferpanel";
         ensureDBOwnership = true;
       }
+      {
+        name = "vaultwarden";
+        ensureDBOwnership = true;
+      }
     ];
     authentication = ''
       # Home Assistant
       local hass hass peer
+
+      # Vaultwarden
+      local vaultwarden vaultwarden peer
       
       # Podman network
       host bitmagnet bitmagnet 10.88.0.0/24 trust
