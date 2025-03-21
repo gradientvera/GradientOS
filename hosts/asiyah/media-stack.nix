@@ -6,10 +6,13 @@ let
   userUid = 976;
   groupName = "mediarr";
   groupGid = 972;
-  defaultOptions = [
+  podOptions = [
     "--pod=${userName}"
+  ];
+  gluetunOptions = [
     "--network=container:gluetun"
   ];
+  defaultOptions = podOptions ++ gluetunOptions;
   userOptions = [
     "--user=${toString userUid}:${toString groupGid}"
   ];
@@ -173,6 +176,10 @@ in {
     "/var/lib/${userName}/mariadb".d = rule;
     "/var/lib/${userName}/.mozilla".d = rule;
     "/var/lib/${userName}/.mozilla/firefox".d = rule;
+    "/var/lib/${userName}/.ssh".d = rule;
+    "/var/lib/${userName}/.ssh/authorized_keys"."f+" = {
+      argument = "${keys.neith}\n${keys.remie}\n${keys.vera}\n";
+    } // rule;
   };
 
   services.clamav.scanner.scanDirectories = [ "/data/downloads" ]; # /var/lib already scanned by default
@@ -677,11 +684,6 @@ in {
       image = "lscr.io/linuxserver/openssh-server:latest";
       pull = "newer";
       volumes = [
-        "${builtins.toFile "authorized_keys" ''
-          ${keys.neith}
-          ${keys.remie}
-          ${keys.vera}
-        ''}:/config/.ssh/authorized_keys:ro"
         "/var/lib/${userName}:/config"
         "/data/downloads:/downloads"
       ];
@@ -693,8 +695,8 @@ in {
         PASSWORD_ACCESS = "false";
         USER_NAME = userName;
       };
-      extraOptions = [] ++ defaultOptions;
-      dependsOn = [ "create-mediarr-pod" "gluetun" ];
+      extraOptions = [] ++ podOptions;
+      dependsOn = [ "create-mediarr-pod" ];
     };
 
     recyclarr = {
