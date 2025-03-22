@@ -38,6 +38,7 @@ let
     extraConfig = vhostConfig;
     useACMEHost = "gradient.moe";
     addSSL = true;
+    forceSSL = true;
     locations."/" = {
       proxyPass = "http://${address}:${toString port}";
       proxyWebsockets = true;
@@ -51,6 +52,7 @@ in
     extraConfig = vhostConfig;
     useACMEHost = "gradient.moe";
     addSSL = true;
+    forceSSL = true;
 
     serverAliases = [
       "asiyah.gradient"
