@@ -98,6 +98,12 @@ in
                 version = "0.12.2";
                 sha256 = "4c8e4aea7dd07c9c20173e71869759fb2ce2f55b9819c4b374172467af03b144";
               }
+              {
+                name = "vscode-just-syntax";
+                publisher = "nefrob";
+                version = "0.8.0";
+                sha256 = "cee0df23186250a469551c69f4171e5ba58f06ae4d342b92d528b4ffa91fa85f";
+              }
             ];
           })
       ];

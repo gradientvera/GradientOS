@@ -59,6 +59,7 @@ in
       screen
       yt-dlp
       p7zip
+      just
       sops
       gmic
       lsof
