@@ -29,7 +29,7 @@ in
     default = true;
     enableACME = true;
     acmeRoot = null;
-    addSSL = true;
+    forceSSL = true;
     serverAliases = [
       "www.gradient.moe"
       "zumorica.es"
@@ -42,7 +42,7 @@ in
 
   services.nginx.virtualHosts."hass.gradient.moe" = {
     useACMEHost = "gradient.moe";
-    addSSL = true;
+    forceSSL = true;
     extraConfig = ''
       proxy_buffering off;
     '';
@@ -55,6 +55,17 @@ in
       proxy_set_header Upgrade $http_upgrade;
       proxy_set_header Connection $connection_upgrade;
     '';
+  };
+
+  services.nginx.virtualHosts."identity.gradient.moe" = {
+    forceSSL = true;
+    # Generate let's encrypt certificate for this domain alone
+    # for kanidm purposes.
+    enableACME = true;
+    locations."/" = {
+      proxyPass = "https://127.0.0.1:${toString ports.kanidm}";
+      proxyWebsockets = true;
+    };
   };
 
 }

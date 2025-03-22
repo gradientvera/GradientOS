@@ -126,6 +126,15 @@
         restartUnits = [ "vaultwarden.service" ];
       };
 
+      kanidm-provisioning = {
+        mode = "0550";
+        format = "binary";
+        sopsFile = ./kanidm-provisioning.json;
+        owner = config.users.users.kanidm.name;
+        group = config.users.users.kanidm.group;
+        restartUnits = [ "kanidm.service" ];
+      };
+
     };
   };
 

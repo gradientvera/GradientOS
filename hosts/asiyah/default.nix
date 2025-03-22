@@ -8,6 +8,7 @@
     ./numad.nix
     ./ollama.nix
     ./clamav.nix
+    ./kanidm.nix
     ./backups.nix
     ./grafana.nix
     ./duckdns.nix

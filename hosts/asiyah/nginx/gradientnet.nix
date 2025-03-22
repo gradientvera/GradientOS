@@ -37,7 +37,6 @@ let
     listenAddresses = [ ips.gradientnet.asiyah ];
     extraConfig = vhostConfig;
     useACMEHost = "gradient.moe";
-    addSSL = true;
     forceSSL = true;
     locations."/" = {
       proxyPass = "http://${address}:${toString port}";
@@ -51,7 +50,6 @@ in
     listenAddresses = [ ips.gradientnet.asiyah ];
     extraConfig = vhostConfig;
     useACMEHost = "gradient.moe";
-    addSSL = true;
     forceSSL = true;
 
     serverAliases = [

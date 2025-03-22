@@ -11,6 +11,10 @@
   gradientnet = 1194;
   lilynet = 1195;
 
+  # kanidm
+  kanidm = 8443;
+  kanidm-ldap = 636;
+
   # mediarr stack
   jellyfin-http = 8096;
   jellyfin-https = 8920;
