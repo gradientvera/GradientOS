@@ -6,6 +6,9 @@ let
 in
 {
 
+  # KanIDM Learning resources:
+  # https://kanidm.github.io/kanidm/stable/
+
   services.kanidm = {
     enableServer = true;
     enableClient = true;
@@ -34,13 +37,32 @@ in
       enable = true;
       autoRemove = true;
       extraJsonFile = secrets.kanidm-provisioning.path;
+      systems.oauth2 = {
+        
+        constellation-oauth2-proxy = {
+          public = true;
+          displayName = "Constellation Internal Services";
+          originLanding = "https://polycule.constellation.moe";
+          originUrl = "https://polycule.constellation.moe/oauth2/callback";
+          enableLocalhostRedirects = true;
+          scopeMaps = {
+            # Only allow constellation group members to access
+            "constellation" = [
+              "openid"
+              "email"
+              "profile"
+            ];
+          };  
+        };
+
+      };
     };
   };
 
   # Allow kanidm to read secret, apparently the NixOS module does not set this???
   systemd.services.kanidm.serviceConfig.BindReadOnlyPaths = [ secrets.kanidm-provisioning.path ];
 
-  # Allow let's encrypt certificate to be read by acme group
+  # Allow Let's Encrypt certificate to be read by acme group
   security.acme.certs."identity.gradient.moe" = {
     reloadServices = [ "kanidm.service" ];
     postRun = ''
@@ -49,11 +71,12 @@ in
     '';
   };
 
-  # Add kanidm system user to acme group
+  # Add kanidm system user to acme group so it can read the certificate
   users.users.kanidm.extraGroups = [
     identityCert.group
   ];
 
+  # kanidm relies heavily on a couple CLI tools for management, so
   environment.systemPackages = [
     pkgs.kanidm
   ];

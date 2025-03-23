@@ -257,8 +257,7 @@ in {
   };
 
   # TODO: Figure out a way to automate the below list eugh
-
-  services.oauth2_proxy.nginx.virtualHosts = {
+  services.oauth2-proxy.nginx.virtualHosts = {
     "polycule.constellation.moe" = {};
     # "jellyfin.constellation.moe" = {}; # Use built-in auth
     "ersatztv.constellation.moe" = {};

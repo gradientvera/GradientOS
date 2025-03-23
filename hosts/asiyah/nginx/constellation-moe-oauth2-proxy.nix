@@ -4,16 +4,32 @@ let
   ports = import ../misc/service-ports.nix;
 in {
 
-  # TODO: Make this a container so we can have multiple instances of oauth2_proxy
+  # TODO: Make this a container so we can have multiple instances of oauth2_proxy?
 
-  services.oauth2_proxy = {
+  # OAuth2 Learning resources:
+  # https://auth0.com/intro-to-iam/what-is-oauth-2
+  # https://oauth2-proxy.github.io/oauth2-proxy/configuration/providers/openid_connect/
+
+  services.oauth2-proxy = {
     enable = true;
-    provider = "github";
     httpAddress = "http://127.0.0.1:${toString ports.oauth2-proxy}";
-    upstream = "http://127.0.0.1:${toString ports.nginx}";
+    upstream = [ "http://127.0.0.1:${toString ports.nginx}" ];
+
+    # -- github config --
+    #redirectURL = "https://polycule.constellation.moe/oauth2/callback";
+    #provider = "github";
+    #github.org = "ConstellationNRV";
+    #clientID = "05fb727827ad30eddf0d";
+
+    # -- kanidm config --
+    provider = "oidc";
+    clientID = "constellation-oauth2-proxy";
+    clientSecret = "proxy"; # Not actually a secret! Uses PKCE
     redirectURL = "https://polycule.constellation.moe/oauth2/callback";
-    github.org = "ConstellationNRV";
-    clientID = "05fb727827ad30eddf0d";
+    oidcIssuerUrl = "https://identity.gradient.moe/oauth2/openid/constellation-oauth2-proxy";
+    profileURL = "https://identity.gradient.moe/oauth2/openid/constellation-oauth2-proxy/userinfo";
+    extraConfig.code-challenge-method = "S256";
+
     keyFile = secrets.oauth2-proxy-secrets.path;
     reverseProxy = true;
     cookie.refresh = "1m";
@@ -34,7 +50,7 @@ in {
     port = ports.redis-oauth2;
   };
 
-  systemd.services.oauth2_proxy = {
+  systemd.services.oauth2-proxy = {
     after = [ "redis-oauth2.service" ];
     wants = [ "redis-oauth2.service" ];
   };

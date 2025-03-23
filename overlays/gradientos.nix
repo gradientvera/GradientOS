@@ -33,7 +33,7 @@ let
     ];
   };
 in {
-  discord = (final.master.discord.override {
+  discord = (prev.discord.override {
     withOpenASAR = true;
     withVencord = true;
     withTTS = true;
@@ -102,8 +102,7 @@ in {
     config.allowUnfree = true;
   };
 
-  # master branch nixpkgs overlay.
-  # ...because why the hell not, I want to use discord screensharing with audio now aaa
+  # Master branch nixpkgs overlay.
   master = import flake.inputs.nixpkgs-master {
     inherit (prev) system;
     config.allowUnfree = true;
