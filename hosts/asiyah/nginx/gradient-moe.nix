@@ -68,4 +68,13 @@ in
     };
   };
 
+  services.nginx.virtualHosts."git.gradient.moe" = {
+    useACMEHost = "gradient.moe";
+    forceSSL = true;
+    locations."/" = {
+      proxyPass = "http://127.0.0.1:${toString ports.forgejo}";
+      proxyWebsockets = true;
+    };
+  };
+
 }

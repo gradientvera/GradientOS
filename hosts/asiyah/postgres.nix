@@ -15,6 +15,7 @@ in
       "bitmagnet"
       "pufferpanel"
       "vaultwarden"
+      "forgejo"
     ];
     ensureUsers = [
       {
@@ -33,6 +34,10 @@ in
         name = "vaultwarden";
         ensureDBOwnership = true;
       }
+      {
+        name = "forgejo";
+        ensureDBOwnership = true;
+      }
     ];
     authentication = ''
       # Home Assistant
@@ -41,6 +46,9 @@ in
       # Vaultwarden
       local vaultwarden vaultwarden peer
       
+      # Forgejo
+      local forgejo forgejo peer
+
       # Podman network
       host bitmagnet bitmagnet 10.88.0.0/24 trust
 

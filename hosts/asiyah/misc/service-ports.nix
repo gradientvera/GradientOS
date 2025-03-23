@@ -70,6 +70,7 @@
   ollama = 11434;
   open-webui = 8079;
   vaultwarden = 8222;
+  forgejo = 3000;
 
   # grafana
   grafana = 8083;

@@ -55,6 +55,7 @@ in
               "openid"
               "email"
               "profile"
+              "groups"
             ];
           };  
         };
@@ -70,6 +71,24 @@ in
           scopeMaps = {
             # Only allow household group members to access
             "household" = [
+              "openid"
+              "email"
+              "profile"
+              "groups"
+            ];
+          };  
+        };
+
+        forgejo = {
+          public = true;
+          displayName = "Gradient Git";
+          originLanding = "https://git.gradient.moe/user/login";
+          originUrl = "https://git.gradient.moe/user/oauth2/kanidm/callback";
+          enableLocalhostRedirects = true;
+          preferShortUsername = true; # important or forgejo eats your face
+          scopeMaps = {
+            # Only allow forgejo group members to access
+            "forgejo-users" = [
               "openid"
               "email"
               "profile"

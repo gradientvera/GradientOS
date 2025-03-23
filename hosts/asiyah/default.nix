@@ -11,6 +11,7 @@
     ./kanidm.nix
     ./backups.nix
     ./grafana.nix
+    ./forgejo.nix
     ./duckdns.nix
     ./postgres.nix
     ./scrutiny.nix
