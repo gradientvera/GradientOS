@@ -10,6 +10,8 @@ in
   # https://kanidm.github.io/kanidm/stable/
 
   services.kanidm = {
+    package = pkgs.kanidmWithSecretProvisioning;
+
     enableServer = true;
     enableClient = true;
 
@@ -36,6 +38,8 @@ in
     provision = {
       enable = true;
       autoRemove = true;
+      adminPasswordFile = secrets.kanidm-admin-password.path;
+      idmAdminPasswordFile = secrets.kanidm-idm-admin-password.path;
       extraJsonFile = secrets.kanidm-provisioning.path;
       systems.oauth2 = {
         
@@ -55,12 +59,35 @@ in
           };  
         };
 
+        home-assistant = {
+          public = true;
+          displayName = "Home Assistant Provider";
+          originLanding = "https://hass.gradient.moe/";
+          # As per https://github.com/christiaangoossens/hass-oidc-auth
+          originUrl = "https://hass.gradient.moe/auth/oidc/callback";
+          enableLegacyCrypto = true; # Needs RS256 apparently...
+          enableLocalhostRedirects = true;
+          scopeMaps = {
+            # Only allow household group members to access
+            "household" = [
+              "openid"
+              "email"
+              "profile"
+              "groups"
+            ];
+          };  
+        };
+
       };
     };
   };
 
-  # Allow kanidm to read secret, apparently the NixOS module does not set this???
-  systemd.services.kanidm.serviceConfig.BindReadOnlyPaths = [ secrets.kanidm-provisioning.path ];
+  # Allow kanidm to read secrets, apparently the NixOS module does not set this???
+  systemd.services.kanidm.serviceConfig.BindReadOnlyPaths = [
+    secrets.kanidm-provisioning.path
+    secrets.kanidm-admin-password.path
+    secrets.kanidm-idm-admin-password.path
+  ];
 
   # Allow Let's Encrypt certificate to be read by acme group
   security.acme.certs."identity.gradient.moe" = {

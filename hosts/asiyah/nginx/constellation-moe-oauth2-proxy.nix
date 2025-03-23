@@ -8,6 +8,7 @@ in {
 
   # OAuth2 Learning resources:
   # https://auth0.com/intro-to-iam/what-is-oauth-2
+  # https://kanidm.github.io/kanidm/stable/integrations/oauth2.html
   # https://oauth2-proxy.github.io/oauth2-proxy/configuration/providers/openid_connect/
 
   services.oauth2-proxy = {

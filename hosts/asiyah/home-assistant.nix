@@ -75,6 +75,7 @@ in
     ];
     customComponents = with pkgs.home-assistant-custom-components; [
       moonraker
+      auth_oidc
       (let
         owner = "uvejota";
         version = "2024.07.6";
@@ -149,6 +150,12 @@ in
       max_retries = 3;
     };
     config.zha.zigpy_config.ota.z2m_remote_index = "https://raw.githubusercontent.com/Koenkk/zigbee-OTA/master/index.json";
+
+    config.auth_oidc = {
+      client_id = "home-assistant";
+      discovery_url = "https://identity.gradient.moe/oauth2/openid/home-assistant/.well-known/openid-configuration";
+    };
+
   };
 
   networking.firewall.interfaces.gradientnet.allowedTCPPorts = [ ports.home-assistant ];

@@ -11,7 +11,7 @@ edit-secret HOST $EDITOR="code --wait":
 
 [group('secrets')]
 edit-secret-kanidm $EDITOR="code --wait":
-    sops --input-type=binary ./hosts/asiyah/secrets/kanidm-provisioning.json
+    sops --input-type=binary ./hosts/asiyah/secrets/kanidm-provisioning.encjson
 
 [group('secrets')]
 edit-secret-core $EDITOR="code --wait":
