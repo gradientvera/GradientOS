@@ -1,4 +1,10 @@
-{ config, pkgs, ... }:
+/*
+
+  Takes heavy inspiration from https://git.lix.systems/the-distro/infra/src/commit/f37ac9edf339710929556f3498a41b5375692c34/services/forgejo/default.nix
+  Thank you, Lix infra team! <3
+
+*/
+{ config, pkgs, lib, ... }:
 let
   ports = import ./misc/service-ports.nix;
   repositoryRoot = "/data/repositories";
@@ -11,7 +17,7 @@ in
     rule = {
       user = config.services.forgejo.user;
       group = config.services.forgejo.group;
-      mode = "0750";
+      mode = "0770";
     };
   in
   {
@@ -31,6 +37,7 @@ in
     database = {
       type = "postgres";
       port = ports.postgresql;
+      createDatabase = true;
     };
 
     secrets = {
@@ -38,9 +45,6 @@ in
     };
 
     settings = {
-
-      session.COOKIE_SECURE = true;
-      ui.SHOW_USER_EMAIL = false;
 
       DEFAULT = {
         APP_NAME = "Gradient Git";
@@ -60,11 +64,32 @@ in
       };
 
       server = {
-        # Might enable this at some point
-        DISABLE_SSH = true;
+        LANDING_PAGE = "explore";
         HTTP_PORT = ports.forgejo;
         DOMAIN = "git.gradient.moe";
         ROOT_URL = "https://git.gradient.moe/";
+      
+        # SSH support
+        DISABLE_SSH = false;
+        START_SSH_SERVER = true;
+        SSH_DOMAIN = "ssh.gradient.moe"; # Not proxied through cloudflare... TODO: figure out a better solution?
+        BUILTIN_SSH_SERVER_USER = config.users.users.git.name;
+        SSH_LISTEN_HOST = "0.0.0.0";
+        SSH_PORT = ports.forgejo-ssh;
+        SSH_SERVER_HOST_KEYS = "${config.sops.secrets.forgejo-ssh-priv.path}";
+        SSH_EXPOSE_ANONYMOUS = false;
+      };
+
+      ui = {
+        SHOW_USER_EMAIL = false;
+        DEFAULT_SHOW_FULL_NAME = false;
+      };
+
+      session = {
+        COOKIE_SECURE = true;
+        PROVIDER = "db";  
+        PROVIDER_CONFIG = "";
+        SESSION_LIFE_TIME = 86400 * 5;
       };
 
       service = {
@@ -74,6 +99,12 @@ in
         ENABLE_NOTIFY_EMAIL = false;
         DEFAULT_KEEP_EMAIL_PRIVATE = true;
         WHITELISTED_URIS = "";
+      };
+
+      cache = {
+        ADAPTER = "redis";
+        HOST = "network=unix,addr=${config.services.redis.servers.forgejo.unixSocket},db=1";
+        ITEM_TTL = "72h";
       };
 
       "service.explore" = {
@@ -95,5 +126,71 @@ in
 
     };
   };
+
+  services.gitea-actions-runner = {
+    package = pkgs.forgejo-runner;
+    instances.asiyah = {
+      enable = true;
+      name = "asiyah";
+      url = config.services.forgejo.settings.server.ROOT_URL;
+      tokenFile = config.sops.secrets.forgejo-runner-token.path;
+      labels = [
+        "docker:docker://alpine:latest"
+        
+        "ubuntu-latest:docker://ubuntu:latest"
+        "ubuntu-24.04:docker://ubuntu:noble"
+        "ubuntu-22.04:docker://ubuntu:jammy"
+
+        "debian-latest:docker://debian:latest"
+        "debian-12.10:docker://debian:bookworm"
+        "debian-11.11:docker://debian:bullseye"
+
+        "alpine-latest:docker://alpine:latest"
+        "alpine-3.21:docker://alpine:3.21"
+        "alpine-3.20:docker://alpine:3.20"
+      ];
+    };
+  };
+
+  systemd.services.forgejo = {
+    serviceConfig = {
+      # Allow binding to port below 1024, for ssh
+      AmbientCapabilities = [ "CAP_NET_BIND_SERVICE" ];
+      CapabilityBoundingSet = [ "CAP_NET_BIND_SERVICE" ];
+      
+      # Allow using git user
+      PrivateUsers = lib.mkForce false;
+    };
+
+    # Prevent race conditions with sshd in case of misconfiguration
+    wants = [ "sshd.service" "redis-forgejo.service" ];
+    requires = [ "sshd.service" "redis-forgejo.service" ];
+  };
+
+  services.redis.servers.forgejo = {
+    enable = true;
+    user = config.services.forgejo.user;
+    save = [];
+    openFirewall = false;
+    port = ports.redis-forgejo;
+  };
+
+  users.users.git = {
+    isSystemUser = true;
+    group = config.users.groups.git.name;
+    extraGroups = [ "forgejo" ];
+    createHome = false;
+  };
+
+  users.groups.git = {};
+
+  networking.firewall.allowedTCPPorts = [
+    ports.forgejo-ssh
+  ];
+
+  environment.systemPackages = [
+    # For CLI management
+    config.services.forgejo.package
+  ];
 
 }

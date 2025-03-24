@@ -4,8 +4,6 @@ let
 in
 {
 
-  
-
   services.fail2ban = {
     enable = true;
     ignoreIP = [

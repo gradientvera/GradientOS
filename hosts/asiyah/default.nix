@@ -5,6 +5,7 @@
     ./nfs.nix
     ./mqtt.nix
     ./searx.nix
+    ./redis.nix
     ./numad.nix
     ./ollama.nix
     ./clamav.nix

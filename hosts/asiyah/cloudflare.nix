@@ -16,7 +16,8 @@
       *.gradient.moe,
       game.gradient.moe,
       vpn.gradient.moe,
-      www.gradient.moe
+      www.gradient.moe,
+      ssh.gradient.moe
 
       zone=zumorica.es
       zumorica.es,

@@ -147,6 +147,18 @@
         group = config.users.users.kanidm.group;
       };
 
+      forgejo-ssh-priv = {
+        restartUnits = [ "forgejo.service" ];
+        owner = config.services.forgejo.user;
+        group = config.services.forgejo.group;
+      };
+
+      forgejo-runner-token = {
+        restartUnits = [ "forgejo.service" "gitea-runner-asiyah.service" ];
+        owner = config.services.forgejo.user;
+        group = config.services.forgejo.group;
+      };
+
     };
   };
 

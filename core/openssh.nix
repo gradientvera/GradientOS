@@ -7,7 +7,7 @@ in {
   
   programs.ssh = {
     startAgent = true;
-    hostKeyAlgorithms = [ "ssh-ed25519" ];
+    hostKeyAlgorithms = [ "ssh-ed25519" "ssh-rsa" ];
 
     extraConfig = ''
 Host * 
@@ -34,6 +34,27 @@ Host *
       };
       "git.lix.systems" = {
         publicKey = "ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIL+li7S+VH+O2F8lehYE9oBmx7SLGGLl+UQDaTRA7iMM";
+      };
+      "ssh.gradient.moe" = {
+        publicKey = ssh-pub-keys.forgejo;
+      };
+      "asiyah.gradient.moe" = {
+        publicKey = ssh-pub-keys.asiyah;
+      };
+      "briah.gradient.moe" = {
+        publicKey = ssh-pub-keys.briah;
+      };
+      "bernkastel.gradient.moe" = {
+        publicKey = ssh-pub-keys.bernkastel;
+      };
+      "featherine.gradient.moe" = {
+        publicKey = ssh-pub-keys.featherine;
+      };
+      "erika.gradient.moe" = {
+        publicKey = ssh-pub-keys.erika;
+      };
+      "beatrice.gradient.moe" = {
+        publicKey = ssh-pub-keys.erika;
       };
     };
 

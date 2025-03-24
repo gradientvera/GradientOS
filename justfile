@@ -3,7 +3,11 @@
 
 [group('deployment')]
 switch HOST:
-    colmena apply switch --on={{HOST}} --evaluator=streaming
+    @just apply switch {{HOST}}
+
+[group('deployment')]
+apply OPERATION HOST:
+    colmena apply {{OPERATION}} --on={{HOST}} --evaluator=streaming
 
 [group('secrets')]
 edit-secret HOST $EDITOR="code --wait":

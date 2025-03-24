@@ -58,6 +58,7 @@
   # misc
   home-assistant = 8123;
   redis-oauth2 = 6380;
+  redis-forgejo = 6381;
   postgresql = 5432;
   trilium = 8081;
   searx = 8089;
@@ -71,6 +72,7 @@
   open-webui = 8079;
   vaultwarden = 8222;
   forgejo = 3000;
+  forgejo-ssh = 222;
 
   # grafana
   grafana = 8083;
