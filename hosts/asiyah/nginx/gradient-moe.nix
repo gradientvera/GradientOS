@@ -6,6 +6,17 @@
 { self, pkgs, lib, config, ... }:
 let
   ports = import ../../asiyah/misc/service-ports.nix;
+  mkReverseProxy = { port, address ? "127.0.0.1", protocol ? "http", generateOwnCert ? false, rootExtraConfig ? "", vhostExtraConfig ? "", useACMEHost ? "gradient.moe" }: {
+    useACMEHost = if (!generateOwnCert) then useACMEHost else null;
+    enableACME = generateOwnCert;
+    forceSSL = true;
+    extraConfig = vhostExtraConfig;
+    locations."/" = {
+      proxyPass = "${protocol}://${address}:${toString port}";
+      proxyWebsockets = true;
+      extraConfig = rootExtraConfig;
+    };
+  };
 in
 {
 
@@ -40,53 +51,15 @@ in
     };
   };
 
-  services.nginx.virtualHosts."hass.gradient.moe" = {
-    useACMEHost = "gradient.moe";
-    forceSSL = true;
-    extraConfig = ''
-      proxy_buffering off;
-    '';
-    locations."/".extraConfig = ''
-      proxy_pass http://127.0.0.1:${toString ports.home-assistant};
-      proxy_set_header Host $host;
-      proxy_redirect http:// https://;
-      proxy_http_version 1.1;
-      proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;
-      proxy_set_header Upgrade $http_upgrade;
-      proxy_set_header Connection $connection_upgrade;
-    '';
-  };
-
-  services.nginx.virtualHosts."identity.gradient.moe" = {
-    forceSSL = true;
-    # Generate let's encrypt certificate for this domain alone
-    # for kanidm purposes.
-    enableACME = true;
-    locations."/" = {
-      proxyPass = "https://127.0.0.1:${toString ports.kanidm}";
-      proxyWebsockets = true;
-    };
-  };
-
-  services.nginx.virtualHosts."git.gradient.moe" = {
-    useACMEHost = "gradient.moe";
-    forceSSL = true;
-    locations."/" = {
-      proxyPass = "http://127.0.0.1:${toString ports.forgejo}";
-      proxyWebsockets = true;
-      extraConfig = ''
-        client_max_body_size 4G;
-      '';
-    };
-  };
-
-  services.nginx.virtualHosts."grafana.gradient.moe" = {
-    useACMEHost = "gradient.moe";
-    forceSSL = true;
-    locations."/" = {
-      proxyPass = "http://127.0.0.1:${toString config.services.grafana.settings.server.http_port}";
-      proxyWebsockets = true;
-    };
+  # Set up reverse proxies
+  services.nginx.virtualHosts = {
+    "hass.gradient.moe" = mkReverseProxy { port = ports.home-assistant; vhostExtraConfig = "proxy_buffering off;"; };
+    # Generate let's encrypt certificate for this domain alone for kanidm purposes.
+    "identity.gradient.moe" = mkReverseProxy { port = ports.kanidm; protocol = "https"; generateOwnCert = true; };
+    "git.gradient.moe" = mkReverseProxy { port = ports.forgejo; rootExtraConfig = "client_max_body_size 4G;"; };
+    "grafana.gradient.moe" = mkReverseProxy { port = config.services.grafana.settings.server.http_port; };
+    # Recommended settings by https://github.com/paperless-ngx/paperless-ngx/wiki/Using-a-Reverse-Proxy-with-Paperless-ngx#nginx
+    "paperless.gradient.moe" = mkReverseProxy { port = ports.paperless; rootExtraConfig = ''client_max_body_size 4G; proxy_redirect off; add_header Referrer-Policy "strict-origin-when-cross-origin";''; };
   };
 
 }

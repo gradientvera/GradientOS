@@ -159,6 +159,16 @@
         group = config.services.forgejo.group;
       };
 
+      paperless-env = {
+        restartUnits = [ "paperless.service" ];
+        owner = config.services.paperless.user;
+      };
+
+      paperless-admin-password = {
+        restartUnits = [ "paperless.service" ];
+        owner = config.services.paperless.user;
+      };
+
     };
   };
 

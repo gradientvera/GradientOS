@@ -17,6 +17,7 @@
     ./postgres.nix
     ./scrutiny.nix
     ./fail2ban.nix
+    ./paperless.nix
     ./cloudflare.nix
     ./filesystem.nix
     ./vaultwarden.nix

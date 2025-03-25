@@ -127,6 +127,23 @@ in
           };
         };
 
+        paperless = {
+          public = true;
+          displayName = "Paperless-ngx";
+          originLanding = "https://paperless.gradient.moe";
+          originUrl = "https://paperless.gradient.moe/accounts/oidc/kanidm/login/callback/";
+          enableLocalhostRedirects = false;
+          preferShortUsername = true;
+          scopeMaps = {
+            "paperless-users" = [
+              "openid"
+              "email"
+              "profile"
+              "groups"
+            ];
+          };
+        };
+
       };
     };
   };

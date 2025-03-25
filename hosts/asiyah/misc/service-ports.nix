@@ -73,6 +73,11 @@
   vaultwarden = 8222;
   forgejo = 3000;
   forgejo-ssh = 222;
+  
+  # Paperless-ngx
+  paperless = 28981;
+  tika = 9998;
+  gotenberg = 9997;
 
   # grafana
   grafana = 8083;

@@ -52,3 +52,7 @@ edit-secret-featherine:
 [group('secrets')]
 edit-secret-neith-deck:
     just edit-secret neith-deck
+
+[group("editing")]
+edit-remote HOST PATH:
+    code sftp://root@{{HOST}}{{PATH}}
