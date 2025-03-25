@@ -10,7 +10,8 @@ in
   # https://kanidm.github.io/kanidm/stable/
 
   services.kanidm = {
-    package = pkgs.kanidmWithSecretProvisioning;
+    # TODO: Do not use master version once this drops -> https://nixpk.gs/pr-tracker.html?pr=392031
+    package = pkgs.master.kanidmWithSecretProvisioning;
 
     enableServer = true;
     enableClient = true;
@@ -95,6 +96,35 @@ in
               "groups"
             ];
           };  
+        };
+
+        # https://kanidm.github.io/kanidm/stable/integrations/oauth2/examples.html#grafana
+        grafana = {
+          public = true;
+          displayName = "Grafana";
+          originLanding = "https://grafana.gradient.moe";
+          originUrl = "https://grafana.gradient.moe/login/generic_oauth";
+          enableLocalhostRedirects = false;
+          preferShortUsername = true;
+          scopeMaps = {
+            # Only allow... yes, you get it by now I imagine!
+            "grafana-users" = [
+              "openid"
+              "email"
+              "profile"
+              "groups"
+            ];
+          };
+          claimMaps = {
+            "grafana_role" = {
+              joinType = "array";
+              valuesByGroup = {
+                grafana-superadmins = [ "GrafanaAdmin" ];
+                grafana-admins = [ "Admin" ];
+                grafana-editors = [ "Editor" ];
+              };
+            };
+          };
         };
 
       };

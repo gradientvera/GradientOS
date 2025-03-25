@@ -16,6 +16,7 @@ in
       "pufferpanel"
       "vaultwarden"
       "forgejo"
+      "grafana"
     ];
     ensureUsers = [
       {
@@ -38,23 +39,22 @@ in
         name = "forgejo";
         ensureDBOwnership = true;
       }
+      {
+        name = "grafana";
+        ensureDBOwnership = true;
+      }
     ];
     authentication = ''
-      # Home Assistant
+      # Local services
       local hass hass peer
-
-      # Vaultwarden
       local vaultwarden vaultwarden peer
-      
-      # Forgejo
       local forgejo forgejo peer
+      host pufferpanel pufferpanel 127.0.0.1/32 trust
+      host pufferpanel pufferpanel ::1/128 trust
+      host grafana grafana 127.0.0.1/32 trust
 
       # Podman network
       host bitmagnet bitmagnet 10.88.0.0/24 trust
-
-      # PufferPanel
-      host pufferpanel pufferpanel 127.0.0.1/32 trust
-      host pufferpanel pufferpanel ::1/128 trust
     '';
     # PGTune settings
     settings = {
