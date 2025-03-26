@@ -112,7 +112,7 @@ in
 
     # For handhelds etc
     boot.initrd.unl0kr.settings.general.backend = "drm";
-
+    
     # Automatically restart 30 seconds after a kernel panic
     boot.kernelParams = [ "panic=30" ];
 
