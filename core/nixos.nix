@@ -66,8 +66,16 @@ in
 
     hardware.enableRedistributableFirmware = true;
 
+    # Increase number of files per process
+    # prevents build failures sometimes
     systemd.extraConfig = ''
       DefaultTimeoutStopSec=30s
+      DefaultLimitNOFILE=16384:524288
+    '';
+
+    systemd.user.extraConfig = ''
+      DefaultTimeoutStopSec=30s
+      DefaultLimitNOFILE=16384:524288
     '';
 
     environment.shells = with pkgs; [
