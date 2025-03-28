@@ -82,7 +82,6 @@ in {
         -p ${toString ports.mikochi}:${toString ports.mikochi} \
         -p ${toString ports.cross-seed}:2468 \
         -p ${toString ports.sabnzbd}:${toString ports.sabnzbd} \
-        -p ${toString ports.mediarr-openssh}:2222 \
         -p ${toString ports.romm}:8080 \
         -p ${toString ports.neko}:${toString ports.neko} \
         -p ${toString ports.neko-epr-start}-${toString ports.neko-epr-end}:${toString ports.neko-epr-start}-${toString ports.neko-epr-end}/udp \
@@ -124,6 +123,12 @@ in {
 
   # -- Folder and Permissions Setup --
   systemd.tmpfiles.settings."10-media.conf" = let
+    keys = config.gradient.const.ssh.pubKeys;
+    authorizedKeysPath = toString (pkgs.writeText "authorized_keys" ''
+      ${keys.neith}
+      ${keys.remie}
+      ${keys.vera}
+    '');
     rule = {
       user = userName;
       group = groupName;
@@ -177,8 +182,14 @@ in {
     "/var/lib/${userName}/.mozilla".d = rule;
     "/var/lib/${userName}/.mozilla/firefox".d = rule;
     "/var/lib/${userName}/.ssh".d = rule;
-    "/var/lib/${userName}/.ssh/authorized_keys"."f+" = {
-      argument = "${keys.neith}\n${keys.remie}\n${keys.vera}\n";
+    "/var/lib/${userName}/ssh_host_keys/*".z = rule // {
+      # Restrictive permissions required for sshd
+      mode = "0700";
+    };
+    "/var/lib/${userName}/.ssh/authorized_keys".C = {
+      argument = authorizedKeysPath;
+      repoPath = authorizedKeysPath;
+      doCheck = true;
     } // rule;
   };
 
@@ -683,6 +694,9 @@ in {
     mediarr-openssh = {
       image = "lscr.io/linuxserver/openssh-server:latest";
       pull = "newer";
+      ports = [
+        "${toString ports.mediarr-openssh}:2222"
+      ];
       volumes = [
         "/var/lib/${userName}:/config"
         "/data/downloads:/downloads"
@@ -693,10 +707,10 @@ in {
         PGID = toString groupGid;
         SUDO_ACCESS = "false";
         PASSWORD_ACCESS = "false";
+        LOG_STDOUT = "true";
         USER_NAME = userName;
       };
-      extraOptions = [] ++ podOptions;
-      dependsOn = [ "create-mediarr-pod" ];
+      extraOptions = [ "--ip=10.88.0.6" ];
     };
 
     recyclarr = {
