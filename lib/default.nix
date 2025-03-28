@@ -64,7 +64,7 @@ rec {
             "dotnet-sdk-wrapped-6.0.428" # TODO: Remove when not needed anymore
             "aspnetcore-runtime-wrapped-6.0.36" # TODO: Remove when not needed anymore
             "aspnetcore-runtime-6.0.36" # TODO: Remove when not needed anymore
-            "freeimage-unstable-2021-11-01" # TODO: Remove when not needed anymore
+            "freeimage-3.18.0-unstable-2024-04-18" # TODO: Remove when not needed anymore
           ];
         };
         overlays = [

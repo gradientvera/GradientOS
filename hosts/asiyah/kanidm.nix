@@ -10,8 +10,7 @@ in
   # https://kanidm.github.io/kanidm/stable/
 
   services.kanidm = {
-    # TODO: Do not use master version once this drops -> https://nixpk.gs/pr-tracker.html?pr=392031
-    package = pkgs.master.kanidmWithSecretProvisioning;
+    package = pkgs.kanidmWithSecretProvisioning;
 
     enableServer = true;
     enableClient = true;
