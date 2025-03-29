@@ -1,6 +1,13 @@
 @default $JUST_CHOOSER="nix run nixpkgs#fzf":
     just --choose
 
+run HOST *COMMAND:
+    #! /usr/bin/env bash
+    IP=$(nix eval --quiet --raw .#nixosConfigurations.{{HOST}}.config.deployment.targetHost)
+    ssh -t $IP "{{COMMAND}}"
+
+logs HOST UNIT: (run HOST "sudo journalctl -xefu" UNIT)
+
 [group('deployment')]
 switch HOST:
     @just apply switch {{HOST}}
