@@ -13,7 +13,7 @@
 
   # kanidm
   kanidm = 8443;
-  kanidm-ldap = 636;
+  kanidm-ldap = 3636;
 
   # mediarr stack
   jellyfin-http = 8096;
