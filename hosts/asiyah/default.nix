@@ -21,7 +21,6 @@
     ./cloudflare.nix
     ./filesystem.nix
     ./vaultwarden.nix
-    ./pufferpanel.nix
     ./media-stack.nix
     ./nginx/default.nix
     ./home-assistant.nix

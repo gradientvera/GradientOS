@@ -75,11 +75,6 @@
 
     declarative-flatpak.url = "github:GermanBread/declarative-flatpak/stable-v3";
 
-    vdo-ninja = {
-      url = "github:steveseguin/vdo.ninja/v24.4";
-      flake = false;
-    };
-
     catppuccin.url = "github:catppuccin/nix";
 
     klipper-adaptive-meshing-purging = {

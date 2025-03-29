@@ -5,7 +5,6 @@ in {
 
   imports = [
     ./crp3092.nix
-    ./vdo-ninja.nix
     ./gradientnet.nix
     ./gradient-moe.nix
     ./constellation-moe.nix
