@@ -1,6 +1,5 @@
 { pkgs, config, lib, ... }:
 let
-  keys = import ../../misc/ssh-pub-keys.nix;
   ports = import ./misc/service-ports.nix;
   userName = "mediarr";
   userUid = 976;
@@ -42,6 +41,7 @@ let
     mediarr-openssh
     proxy-vpn
     proxy-vpn-uk
+    calibre-web-automated
   ];
 in {
 
@@ -179,6 +179,7 @@ in {
     "/var/lib/${userName}/romm/redis".d = rule;
     "/var/lib/${userName}/romm/resources".d = rule;
     "/var/lib/${userName}/mariadb".d = rule;
+    "/var/lib/${userName}/calibre-web-automated".d = rule;
     "/var/lib/${userName}/.mozilla".d = rule;
     "/var/lib/${userName}/.mozilla/firefox".d = rule;
     "/var/lib/${userName}/.ssh".d = rule;
@@ -741,6 +742,7 @@ in {
         "/var/lib/${userName}/romm/redis:/redis-data"
       ];
       environment = {
+        TZ = config.time.timeZone;
         DB_HOST = "127.0.0.1";
         DB_PORT = "3808";
         DB_NAME = "romm";
@@ -757,6 +759,7 @@ in {
         "/var/lib/${userName}/mariadb:/var/lib/mysql"
       ];
       environment = {
+        TZ = config.time.timeZone;
         MARIADB_DATABASE = "romm";
       };
       environmentFiles = [ config.sops.secrets.mediarr-mariadb-env.path ];
@@ -780,6 +783,7 @@ in {
         "/var/lib/${userName}/.mozilla:/home/neko/.mozilla"
       ];
       environment = {
+        TZ = config.time.timeZone;
         NEKO_SCREEN = "1920x1080@30";
         NEKO_BIND = ":${toString ports.neko}";
         NEKO_EPR = "${toString ports.neko-epr-start}-${toString ports.neko-epr-end}";
@@ -796,6 +800,26 @@ in {
         "--device=/dev/dri/:/dev/dri/"
       ] ++ (builtins.filter (e: e != "--network=container:gluetun") defaultOptions);
       dependsOn = [ "create-mediarr-pod" ];
+    };
+
+    calibre = {
+      image = "crocodilestick/calibre-web-automated:latest";
+      pull = "newer";
+      ports = [
+        "${toString ports.calibre-web-automated}:8083"
+      ];
+      volumes = [
+        "/var/lib/${userName}/calibre-web-automated:/config"
+        "/data/downloads/books:/calibre-library"
+      ];
+      environment = {
+        TZ = config.time.timeZone;
+        PUID = toString userUid;
+        PGID = toString groupGid;
+      };
+      extraOptions = [
+        "--ip=10.88.0.7"
+      ];
     };
 
   };

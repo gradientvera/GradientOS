@@ -1,32 +1,27 @@
 { config, self, ... }:
 let
   ports = import ../misc/service-ports.nix;
+  # TODO: This is copy-pasted... Make this a common lib or something?
+  #       or even better, make a NixOS module for it hoooly shit
+  mkReverseProxy = { port, address ? "127.0.0.1", protocol ? "http", generateOwnCert ? false,
+    rootExtraConfig ? "", vhostExtraConfig ? "", reverseProxyLocation ? "/", reverseProxySubdomain ? "", useACMEHost ? "constellation.moe" }: {
+    useACMEHost = if (!generateOwnCert) then useACMEHost else null;
+    enableACME = generateOwnCert;
+    forceSSL = true;
+    extraConfig = vhostExtraConfig;
+    locations.${reverseProxyLocation} = {
+      proxyPass = "${protocol}://${address}:${toString port}${reverseProxySubdomain}";
+      proxyWebsockets = true;
+      extraConfig = rootExtraConfig;
+    };
+  };
 in {
 
   services.nginx.virtualHosts."polycule.constellation.moe" = {
+    # TODO: Make this an HTML page here, no need for a private repo
     root = self.inputs.polycule-constellation-moe;
     useACMEHost = "constellation.moe";
-    addSSL = true;
-
-    locations."/vdo-ninja/" = {
-      proxyPass = "http://127.0.0.1:${toString ports.vdo-ninja}/";
-      proxyWebsockets = true;
-      extraConfig = ''
-        add_header Access-Control-Allow-Origin *;
-      '';
-    };
-
-    locations."/ersatztv/".extraConfig = ''
-      return 302 $scheme://ersatztv.constellation.moe/;
-    '';
-
-    locations."/jellyfin".extraConfig = ''
-      return 302 $scheme://$host/jellyfin/;
-    '';
-
-    locations."/jellyfin/".extraConfig = ''
-      return 302 $scheme://jellyfin.constellation.moe/;
-    '';
+    forceSSL = true;
   };
 
   services.nginx.virtualHosts."jellyfin.constellation.moe" = {
@@ -85,175 +80,27 @@ in {
     '';
   };
 
-  services.nginx.virtualHosts."ersatztv.constellation.moe" = {
-    useACMEHost = "constellation.moe";
-    addSSL = true;
-    locations."/" = {
-      proxyPass = "http://127.0.0.1:${toString ports.ersatztv}";
-      proxyWebsockets = true;
-    };
-  };
 
-  services.nginx.virtualHosts."iptv.constellation.moe" = {
-    useACMEHost = "constellation.moe";
-    addSSL = true;
-    locations."/iptv" = {
-      proxyPass = "http://127.0.0.1:${toString ports.ersatztv}/iptv";
-      proxyWebsockets = true;
-    };
-  };
-
-  services.nginx.virtualHosts."jellyseerr.constellation.moe" = {
-    useACMEHost = "constellation.moe";
-    addSSL = true;
-    locations."/" = {
-      proxyPass = "http://127.0.0.1:${toString ports.jellyseerr}";
-      proxyWebsockets = true;
-    };
-  };
-
-  services.nginx.virtualHosts."radarr.constellation.moe" = {
-    useACMEHost = "constellation.moe";
-    addSSL = true;
-    locations."/" = {
-      proxyPass = "http://127.0.0.1:${toString ports.radarr}";
-      proxyWebsockets = true;
-    };
-  };
-
-  services.nginx.virtualHosts."sonarr.constellation.moe" = {
-    useACMEHost = "constellation.moe";
-    addSSL = true;
-    locations."/" = {
-      proxyPass = "http://127.0.0.1:${toString ports.sonarr}";
-      proxyWebsockets = true;
-    };
-  };
-
-  services.nginx.virtualHosts."lidarr.constellation.moe" = {
-    useACMEHost = "constellation.moe";
-    addSSL = true;
-    locations."/" = {
-      proxyPass = "http://127.0.0.1:${toString ports.lidarr}";
-      proxyWebsockets = true;
-    };
-  };
-
-  services.nginx.virtualHosts."slskd.constellation.moe" = {
-    useACMEHost = "constellation.moe";
-    addSSL = true;
-    locations."/" = {
-      proxyPass = "http://127.0.0.1:${toString ports.slskd}";
-      proxyWebsockets = true;
-    };
-  };
-
-  services.nginx.virtualHosts."readarr.constellation.moe" = {
-    useACMEHost = "constellation.moe";
-    addSSL = true;
-    locations."/" = {
-      proxyPass = "http://127.0.0.1:${toString ports.readarr}";
-      proxyWebsockets = true;
-    };
-  };
-
-  services.nginx.virtualHosts."bazarr.constellation.moe" = {
-    useACMEHost = "constellation.moe";
-    addSSL = true;
-    locations."/" = {
-      proxyPass = "http://127.0.0.1:${toString ports.bazarr}";
-      proxyWebsockets = true;
-    };
-  };
-
-  services.nginx.virtualHosts."prowlarr.constellation.moe" = {
-    useACMEHost = "constellation.moe";
-    addSSL = true;
-    locations."/" = {
-      proxyPass = "http://127.0.0.1:${toString ports.prowlarr}";
-      proxyWebsockets = true;
-    };
-  };
-
-  services.nginx.virtualHosts."tdarr.constellation.moe" = {
-    useACMEHost = "constellation.moe";
-    addSSL = true;
-    locations."/" = {
-      proxyPass = "http://127.0.0.1:${toString ports.tdarr-webui}";
-      proxyWebsockets = true;
-    };
-  };
-
-  services.nginx.virtualHosts."torrent.constellation.moe" = {
-    useACMEHost = "constellation.moe";
-    addSSL = true;
-    locations."/" = {
-      proxyPass = "http://127.0.0.1:${toString ports.qbittorrent-webui}";
-      proxyWebsockets = true;
-    };
-  };
-
-  services.nginx.virtualHosts."bitmagnet.constellation.moe" = {
-    useACMEHost = "constellation.moe";
-    addSSL = true;
-    locations."/" = {
-      proxyPass = "http://127.0.0.1:${toString ports.bitmagnet-webui}";
-      proxyWebsockets = true;
-    };
-  };
-
-  services.nginx.virtualHosts."sabnzbd.constellation.moe" = {
-    useACMEHost = "constellation.moe";
-    addSSL = true;
-    locations."/" = {
-      proxyPass = "http://127.0.0.1:${toString ports.sabnzbd}";
-      proxyWebsockets = true;
-    };
-  };
-
-  services.nginx.virtualHosts."romm.constellation.moe" = {
-    useACMEHost = "constellation.moe";
-    addSSL = true;
-    locations."/" = {
-      proxyPass = "http://127.0.0.1:${toString ports.romm}";
-      proxyWebsockets = true;
-    };
-  };
-
-  services.nginx.virtualHosts."search.constellation.moe" = {
-    useACMEHost = "constellation.moe";
-    addSSL = true;
-    locations."/" = {
-      proxyPass = "http://127.0.0.1:${toString ports.searx}";
-      proxyWebsockets = true;
-    };
-  };
-
-  services.nginx.virtualHosts."files.constellation.moe" = {
-    useACMEHost = "constellation.moe";
-    addSSL = true;
-    locations."/" = {
-      proxyPass = "http://127.0.0.1:${toString ports.mikochi}";
-      proxyWebsockets = true;
-    };
-  };
-
-  services.nginx.virtualHosts."neko.constellation.moe" = {
-    useACMEHost = "constellation.moe";
-    addSSL = true;
-    locations."/" = {
-      proxyPass = "http://127.0.0.1:${toString ports.neko}";
-      proxyWebsockets = true;
-    };
-  };
-
-  services.nginx.virtualHosts."pufferpanel.constellation.moe" = {
-    useACMEHost = "constellation.moe";
-    addSSL = true;
-    locations."/" = {
-      proxyPass = "http://127.0.0.1:${toString ports.pufferpanel}";
-      proxyWebsockets = true;
-    };
+  services.nginx.virtualHosts = {
+    "ersatztv.constellation.moe" = mkReverseProxy { port = ports.ersatztv; rootExtraConfig = "proxy_buffering off;"; };
+    "iptv.constellation.moe" = mkReverseProxy { port = ports.ersatztv; reverseProxyLocation = "/iptv"; reverseProxySubdomain = "/iptv"; rootExtraConfig = "proxy_buffering off;"; };
+    "jellyseerr.constellation.moe" = mkReverseProxy { port = ports.jellyseerr; };
+    "radarr.constellation.moe" = mkReverseProxy { port = ports.radarr; };
+    "sonarr.constellation.moe" = mkReverseProxy { port = ports.sonarr; };
+    "lidarr.constellation.moe" = mkReverseProxy { port = ports.lidarr; };
+    "slskd.constellation.moe" = mkReverseProxy { port = ports.slskd; };
+    "readarr.constellation.moe" = mkReverseProxy { port = ports.readarr; };
+    "bazarr.constellation.moe" = mkReverseProxy { port = ports.bazarr; };
+    "prowlarr.constellation.moe" = mkReverseProxy { port = ports.prowlarr; };
+    "tdarr.constellation.moe" = mkReverseProxy { port = ports.tdarr-webui; };
+    "torrent.constellation.moe" = mkReverseProxy { port = ports.qbittorrent-webui; };
+    "bitmagnet.constellation.moe" = mkReverseProxy { port = ports.bitmagnet-webui; };
+    "sabnzbd.constellation.moe" = mkReverseProxy { port = ports.sabnzbd; };
+    "romm.constellation.moe" = mkReverseProxy { port = ports.romm; };
+    "search.constellation.moe" = mkReverseProxy { port = ports.searx; };
+    "files.constellation.moe" = mkReverseProxy { port = ports.mikochi; };
+    "neko.constellation.moe" = mkReverseProxy { port = ports.neko; };
+    "calibre.constellation.moe" = mkReverseProxy { port = ports.calibre-web-automated; };
   };
 
   # TODO: Figure out a way to automate the below list eugh
@@ -261,7 +108,7 @@ in {
     "polycule.constellation.moe" = {};
     # "jellyfin.constellation.moe" = {}; # Use built-in auth
     "ersatztv.constellation.moe" = {};
-    "iptv.constellation.moe" = {};
+    # "iptv.constellation.moe" = {}; # Use built-in auth
     # "jellyseerr.constellation.moe" = {}; # Use built-in auth
     "radarr.constellation.moe" = {};
     "sonarr.constellation.moe" = {};
@@ -278,7 +125,7 @@ in {
     "search.constellation.moe" = {};
     "files.constellation.moe" = {};
     "neko.constellation.moe" = {};
-    "pufferpanel.constellation.moe" = {};
+    "calibre.constellation.moe" = {};
   };
   
 }

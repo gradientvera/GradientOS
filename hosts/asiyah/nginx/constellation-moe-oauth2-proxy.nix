@@ -5,6 +5,7 @@ let
 in {
 
   # TODO: Make this a container so we can have multiple instances of oauth2_proxy?
+  # TODO-Followup: Might actually not be needed with kanidm, just use groups maybe?
 
   # OAuth2 Learning resources:
   # https://auth0.com/intro-to-iam/what-is-oauth-2

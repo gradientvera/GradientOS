@@ -692,8 +692,7 @@
         "nixpkgs-stable": "nixpkgs-stable",
         "polycule-constellation-moe": "polycule-constellation-moe",
         "sops-nix": "sops-nix",
-        "ss14-watchdog": "ss14-watchdog",
-        "vdo-ninja": "vdo-ninja"
+        "ss14-watchdog": "ss14-watchdog"
       }
     },
     "sops-nix": {
@@ -814,23 +813,6 @@
       "original": {
         "owner": "numtide",
         "repo": "treefmt-nix",
-        "type": "github"
-      }
-    },
-    "vdo-ninja": {
-      "flake": false,
-      "locked": {
-        "lastModified": 1711696836,
-        "narHash": "sha256-sc8T0Zra36Y1dfxXBtIgEg2Diyvs23VLAI5JYFiU7Jk=",
-        "owner": "steveseguin",
-        "repo": "vdo.ninja",
-        "rev": "df7ee9a65920a74e99ab142198262c47988d553f",
-        "type": "github"
-      },
-      "original": {
-        "owner": "steveseguin",
-        "ref": "v24.4",
-        "repo": "vdo.ninja",
         "type": "github"
       }
     }

@@ -48,6 +48,7 @@
   neko-epr-end = 52100;
   proxy-vpn = 1080;
   proxy-vpn-uk = 1081;
+  calibre-web-automated = 8078;
 
   # NFS
   nfsd = 2049;
@@ -68,8 +69,6 @@
   pufferpanel-sftp = 5657;
   ange-spice = 5900;
   syncthing = 8384;
-  ollama = 11434;
-  open-webui = 8079;
   vaultwarden = 8222;
   forgejo = 3000;
   forgejo-ssh = 222;

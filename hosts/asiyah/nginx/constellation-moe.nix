@@ -18,7 +18,7 @@
       root = self.inputs.constellation-moe;
       enableACME = true;
       acmeRoot = null;
-      addSSL = true;
+      forceSSL = true;
       serverAliases = [
         "www.constellation.moe"
       ];
@@ -26,7 +26,7 @@
 
     "neith.constellation.moe" = {
       useACMEHost = "constellation.moe";
-      addSSL = true;
+      forceSSL = true;
 
       locations."/" = {
         return = "301 https://constellation.moe$request_uri";
@@ -39,7 +39,7 @@
 
     "remie.constellation.moe" = {
       useACMEHost = "constellation.moe";
-      addSSL = true;
+      forceSSL = true;
       
       locations."/" = {
         return = "301 https://constellation.moe$request_uri";
@@ -52,7 +52,7 @@
 
     "vera.constellation.moe" = {
       useACMEHost = "constellation.moe";
-      addSSL = true;
+      forceSSL = true;
       
       locations."/" = {
         return = "301 https://constellation.moe$request_uri";
