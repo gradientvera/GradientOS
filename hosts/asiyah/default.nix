@@ -7,7 +7,6 @@
     ./searx.nix
     ./redis.nix
     ./numad.nix
-    ./ollama.nix
     ./clamav.nix
     ./kanidm.nix
     ./backups.nix
