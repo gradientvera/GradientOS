@@ -32,6 +32,9 @@ in {
     profileURL = "https://identity.gradient.moe/oauth2/openid/constellation-oauth2-proxy/userinfo";
     extraConfig.code-challenge-method = "S256";
 
+    # Needed for things that use header auth.
+    setXauthrequest = true;
+
     keyFile = secrets.oauth2-proxy-secrets.path;
     reverseProxy = true;
     cookie.refresh = "1m";
