@@ -122,6 +122,15 @@
         restartUnits = [ "acme-gradient.moe.service" "acme-constellation.moe.service" ];
       };
 
+      fail2ban-cf-token = {
+        restartUnits = [ "fail2ban.service" ];
+      };
+
+      fail2ban-apprise-conf = {
+        restartUnits = [ "fail2ban.service" ];
+        path = "/etc/fail2ban/apprise.conf";
+      };
+
       vaultwarden-env = {
         restartUnits = [ "vaultwarden.service" ];
       };
