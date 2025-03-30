@@ -173,4 +173,8 @@ in
     pkgs.kanidm
   ];
 
+  networking.firewall.interfaces.podman0.allowedTCPPorts = with ports; [
+    kanidm-ldap
+  ];
+
 }
