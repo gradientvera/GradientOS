@@ -1,5 +1,21 @@
 {
   "nodes": {
+    "ai-robots-txt": {
+      "flake": false,
+      "locked": {
+        "lastModified": 1743209650,
+        "narHash": "sha256-3mEaCTf6mA0bqzVMk3CxK0d3GrJxs/clmxa5oK+sqYg=",
+        "owner": "ai-robots-txt",
+        "repo": "ai.robots.txt",
+        "rev": "5b8650b99b35ff2aa1aa9ae26183b312edc48d45",
+        "type": "github"
+      },
+      "original": {
+        "owner": "ai-robots-txt",
+        "repo": "ai.robots.txt",
+        "type": "github"
+      }
+    },
     "catppuccin": {
       "inputs": {
         "nixpkgs": "nixpkgs"
@@ -672,6 +688,7 @@
     },
     "root": {
       "inputs": {
+        "ai-robots-txt": "ai-robots-txt",
         "catppuccin": "catppuccin",
         "colmena": "colmena",
         "constellation-moe": "constellation-moe",

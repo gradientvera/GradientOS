@@ -86,6 +86,11 @@
       url = "git+ssh://git@github.com/CRP3092/Portafolio.git";
       flake = false;
     };
+
+    ai-robots-txt = {
+      url = "github:ai-robots-txt/ai.robots.txt";
+      flake = false;
+    };
   };
 
   outputs = { self, nixpkgs, home-manager, gradient-generator, jovian-nixos, sops-nix, nixos-hardware, nixos-generators, ss14-watchdog, declarative-flatpak, ... }:

@@ -12,6 +12,8 @@ in {
     ./constellation-moe-oauth2-proxy.nix
   ];
 
+  gradient.nginx.enableBlockAIBots = true;
+
   services.nginx = {
     enable = true;
     package = pkgs.nginxStable.override {

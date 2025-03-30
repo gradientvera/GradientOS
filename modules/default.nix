@@ -8,6 +8,7 @@
     ./presets
     ./hardware
     ./profiles
+    ./nginx-robots.nix
     ./tmpfiles-check.nix
     ./substituter-switcher.nix
   ];
