@@ -37,8 +37,9 @@ GradientOS supports the [auxolotl](https://auxolotl.org/) and [Lix](https://lix.
 - **[beatrice](hosts/beatrice)**: Steam Deck LCD used as a Server.
 - **[neith-deck](hosts/neith-deck)**: Steam Deck LCD.
 - **[asiyah](hosts/asiyah)**: Custom Home Server.
+- **[yetzirah](hosts/yetzirah)**: ThinkCentre M900 Tiny Home Server.
 - **[briah](hosts/briah)**: Raspberry Pi 4 Home Server.
-- **[atziluth](hosts/atziluth)**: BigTechTree CB1 running Armbian, Voron 2.4r2. (Managed with Ansible)
+- **[atziluth](hosts/atziluth)**: (WIP) BigTechTree CB1 running Armbian, Voron 2.4r2. (Managed with Ansible)
 
 ### FAQ
 

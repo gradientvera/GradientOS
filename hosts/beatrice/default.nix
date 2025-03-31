@@ -4,15 +4,9 @@
 
   imports = [
     ./backups.nix
-    ./klipper.nix
     ./programs.nix
-    ./mainsail.nix
-    ./ustreamer.nix
-    ./moonraker.nix
     ./filesystems.nix
-    ./kiosk-session.nix
     ./secrets/default.nix
-    ./specialisations
     ./hardware-configuration.nix
   ];
 
@@ -25,6 +19,18 @@
 
   services.handheld-daemon.enable = true;
   services.handheld-daemon.user = "vera";
+
+  gradient.profiles.gaming.enable = true;
+  gradient.profiles.gaming.emulation.enable = false;
+  gradient.profiles.gaming.emulation.romPath = "/run/media/deck/mmcblk0p1/roms";
+  gradient.profiles.desktop.enable = true;
+
+  # Use Jovian's steam deck UI autostart.
+  services.displayManager.sddm.enable = lib.mkForce false;
+  jovian.steam.autoStart = true;
+  jovian.steam.user = "vera";
+  jovian.decky-loader.user = "vera";
+  jovian.steam.desktopSession = "plasma";
 
   gradient.substituters = {
     asiyah = "ssh-ng://nix-ssh@asiyah.gradient?priority=40";

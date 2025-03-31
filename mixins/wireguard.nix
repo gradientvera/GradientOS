@@ -30,6 +30,7 @@ let
   generateHosts = suffix: addresses: lib.attrsets.mapAttrs' (name: value: { name = value; value = ["${name}${suffix}"]; }) addresses;
 
   asiyahHost = "asiyah";
+  yetzirahHost = "yetzirah";
   briahHost = "briah";
   bernkastelHost = "bernkastel";
   neithDeckHost = "neith-deck";
@@ -121,7 +122,7 @@ in
       };
     })
 
-    (lib.mkIf (builtins.any (v: hostName == v) [ asiyahHost briahHost bernkastelHost beatriceHost erikaHost featherineHost ]) {
+    (lib.mkIf (builtins.any (v: hostName == v) [ asiyahHost yetzirahHost briahHost bernkastelHost beatriceHost erikaHost featherineHost ]) {
       systemd.network.wait-online.ignoredInterfaces = [ "gradientnet" ];
 
       # Allow SSH over gradientnet
@@ -136,6 +137,10 @@ in
         postShutdown = lib.mkIf isAsiyah (gen-post-shutdown "gradientnet" "eno1");
         privateKeyFile = private-key;
         peers = (if isAsiyah then [
+          {
+            allowedIPs = [ "${yetzirah}/32" ];
+            publicKey = keys.yetzirah;
+          }
           {
             allowedIPs = [ "${briah}/32" ];
             publicKey = keys.briah;
@@ -182,7 +187,7 @@ in
       };
     })
 
-    (lib.mkIf (builtins.any (v: hostName == v) [ asiyahHost briahHost bernkastelHost neithDeckHost beatriceHost erikaHost featherineHost ]) {
+    (lib.mkIf (builtins.any (v: hostName == v) [ asiyahHost yetzirahHost briahHost bernkastelHost neithDeckHost beatriceHost erikaHost featherineHost ]) {
       systemd.network.wait-online.ignoredInterfaces = [ "lilynet" ];
 
       networking.hosts = generateHosts ".lily" addr.lilynet;
@@ -194,6 +199,10 @@ in
         postShutdown = lib.mkIf isAsiyah (gen-post-shutdown "lilynet" "eno1");
         privateKeyFile = private-key;
         peers = (if isAsiyah then [
+          {
+            allowedIPs = [ "${yetzirah}/32" ];
+            publicKey = keys.yetzirah;
+          }
           {
             allowedIPs = [ "${briah}/32" ];
             publicKey = keys.briah;

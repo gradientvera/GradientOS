@@ -8,6 +8,7 @@ keys:
   - &host_asiyah age1lkh89lus8pzd83m2gkvsmyr9uql6n6c0xgwtq69eh0wxeaynxa3qfyzps4
   - &host_briah age1mlznec0ruk9xgkzygpmetsfvutxk4qml636rqcvzpzudyp4wlcfqzgh2e2
   - &host_featherine age1ejpz2fma32t2ek20t3v2x6cyjrzm50lhd9gwqsqhvhnr9nkc0gpscgndk2
+  - &host_yetzirah age1ca2ptgj50tdc9lf20mlsq64efqkczd7zlvt49fdnk0z8u7qy7v8sha9tsy
 creation_rules:
 
   - path_regex: 'core/secrets/*'
@@ -22,6 +23,7 @@ creation_rules:
       - *host_asiyah
       - *host_briah
       - *host_featherine
+      - *host_yetzirah
 
   - path_regex: 'users/vera/secrets/*'
     key_groups:
@@ -64,6 +66,12 @@ creation_rules:
     - age:
       - *user_vera
       - *host_asiyah
+
+  - path_regex: 'hosts/yetzirah/secrets/*'
+    key_groups:
+    - age:
+      - *user_vera
+      - *host_yetzirah
 
   - path_regex: 'hosts/briah/secrets/*'
     key_groups:

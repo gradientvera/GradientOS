@@ -2,6 +2,7 @@
   gradientnet = {
     gradientnet = "192.168.24.0";
     asiyah = "192.168.24.1";
+    yetzirah = "192.168.24.8";
     briah = "192.168.24.24";
     atziluth = "192.168.24.48";
     bernkastel = "192.168.24.2";
@@ -15,6 +16,7 @@
   lilynet = {
     lilynet = "192.168.109.0";
     asiyah = "192.168.109.1";
+    yetzirah = "192.168.109.10";
     briah = "192.168.109.24";
     bernkastel = "192.168.109.2";
     neith-deck = "192.168.109.3";

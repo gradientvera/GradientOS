@@ -217,7 +217,9 @@
           mixins.upgrade-diff
           mixins.v4l2loopback
           mixins.virtualisation
+          mixins.graphical-steam
           mixins.nix-store-serve
+          mixins.system76-scheduler
           mixins.declarative-flatpak
           
           mixins.hardware-qmk
@@ -228,6 +230,7 @@
           mixins.hardware-openrazer
           mixins.hardware-steamdeck-minimal
           mixins.hardware-home-dcp-l2530dw
+          mixins.hardware-xbox-one-controller
           
           mixins.restic-repository-hokma
         ];
@@ -239,7 +242,7 @@
 
         deployment = {
           targetHost = ips.gradientnet.beatrice;
-          tags = with colmena-tags; [ x86_64 steam-deck desktop server vera ];
+          tags = with colmena-tags; [ x86_64 steam-deck desktop vera ];
           allowLocalDeployment = true;
         };
       }
@@ -379,7 +382,36 @@
         };
       }
 
-       {
+      {
+        name = "yetzirah";
+
+        modules = [
+          nixos-hardware.nixosModules.common-cpu-intel
+          nixos-hardware.nixosModules.common-gpu-intel
+
+          mixins.podman
+          mixins.wireguard
+          mixins.vera-locale
+          mixins.upgrade-diff
+          mixins.virtualisation
+          mixins.aarch64-emulation
+          mixins.hardware-eaton-ups
+          mixins.hardware-intelgpu-vaapi
+          mixins.restic-repository-hokma
+        ];
+
+        users.vera.modules = [
+          sops-nix.homeManagerModule
+        ];
+
+        deployment = {
+          targetHost = ips.gradientnet.yetzirah;
+          tags = with colmena-tags; [ x86_64 server vera ];
+          allowLocalDeployment = true;
+        };
+      }
+
+      {
         name = "briah";
         system = "aarch64-linux";
         overlays = [ self.overlays.kernel-allow-missing ];
