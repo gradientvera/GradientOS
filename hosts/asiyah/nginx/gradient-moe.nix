@@ -37,7 +37,6 @@ in
 
   services.nginx.virtualHosts."gradient.moe" = {
     root = toString self.inputs.gradient-moe.packages.${pkgs.system}.default;
-    default = true;
     enableACME = true;
     acmeRoot = null;
     forceSSL = true;
@@ -60,6 +59,16 @@ in
     "grafana.gradient.moe" = mkReverseProxy { port = config.services.grafana.settings.server.http_port; };
     # Recommended settings by https://github.com/paperless-ngx/paperless-ngx/wiki/Using-a-Reverse-Proxy-with-Paperless-ngx#nginx
     "paperless.gradient.moe" = mkReverseProxy { port = ports.paperless; rootExtraConfig = ''client_max_body_size 4G; proxy_redirect off; add_header Referrer-Policy "strict-origin-when-cross-origin";''; };
+  };
+
+  # Redirect to main site for all incorrect subdomains
+  services.nginx.virtualHosts."_" = {
+    default = true;
+    addSSL = true;
+    enableACME = false;
+    useACMEHost = "gradient.moe";
+    serverName = ''""'';
+    extraConfig = "return 301 https://gradient.moe$request_uri ;";
   };
 
 }

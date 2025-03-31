@@ -43,6 +43,13 @@ in {
       set_real_ip_from 104.24.0.0/14;
       set_real_ip_from 172.64.0.0/13;
       set_real_ip_from 131.0.72.0/22;
+      set_real_ip_from 2400:cb00::/32;
+      set_real_ip_from 2606:4700::/32;
+      set_real_ip_from 2803:f800::/32;
+      set_real_ip_from 2405:b500::/32;
+      set_real_ip_from 2405:8100::/32;
+      set_real_ip_from 2a06:98c0::/29;
+      set_real_ip_from 2c0f:f248::/32;
       real_ip_header CF-Connecting-IP;
     '';
   };

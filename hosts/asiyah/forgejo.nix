@@ -132,7 +132,7 @@ in
     instances.asiyah = {
       enable = true;
       name = "asiyah";
-      url = config.services.forgejo.settings.server.ROOT_URL;
+      url = "127.0.0.1:${toString ports.forgejo}";
       tokenFile = config.sops.secrets.forgejo-runner-token.path;
       labels = [
         "docker:docker://alpine:latest"
