@@ -2,6 +2,7 @@
 let
   ports = import ./misc/service-ports.nix;
   addresses = import ../../misc/wireguard-addresses.nix;
+  hostName = config.networking.hostName;
   kamp = self.inputs.klipper-adaptive-meshing-purging;
   cfgPath = "/var/lib/moonraker";
 in {
@@ -24,11 +25,14 @@ in {
 
       authorization = {
         cors_domains = [
+          "*://127.0.0.1:*"
           "*://${config.networking.hostName}:*"
-          "*://${addresses.gradientnet.beatrice}:*"
-          "*://${addresses.lilynet.beatrice}:*"
-          "*//beatrice.gradient"
-          "*//beatrice.lily"
+          "*://${addresses.gradientnet.${hostName}}:*"
+          "*://${addresses.lilynet.${hostName}}:*"
+          "*//mainsail.${hostName}.constellation.moe"
+          "*//mainsail.${hostName}.gradient.moe"
+          "*//${hostName}.gradient"
+          "*//${hostName}.lily"
         ];
         trusted_clients = [
           "127.0.0.1"

@@ -1,7 +1,8 @@
-{ ... }:
+{ config, ... }:
 let
   ports = import ./misc/service-ports.nix;
   addresses = import ../../misc/wireguard-addresses.nix;
+  hostName = config.networking.hostName;
 in {
 
   services.mainsail = {
@@ -12,22 +13,24 @@ in {
         port = ports.mainsail;
       }
       {
-        addr = addresses.gradientnet.beatrice;
+        addr = addresses.gradientnet.${hostName};
         port = ports.mainsail;
       }
       {
-        addr = addresses.lilynet.beatrice;
+        addr = addresses.lilynet.${hostName};
         port = ports.mainsail;
       }
     ];
     nginx.serverAliases = [
-      "beatrice.gradient"
-      "beatrice.lily"
+      "mainsail.${hostName}.constellation.moe"
+      "mainsail.${hostName}.gradient.moe"
+      "${hostName}.gradient"
+      "${hostName}.lily"
     ];
   };
 
   # Increase max upload size for uploading gcode files from PrusaSlicer
-  services.nginx.clientMaxBodySize = "1000m";
+  services.nginx.clientMaxBodySize = "4G";
 
   networking.firewall.interfaces.gradientnet.allowedTCPPorts = [ ports.mainsail ];
   networking.firewall.interfaces.gradientnet.allowedUDPPorts = [ ports.mainsail ];
