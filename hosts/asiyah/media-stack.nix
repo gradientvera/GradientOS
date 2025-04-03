@@ -42,6 +42,7 @@ let
     proxy-vpn
     proxy-vpn-uk
     calibre-web-automated
+    calibre-downloader
   ];
 in {
 
@@ -86,6 +87,7 @@ in {
         -p ${toString ports.neko}:${toString ports.neko} \
         -p ${toString ports.neko-epr-start}-${toString ports.neko-epr-end}:${toString ports.neko-epr-start}-${toString ports.neko-epr-end}/udp \
         -p ${toString ports.proxy-vpn}:${toString ports.proxy-vpn} \
+        -p ${toString ports.calibre-downloader}:${toString ports.calibre-downloader} \
         --ip "10.88.0.2" \
         --sysctl="net.ipv4.ip_forward=1" \
         --sysctl="net.ipv4.conf.all.src_valid_mark=1" \
@@ -140,6 +142,7 @@ in {
     "/data/downloads/movies".d = rule;
     "/data/downloads/music".d = rule;
     "/data/downloads/books".d = rule;
+    "/data/downloads/books-ingest".d = rule;
     "/data/downloads/games".d = rule;
     "/data/downloads/game-assets".d = rule;
     "/data/downloads/torrents".d = rule;
@@ -805,12 +808,11 @@ in {
     calibre = {
       image = "crocodilestick/calibre-web-automated:latest";
       pull = "newer";
-      ports = [
-        "${toString ports.calibre-web-automated}:8083"
-      ];
+      ports = [ "${toString ports.calibre-web-automated}:8083" ];
       volumes = [
         "/var/lib/${userName}/calibre-web-automated:/config"
         "/data/downloads/books:/calibre-library"
+        "/data/downloads/books-ingest:/cwa-book-ingest"
       ];
       environment = {
         TZ = config.time.timeZone;
@@ -820,6 +822,22 @@ in {
       extraOptions = [
         "--ip=10.88.0.7"
       ];
+    };
+
+    calibre-downloader = {
+      image = "ghcr.io/calibrain/calibre-web-automated-book-downloader:latest";
+      pull = "newer";
+      volumes = [
+        "/data/downloads/books-ingest:/ingest"
+      ];
+      environment = {
+        FLASK_PORT = toString ports.calibre-downloader;
+        FLASK_DEBUG = "false";
+        BOOK_LANGUAGE = "en";
+        INGEST_DIR = "/ingest";
+      };
+      extraOptions = [] ++ defaultOptions;
+      dependsOn = [ "create-mediarr-pod" "gluetun" ];
     };
 
   };

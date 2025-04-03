@@ -27,6 +27,7 @@
       zone=constellation.moe
       constellation.moe,
       *.constellation.moe,
+      calibre.constellation.moe,
       ftp.constellation.moe,
       www.constellation.moe
     '';

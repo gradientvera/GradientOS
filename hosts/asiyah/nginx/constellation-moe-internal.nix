@@ -101,6 +101,7 @@ in {
     "files.constellation.moe" = mkReverseProxy { port = ports.mikochi; };
     "neko.constellation.moe" = mkReverseProxy { port = ports.neko; };
     "calibre.constellation.moe" = mkReverseProxy { port = ports.calibre-web-automated; vhostExtraConfig = "client_max_body_size 4G;"; };
+    "calibredl.constellation.moe" = mkReverseProxy { port = ports.calibre-downloader; };
   };
 
   # TODO: Figure out a way to automate the below list eugh
@@ -126,6 +127,7 @@ in {
     "files.constellation.moe" = {};
     "neko.constellation.moe" = {};
     "calibre.constellation.moe" = {};
+    "calibredl.constellation.moe" = {};
   };
   
 }
