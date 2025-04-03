@@ -124,6 +124,11 @@ in
         ENABLE_OPENID_SIGNUP = false;
       };
 
+      actions = {
+        ENABLED = true;
+        DEFAULT_ACTIONS_URL = "https://git.gradient.moe";
+      };
+
     };
   };
 

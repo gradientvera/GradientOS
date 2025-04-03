@@ -31,7 +31,7 @@ in {
     extraConfig = ''
       # # https://jellyfin.org/docs/general/networking/nginx/
       ## The default `client_max_body_size` is 1M, this might not be enough for some posters, etc.
-      client_max_body_size 20M;
+      client_max_body_size 200M;
     
       # Security / XSS Mitigation Headers
       # NOTE: X-Frame-Options may cause issues with the webOS app
@@ -100,7 +100,7 @@ in {
     "search.constellation.moe" = mkReverseProxy { port = ports.searx; };
     "files.constellation.moe" = mkReverseProxy { port = ports.mikochi; };
     "neko.constellation.moe" = mkReverseProxy { port = ports.neko; };
-    "calibre.constellation.moe" = mkReverseProxy { port = ports.calibre-web-automated; };
+    "calibre.constellation.moe" = mkReverseProxy { port = ports.calibre-web-automated; vhostExtraConfig = "client_max_body_size 4G;"; };
   };
 
   # TODO: Figure out a way to automate the below list eugh

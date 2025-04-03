@@ -55,10 +55,10 @@ in
     "hass.gradient.moe" = mkReverseProxy { port = ports.home-assistant; vhostExtraConfig = "proxy_buffering off;"; };
     # Generate let's encrypt certificate for this domain alone for kanidm purposes.
     "identity.gradient.moe" = mkReverseProxy { port = ports.kanidm; protocol = "https"; generateOwnCert = true; };
-    "git.gradient.moe" = mkReverseProxy { port = ports.forgejo; rootExtraConfig = "client_max_body_size 4G;"; };
+    "git.gradient.moe" = mkReverseProxy { port = ports.forgejo; vhostExtraConfig = "client_max_body_size 4G;"; };
     "grafana.gradient.moe" = mkReverseProxy { port = config.services.grafana.settings.server.http_port; };
     # Recommended settings by https://github.com/paperless-ngx/paperless-ngx/wiki/Using-a-Reverse-Proxy-with-Paperless-ngx#nginx
-    "paperless.gradient.moe" = mkReverseProxy { port = ports.paperless; rootExtraConfig = ''client_max_body_size 4G; proxy_redirect off; add_header Referrer-Policy "strict-origin-when-cross-origin";''; };
+    "paperless.gradient.moe" = mkReverseProxy { port = ports.paperless; vhostExtraConfig = ''client_max_body_size 4G;''; rootExtraConfig = ''proxy_redirect off; add_header Referrer-Policy "strict-origin-when-cross-origin";''; };
   };
 
   # Redirect to main site for all incorrect subdomains
