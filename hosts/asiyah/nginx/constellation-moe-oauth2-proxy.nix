@@ -42,6 +42,7 @@ in {
     cookie.httpOnly = false;
     cookie.domain = ".constellation.moe";
     extraConfig = {
+      pass-user-headers = "true";
       session-store-type = "redis";
       redis-connection-url = "redis://127.0.0.1:${toString ports.redis-oauth2}/0";
     };

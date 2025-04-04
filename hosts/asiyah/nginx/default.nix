@@ -51,6 +51,11 @@ in {
       set_real_ip_from 2a06:98c0::/29;
       set_real_ip_from 2c0f:f248::/32;
       real_ip_header CF-Connecting-IP;
+
+      map $username $xusername {
+        ~^(\w+)@identity.gradient.moe $1;
+        default "";
+      } 
     '';
   };
 

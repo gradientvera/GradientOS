@@ -100,7 +100,7 @@ in {
     "search.constellation.moe" = mkReverseProxy { port = ports.searx; };
     "files.constellation.moe" = mkReverseProxy { port = ports.mikochi; };
     "neko.constellation.moe" = mkReverseProxy { port = ports.neko; };
-    "calibre.constellation.moe" = mkReverseProxy { port = ports.calibre-web-automated; vhostExtraConfig = "client_max_body_size 4G;"; };
+    "calibre.constellation.moe" = mkReverseProxy { port = ports.calibre-web-automated; vhostExtraConfig = "client_max_body_size 4G; auth_request_set $username $upstream_http_x_auth_request_preferred_username;"; rootExtraConfig = "proxy_set_header X-Forwarded-Preferred-Username $xusername; proxy_pass_header X-Forwarded-Preferred-Username;"; };
     "calibredl.constellation.moe" = mkReverseProxy { port = ports.calibre-downloader; };
   };
 
