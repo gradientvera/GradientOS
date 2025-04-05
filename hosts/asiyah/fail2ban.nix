@@ -51,11 +51,13 @@ in
 
       sshd-mediarr = ''
         enabled = true
-        filter = sshd
+        maxretry = 5
+        findtime = 3600
+        filter = sshd[mode=aggressive,_daemon=mediarr-openssh(?:-session)?]
         port = ${toString ports.mediarr-openssh}
-        journalmatch = _SYSTEMD_UNIT=podman-mediarr-openssh.service
-        backend = systemd
-        action = iptables-multiport[port=${toString ports.mediarr-openssh}]
+        backend = pyinotify
+        logpath = /var/lib/mediarr/sshlogs/current
+        action = iptables-multiport[name=fail2ban-mediarr-openssh, port=${toString ports.mediarr-openssh}]
                  apprise
       '';
     };

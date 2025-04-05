@@ -189,8 +189,11 @@ in {
     "/var/lib/${userName}/calibre-web-automated".d = rule;
     "/var/lib/${userName}/.mozilla".d = rule;
     "/var/lib/${userName}/.mozilla/firefox".d = rule;
+    "/var/lib/${userName}/sshlogs".d = rule;
     "/var/lib/${userName}/.ssh".d = sshRule;
     "/var/lib/${userName}/.ssh/*".z = sshRule;
+    "/var/lib/${userName}/sshd".d = sshRule;
+    "/var/lib/${userName}/sshd/*".z = sshRule;
     "/var/lib/${userName}/ssh_host_keys/*".z = sshRule;
     "/var/lib/${userName}/.ssh/authorized_keys".C = {
       argument = authorizedKeysPath;
@@ -705,8 +708,10 @@ in {
       ];
       volumes = [
         "/var/lib/${userName}/.ssh:/config/.ssh"
+        "/var/lib/${userName}/sshd:/config/sshd"
         "/var/lib/${userName}/ssh_host_keys:/config/ssh_host_keys"
         "/var/lib/${userName}:/mediarr-config"
+        "/var/lib/${userName}/sshlogs:/config/logs/openssh"
         "/data/downloads:/downloads"
       ];
       environment = {
@@ -715,7 +720,7 @@ in {
         PGID = toString groupGid;
         SUDO_ACCESS = "false";
         PASSWORD_ACCESS = "false";
-        LOG_STDOUT = "true";
+        LOG_STDOUT = "false";
         USER_NAME = userName;
       };
       extraOptions = [ "--ip=10.88.0.6" ];
