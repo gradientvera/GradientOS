@@ -1,13 +1,15 @@
 { config, pkgs, ... }:
 let
   addresses = config.gradient.const.wireguard.addresses;
+  ports = import ./misc/service-ports.nix;
 in
 {
 
   services.fail2ban = {
     enable = true;
-    extraPackages = [ pkgs.curl pkgs.jq pkgs.apprise ];
+    extraPackages = [ pkgs.curl pkgs.jq pkgs.apprise pkgs.gawk pkgs.coreutils-full ];
     ignoreIP = [
+      "10.0.0.0/8"
       "${addresses.gradientnet.gradientnet}/24"
       "${addresses.lilynet.lilynet}/24"
     ];
@@ -46,9 +48,17 @@ in
       nginx-http-auth = mkNginxJail { filter = "nginx-http-auth"; };
       # As per https://notes.abhinavsarkar.net/2022/fail2ban-nginx-cloudflare-nixos
       nginx-noagent = mkNginxJail { filter = "nginx-noagent"; maxretry = 1; };
+
+      sshd-mediarr = ''
+        enabled = true
+        filter = sshd
+        port = ${toString ports.mediarr-openssh}
+        journalmatch = _SYSTEMD_UNIT=podman-mediarr-openssh.service
+        backend = systemd
+        action = iptables-multiport[port=${toString ports.mediarr-openssh}]
+                 apprise
+      '';
     };
-
-
 
   };
 
@@ -69,7 +79,7 @@ in
                             -X GET <_cf_api_url_zones> \
                           | jq -r '.result[] | select(.name=="<cfzone>") | .id')
                   id=$(curl -s -G -X GET "<_cf_api_url>" \
-                      --data-urlencode "mode=<cfmode>" --data-urlencode "notes=<notes>" --data-urlencode "configuration.target=<cftarget>" --data-urlencode "configuration.value=<ip>" \
+                      -d "mode=<cfmode>" -d "notes=<notes>" -d "configuration.target=<cftarget>" -d "configuration.value=<ip>" \
                       <_cf_api_params> \
                     | awk -F"[,:}]" '{for(i=1;i<=NF;i++){if($i~/'id'\042/){print $(i+1)}}}' \
                     | tr -d ' "' \
@@ -84,6 +94,7 @@ in
     _cf_api_url_zones = https://api.cloudflare.com/client/v4/zones
 
     [Init]
+    notes = fail2ban
     cfmode = block
     cftarget = ip
     cftokenpath =
@@ -100,14 +111,6 @@ in
     failregex = ^<HOST> -.*"-" "-"$
 
     ignoreregex =
-  '';
-
-  environment.etc."fail2ban/action.d/webhook.conf".text = ''
-    [Definition]
-    
-    [Init]
-    webhookurlfile =
-    webhookusername =
   '';
 
 }
