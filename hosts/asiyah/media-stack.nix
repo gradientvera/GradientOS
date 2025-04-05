@@ -136,6 +136,10 @@ in {
       group = groupName;
       mode = "0775";
     };
+    # Restrictive permissions required for sshd
+    sshRule = rule // {
+      mode = "0700";
+    };
   in {
     "/data/downloads".d = rule;
     "/data/downloads/tv".d = rule;
@@ -185,16 +189,14 @@ in {
     "/var/lib/${userName}/calibre-web-automated".d = rule;
     "/var/lib/${userName}/.mozilla".d = rule;
     "/var/lib/${userName}/.mozilla/firefox".d = rule;
-    "/var/lib/${userName}/.ssh".d = rule;
-    "/var/lib/${userName}/ssh_host_keys/*".z = rule // {
-      # Restrictive permissions required for sshd
-      mode = "0700";
-    };
+    "/var/lib/${userName}/.ssh".d = sshRule;
+    "/var/lib/${userName}/.ssh/*".z = sshRule;
+    "/var/lib/${userName}/ssh_host_keys/*".z = sshRule;
     "/var/lib/${userName}/.ssh/authorized_keys".C = {
       argument = authorizedKeysPath;
       repoPath = authorizedKeysPath;
       doCheck = true;
-    } // rule;
+    } // sshRule;
   };
 
   services.clamav.scanner.scanDirectories = [ "/data/downloads" ]; # /var/lib already scanned by default
@@ -702,7 +704,9 @@ in {
         "${toString ports.mediarr-openssh}:2222"
       ];
       volumes = [
-        "/var/lib/${userName}:/config"
+        "/var/lib/${userName}/.ssh:/config/.ssh"
+        "/var/lib/${userName}/ssh_host_keys:/config/ssh_host_keys"
+        "/var/lib/${userName}:/mediarr-config"
         "/data/downloads:/downloads"
       ];
       environment = {
@@ -835,6 +839,8 @@ in {
         FLASK_DEBUG = "false";
         BOOK_LANGUAGE = "en";
         INGEST_DIR = "/ingest";
+        UID = toString userUid;
+        GID = toString groupGid;
       };
       extraOptions = [] ++ defaultOptions;
       dependsOn = [ "create-mediarr-pod" "gluetun" ];
