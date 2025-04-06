@@ -24,9 +24,18 @@ Host *
     
     settings = {
       PasswordAuthentication = false;
+      KbdInteractiveAuthentication = false;
       PermitRootLogin = lib.mkForce "prohibit-password";
       LogLevel = "VERBOSE";
+      X11Forwarding = false;
     };
+
+    extraConfig = ''
+      AllowTcpForwarding yes
+      AllowAgentForwarding no
+      AllowStreamLocalForwarding no
+      AuthenticationMethods publickey
+    '';
 
     knownHosts = {
       "github.com" = {
