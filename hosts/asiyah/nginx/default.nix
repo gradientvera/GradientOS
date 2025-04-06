@@ -27,6 +27,8 @@ in {
     recommendedTlsSettings = true;
     recommendedZstdSettings = true;
 
+    logError = "/var/log/nginx/error.log";
+
     appendHttpConfig = ''
       set_real_ip_from 173.245.48.0/20;
       set_real_ip_from 103.21.244.0/22;
