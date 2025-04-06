@@ -57,6 +57,12 @@ in
 
     security.rtkit.enable = true;
     security.polkit.enable = true;
+    security.auditd.enable = true;
+    services.journald.audit = true;
+    security.audit.enable = true;
+    security.audit.rules = [
+      "-a exit,always -F arch=b64 -S execve"
+    ];
 
     programs.dconf.enable = true;
     programs.nix-ld.enable = true;

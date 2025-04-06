@@ -9,7 +9,7 @@
   boot.kernelPackages = pkgs.linuxPackages_xanmod;
   boot.initrd.availableKernelModules = [ "xhci_pci" "ehci_pci" "ahci" "nvme" "usbhid" "usb_storage" "sd_mod" "xhci_hcd" ];
   boot.initrd.kernelModules = [ ];
-  boot.kernelModules = [ "kvm-intel" "nfs" "corsair-psu" "iTCO_wdt" ];
+  boot.kernelModules = [ "kvm-intel" "nfs" "corsair-psu" "iTCO_wdt" "xt_multiport" ];
   boot.extraModulePackages = [ ];
 
   boot.kernelParams = [
