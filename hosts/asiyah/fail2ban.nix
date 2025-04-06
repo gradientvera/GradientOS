@@ -27,13 +27,14 @@ in
           ${(mkCloudflare "gradient.moe")}
                      ${(mkCloudflare "zumorica.es")}
                      ${(mkCloudflare "constellation.moe")}'';
-        mkNginxJail = { filter, maxretry ? 10, findtime ? 3600 }: ''
+        mkNginxJail = { filter, maxretry ? 10, findtime ? 3600, backend ? "systemd" }: ''
           enabled  = true
           port     = http,https
-          backend  = auto
+          backend  = ${backend}
           filter   = ${filter}
           findtime = ${toString findtime}
           maxretry = ${toString maxretry}
+          journalmatch = _SYSTEMD_UNIT=nginx.service + _COMM=nginx
           logpath  = %(nginx_access_log)s
           action   = ${mkCloudflareAll}
                     iptables-multiport[port="http,https"]
@@ -43,11 +44,11 @@ in
     {
       nginx-bad-request = mkNginxJail { filter = "nginx-bad-request"; };
       nginx-botsearch = mkNginxJail { filter = "nginx-botsearch"; };
-      nginx-error-common = mkNginxJail { filter = "nginx-error-common"; };
       nginx-forbidden = mkNginxJail { filter = "nginx-forbidden"; };
       nginx-http-auth = mkNginxJail { filter = "nginx-http-auth"; };
+      nginx-error-common = mkNginxJail { filter = "nginx-error-common"; backend = "auto"; };
       # As per https://notes.abhinavsarkar.net/2022/fail2ban-nginx-cloudflare-nixos
-      nginx-noagent = mkNginxJail { filter = "nginx-noagent"; maxretry = 1; };
+      nginx-noagent = mkNginxJail { filter = "nginx-noagent"; maxretry = 1; backend = "auto"; };
 
       sshd-mediarr = ''
         enabled = true
