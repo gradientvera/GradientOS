@@ -4,6 +4,7 @@
   imports = [
     ./nfs.nix
     ./mqtt.nix
+    ./fail2ban
     ./searx.nix
     ./redis.nix
     ./numad.nix
@@ -15,7 +16,6 @@
     ./duckdns.nix
     ./postgres.nix
     ./scrutiny.nix
-    ./fail2ban.nix
     ./paperless.nix
     ./cloudflare.nix
     ./filesystem.nix

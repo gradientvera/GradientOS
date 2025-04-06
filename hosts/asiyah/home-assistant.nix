@@ -1,4 +1,4 @@
-{ config, pkgs, ... }:
+{ config, pkgs, lib, ... }:
 let
   ports = import ./misc/service-ports.nix;
   addresses = config.gradient.const.wireguard.addresses.gradientnet;
@@ -41,6 +41,7 @@ in
       "mqtt_room"
       "rpi_power"
       "telegram"
+      "fail2ban"
       "recorder"
       "zeroconf"
       "apple_tv"
@@ -124,37 +125,49 @@ in
       })
     ];
     extraPackages = ps: with ps; [ psycopg2 ];
-    config.telegram_bot = "!include telegram.yaml";
-    config.automation = "!include automations.yaml";
-    config.notify = "!include notifiers.yaml";
-    config.script = "!include scripts.yaml";
-    config.http = {
-      server_port = ports.home-assistant;
-      use_x_forwarded_for = true;
-      trusted_proxies = [ "${addresses.asiyah}" "127.0.0.1" ];
-      ip_ban_enabled = true;
-      login_attempts_threshold = 10;
-    };
-    config.lovelace.mode = "storage";
-    config.default_config = {};
-    config.mobile_app = {};
-    config.history = {};
-    config.recorder = {
-      purge_keep_days = 10;
-      db_url = "postgresql://@/hass";
-    };
-    config.influxdb = {
-      api_version = "1";
-      host = "127.0.0.1";
-      port = toString ports.victoriametrics;
-      max_retries = 3;
-    };
-    config.zha.zigpy_config.ota.z2m_remote_index = "https://raw.githubusercontent.com/Koenkk/zigbee-OTA/master/index.json";
 
-    #config.auth_oidc = {
-    #  client_id = "home-assistant";
-    #  discovery_url = "https://identity.gradient.moe/oauth2/openid/home-assistant/.well-known/openid-configuration";
-    #};
+    config = {
+      # Imports/includes
+      telegram_bot = "!include telegram.yaml";
+      automation = "!include automations.yaml";
+      notify = "!include notifiers.yaml";
+      script = "!include scripts.yaml";
+
+      zha.zigpy_config.ota.z2m_remote_index = "https://raw.githubusercontent.com/Koenkk/zigbee-OTA/master/index.json";
+      lovelace.mode = "storage";
+      default_config = {};
+      mobile_app = {};
+      history = {};
+
+      http = {
+        server_port = ports.home-assistant;
+        use_x_forwarded_for = true;
+        trusted_proxies = [ "${addresses.asiyah}" "127.0.0.1" ];
+        ip_ban_enabled = true;
+        login_attempts_threshold = 10;
+      };
+
+      recorder = {
+        purge_keep_days = 10;
+        db_url = "postgresql://@/hass";
+      };
+
+      influxdb = {
+        api_version = "1";
+        host = "127.0.0.1";
+        port = toString ports.victoriametrics;
+        max_retries = 3;
+      };
+
+      sensor = [
+        {
+          platform = "fail2ban";
+          # Actually get all jails that are configured
+          jails = (lib.map (x: x.name) (lib.attrsToList config.services.fail2ban.jails));
+        }
+      ];
+
+    };
 
   };
 
