@@ -66,13 +66,13 @@ in
 
       sshd-mediarr = ''
         enabled = true
-        maxretry = 5
+        maxretry = 1
         findtime = 3600
         filter = sshd[mode=aggressive,_daemon=mediarr-openssh(?:-session)?]
         port = ${toString ports.mediarr-openssh}
-        backend = pyinotify
+        backend = auto
         logpath = /var/lib/mediarr/sshlogs/current
-        action = iptables-multiport[name=fail2ban-mediarr-openssh, port=${toString ports.mediarr-openssh}]
+        action = iptables-multiport[chain=FORWARD, name=mediarr-openssh, port=${toString ports.mediarr-openssh}]
                  apprise
       '';
 
@@ -81,9 +81,11 @@ in
         enabled = true
         maxretry = 5
         filter = hass
-        action = iptables-allports[name=HASS]
         backend = auto
         logpath = /var/lib/hass/home-assistant.log
+        port=80,443
+        action = iptables-multiport[name=HASS]
+                 apprise
       '';
 
       jellyfin = ''
@@ -96,6 +98,8 @@ in
         bantime = 86400
         findtime = 43200
         logpath = /var/lib/mediarr/jellyfin/config/log/log*.log
+        action = iptables-multiport[name=jellyfin]
+                 apprise
       '';
     };
 
