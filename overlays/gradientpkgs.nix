@@ -20,8 +20,6 @@ final: prev:
 
   starsector-gamescope-wrap = prev.callPackage ../pkgs/starsector-gamescope-wrap.nix { }; 
 
-  tinypilot = prev.callPackage ../pkgs/tinypilot.nix { };
-
   # Klipper with accelerometer support. See: https://www.klipper3d.org/Measuring_Resonances.html#software-installation
   klipper = prev.klipper.overrideAttrs (finalAttrs: prevAttrs: {
     buildInputs = [
