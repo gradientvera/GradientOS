@@ -99,7 +99,7 @@ in {
       mode = "0777";
     };
 
-    "${cfgPath}/config/KAMP_Settings.cfg"."L+" = {
+    "${cfgPath}/config/KAMP_Settings.cfg".C = {
       argument = "${kamp}/Configuration/KAMP_Settings.cfg";
       user = config.services.moonraker.user;
       group = config.services.moonraker.group;
