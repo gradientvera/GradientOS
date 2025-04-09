@@ -76,7 +76,9 @@ in
     ];
     customComponents = with pkgs.home-assistant-custom-components; [
       moonraker
+
       #auth_oidc # disable for now, not really that good
+
       (let
         owner = "uvejota";
         version = "2024.07.6";
@@ -123,6 +125,26 @@ in
           })
         ];
       })
+
+      (let
+        owner = "openrgb-ha";
+        version = "2.7.0";
+      in pkgs.buildHomeAssistantComponent {
+        inherit version owner;
+        domain = "openrgb";
+
+        src = pkgs.fetchFromGitHub {
+          inherit owner;
+          repo = "openrgb-ha";
+          rev = "v${version}";
+          hash = "sha256-cTOkTyOU3aBXIGU1FL1boKU/6RIeFMC8yKc+0wcTVUU=";
+        };
+
+        propagatedBuildInputs = [
+          pkgs.python313Packages.openrgb-python
+        ];
+      })
+
     ];
     extraPackages = ps: with ps; [ psycopg2 ];
 
