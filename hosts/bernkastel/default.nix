@@ -1,5 +1,7 @@
  { config, pkgs, ... }:
-
+ let
+  ports = config.gradient.currentHost.ports;
+in
  {
 
   imports = [
@@ -28,7 +30,15 @@
   services.displayManager.autoLogin.user = "vera";
   services.displayManager.defaultSession = "plasma";
 
-  services.hardware.openrgb.enable = true;
+  services.hardware.openrgb = {
+    enable = true;
+    motherboard = "amd";
+    package = pkgs.openrgb-with-all-plugins;
+    server.port = ports.openrgb;
+  };
+
+  networking.firewall.interfaces.gradientnet.allowedTCPPorts = [ ports.openrgb ];
+  networking.firewall.interfaces.gradientnet.allowedUDPPorts = [ ports.openrgb ];
 
   # Overclocking/underclocking AMD GPU support
   programs.corectrl = {
