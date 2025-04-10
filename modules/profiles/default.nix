@@ -27,6 +27,13 @@ in
   config = lib.mkIf cfg.profiles.default.enable {
     programs.git.enable = true;
 
+    services.udev.packages = with pkgs; [
+      steam-devices-udev-rules
+      game-devices-udev-rules
+      android-udev-rules
+      qmk-udev-rules
+    ];
+
     environment.systemPackages = with pkgs; [
       (with dotnetCorePackages; combinePackages [
         dotnet_8.sdk
