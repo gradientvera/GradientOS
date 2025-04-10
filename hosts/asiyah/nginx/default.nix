@@ -1,6 +1,6 @@
 { pkgs, lib, config, ... }:
 let
-  ports = import ../misc/service-ports.nix;
+  ports = config.gradient.currentHost.ports;
 in {
 
   imports = [

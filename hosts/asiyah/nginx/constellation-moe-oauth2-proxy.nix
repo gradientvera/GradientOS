@@ -1,7 +1,7 @@
 { config, ... }:
 let
   secrets = config.sops.secrets;
-  ports = import ../misc/service-ports.nix;
+  ports = config.gradient.currentHost.ports;
 in {
 
   # TODO: Make this a container so we can have multiple instances of oauth2_proxy?

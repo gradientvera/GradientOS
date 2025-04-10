@@ -1,7 +1,7 @@
 { config, ... }:
 let
-  ports = import ./misc/service-ports.nix;
-  addresses = import ../../misc/wireguard-addresses.nix;
+  ports = config.gradient.currentHost.ports;
+  addresses = config.gradient.const.wireguard.addresses;;
   hostName = config.networking.hostName;
 in {
 

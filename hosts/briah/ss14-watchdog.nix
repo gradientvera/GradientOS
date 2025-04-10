@@ -1,6 +1,6 @@
 { config, ... }:
 let
-  ports = import ./misc/service-ports.nix;
+  ports = config.gradient.currentHost.ports;
   pong-api-token = config.sops.secrets.pong-api-token.path;
 in {
 

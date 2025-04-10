@@ -1,6 +1,6 @@
 { pkgs, config, lib, ... }:
 let
-  ports = import ./misc/service-ports.nix;
+  ports = config.gradient.currentHost.ports;
   userName = "mediarr";
   userUid = 976;
   groupName = "mediarr";

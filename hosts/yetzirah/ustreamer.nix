@@ -1,6 +1,6 @@
-{ pkgs, ... }:
+{ config, pkgs, ... }:
 let
-  ports = import ./misc/service-ports.nix;
+  ports = config.gradient.currentHost.ports;
 in {
   systemd.services.ustreamer = {
     description = "ustreamer webcam streamer";

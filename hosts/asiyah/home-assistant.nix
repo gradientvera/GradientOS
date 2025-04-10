@@ -1,6 +1,6 @@
 { config, pkgs, lib, ... }:
 let
-  ports = import ./misc/service-ports.nix;
+  ports = config.gradient.currentHost.ports;
   addresses = config.gradient.const.wireguard.addresses.gradientnet;
 in
 {

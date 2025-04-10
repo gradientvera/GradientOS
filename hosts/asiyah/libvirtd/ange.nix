@@ -1,5 +1,5 @@
-{ ... }:
-let ports = import ../misc/service-ports.nix; in
+{ config, ... }:
+let ports = config.gradient.currentHost.ports; in
 {
 
   systemd.tmpfiles.settings."10-libvirtd" = {

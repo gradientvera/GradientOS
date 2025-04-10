@@ -6,7 +6,7 @@
 */
 { config, pkgs, lib, ... }:
 let
-  ports = import ./misc/service-ports.nix;
+  ports = config.gradient.currentHost.ports;
   repositoryRoot = "/data/repositories";
   lfsRoot = "/data/lfs";
 in

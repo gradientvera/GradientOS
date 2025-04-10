@@ -6,7 +6,7 @@ let
 
   private-key = config.sops.secrets.wireguard-private-key.path;
 
-  asiyahPorts = import ./../hosts/asiyah/misc/service-ports.nix;
+  asiyahPorts = config.gradient.hosts.asiyah.ports;
 
   iptablesCmd = "${pkgs.iptables}/bin/iptables";
   ip6tablesCmd = "${pkgs.iptables}/bin/ip6tables";

@@ -1,7 +1,7 @@
 { config, ... }:
 let
-  asiyahPorts = import ../hosts/asiyah/misc/service-ports.nix;
-  addresses = import ../misc/wireguard-addresses.nix;
+  asiyahPorts = config.gradient.hosts.asiyah.ports;
+  addresses = config.gradient.const.wireguard.addresses;
   userUid = 976;
   groupGid = 972;
 in

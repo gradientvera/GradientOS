@@ -1,8 +1,8 @@
 { config, lib, ... }:
 let
   addresses = config.gradient.const.wireguard.addresses;
-  ports = import ./misc/service-ports.nix;
-  asiyahPorts = import ../asiyah/misc/service-ports.nix;
+  ports = config.gradient.currentHost.ports;
+  asiyahPorts = config.gradient.hosts.asiyah.ports;
 in
 {
 

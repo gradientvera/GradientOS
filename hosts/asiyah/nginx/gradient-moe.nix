@@ -5,7 +5,7 @@
 */
 { self, pkgs, lib, config, ... }:
 let
-  ports = import ../../asiyah/misc/service-ports.nix;
+  ports = config.gradient.currentHost.ports;
   mkReverseProxy = { port, address ? "127.0.0.1", protocol ? "http", generateOwnCert ? false, rootExtraConfig ? "", vhostExtraConfig ? "", useACMEHost ? "gradient.moe" }: {
     useACMEHost = if (!generateOwnCert) then useACMEHost else null;
     enableACME = generateOwnCert;

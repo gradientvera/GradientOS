@@ -1,6 +1,6 @@
 { config, lib, pkgs, ... }:
 let
-  ports = import ./misc/service-ports.nix;
+  ports = config.gradient.currentHost.ports;
   faviconSettings = (pkgs.writeText "favicons.toml" ''
     [favicons]
     cfg_schema = 1

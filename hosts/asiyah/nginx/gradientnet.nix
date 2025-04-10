@@ -20,15 +20,14 @@ let
       "beatrice.gradient"
       (toString briahPorts.zigbee2mqtt)
       (toString briahPorts.esphome)
-      (toString asiyahPorts.prowlarr)
-      (toString asiyahPorts.searx)
+      (toString ports.prowlarr)
+      (toString ports.searx)
     ]
     html;
   dashboardBaseHtml = (builtins.readFile ./dashboard.html);
-  asiyahPorts = import ../../asiyah/misc/service-ports.nix;
-  briahPorts = import ../../briah/misc/service-ports.nix;
-  ports = import ../misc/service-ports.nix;
-  ips = import ../../../misc/wireguard-addresses.nix;
+  briahPorts = config.gradient.hosts.briah.ports;
+  ports = config.gradient.currentHost.ports;
+  ips = config.gradient.const.wireguard.addresses;
   vhostConfig = ''
     allow ${ips.gradientnet.gradientnet}/24;
     deny all;

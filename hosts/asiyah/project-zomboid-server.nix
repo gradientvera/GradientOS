@@ -1,7 +1,7 @@
 { config, pkgs, lib, ... }:
 let
 	steam-app = "380870";
-  ports = import ./misc/service-ports.nix;
+  ports = config.gradient.currentHost.ports;
 in {
 
 	users.users.project-zomboid = {

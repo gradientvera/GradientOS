@@ -1,7 +1,7 @@
 { config, pkgs, ... }:
 let
   secrets = config.sops.secrets;
-  ports = import ./misc/service-ports.nix;
+  ports = config.gradient.currentHost.ports;
   identityCert = config.security.acme.certs."identity.gradient.moe";
 in
 {

@@ -1,6 +1,6 @@
 { config, pkgs, ... }:
 let
-  ports = import misc/service-ports.nix;
+  ports = config.gradient.currentHost.ports;
   name = "trilium-memory-repository";
   tag = "0.62.6"; # Corresponds to original image tag.
 in {
