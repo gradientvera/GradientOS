@@ -1,10 +1,12 @@
-{ config, self, ... }:
+{ config, self, lib, ... }:
 let
-  ports = import ../misc/service-ports.nix;
+  ports = config.gradient.currentHost.ports;
   # TODO: This is copy-pasted... Make this a common lib or something?
   #       or even better, make a NixOS module for it hoooly shit
   mkReverseProxy = { port, address ? "127.0.0.1", protocol ? "http", generateOwnCert ? false,
-    rootExtraConfig ? "", vhostExtraConfig ? "", reverseProxyLocation ? "/", reverseProxySubdomain ? "", useACMEHost ? "constellation.moe" }: {
+    rootExtraConfig ? "", vhostExtraConfig ? "", reverseProxyLocation ? "/", reverseProxySubdomain ? "", useACMEHost ? "constellation.moe", extraConfig ? {} }:
+  (lib.recursiveUpdate 
+  {
     useACMEHost = if (!generateOwnCert) then useACMEHost else null;
     enableACME = generateOwnCert;
     forceSSL = true;
@@ -14,7 +16,7 @@ let
       proxyWebsockets = true;
       extraConfig = rootExtraConfig;
     };
-  };
+  } extraConfig);
 in {
 
   services.nginx.virtualHosts."polycule.constellation.moe" = {
@@ -100,7 +102,25 @@ in {
     "search.constellation.moe" = mkReverseProxy { port = ports.searx; };
     "files.constellation.moe" = mkReverseProxy { port = ports.mikochi; };
     "neko.constellation.moe" = mkReverseProxy { port = ports.neko; };
-    "calibre.constellation.moe" = mkReverseProxy { port = ports.calibre-web-automated; vhostExtraConfig = "client_max_body_size 4G; auth_request_set $username $upstream_http_x_auth_request_preferred_username;"; rootExtraConfig = "proxy_set_header X-Forwarded-Preferred-Username $xusername; proxy_pass_header X-Forwarded-Preferred-Username;"; };
+    "calibre.constellation.moe" = mkReverseProxy {
+      port = ports.calibre-web-automated;
+      vhostExtraConfig = ''
+        client_max_body_size 4G;
+        proxy_buffer_size 128k;
+        proxy_buffers 4 256k;
+        proxy_busy_buffers_size 256k;
+        auth_request_set $username $upstream_http_x_auth_request_preferred_username;
+      
+      '';
+      rootExtraConfig = ''
+        proxy_set_header X-Forwarded-Preferred-Username $xusername;
+        proxy_pass_header X-Forwarded-Preferred-Username;
+      '';
+      extraConfig.locations."/kobo".extraConfig = ''
+        auth_request off;
+        proxy_pass http://127.0.0.1:${toString ports.calibre-web-automated};
+      '';
+    };
     "calibredl.constellation.moe" = mkReverseProxy { port = ports.calibre-downloader; };
   };
 
@@ -127,6 +147,7 @@ in {
     "files.constellation.moe" = {};
     "neko.constellation.moe" = {};
     "calibre.constellation.moe" = {};
+    #"kobo.constellation.moe" = {}; # Use built-in auth
     "calibredl.constellation.moe" = {};
   };
   
