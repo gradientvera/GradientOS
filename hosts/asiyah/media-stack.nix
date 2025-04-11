@@ -822,6 +822,7 @@ in {
         "/var/lib/${userName}/calibre-web-automated:/config"
         "/data/downloads/books:/calibre-library"
         "/data/downloads/books-ingest:/cwa-book-ingest"
+        "${toString ./cwa-convert_library-fixed.py}:/app/calibre-web-automated/scripts/convert_library.py"
       ];
       environment = {
         TZ = config.time.timeZone;
