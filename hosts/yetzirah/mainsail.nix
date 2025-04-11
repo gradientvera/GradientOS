@@ -1,7 +1,7 @@
 { config, ... }:
 let
   ports = config.gradient.currentHost.ports;
-  addresses = config.gradient.const.wireguard.addresses;;
+  addresses = config.gradient.const.wireguard.addresses;
   hostName = config.networking.hostName;
 in {
 

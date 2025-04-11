@@ -46,7 +46,7 @@ in
     services.irqbalance.enable = true;
 
     # Convenience
-    services.envfs.enable = true;
+    # services.envfs.enable = true;
     
     services.ananicy = {
       enable = true;

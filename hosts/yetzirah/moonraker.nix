@@ -1,7 +1,7 @@
 { config, pkgs, self, ... }:
 let
   ports = config.gradient.currentHost.ports;
-  addresses = config.gradient.const.wireguard.addresses;;
+  addresses = config.gradient.const.wireguard.addresses;
   hostName = config.networking.hostName;
   kamp = self.inputs.klipper-adaptive-meshing-purging;
   cfgPath = "/var/lib/moonraker";

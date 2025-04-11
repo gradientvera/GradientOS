@@ -1,4 +1,4 @@
-{ ... }:
+{ config, ... }:
 let
   ports = config.gradient.currentHost.ports;
 in

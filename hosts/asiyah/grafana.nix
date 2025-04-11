@@ -1,6 +1,6 @@
 { config, pkgs, ... }:
 let
-  ports = import config.gradient.currentHost.ports;
+  ports = config.gradient.currentHost.ports;
 in
 {
 
