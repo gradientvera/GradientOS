@@ -5,6 +5,11 @@ final: prev:
 {
   beyond-all-reason-launcher = prev.callPackage ../pkgs/beyond-all-reason-launcher.nix { }; 
 
+  fbink = prev.callPackage ../pkgs/fbink.nix { device = "LINUX"; };
+  fbink-static = prev.pkgsStatic.callPackage ../pkgs/fbink.nix { device = "LINUX"; };
+  fbink-kobo = prev.pkgsCross.armv7l-hf-multiplatform.callPackage ../pkgs/fbink.nix { device = "KOBO"; }; 
+  fbink-kobo-static = prev.pkgsCross.armv7l-hf-multiplatform.pkgsStatic.callPackage ../pkgs/fbink.nix { device = "KOBO"; }; 
+
   fna3d = prev.callPackage ../pkgs/fna3d.nix { };
 
   force-xwayland = prev.callPackage ../pkgs/scripts/force-xwayland.nix { };
