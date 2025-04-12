@@ -28,11 +28,27 @@ in
       services.pipewire = {
         enable = true;
         alsa.enable = true;
+        audio.enable = true;
         alsa.support32Bit = true;
         pulse.enable = true;
         jack.enable = true;
         wireplumber.enable = true;
       };
+
+      security.pam.loginLimits =
+        let
+          mkLimit = item: value: {
+            inherit item value;
+            domain = "@pipewire";
+            type = "-";
+          };
+        in
+      [
+        # As per https://gitlab.freedesktop.org/pipewire/pipewire/-/wikis/Performance-tuning#rlimits
+        (mkLimit "rtprio" "95")
+        (mkLimit "nice" "-19")
+        (mkLimit "memlock" "4194304")
+      ];
 
       environment.systemPackages = with pkgs; [
         jack-matchmaker
@@ -47,6 +63,13 @@ in
       systemd.user.services.wireplumber = {
         startLimitBurst = 100;
         startLimitIntervalSec = 60;
+      };
+    })
+
+    (lib.mkIf config.system76-scheduler.enable {
+      services.system76-scheduler.settings.processScheduler.pipewireBoost.profile = {
+        nice = -19;
+        ioClass = "realtime";
       };
     })
   ];

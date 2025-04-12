@@ -55,7 +55,24 @@ in
       extraRules = import ./ananicy-rules.nix;
     };
 
-    security.rtkit.enable = true;
+    security.rtkit = {
+      enable = true;
+      # As per https://gitlab.freedesktop.org/pipewire/pipewire/-/wikis/Performance-tuning#rtkit
+      args = [
+        "--scheduling-policy=FIFO"
+        "--our-realtime-priority=89"
+        "--max-realtime-priority=88"
+        "--min-nice-level=-19"
+        "--rttime-usec-max=2000000"
+        "--users-max=100"
+        "--processes-per-user-max=1000"
+        "--threads-per-user-max=10000"
+        "--actions-burst-sec=10"
+        "--actions-per-burst-max=1000"
+        "--canary-cheep-msec=30000"
+        "--canary-watchdog-msec=60000"
+      ];  
+    };
     security.polkit.enable = true;
     security.auditd.enable = true;
     services.journald.audit = true;
