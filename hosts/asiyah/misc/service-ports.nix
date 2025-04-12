@@ -73,6 +73,7 @@
   vaultwarden = 8222;
   forgejo = 3000;
   forgejo-ssh = 222;
+  trmnl = 4567;
   
   # Paperless-ngx
   paperless = 28981;

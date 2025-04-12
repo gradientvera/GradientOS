@@ -67,5 +67,6 @@ in
   services.nginx.virtualHosts."syncthing.asiyah.gradient.moe" = mkInternalVHost { port = ports.syncthing; };
   services.nginx.virtualHosts."scrutiny.asiyah.gradient.moe" = mkInternalVHost { port = ports.scrutiny; };
   services.nginx.virtualHosts."bitwarden.asiyah.gradient.moe" = mkInternalVHost { port = ports.vaultwarden; };
+  services.nginx.virtualHosts."trmnl.asiyah.gradient.moe" = mkInternalVHost { port = ports.trmnl; };
 
 }
