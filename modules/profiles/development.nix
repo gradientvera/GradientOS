@@ -45,6 +45,7 @@ in
 
               # rust
               rust-lang.rust-analyzer
+              tamasfe.even-better-toml
 
               # nushell
               thenuprojectcontributors.vscode-nushell-lang
