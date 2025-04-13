@@ -74,8 +74,9 @@ in
 
     libreoffice.autoStart = true;
 
-    chromium.autoStart = true;
-    chromium.disableJavascript = true;
+    # It's just broken--
+    # chromium.autoStart = true;
+    # chromium.disableJavascript = true;
   };
 
 }
