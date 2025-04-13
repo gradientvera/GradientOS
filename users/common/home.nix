@@ -3,7 +3,7 @@
 {
 
   imports = [
-    self.inputs.catppuccin.homeManagerModules.catppuccin
+    self.inputs.catppuccin.homeModules.catppuccin
 
     ./nix.nix
     ./nix-direnv.nix

@@ -6,7 +6,6 @@
     ./mqtt.nix
     ./fail2ban
     ./searx.nix
-    ./trmnl.nix
     ./redis.nix
     ./numad.nix
     ./clamav.nix

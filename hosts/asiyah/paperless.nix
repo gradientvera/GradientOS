@@ -72,7 +72,7 @@ in
     enable = true;
     port = ports.gotenberg;
 
-    libreoffice.autoStart = true;
+    # libreoffice.autoStart = true;
 
     # It's just broken--
     # chromium.autoStart = true;
