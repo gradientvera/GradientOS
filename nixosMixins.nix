@@ -1,7 +1,7 @@
 {
   core = ./core/default.nix;
 
-  aarch64-emulation = ./mixins/aarch64-emulation.nix;
+  binfmt-emulation = ./mixins/binfmt-emulation.nix;
   declarative-flatpak = ./mixins/declarative-flatpak.nix;
   gnupg = ./mixins/gnupg.nix;
   jovian-decky-loader = ./mixins/jovian-decky-loader.nix;

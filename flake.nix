@@ -124,7 +124,7 @@
           mixins.vera-locale
           mixins.virtualisation
           mixins.nix-store-serve
-          mixins.aarch64-emulation
+          mixins.binfmt-emulation
           mixins.system76-scheduler
           mixins.declarative-flatpak
 
@@ -365,7 +365,7 @@
           mixins.v4l2loopback
           mixins.virtualisation
           mixins.nix-store-serve
-          mixins.aarch64-emulation
+          mixins.binfmt-emulation
           mixins.hardware-eaton-ups
           mixins.hardware-intelgpu-vaapi
           mixins.restic-repository-hokma
@@ -394,7 +394,7 @@
           mixins.vera-locale
           mixins.upgrade-diff
           mixins.virtualisation
-          mixins.aarch64-emulation
+          mixins.binfmt-emulation
           mixins.hardware-eaton-ups
           mixins.hardware-intelgpu-vaapi
           mixins.restic-repository-hokma

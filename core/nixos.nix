@@ -84,6 +84,10 @@ in
     programs.dconf.enable = true;
     programs.nix-ld.enable = true;
 
+    # Convenience
+    programs.appimage.binfmt = true;
+    programs.java.binfmt = true;
+
     # Mainly for the security wrapper + firejail in PATH
     programs.firejail.enable = true;
 
