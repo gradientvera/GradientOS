@@ -116,7 +116,7 @@ in {
     uid = userUid;
     homeMode = "775";
     group = config.users.groups.${groupName}.name;
-    extraGroups = [ "render" ]; # QSV
+    extraGroups = [ "video" "render" ]; # QSV
   };
 
   users.groups.${groupName} = {

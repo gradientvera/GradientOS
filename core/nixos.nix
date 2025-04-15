@@ -116,6 +116,11 @@ in
       kexecTime = "45s";
     };
 
+    security.pam.u2f = {
+      enable = true;
+      settings.cue = true;
+    };
+
     # systemd-based initrd
     boot.initrd.systemd.enable = true;
 
