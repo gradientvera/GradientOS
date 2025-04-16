@@ -9,10 +9,8 @@ in
   boot.loader.efi.canTouchEfiVariables = true;
 
   boot.initrd.luks.devices."luks-4b159de8-a815-46ef-94bd-52a9d0e03e3a".device = "/dev/disk/by-uuid/4b159de8-a815-46ef-94bd-52a9d0e03e3a";
-  boot.initrd.luks.devices."luks-4b159de8-a815-46ef-94bd-52a9d0e03e3a".crypttabExtraOpts = ["fido2-device=auto"];
   boot.initrd.luks.devices."luks-4b159de8-a815-46ef-94bd-52a9d0e03e3a".bypassWorkqueues = true;
   boot.initrd.luks.devices."luks-5300f6ce-cc89-429c-8656-50e5bf71f13d".device = "/dev/disk/by-uuid/5300f6ce-cc89-429c-8656-50e5bf71f13d";
-  boot.initrd.luks.devices."luks-5300f6ce-cc89-429c-8656-50e5bf71f13d".crypttabExtraOpts = ["fido2-device=auto"];
   boot.initrd.luks.devices."luks-5300f6ce-cc89-429c-8656-50e5bf71f13d".bypassWorkqueues = true;
 
   # SD Card

@@ -15,10 +15,8 @@
 
   # Enable swap on luks
   boot.initrd.luks.devices."luks-3053e826-9bee-46c6-b7ca-86d8a34fc307".device = "/dev/disk/by-uuid/3053e826-9bee-46c6-b7ca-86d8a34fc307";
-  boot.initrd.luks.devices."luks-3053e826-9bee-46c6-b7ca-86d8a34fc307".crypttabExtraOpts = ["fido2-device=auto"];
   boot.initrd.luks.devices."luks-3053e826-9bee-46c6-b7ca-86d8a34fc307".bypassWorkqueues = true;
   boot.initrd.luks.devices."luks-4ddc036e-9ff2-44a8-ad72-080243230631".device = "/dev/disk/by-uuid/4ddc036e-9ff2-44a8-ad72-080243230631";
-  boot.initrd.luks.devices."luks-4ddc036e-9ff2-44a8-ad72-080243230631".crypttabExtraOpts = ["fido2-device=auto"];
   boot.initrd.luks.devices."luks-4ddc036e-9ff2-44a8-ad72-080243230631".bypassWorkqueues = true;
   boot.initrd.luks.devices."luks-4ddc036e-9ff2-44a8-ad72-080243230631".keyFile = "/crypto_keyfile.bin";
 
