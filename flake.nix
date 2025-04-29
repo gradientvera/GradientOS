@@ -75,6 +75,9 @@
 
     declarative-flatpak.url = "github:GermanBread/declarative-flatpak/stable-v3";
 
+    gpd-fan-driver.url = "github:Cryolitia/gpd-fan-driver";
+    gpd-fan-driver.inputs.nixpkgs.follows = "nixpkgs";
+
     catppuccin.url = "github:catppuccin/nix";
 
     klipper-adaptive-meshing-purging = {
@@ -93,7 +96,7 @@
     };
   };
 
-  outputs = { self, nixpkgs, home-manager, gradient-generator, jovian-nixos, sops-nix, nixos-hardware, nixos-generators, ss14-watchdog, declarative-flatpak, ... }:
+  outputs = { self, nixpkgs, home-manager, gradient-generator, jovian-nixos, sops-nix, nixos-hardware, nixos-generators, ss14-watchdog, declarative-flatpak, gpd-fan-driver, ... }:
   let
     ips = import ./misc/wireguard-addresses.nix;
     colmena-tags = import ./misc/colmena-tags.nix;
@@ -300,6 +303,7 @@
         name = "featherine";
 
         modules = [
+          gpd-fan-driver.nixosModules.default
           jovian-nixos.nixosModules.default
           declarative-flatpak.nixosModules.default
           nixos-hardware.nixosModules.gpd-win-mini-2024
