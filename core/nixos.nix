@@ -148,6 +148,10 @@ in
       "net.ipv4.tcp_fin_timeout" = "10";
       "net.ipv4.tcp_slow_start_after_idle" = "0";
       "net.ipv4.tcp_syncookies" = "1";
+
+      # Increase inotify watches
+      "fs.inotify.max_user_instances" = "524288";
+      "fs.inotify.max_user_watches" =  "524288"; 
     };
 
     # For handhelds etc
