@@ -9,7 +9,7 @@ in
     exporter.enable = true;
     database.createLocally = true;
 
-    address = "localhost";
+    address = "127.0.0.1";
     port = ports.paperless;
 
     consumptionDirIsPublic = true;
