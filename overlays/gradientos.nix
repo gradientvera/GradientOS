@@ -44,7 +44,11 @@ in {
     });
   });
 
-  emulationstation-de = (prev.emulationstation-de.override { libgit2 = final.stable.libgit2; icu = final.icu75; });
+  emulationstation-de = prev.emulationstation-de.overrideAttrs (prevAttrs: {
+    buildInputs = prevAttrs.buildInputs ++ [ prev.libGL ];
+  });
+
+  gotenberg = prev.gotenberg.override { pdfcpu = final.stable.pdfcpu; };
 
   moonlight-qt = prev.moonlight-qt.overrideAttrs (prevAttrs: {
     nativeBuildInputs = prevAttrs.nativeBuildInputs ++ [ prev.copyDesktopItems ];

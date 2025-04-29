@@ -147,7 +147,6 @@ in {
     "files.constellation.moe" = {};
     "neko.constellation.moe" = {};
     "calibre.constellation.moe" = {};
-    #"kobo.constellation.moe" = {}; # Use built-in auth
     "calibredl.constellation.moe" = {};
   };
   

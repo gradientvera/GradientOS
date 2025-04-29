@@ -111,8 +111,6 @@ in
         DISABLE_USERS_PAGE = true;
       };
 
-      # TODO: add redis cache or something
-
       mailer = {
         # fuck that noise
         ENABLED = false;
