@@ -14,7 +14,15 @@ switch HOST:
 
 [group('deployment')]
 apply OPERATION HOST:
-    colmena apply {{OPERATION}} --on={{HOST}} --evaluator=streaming --build-on-target
+    @if [ "{{HOST}}" = "local" ]; then \
+        just apply-local {{OPERATION}}; \
+    else \
+        colmena apply {{OPERATION}} --on={{HOST}} --evaluator=streaming --build-on-target; \
+    fi;
+
+[group('deployment')]
+apply-local OPERATION:
+    @colmena apply-local {{OPERATION}} --sudo
 
 [group('secrets')]
 edit-secret HOST $EDITOR="code --wait":
