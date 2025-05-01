@@ -116,7 +116,6 @@
 
           mixins.wine
           mixins.gnupg
-          mixins.monado
           mixins.podman
           mixins.plymouth
           mixins.wireguard
