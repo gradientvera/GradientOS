@@ -25,6 +25,11 @@ in
 
   gradient.presets.syncthing.enable = true;
 
+  programs.alvr = {
+    enable = true;
+    openFirewall = true;
+  };
+
   # Enable automatic login for the user.
   services.displayManager.autoLogin.enable = true;
   services.displayManager.autoLogin.user = "vera";
