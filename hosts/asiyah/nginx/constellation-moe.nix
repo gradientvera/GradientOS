@@ -63,6 +63,16 @@
       };
     };
 
+    "adventure.constellation.moe" = {
+      useACMEHost = "constellation.moe";
+      forceSSL = true;
+      root = "/data/adventure";
+      extraConfig = ''
+        auth_basic "Constellation Adventure: Extended Cut";
+        auth_basic_user_file /data/adventure/.htpasswd;
+      '';
+    };
+
   };
 
 }
