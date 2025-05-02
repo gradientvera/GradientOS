@@ -16,6 +16,9 @@ in
   networking.hostName = "bernkastel";
 
   gradient.profiles.gaming.enable = true;
+  gradient.profiles.gaming.vr.enable = true;
+  gradient.profiles.gaming.vr.patchAmdgpu = true;
+  gradient.profiles.gaming.vr.wivrn.enable = true;
   gradient.profiles.gaming.emulation.romPath = "/data/roms";
   gradient.profiles.desktop.enable = true;
   gradient.profiles.development.enable = true;
@@ -24,11 +27,6 @@ in
   gradient.profiles.audio.um2.enable = true;
 
   gradient.presets.syncthing.enable = true;
-
-  programs.alvr = {
-    enable = true;
-    openFirewall = true;
-  };
 
   # Enable automatic login for the user.
   services.displayManager.autoLogin.enable = true;

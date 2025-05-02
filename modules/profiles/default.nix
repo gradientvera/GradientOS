@@ -5,8 +5,9 @@ in
 {
 
   imports = [
-    ./audio
-    ./gaming.nix
+    ./audio/default.nix
+    ./gaming/default.nix
+
     ./desktop.nix
     ./graphics.nix
     ./catppuccin.nix
@@ -26,6 +27,7 @@ in
 
   config = lib.mkIf cfg.profiles.default.enable {
     programs.git.enable = true;
+    programs.git.lfs.enable = true;
 
     services.udev.packages = with pkgs; [
       steam-devices-udev-rules

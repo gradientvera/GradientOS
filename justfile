@@ -22,7 +22,7 @@ apply OPERATION HOST:
 
 [group('deployment')]
 apply-local OPERATION:
-    @colmena apply-local {{OPERATION}} --sudo
+    @sudo colmena apply-local {{OPERATION}} --sudo --show-trace
 
 [group('secrets')]
 edit-secret HOST $EDITOR="code --wait":

@@ -4,10 +4,11 @@
 {
 
   imports = [
-    ./kernel
-    ./presets
-    ./hardware
-    ./profiles
+    ./kernel/default.nix
+    ./presets/default.nix
+    ./hardware/default.nix
+    ./profiles/default.nix
+
     ./nginx-robots.nix
     ./tmpfiles-check.nix
     ./substituter-switcher.nix

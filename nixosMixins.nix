@@ -5,7 +5,6 @@
   declarative-flatpak = ./mixins/declarative-flatpak.nix;
   gnupg = ./mixins/gnupg.nix;
   jovian-decky-loader = ./mixins/jovian-decky-loader.nix;
-  monado = ./mixins/monado.nix;
   neith-locale = ./mixins/neith-locale.nix;
   networkd = ./mixins/networkd.nix;
   nix-store-serve = ./mixins/nix-store-serve.nix;
