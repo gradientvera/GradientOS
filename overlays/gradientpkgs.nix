@@ -35,13 +35,13 @@ final: prev:
 
   klipper-np3pro-firmware = prev.klipper-firmware.override {
     mcu = prev.lib.strings.sanitizeDerivationName "np3pro";
-    gcc-arm-embedded = prev.gcc-arm-embedded-11;
+    gcc-arm-embedded = prev.gcc-arm-embedded-13;
     firmwareConfig = ../pkgs/klipper-np3pro-firmware/config;
   };
 
   klipper-kusba-firmware = (prev.klipper-firmware.override {
     mcu = prev.lib.strings.sanitizeDerivationName "kusba";
-    gcc-arm-embedded = prev.gcc-arm-embedded-11;
+    gcc-arm-embedded = prev.gcc-arm-embedded-13;
     firmwareConfig = ../pkgs/klipper-kusba-firmware/config;
   }).overrideAttrs (finalAttrs: prevAttrs: {
     # Regular firmware derivation does not copy uf2 file.
