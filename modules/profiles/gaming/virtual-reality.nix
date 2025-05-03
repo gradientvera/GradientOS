@@ -42,7 +42,7 @@ in
 
     gradient.profiles.gaming.vr.monado.default = lib.mkOption {
       type = lib.types.bool;
-      default = cfg.profiles.gaming.vr.monado.enable;
+      default = false;
       description = ''
         Whether to set up Monado as the default OpenXR runtime systemwide.
       '';
@@ -58,7 +58,7 @@ in
 
     gradient.profiles.gaming.vr.wivrn.default = lib.mkOption {
       type = lib.types.bool;
-      default = cfg.profiles.gaming.vr.wivrn.enable;
+      default = false;
       description = ''
         Whether to set up WiVRn as the default OpenXR runtime systemwide.
       '';
