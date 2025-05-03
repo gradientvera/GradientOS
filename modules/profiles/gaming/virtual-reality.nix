@@ -40,11 +40,27 @@ in
       '';
     };
 
+    gradient.profiles.gaming.vr.monado.default = lib.mkOption {
+      type = lib.types.bool;
+      default = cfg.profiles.gaming.vr.monado.enable;
+      description = ''
+        Whether to set up Monado as the default OpenXR runtime systemwide.
+      '';
+    };
+
     gradient.profiles.gaming.vr.wivrn.enable = lib.mkOption {
       type = lib.types.bool;
       default = false;
       description = ''
         Whether to set up WiVRn.
+      '';
+    };
+
+    gradient.profiles.gaming.vr.wivrn.default = lib.mkOption {
+      type = lib.types.bool;
+      default = cfg.profiles.gaming.vr.wivrn.enable;
+      description = ''
+        Whether to set up WiVRn as the default OpenXR runtime systemwide.
       '';
     };
 
@@ -68,7 +84,7 @@ in
         };
       };
 
-      environment.systemPackages = with pkgs; [
+      environment.systemPackages = [
         (let
           mkOpenVr = name: runtimePath: pkgs.writeText name ''
             {
@@ -107,6 +123,9 @@ in
             mkdir -p $(${pkgs.coreutils}/bin/dirname {{vrpath}})
             rm -f {{vrpath}}
 
+          clean: _clean
+            @echo "Cleaned user OpenVR runtime, will default to systemwide runtime."
+
           steam: _clean
             @ln -s ${toString steamOpenVr} {{vrpath}}
             @echo "Set SteamVR as the OpenVR runtime."
@@ -118,6 +137,33 @@ in
           xrizer: _clean
             @ln -s ${toString xrizerVr} {{vrpath}}
             @echo "Set XRizer as the OpenVR runtime."
+
+        '')
+        (let
+          monadoXr = "${pkgs.monado}/share/openxr/1/openxr_monado.json";
+          wivrnXr = "${pkgs.wivrn}/share/openxr/1/openxr_wivrn.json";
+        in pkgs.writeScriptBin "openxr-runtime" ''
+          #!/usr/bin/env -S ${pkgs.just}/bin/just --chooser=${pkgs.fzf}/bin/fzf --justfile
+
+          xrpath := "~/.config/openxr/1/active_runtime.json"
+
+          @_default:
+            openxr-runtime --choose
+
+          @_clean:
+            mkdir -p $(${pkgs.coreutils}/bin/dirname {{xrpath}})
+            rm -f {{xrpath}}
+
+          clean: _clean
+            @echo "Cleaned user OpenXR runtime, will default to systemwide runtime."
+
+          monado: _clean
+            @ln -s ${monadoXr} {{xrpath}}
+            @echo "Set Monado as the OpenXR runtime."
+
+          wivrn: _clean
+            @ln -s ${wivrnXr} {{xrpath}}
+            @echo "Set WiVRn as the OpenXR runtime."
 
         '')
       ];
@@ -138,6 +184,7 @@ in
           echo "Done!"
         '')
         wlx-overlay-s
+        immersed-vr
         bs-manager
         xrgears
       ];
@@ -169,7 +216,7 @@ in
       services.monado = {
         enable = true;
         highPriority = true;
-        defaultRuntime = true;
+        defaultRuntime = cfg.profiles.gaming.vr.monado.default;
       };
 
       gradient.profiles.gaming.vr.steam.pressure-vessel-filesystems-rw = [ "$XDG_RUNTIME_DIR/monado_comp_ipc" ];
@@ -198,7 +245,7 @@ in
         # Write information to /etc/xdg/openxr/1/active_runtime.json, VR applications
         # will automatically read this and work with WiVRn (Note: This does not currently
         # apply for games run in Valve's Proton)
-        defaultRuntime = true;
+        defaultRuntime = cfg.profiles.gaming.vr.wivrn.default;
 
         # Run WiVRn as a systemd service on startup
         autoStart = true;

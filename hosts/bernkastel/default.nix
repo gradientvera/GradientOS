@@ -16,13 +16,19 @@ in
   networking.hostName = "bernkastel";
 
   gradient.profiles.gaming.enable = true;
-  gradient.profiles.gaming.vr.enable = true;
-  gradient.profiles.gaming.vr.patchAmdgpu = true;
-  gradient.profiles.gaming.vr.wivrn.enable = true;
   gradient.profiles.gaming.emulation.romPath = "/data/roms";
   gradient.profiles.desktop.enable = true;
   gradient.profiles.development.enable = true;
   gradient.profiles.catppuccin.enable = true;
+
+  gradient.profiles.gaming.vr = {
+    enable = true;
+    patchAmdgpu = true;
+    wivrn.enable = true;
+    wivrn.default = true;
+    monado.enable = true;
+    monado.default = false;
+  };
 
   gradient.profiles.audio.um2.enable = true;
 
