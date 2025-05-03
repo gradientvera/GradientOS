@@ -142,10 +142,13 @@ in
         (let
           monadoXr = "${pkgs.monado}/share/openxr/1/openxr_monado.json";
           wivrnXr = "${pkgs.wivrn}/share/openxr/1/openxr_wivrn.json";
+          steamXr = "~/.local/share/Steam/steamapps/common/SteamVR/steamxr_linux64.json";
         in pkgs.writeScriptBin "openxr-runtime" ''
           #!/usr/bin/env -S ${pkgs.just}/bin/just --chooser=${pkgs.fzf}/bin/fzf --justfile
 
           xrpath := "~/.config/openxr/1/active_runtime.json"
+          alias steamxr := steam
+          alias steamvr := steam
 
           @_default:
             openxr-runtime --choose
@@ -156,6 +159,10 @@ in
 
           clean: _clean
             @echo "Cleaned user OpenXR runtime, will default to systemwide runtime."
+
+          steam: _clean
+            @ln -s ${steamXr} {{xrpath}}
+            @echo "Set SteamVR as the OpenXR runtime."
 
           monado: _clean
             @ln -s ${monadoXr} {{xrpath}}
