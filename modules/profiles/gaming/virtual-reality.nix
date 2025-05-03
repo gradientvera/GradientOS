@@ -119,6 +119,13 @@ in
           @_default:
             openvr-runtime --choose
 
+          @_link SOURCE:
+            ln -s {{SOURCE}} {{vrpath}}
+
+          @_copy SOURCE:
+            cp {{SOURCE}} {{vrpath}}
+            chmod 777 {{vrpath}}
+
           @_clean:
             mkdir -p $(${pkgs.coreutils}/bin/dirname {{vrpath}})
             rm -f {{vrpath}}
@@ -126,16 +133,13 @@ in
           clean: _clean
             @echo "Cleaned user OpenVR runtime, will default to systemwide runtime."
 
-          steam: _clean
-            @ln -s ${toString steamOpenVr} {{vrpath}}
+          steam: _clean (_copy "${toString steamOpenVr}")
             @echo "Set SteamVR as the OpenVR runtime."
 
-          opencomposite: _clean
-            @ln -s ${toString openCompositeVr} {{vrpath}}
+          opencomposite: _clean (_link "${toString openCompositeVr}")
             @echo "Set OpenComposite as the OpenVR runtime."
 
-          xrizer: _clean
-            @ln -s ${toString xrizerVr} {{vrpath}}
+          xrizer: _clean (_link "${toString xrizerVr}")
             @echo "Set XRizer as the OpenVR runtime."
 
         '')
@@ -153,6 +157,9 @@ in
           @_default:
             openxr-runtime --choose
 
+          @_link SOURCE:
+            ln -s {{SOURCE}} {{xrpath}}
+
           @_clean:
             mkdir -p $(${pkgs.coreutils}/bin/dirname {{xrpath}})
             rm -f {{xrpath}}
@@ -160,16 +167,13 @@ in
           clean: _clean
             @echo "Cleaned user OpenXR runtime, will default to systemwide runtime."
 
-          steam: _clean
-            @ln -s ${steamXr} {{xrpath}}
+          steam: _clean (_link "${steamXr}")
             @echo "Set SteamVR as the OpenXR runtime."
 
-          monado: _clean
-            @ln -s ${monadoXr} {{xrpath}}
+          monado: _clean (_link "${monadoXr}")
             @echo "Set Monado as the OpenXR runtime."
 
-          wivrn: _clean
-            @ln -s ${wivrnXr} {{xrpath}}
+          wivrn: _clean (_link "${wivrnXr}")
             @echo "Set WiVRn as the OpenXR runtime."
 
         '')
