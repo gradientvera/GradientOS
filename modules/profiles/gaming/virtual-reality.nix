@@ -1,6 +1,7 @@
-{ config, lib, pkgs, ... }:
+{ config, lib, pkgs, self, ... }:
 let
   cfg = config.gradient;
+  pkgs-xr = self.inputs.nixpkgs-xr.packages.${pkgs.system};
 in 
 {
 
@@ -55,6 +56,15 @@ in
         Whether to set up WiVRn.
       '';
     };
+    
+    gradient.profiles.gaming.vr.wivrn.androidId = lib.mkOption {
+      type = lib.types.str;
+      default = "org.meumeu.wivrn";
+      description = ''
+        Android app identifier to use when using the wivrn-usb script to connect a standalone VR headset to your computer.
+        See: https://github.com/WiVRn/WiVRn?tab=readme-ov-file#how-do-i-use-a-wired-connection
+      '';
+    };
 
     gradient.profiles.gaming.vr.wivrn.default = lib.mkOption {
       type = lib.types.bool;
@@ -107,7 +117,9 @@ in
           '';
           steamOpenVr = mkOpenVr "steamvr.vrpath" "~/.local/share/Steam/steamapps/common/SteamVR";
           openCompositeVr = mkOpenVr "opencomposite.vrpath" "${pkgs.opencomposite}/lib/opencomposite";
+          openCompositeUnstableVr = mkOpenVr "opencompositeUnstable.vrpath" "${pkgs-xr.opencomposite}/lib/opencomposite";
           xrizerVr = mkOpenVr "xrizer.vrpath" "${pkgs.xrizer}/lib/xrizer";
+          xrizerUnstableVr = mkOpenVr "xrizerUnstable.vrpath" "${pkgs-xr.xrizer}/lib/xrizer";
         in pkgs.writeScriptBin "openvr-runtime" ''
           #!/usr/bin/env -S ${pkgs.just}/bin/just --chooser=${pkgs.fzf}/bin/fzf --justfile
 
@@ -139,12 +151,19 @@ in
           opencomposite: _clean (_link "${toString openCompositeVr}")
             @echo "Set OpenComposite as the OpenVR runtime."
 
+          opencompositeUnstable: _clean (_link "${toString openCompositeUnstableVr}")
+            @echo "Set OpenComposite (unstable) as the OpenVR runtime."
+
           xrizer: _clean (_link "${toString xrizerVr}")
             @echo "Set XRizer as the OpenVR runtime."
+
+          xrizerUnstable: _clean (_link "${toString xrizerUnstableVr}")
+            @echo "Set XRizer (unstable) as the OpenVR runtime."
 
         '')
         (let
           monadoXr = "${pkgs.monado}/share/openxr/1/openxr_monado.json";
+          monadoUnstableXr = "${pkgs-xr.monado}/share/openxr/1/openxr_monado.json";
           wivrnXr = "${pkgs.wivrn}/share/openxr/1/openxr_wivrn.json";
           steamXr = "~/.local/share/Steam/steamapps/common/SteamVR/steamxr_linux64.json";
         in pkgs.writeScriptBin "openxr-runtime" ''
@@ -173,6 +192,9 @@ in
           monado: _clean (_link "${monadoXr}")
             @echo "Set Monado as the OpenXR runtime."
 
+          monadoUnstable: _clean (_link "${monadoUnstableXr}")
+            @echo "Set Monado (unstable) as the OpenXR runtime."
+
           wivrn: _clean (_link "${wivrnXr}")
             @echo "Set WiVRn as the OpenXR runtime."
 
@@ -182,6 +204,11 @@ in
     })
 
     (lib.mkIf (cfg.profiles.gaming.vr.enable && cfg.profiles.gaming.vr.installUtilities) {
+
+      programs.steam.extraCompatPackages = [
+        # Better for VRChat etc
+        pkgs-xr.proton-ge-rtsp-bin
+      ];
 
       programs.alvr = {
         enable = true;
@@ -194,6 +221,7 @@ in
           echo "4" > /sys/class/drm/renderD128/device/pp_power_profile_mode
           echo "Done!"
         '')
+        pkgs-xr.wayvr-dashboard 
         wlx-overlay-s
         bs-manager
         immersed
@@ -245,6 +273,18 @@ in
     })
 
     (lib.mkIf (cfg.profiles.gaming.vr.enable && cfg.profiles.gaming.vr.wivrn.enable) {
+
+      environment.systemPackages = with pkgs;
+      let
+        adb = "${pkgs.android-tools}/bin/adb";
+      in [
+        android-tools # adb for standalone headsets
+        # Script as per https://github.com/WiVRn/WiVRn?tab=readme-ov-file#how-do-i-use-a-wired-connection
+        (pkgs.writeShellScriptBin "wivrn-usb" ''
+          ${adb} reverse tcp:9757 tcp:9757
+          ${adb} shell am start -a android.intent.action.VIEW -d "wivrn+tcp://localhost" ${cfg.profiles.gaming.vr.wivrn.androidId}
+        '')
+      ];
 
       # As per https://wiki.nixos.org/wiki/VR#WiVRn
       # To use with Steam games, use the following:

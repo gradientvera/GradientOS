@@ -80,6 +80,8 @@
 
     catppuccin.url = "github:catppuccin/nix";
 
+    nixpkgs-xr.url = "github:nix-community/nixpkgs-xr";
+
     klipper-adaptive-meshing-purging = {
       url = "github:kyleisah/Klipper-Adaptive-Meshing-Purging";
       flake = false;
@@ -96,7 +98,7 @@
     };
   };
 
-  outputs = { self, nixpkgs, home-manager, gradient-generator, jovian-nixos, sops-nix, nixos-hardware, nixos-generators, ss14-watchdog, declarative-flatpak, gpd-fan-driver, ... }:
+  outputs = { self, nixpkgs, gradient-generator, jovian-nixos, sops-nix, nixos-hardware, ss14-watchdog, declarative-flatpak, gpd-fan-driver, ... }:
   let
     ips = import ./misc/wireguard-addresses.nix;
     colmena-tags = import ./misc/colmena-tags.nix;
