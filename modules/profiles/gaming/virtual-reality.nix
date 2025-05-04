@@ -272,7 +272,7 @@ in
             encoders = [
               {
                 encoder = "vaapi";
-                codec = "av1";
+                codec = "h265";
                 # 1.0 x 1.0 scaling
                 width = 1.0;
                 height = 1.0;
