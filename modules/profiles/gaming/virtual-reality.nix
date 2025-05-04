@@ -195,8 +195,8 @@ in
           echo "Done!"
         '')
         wlx-overlay-s
-        immersed-vr
         bs-manager
+        immersed
         xrgears
       ];
 
