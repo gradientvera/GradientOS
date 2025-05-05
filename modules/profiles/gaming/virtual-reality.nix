@@ -1,6 +1,7 @@
 { config, lib, pkgs, self, ... }:
 let
   cfg = config.gradient;
+  adb = "${pkgs.android-tools}/bin/adb";
   pkgs-xr = self.inputs.nixpkgs-xr.packages.${pkgs.system};
 in 
 {
@@ -216,13 +217,21 @@ in
       };
 
       environment.systemPackages = with pkgs; [
-        (pkgs.writeShellScriptBin "amdgpu-vr" ''
+        (writeShellScriptBin "amdgpu-vr" ''
           echo "Setting AMD card to VR mode..."
-          echo "4" > /sys/class/drm/renderD128/device/pp_power_profile_mode
+          echo "manual" | sudo tee /sys/class/drm/renderD128/device/power_dpm_force_performance_level
+          echo "4" | sudo tee /sys/class/drm/renderD128/device/pp_power_profile_mode
           echo "Done!"
         '')
+        # As per https://github.com/alvr-org/ALVR/wiki/ALVR-wired-setup-(ALVR-over-USB)
+        (writeShellScriptBin "alvr-usb" ''
+          ${adb} start-server
+          ${adb} forward tcp:9943 tcp:9943
+          ${adb} forward tcp:9944 tcp:9944
+        '')
         pkgs-xr.wayvr-dashboard 
-        wlx-overlay-s
+        pkgs-xr.wlx-overlay-s
+        android-tools # adb for standalone headsets
         bs-manager
         immersed
         xrgears
@@ -261,7 +270,9 @@ in
       gradient.profiles.gaming.vr.steam.pressure-vessel-filesystems-rw = [ "$XDG_RUNTIME_DIR/monado_comp_ipc" ];
 
       systemd.user.services.monado.environment = {
-        # Configure as needed here...
+        # Configure environment as needed here...
+        # Might prevent a crash on AMDGPU?
+        XRT_DISTORTION_MIP_LEVELS = "1";
       };
 
       # See https://wiki.nixos.org/wiki/VR#Hand_Tracking for setup
@@ -274,13 +285,10 @@ in
 
     (lib.mkIf (cfg.profiles.gaming.vr.enable && cfg.profiles.gaming.vr.wivrn.enable) {
 
-      environment.systemPackages = with pkgs;
-      let
-        adb = "${pkgs.android-tools}/bin/adb";
-      in [
-        android-tools # adb for standalone headsets
+      environment.systemPackages = with pkgs; [
         # Script as per https://github.com/WiVRn/WiVRn?tab=readme-ov-file#how-do-i-use-a-wired-connection
-        (pkgs.writeShellScriptBin "wivrn-usb" ''
+        (writeShellScriptBin "wivrn-usb" ''
+          ${adb} start-server
           ${adb} reverse tcp:9757 tcp:9757
           ${adb} shell am start -a android.intent.action.VIEW -d "wivrn+tcp://localhost" ${cfg.profiles.gaming.vr.wivrn.androidId}
         '')
@@ -301,18 +309,26 @@ in
         # Run WiVRn as a systemd service on startup
         autoStart = true;
 
+        monadoEnvironment = {
+          # Might prevent a crash on AMDGPU?
+          XRT_DISTORTION_MIP_LEVELS = "1";
+        };
+
         # Config for WiVRn (https://github.com/WiVRn/WiVRn/blob/master/docs/configuration.md)
         config = {
           enable = true;
           json = {
-            # 1.0x foveation scaling
-            scale = 1.0;
-            # 100 Mb/s
-            bitrate = 100000000;
+            # 0.5x foveation scaling
+            scale = 0.5;
+            # 50 Mb/s
+            bitrate = 50000000;
+            # Do not manage the OpenVR configuration, use openvr-runtime script.
+            openvr-compat-path = null;
             encoders = [
               {
                 encoder = "vaapi";
                 codec = "h265";
+                device = "/dev/dri/renderD128";
                 # 1.0 x 1.0 scaling
                 width = 1.0;
                 height = 1.0;
