@@ -81,6 +81,7 @@ in
       
       environment.systemPackages = with pkgs; [
         space-station-14-launcher
+        satisfactorymodmanager
         osu-lazer-bin
         prismlauncher
         vintagestory
