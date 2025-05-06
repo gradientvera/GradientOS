@@ -3,6 +3,20 @@ let
   cfg = config.gradient;
   adb = "${pkgs.android-tools}/bin/adb";
   pkgs-xr = self.inputs.nixpkgs-xr.packages.${pkgs.system};
+
+  # As per https://github.com/olekolek1000/wayvr-dashboard#assigning-wayvr-dashboard-to-the-wayvr-config-in-wlx-overlay-s
+  wayvr-dashboard-yaml = pkgs.writeText "wayvr-dashboard.yaml" ''
+    dashboard:
+      exec: "${pkgs-xr.wayvr-dashboard}/bin/wayvr-dashboard"
+      args: ""
+      env: []
+  '';
+  wayvr-dashboard-location = "~/.config/wlxoverlay/wayvr.conf.d/dashboard.yaml";
+  install-wayvr-dashboard = pkgs.writeShellScriptBin "install-wayvr-dashboard" ''
+    mkdir -p ~/.config/wlxoverlay/wayvr.conf.d/
+    rm -f ${wayvr-dashboard-location}
+    ln -s ${toString wayvr-dashboard-yaml} ${wayvr-dashboard-location}
+  '';
 in 
 {
 
@@ -229,13 +243,17 @@ in
           ${adb} forward tcp:9943 tcp:9943
           ${adb} forward tcp:9944 tcp:9944
         '')
-        pkgs-xr.wayvr-dashboard 
+        pkgs-xr.wayvr-dashboard
+        install-wayvr-dashboard
         wlx-overlay-s
         android-tools # adb for standalone headsets
         bs-manager
         immersed
         xrgears
       ];
+
+      # Auto-install on activation, in case the path changed.
+      system.userActivationScripts.install-wayvr-dashboard = "${toString install-wayvr-dashboard}/bin/install-wayvr-dashboard";
 
     })
 
