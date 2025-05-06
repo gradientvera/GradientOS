@@ -11,6 +11,7 @@
     extest.enable = true;
     protontricks.enable = true;
     extraCompatPackages = with pkgs; [
+      steam-play-none
       proton-ge-bin
     ];
   };
