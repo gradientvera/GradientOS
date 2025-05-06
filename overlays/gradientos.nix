@@ -5,7 +5,7 @@
 flake: final: prev:
 let
   steam-override = {
-    extraArgs = "-console";
+    extraArgs = "-console -pipewire";
     extraEnv.ROBUST_SOUNDFONT_OVERRIDE = "${prev.soundfont-fluid}/share/soundfonts/FluidR3_GM2-2.sf2";
     extraPkgs = pkgs: with pkgs; [
       ffmpeg-full
