@@ -230,7 +230,7 @@ in
           ${adb} forward tcp:9944 tcp:9944
         '')
         pkgs-xr.wayvr-dashboard 
-        pkgs-xr.wlx-overlay-s
+        wlx-overlay-s
         android-tools # adb for standalone headsets
         bs-manager
         immersed
