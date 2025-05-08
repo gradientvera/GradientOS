@@ -122,6 +122,7 @@ in {
       '';
     };
     "calibredl.constellation.moe" = mkReverseProxy { port = ports.calibre-downloader; };
+    "radio.constellation.moe" = mkReverseProxy { port = ports.openwebrx; };
   };
 
   # TODO: Figure out a way to automate the below list eugh
@@ -148,6 +149,7 @@ in {
     "neko.constellation.moe" = {};
     "calibre.constellation.moe" = {};
     "calibredl.constellation.moe" = {};
+    "radio.constellation.moe" = {};
   };
   
 }

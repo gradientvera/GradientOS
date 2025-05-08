@@ -8,6 +8,7 @@
     ./searx.nix
     ./redis.nix
     ./numad.nix
+    ./radio.nix
     ./clamav.nix
     ./kanidm.nix
     ./backups.nix

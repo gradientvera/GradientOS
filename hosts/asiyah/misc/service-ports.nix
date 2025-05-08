@@ -18,7 +18,7 @@
   # mediarr stack
   jellyfin-http = 8096;
   jellyfin-https = 8920;
-  jellyfin-service-discovery = 1900;
+  jellyfin-service-discovery = 1901;
   jellyfin-client-discovery = 7359;
   radarr = 7878;
   sonarr = 8989;
@@ -74,6 +74,7 @@
   forgejo = 3000;
   forgejo-ssh = 222;
   trmnl = 4567;
+  openwebrx = 8073;
   
   # Paperless-ngx
   paperless = 28981;
