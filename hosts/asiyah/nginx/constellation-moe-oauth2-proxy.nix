@@ -57,8 +57,8 @@ in {
   };
 
   systemd.services.oauth2-proxy = {
-    after = [ "redis-oauth2.service" ];
-    wants = [ "redis-oauth2.service" ];
+    after = [ "redis-oauth2.service" "kanidm.service" ];
+    wants = [ "redis-oauth2.service" "kanidm.service" ];
   };
 
   networking.firewall.allowedTCPPorts = with ports; [ oauth2-proxy ];
