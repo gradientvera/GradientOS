@@ -43,12 +43,12 @@ in
 
   environment.systemPackages = [
     (pkgs.writeShellScriptBin "decrypt-aurora" ''
-      ${pkgs.sudo}/bin/sudo ${pkgs.cryptsetup}/bin/cryptsetup luksOpen /dev/disk/by-uuid/${auroraUuid} luks-${auroraUuid}
-      ${pkgs.sudo}/bin/sudo ${pkgs.util-linux}/bin/mount /data
+      sudo ${pkgs.cryptsetup}/bin/cryptsetup luksOpen /dev/disk/by-uuid/${auroraUuid} luks-${auroraUuid}
+      sudo ${pkgs.util-linux}/bin/mount /data
     '')
     (pkgs.writeShellScriptBin "encrypt-aurora" ''
-      ${pkgs.sudo}/bin/sudo ${pkgs.util-linux}/bin/umount /data
-      ${pkgs.sudo}/bin/sudo ${pkgs.cryptsetup}/bin/cryptsetup luksClose luks-${auroraUuid}
+      sudo ${pkgs.util-linux}/bin/umount /data
+      sudo ${pkgs.cryptsetup}/bin/cryptsetup luksClose luks-${auroraUuid}
     '')
   ];
 

@@ -121,6 +121,10 @@ in
       settings.cue = true;
     };
 
+    # sudo but in rust?? hoooly hell
+    security.sudo.enable = false;
+    security.sudo-rs.enable = true;
+
     # systemd-based initrd
     boot.initrd.systemd.enable = true;
 
