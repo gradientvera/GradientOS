@@ -78,7 +78,8 @@ in
     services.journald.audit = true;
     security.audit.enable = true;
     security.audit.rules = [
-      "-a exit,always -F arch=b64 -S execve"
+      # Very spammy, not very useful
+      # "-a exit,always -F arch=b64 -S execve"
     ];
 
     programs.dconf.enable = true;
