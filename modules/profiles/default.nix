@@ -43,10 +43,6 @@ in
         dotnet_9.sdk
         dotnet_9.aspnetcore
       ])
-      gradientos-upgrade-switch
-      gradientos-upgrade-boot
-      gradientos-upgrade-test
-      gradientos-colmena
       smartmontools
       appimage-run
       imagemagick

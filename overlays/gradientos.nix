@@ -87,11 +87,6 @@ in {
   
   gradient-generator = flake.inputs.gradient-generator.packages.${prev.system}.default;
 
-  gradientos-colmena = prev.callPackage ../pkgs/scripts/gradientos-colmena.nix { };
-  gradientos-upgrade-switch = prev.callPackage ../pkgs/scripts/gradientos-upgrade-switch.nix { };
-  gradientos-upgrade-boot = prev.callPackage ../pkgs/scripts/gradientos-upgrade-boot.nix { };
-  gradientos-upgrade-test = prev.callPackage ../pkgs/scripts/gradientos-upgrade-test.nix { };
-
   nix-gaming = flake.inputs.nix-gaming.packages.${prev.system};
 
   # Unmodified unstable nixpkgs overlay.
