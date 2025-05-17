@@ -1,0 +1,96 @@
+esphome:
+  name: sonoff-rf-bridge-r2
+  friendly_name: Sonoff RF Bridge R2
+
+esp8266:
+  board: esp01_1m
+
+logger:
+  baud_rate: 0
+
+ota:
+  - platform: esphome
+    id: ota_esphome
+    password: !secret ota_password
+
+wifi:
+  networks:
+  - ssid: !secret wifi_ssid
+    password: !secret wifi_password
+    bssid: "80:AF:CA:56:F8:96"
+    manual_ip:
+      static_ip: 192.168.1.105
+      gateway: 192.168.1.1
+      subnet: 255.255.255.0
+  ap:
+    ssid: "sonoff-rf-bridge-r2"
+    password: !secret ap_password
+
+captive_portal:
+
+button:
+  - platform: restart
+    name: "Restart"
+
+uart:
+  tx_pin: 1
+  rx_pin: 3
+  baud_rate: 19200
+
+text_sensor:
+  - platform: version
+    hide_timestamp: true
+    name: "ESPHome Version"
+  - platform: wifi_info
+    ip_address:
+      name: "IP Address"
+      icon: mdi:wifi
+    ssid:
+      name: "Connected SSID"
+      icon: mdi:wifi-strength-2
+
+sensor:
+  - platform: wifi_signal
+    name: "WiFi Signal"
+    update_interval: 120s
+  - platform: uptime
+    name: Sonoff RF Bridge Uptime
+
+binary_sensor:
+  - platform: status
+    name: Sonoff RF Bridge Status
+
+light:
+  - platform: status_led
+    name: "Switch state"
+    pin: GPIO13
+
+api:
+  actions:
+    - action: send_rf_code
+      variables:
+        sync: int
+        low: int
+        high: int
+        code: int
+      then:
+        - rf_bridge.send_code:
+            sync: !lambda 'return sync;'
+            low: !lambda 'return low;'
+            high: !lambda 'return high;'
+            code: !lambda 'return code;'
+    - action: learn
+      then:
+        - rf_bridge.learn
+
+rf_bridge:
+  on_code_received:
+    then:
+      - homeassistant.event:
+          event: esphome.rf_code_received
+          data:
+            sync: !lambda 'return "0x" + format_hex(data.sync);'
+            low: !lambda 'return "0x" + format_hex(data.low);'
+            high: !lambda 'return "0x" + format_hex(data.high);'
+            code: !lambda 'return "0x" + format_hex(data.code);'
+      - logger.log: data

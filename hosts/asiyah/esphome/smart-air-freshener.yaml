@@ -1,0 +1,88 @@
+esphome:
+  name: air-freshener-vera-bedroom
+  friendly_name: Air Freshener Vera Bedroom
+
+esp32:
+  board: nodemcu-32s
+  framework:
+    type: esp-idf
+    version: recommended
+
+logger:
+
+api:
+
+ota:
+  - platform: esphome
+    id: ota_esphome
+    password: !secret ota_password
+
+wifi:
+  ssid: !secret wifi_ssid
+  password: !secret wifi_password
+  fast_connect: on
+  manual_ip:
+    static_ip: 192.168.1.101
+    gateway: 192.168.1.1
+    subnet: 255.255.255.0
+  ap:
+    ssid: "Air Freshener ESP32"
+    password: !secret ap_password
+
+captive_portal:
+
+output:
+  - platform: esp32_dac
+    pin: GPIO25
+    id: dac_output
+  - platform: esp32_dac
+    pin: GPIO26
+    id: dac_output_inv
+
+button:
+  - platform: restart
+    name: "Restart"
+  - platform: template
+    name: Spray
+    id: spray
+    icon: "mdi:spray"
+    on_press:
+      - logger.log: "Spraying..."
+      - output.turn_on: dac_output_inv
+      - output.turn_on: dac_output
+      - output.set_level:
+          id: dac_output_inv
+          level: 100%
+      - output.set_level:
+          id: dac_output
+          level: 0%
+      - delay: 0.5s
+      - output.turn_off: dac_output
+      - output.turn_off: dac_output_inv
+      - logger.log: "Sprayed!"
+
+text_sensor:
+  - platform: version
+    hide_timestamp: true
+    name: "ESPHome Version"
+  - platform: wifi_info
+    ip_address:
+      name: "IP Address"
+      icon: mdi:wifi
+    ssid:
+      name: "Connected SSID"
+      icon: mdi:wifi-strength-2
+
+sensor:
+  - platform: wifi_signal
+    name: "WiFi Signal"
+    update_interval: 120s
+  - platform: uptime
+    type: seconds
+    name: Uptime Sensor
+  - platform: internal_temperature
+    name: "ESP32 Internal Temperature"
+
+binary_sensor:
+  - platform: status
+    name: Air Freshener Status

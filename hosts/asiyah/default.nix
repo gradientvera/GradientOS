@@ -24,6 +24,7 @@
     ./media-stack.nix
     ./nginx/default.nix
     ./home-assistant.nix
+    ./esphome/default.nix
     ./victoriametrics.nix
     ./palworld-server.nix
     ./secrets/default.nix

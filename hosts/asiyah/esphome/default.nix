@@ -33,33 +33,23 @@ in
     };
   };
 
-  systemd.tmpfiles.settings."10-esphome" = {
-    "/var/lib/esphome/bk7231n-ir-blaster.yaml".C = {
-      argument = toString ./bk7231n-ir-blaster.yaml;
-      repoPath = "/etc/nixos/hosts/briah/esphome/bk7231n-ir-blaster.yaml";
+  systemd.tmpfiles.settings."10-esphome" = 
+  let
+    mkDevice = file: {
+      argument = toString ./${file};
+      repoPath = "/etc/nixos/hosts/asiyah/esphome/${file}";
       doCheck = true;
       user = config.systemd.services.esphome.serviceConfig.User;
       group = config.systemd.services.esphome.serviceConfig.Group;
-      mode = "0777";
+      mode = "0755";
     };
-
-    "/var/lib/esphome/kaysun-ac-living-room.yaml".C = {
-      argument = toString ./kaysun-ac-living-room.yaml;
-      repoPath = "/etc/nixos/hosts/briah/esphome/kaysun-ac-living-room.yaml";
-      doCheck = true;
-      user = config.systemd.services.esphome.serviceConfig.User;
-      group = config.systemd.services.esphome.serviceConfig.Group;
-      mode = "0777";
-    };
-
-    "/var/lib/esphome/kaysun-ac-vera-bedroom.yaml".C = {
-      argument = toString ./kaysun-ac-vera-bedroom.yaml;
-      repoPath = "/etc/nixos/hosts/briah/esphome/kaysun-ac-vera-bedroom.yaml";
-      doCheck = true;
-      user = config.systemd.services.esphome.serviceConfig.User;
-      group = config.systemd.services.esphome.serviceConfig.Group;
-      mode = "0777";
-    };
+  in
+  {
+    "/var/lib/esphome/bk7231n-ir-blaster.yaml".C = mkDevice "bk7231n-ir-blaster.yaml";
+    "/var/lib/esphome/kaysun-ac-living-room.yaml".C = mkDevice "kaysun-ac-living-room.yaml";
+    "/var/lib/esphome/kaysun-ac-vera-bedroom.yaml".C = mkDevice "kaysun-ac-vera-bedroom.yaml";
+    "/var/lib/esphome/sonoff-rf-bridge-r2.yaml".C = mkDevice "sonoff-rf-bridge-r2.yaml";
+    "/var/lib/esphome/smart-air-freshener.yaml".C = mkDevice "smart-air-freshener.yaml";
   };
 
   networking.firewall.interfaces.gradientnet.allowedTCPPorts = [ ports.esphome ];

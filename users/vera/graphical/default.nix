@@ -27,7 +27,6 @@
     firefox
     discord
     vesktop
-    ventoy
     krita
     carla
     vmpk

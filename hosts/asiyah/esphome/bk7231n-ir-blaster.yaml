@@ -6,7 +6,7 @@ esphome:
 bk72xx:
   board: generic-bk7231n-qfn32-tuya
   framework:
-    version: latest
+    version: recommended
 
 api:
 logger:
@@ -51,7 +51,39 @@ uart:
   tx_pin: TX1
   baud_rate: 9600
 
+text_sensor:
+  - platform: version
+    hide_timestamp: true
+    name: "ESPHome Version"
+  - platform: wifi_info
+    ip_address:
+      name: "IP Address"
+      icon: mdi:wifi
+    ssid:
+      name: "Connected SSID"
+      icon: mdi:wifi-strength-2
+
 sensor:
+  - platform: wifi_signal
+    name: "WiFi Signal"
+    update_interval: 120s
   - platform: uptime
     type: seconds
     name: Uptime Sensor
+  - platform: homeassistant
+    name: "Kaysun IR Follow Me"
+    id: "AC_Follow_Me"
+    entity_id: sensor.vera_bedroom_thermometer_temperature
+    internal: true
+    filters:
+      - throttle: 10s
+      - heartbeat: 2min
+      - debounce: 1s
+    on_value:
+    - remote_transmitter.transmit_midea:
+        code: !lambda |-
+          return {0xA4, 0x82, 0x48, 0x7F, (uint8_t)(x)};
+
+binary_sensor:
+  - platform: status
+    name: Air Freshener Status
