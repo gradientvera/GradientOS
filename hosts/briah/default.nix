@@ -9,7 +9,7 @@
     ./postgresql.nix
     ./filesystems.nix
     # ./ss14-watchdog.nix
-    ./esphome/default.nix
+    # ./esphome/default.nix
     ./secrets/default.nix
     ./hardware-configuration.nix
   ];

@@ -36,13 +36,6 @@
         restartUnits = [ "syncthing.service" ];
       };
 
-      esphome-secrets = {
-        owner = config.users.users.esphome.name;
-        group = config.users.users.esphome.group;
-        path = "${config.users.users.esphome.home}/secrets.yaml";
-        restartUnits = [ "esphome.service" ];
-      };
-
     };
   };
 
