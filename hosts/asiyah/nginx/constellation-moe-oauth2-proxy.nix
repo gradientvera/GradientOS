@@ -37,10 +37,12 @@ in {
 
     keyFile = secrets.oauth2-proxy-secrets.path;
     reverseProxy = true;
-    cookie.refresh = "1m";
+    cookie.refresh = "1h";
+    cookie.expire = "168h0m0s";
     cookie.secure = true;
     cookie.httpOnly = false;
     cookie.domain = ".constellation.moe";
+    cookie.name = "__Secure-oauth2_proxy_constellation";
     extraConfig = {
       pass-user-headers = "true";
       session-store-type = "redis";
