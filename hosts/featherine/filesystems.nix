@@ -15,6 +15,7 @@ in
 
   # SD Card
   boot.initrd.luks.devices."luks-${auroraUuid}".device = "/dev/disk/by-uuid/${auroraUuid}";
+  boot.initrd.luks.devices."luks-${auroraUuid}".bypassWorkqueues = true;
 
   boot.initrd.availableKernelModules = [ "nvme" "xhci_pci" "thunderbolt" "usb_storage" "usbhid" "sd_mod" ];
   boot.initrd.kernelModules = [ ];
