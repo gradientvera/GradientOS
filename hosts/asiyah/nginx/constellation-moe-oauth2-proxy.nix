@@ -26,7 +26,6 @@ in {
     # -- kanidm config --
     provider = "oidc";
     clientID = "constellation-oauth2-proxy";
-    clientSecret = "proxy"; # Not actually a secret! Uses PKCE
     redirectURL = "https://polycule.constellation.moe/oauth2/callback";
     oidcIssuerUrl = "https://identity.gradient.moe/oauth2/openid/constellation-oauth2-proxy";
     profileURL = "https://identity.gradient.moe/oauth2/openid/constellation-oauth2-proxy/userinfo";
@@ -37,8 +36,8 @@ in {
 
     keyFile = secrets.oauth2-proxy-secrets.path;
     reverseProxy = true;
-    cookie.refresh = "1h";
-    cookie.expire = "168h0m0s";
+    cookie.refresh = "14m";
+    cookie.expire = "720h0m0s";
     cookie.secure = true;
     cookie.httpOnly = false;
     cookie.domain = ".constellation.moe";

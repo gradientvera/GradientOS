@@ -1,0 +1,27 @@
+From cacc7a148fe6c5296ff16b7cfc72dc85989e204d Mon Sep 17 00:00:00 2001
+From: Vera Aguilera Puerto <gradientvera@outlook.com>
+Date: Sun, 18 May 2025 13:04:20 +0200
+Subject: [PATCH] Set oauth refresh token expiry to a month.
+
+---
+ server/lib/src/constants/mod.rs | 4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
+
+diff --git a/server/lib/src/constants/mod.rs b/server/lib/src/constants/mod.rs
+index 1e1fec51..0cabb493 100644
+--- a/server/lib/src/constants/mod.rs
++++ b/server/lib/src/constants/mod.rs
+@@ -135,8 +135,8 @@ pub const MAXIMUM_AUTH_PRIVILEGE_EXPIRY: u32 = 3600;
+ pub const DEFAULT_AUTH_PRIVILEGE_EXPIRY: u32 = 600;
+ // Default - directly privileged sessions only last 1 hour.
+ pub const DEFAULT_AUTH_SESSION_LIMITED_EXPIRY: u32 = 3600;
+-// Default - oauth refresh tokens last for 16 hours.
+-pub const OAUTH_REFRESH_TOKEN_EXPIRY: u64 = 3600 * 16;
++// Default - oauth refresh tokens last for a month.
++pub const OAUTH_REFRESH_TOKEN_EXPIRY: u64 = 3600 * 24 * 30;
+ 
+ /// How long access tokens should last. This is NOT the length
+ /// of the refresh token, which is bound to the issuing session.
+-- 
+2.49.0
+

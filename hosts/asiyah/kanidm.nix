@@ -10,7 +10,7 @@ in
   # https://kanidm.github.io/kanidm/stable/
 
   services.kanidm = {
-    package = pkgs.kanidmWithSecretProvisioning;
+    package = pkgs.kanidmWithSecretProvisioningAndGradientPatches;
 
     enableServer = true;
     enableClient = true;
