@@ -17,6 +17,7 @@ in
       "vaultwarden"
       "forgejo"
       "grafana"
+      "trmnl"
     ];
     ensureUsers = [
       {
@@ -43,6 +44,10 @@ in
         name = "grafana";
         ensureDBOwnership = true;
       }
+      {
+        name = "trmnl";
+        ensureDBOwnership = true;
+      }
     ];
     authentication = ''
       # Local services
@@ -55,6 +60,7 @@ in
 
       # Podman network
       host bitmagnet bitmagnet 10.88.0.0/24 trust
+      host trmnl trmnl 10.88.0.0/24 trust
     '';
     # PGTune settings
     settings = {

@@ -7,6 +7,7 @@
     ./fail2ban
     ./searx.nix
     ./redis.nix
+    ./trmnl.nix
     ./numad.nix
     ./radio.nix
     ./clamav.nix
