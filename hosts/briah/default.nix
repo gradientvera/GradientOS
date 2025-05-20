@@ -2,7 +2,6 @@
 {
 
   imports = [
-    ./mqtt.nix
     ./backups.nix
     ./hostapd.nix
     ./programs.nix

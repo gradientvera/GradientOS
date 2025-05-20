@@ -1,8 +1,6 @@
 { config, lib, ... }:
 let
-  addresses = config.gradient.const.wireguard.addresses;
   ports = config.gradient.currentHost.ports;
-  asiyahPorts = config.gradient.hosts.asiyah.ports;
 in
 {
 
@@ -11,7 +9,7 @@ in
     settings = {
       homeassistant = config.services.home-assistant.enable;
       mqtt = {
-        server = "mqtt://${addresses.gradientnet.asiyah}:${toString asiyahPorts.mqtt}";
+        server = "mqtt://127.0.0.1:${toString ports.mqtt}";
         include_device_information = true;
         version = 5;
       };
@@ -28,6 +26,9 @@ in
         cache_state = true;
         last_seen = "ISO_8601";
         elapsed = true;
+        log_directories_to_keep = 10;
+        log_level = "info";
+        log_namespaced_levels = { "z2m:mqtt" = "warning"; };
       };
     };  
   };

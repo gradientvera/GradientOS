@@ -59,6 +59,7 @@
 
   # misc
   home-assistant = 8123;
+  zigbee2mqtt = 8124;
   esphome = 6052;
   redis-oauth2 = 6380;
   redis-forgejo = 6381;

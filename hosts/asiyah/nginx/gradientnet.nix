@@ -9,7 +9,6 @@ let
       "@ASIYAH@"
       "@BRIAH@"
       "@BEATRICE@"
-      "@PORT-Z2M@"
       "@PORT-PROWLARR@"
       "@PORT-SEARX@"
     ]
@@ -17,14 +16,12 @@ let
       "asiyah.gradient"
       "briah.gradient"
       "beatrice.gradient"
-      (toString briahPorts.zigbee2mqtt)
       (toString ports.prowlarr)
       (toString ports.searx)
     ]
     html;
   # TODO: Rebuild this mess ugh
   dashboardBaseHtml = (builtins.readFile ./dashboard.html);
-  briahPorts = config.gradient.hosts.briah.ports;
   ports = config.gradient.currentHost.ports;
   ips = config.gradient.const.wireguard.addresses;
   vhostConfig = ''
@@ -69,5 +66,6 @@ in
   services.nginx.virtualHosts."trmnl.asiyah.gradient.moe" = mkInternalVHost { port = ports.trmnl; };
   services.nginx.virtualHosts."radio.asiyah.gradient.moe" = mkInternalVHost { port = ports.openwebrx; };
   services.nginx.virtualHosts."esphome.asiyah.gradient.moe" = mkInternalVHost { port = ports.esphome; };
+  services.nginx.virtualHosts."zigbee.asiyah.gradient.moe" = mkInternalVHost { port = ports.zigbee2mqtt; };
 
 }

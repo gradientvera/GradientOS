@@ -9,6 +9,5 @@
   # misc
   syncthing = 8384;
   syncthing-transfers = 22000;
-  zigbee2mqtt = 8124;
   
 }
