@@ -1,4 +1,4 @@
-{ config, lib, ... }:
+{ pkgs, config, lib, ... }:
 let
   ports = config.gradient.currentHost.ports;
 in
@@ -6,6 +6,24 @@ in
 
   services.zigbee2mqtt = {
     enable = true;
+    package = pkgs.zigbee2mqtt_2.overrideAttrs (prevAttrs:
+      let
+        pname = "zigbee2mqtt";
+        version = "693f0d0a35231b529261fe1652bb6e355d5854fe";
+        src = pkgs.fetchFromGitHub {
+            owner = "Koenkk";
+            repo = pname;
+            rev = version;
+            hash = "sha256-iENB6+NEZDurS6zf/2lnJpPT9AKpXX6qqvewe21OEkU=";
+        };
+      in {
+      # TODO: Temporary, fixes a bug with my door/window sensors
+      inherit src version;
+      pnpmDeps = pkgs.pnpm_9.fetchDeps {
+        inherit pname version src;
+        hash = "sha256-SmCcubqmYta3GBF1EaAHQlH/rVLjVqbNDb/FQFMgp0M=";
+      };
+    });
     settings = {
       homeassistant = config.services.home-assistant.enable;
       mqtt = {
@@ -29,6 +47,13 @@ in
         log_directories_to_keep = 10;
         log_level = "info";
         log_namespaced_levels = { "z2m:mqtt" = "warning"; };
+        homeassistant_legacy_entity_attributes = false;
+        homeassistant_legacy_triggers = false;
+        legacy_api = false;
+        legacy_availability_payload = false;
+      };
+      device_options = {
+        legacy = false;
       };
     };  
   };
