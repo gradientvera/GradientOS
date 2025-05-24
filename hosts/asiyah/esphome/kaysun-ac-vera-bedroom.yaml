@@ -13,8 +13,8 @@ logger:
   baud_rate: 0
 
 api:
-  services:
-    - service: follow_me
+  actions:
+    - action: follow_me
       variables:
         temperature: float
       then:
@@ -42,6 +42,7 @@ wifi:
 captive_portal:
 
 uart:
+  id: uart_tx_rx
   tx_pin: GPIO17
   rx_pin: GPIO16
   baud_rate: 9600
@@ -50,11 +51,25 @@ climate:
   - platform: midea
     id: climate_control
     name: Air Conditioner
+    uart_id: uart_tx_rx
+    transmitter_id: ir_tx
     autoconf: true
+    supported_modes:
+      - FAN_ONLY
+      - HEAT_COOL
+      - COOL
+      - HEAT
+      - DRY
     outdoor_temperature:
       name: Outdoor Temperature
       id: outdoor_temperature
       accuracy_decimals: 1
+
+remote_transmitter:
+  id: ir_tx
+  pin: GPIO26
+  # RF uses a 100% carrier signal
+  carrier_duty_percent: 50%
 
 switch:
   - platform: template
@@ -72,8 +87,12 @@ button:
   - platform: restart
     name: Restart
   - platform: template
+    name: Display Toggle
+    icon: mdi:theme-light-dark
+    on_press:
+      midea_ac.display_toggle:
+  - platform: template
     name: Swing Step
-    id: midea_swing_step
     icon: mdi:tailwind
     on_press:
       midea_ac.swing_step:
@@ -102,7 +121,7 @@ sensor:
   - platform: internal_temperature
     name: "ESP32 Internal Temperature"
   - platform: homeassistant
-    entity_id: sensor.vindstyrka_temperature
+    entity_id: sensor.vera_bedroom_thermometer_temperature
     id: follow_me_sensor
     filters:
       - throttle: 10s
@@ -112,6 +131,19 @@ sensor:
       midea_ac.follow_me:
         temperature: !lambda "return x;"
         beeper: false
+  - platform: homeassistant
+    name: "Kaysun IR Follow Me"
+    id: "AC_Follow_Me"
+    entity_id: sensor.vera_bedroom_thermometer_temperature
+    internal: true
+    filters:
+      - throttle: 10s
+      - heartbeat: 2min
+      - debounce: 1s
+    on_value:
+    - remote_transmitter.transmit_midea:
+        code: !lambda |-
+          return {0xA4, 0x82, 0x48, 0x7F, (uint8_t)(x)};
   - platform: xiaomi_hhccjcy01
     mac_address: '5C:85:7E:12:DD:4B'
     temperature:
@@ -123,4 +155,8 @@ sensor:
     conductivity:
       name: "Plant Soil Conductivity"
     battery_level:
-      name: "Soil Sensor Battery Level"
+      name: "Plant Sensor Battery Level"
+
+binary_sensor:
+  - platform: status
+    name: Kaysun AC Vera Bedroom Controller Status

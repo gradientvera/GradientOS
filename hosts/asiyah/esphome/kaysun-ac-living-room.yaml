@@ -51,6 +51,12 @@ climate:
     id: climate_control
     name: Air Conditioner
     autoconf: true
+    supported_modes:
+      - FAN_ONLY
+      - HEAT_COOL
+      - COOL
+      - HEAT
+      - DRY
     outdoor_temperature:
       name: Outdoor Temperature
       id: outdoor_temperature
@@ -110,3 +116,7 @@ sensor:
       midea_ac.follow_me:
         temperature: !lambda "return x;"
         beeper: false
+
+binary_sensor:
+  - platform: status
+    name: Kaysun AC Living Room Controller Status

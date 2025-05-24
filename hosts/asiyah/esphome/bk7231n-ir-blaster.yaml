@@ -70,20 +70,7 @@ sensor:
   - platform: uptime
     type: seconds
     name: Uptime Sensor
-  - platform: homeassistant
-    name: "Kaysun IR Follow Me"
-    id: "AC_Follow_Me"
-    entity_id: sensor.vera_bedroom_thermometer_temperature
-    internal: true
-    filters:
-      - throttle: 10s
-      - heartbeat: 2min
-      - debounce: 1s
-    on_value:
-    - remote_transmitter.transmit_midea:
-        code: !lambda |-
-          return {0xA4, 0x82, 0x48, 0x7F, (uint8_t)(x)};
 
 binary_sensor:
   - platform: status
-    name: Air Freshener Status
+    name: IR Blaster Status

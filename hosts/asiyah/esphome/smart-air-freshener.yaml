@@ -1,16 +1,19 @@
 esphome:
   name: air-freshener-vera-bedroom
   friendly_name: Air Freshener Vera Bedroom
+  name_add_mac_suffix: false
+
+external_components:
+  - source: "github://gabest11/esphome@0d73a86e1b4ac0920110c484993e8c998d2880b9"
+    components: [ cc1101 ]
 
 esp32:
   board: nodemcu-32s
   framework:
-    type: esp-idf
+    type: arduino
     version: recommended
 
 logger:
-
-api:
 
 ota:
   - platform: esphome
@@ -39,6 +42,255 @@ output:
     pin: GPIO26
     id: dac_output_inv
 
+text_sensor:
+  - platform: version
+    hide_timestamp: true
+    name: "ESPHome Version"
+  - platform: wifi_info
+    ip_address:
+      name: "IP Address"
+      icon: mdi:wifi
+    ssid:
+      name: "Connected SSID"
+      icon: mdi:wifi-strength-2
+
+# Taken from https://smarthomescene.com/guides/how-to-integrate-switchbot-meter-pro-and-meter-pro-co2-in-esphome/
+esp32_ble_tracker:
+  on_ble_advertise:
+    - mac_address:
+        - "B0:E9:FE:9C:A8:AC"
+      then:
+        - lambda: |-
+            for (auto data : x.get_manufacturer_datas()) {
+                if (data.data.size() >= 15) { // Ensure sufficient length for CO2 version
+                    // Parse temperature from Bytes 8-9
+                    float temperature = (float(data.data[8] & 0x0F) * 0.1) + float(data.data[9] & 0x7F);
+                    if (!(data.data[9] & 0x80)) {
+                        temperature = -temperature;
+                    }
+                    id(meter_pro_co2_temperature).publish_state(temperature);
+
+                    // Parse humidity from Byte 10
+                    uint8_t humidity = data.data[10] & 0x7F;
+                    id(meter_pro_co2_humidity).publish_state(humidity);
+
+                    // Parse CO2 from Bytes 13-14
+                    uint16_t co2 = (data.data[13] << 8) | data.data[14];
+                    id(meter_pro_co2).publish_state(co2);
+                }
+            }
+            for (auto data : x.get_service_datas()) {
+                if (data.data.size() == 3) {
+                    // Parse battery percentage from Byte 2
+                    int8_t battery_pct = data.data[2] & 0x7F;
+                    id(meter_pro_co2_battery).publish_state(battery_pct);
+                }
+            }
+
+sensor:
+  - platform: wifi_signal
+    name: "WiFi Signal"
+    update_interval: 120s
+  - platform: uptime
+    type: seconds
+    name: Uptime Sensor
+  - platform: internal_temperature
+    name: "ESP32 Internal Temperature"
+  - platform: template
+    name: "Meter Pro Temperature"
+    id: meter_pro_co2_temperature
+    unit_of_measurement: "°C"
+    accuracy_decimals: 1
+    icon: "mdi:thermometer"
+  - platform: template
+    name: "Meter Pro Humidity"
+    id: meter_pro_co2_humidity
+    unit_of_measurement: "%"
+    accuracy_decimals: 0
+    icon: "mdi:water-percent"
+  - platform: template
+    name: "Meter Pro CO2"
+    id: meter_pro_co2
+    unit_of_measurement: "ppm"
+    accuracy_decimals: 0
+    icon: "mdi:molecule-co2"
+  - platform: template
+    name: "Meter Pro Battery"
+    id: meter_pro_co2_battery
+    unit_of_measurement: "%"
+    accuracy_decimals: 0
+    icon: "mdi:battery"
+  - platform: ble_rssi
+    mac_address: "B0:E9:FE:9C:A8:AC"
+    name: "BLE Meter Pro RSSI value"
+
+spi:
+  clk_pin: GPIO17
+  miso_pin: GPIO27
+  mosi_pin: GPIO16
+
+cc1101:
+  id: transceiver
+  cs_pin: GPIO19
+  output_power: 0
+  tuner:
+    frequency: 434110
+    # if_frequency: 153
+    # bandwidth: 325
+    # channel: 0
+    # channel_spacing: 200
+    # fsk_deviation: 47.607
+    # msk_deviation: 0
+    # symbol_rate: 5000
+    # sync_mode: None
+    # carrier_sense_above_threshold: true
+    # modulation: ASK/OOK
+  # agc:    
+    # magn_target:
+    # max_lna_gain:
+    # max_dva_gain:
+    # carrier_sense_abs_thr:
+    # carrier_sense_rel_thr:
+    # lna_priority:
+    # filter_length_fsk_msk:
+    # filter_length_ask_ook:
+    # freeze:
+    # wait_time:
+    # hyst_level:
+  sensor:
+    chip_id:
+      name: Chip Id
+    rssi:
+      name: RSSI
+    lqi:
+      name: LQI
+    temperature:
+      name: Temperature
+
+number:
+  - platform: cc1101
+    output_power:
+      name: output_power
+    tuner:
+      frequency:
+        name: Tuner frequency
+      if_frequency:
+        name: Tuner if_frequency
+      bandwidth:
+        name: Tuner bandwidth
+      channel:
+        name: Tuner channel
+      channel_spacing:
+        name: Tuner channel_spacing
+      fsk_deviation:
+        name: Tuner fsk_deviation
+      msk_deviation:
+        name: Tuner msk_deviation
+      symbol_rate:
+        name: Tuner symbol_rate
+    agc:
+      carrier_sense_abs_thr:
+        name: AGC carrier_sense_abs_thr
+
+select:
+  - platform: cc1101
+    tuner:
+      sync_mode:
+        name: Tuner Sync Mode
+      modulation:
+        name: Tuner Modulation
+    agc:
+      magn_target:
+        name: AGC magn_target
+      max_lna_gain:
+        name: AGC max_lna_gain
+      max_dvga_gain:
+        name: AGC max_dva_gain
+      carrier_sense_rel_thr:
+        name: AGC carrier_sense_rel_thr
+      filter_length_fsk_msk:
+        name: AGC filter_length_fsk_msk
+      filter_length_ask_ook:
+        name: AGC filter_length_ask_ook
+      freeze:
+        name: AGC freeze
+      wait_time:
+        name: AGC wait_time
+      hyst_level:
+        name: AGC hyst_level
+
+switch:
+  - platform: cc1101
+    tuner:
+      carrier_sense_above_threshold:
+        name: Tuner carrier_sense_above_threshold
+    agc:
+      lna_priority:
+        name: AGC lna_priority
+
+remote_transmitter:
+  pin: GPIO18  # GDO0
+  carrier_duty_percent: 100%
+  on_transmit:
+    then:
+      - cc1101.begin_tx: transceiver
+  on_complete:
+    then:
+      - cc1101.end_tx: transceiver
+
+remote_receiver:
+  pin: GPIO14  # GDO2
+  dump:
+    - rc_switch
+    # - raw
+  tolerance: 50%
+  filter: 250us
+  idle: 4ms
+
+api:
+  services:
+    - service: 'remote_transmit_raw'
+      variables:
+        code: int[]
+        repeat: int
+      then:
+        - remote_transmitter.transmit_raw:
+            code: !lambda 'return code;'
+            repeat: 
+              times: !lambda 'return repeat;'
+    - service: 'remote_transmit_cc1101_ceiling_fan_code'
+      variables:
+        code: string
+        repeat: int
+      then:
+        - lambda: id(cc1101_transmit_ceiling_fan_code)->execute(code, repeat);
+
+script:
+  - id: cc1101_transmit_ceiling_fan_code
+    parameters:
+      code: string
+      repeat: int
+    then:
+      - remote_transmitter.transmit_raw:
+          code: !lambda |-
+            std::vector<int> vec;
+            for (int i = 0; i < code.length(); i++) {
+              if (code[i] == '0') {
+                vec.push_back(740);
+                vec.push_back(-256);
+              } else if (code[i] == '1') {
+                vec.push_back(256);
+                vec.push_back(-740);
+              }
+            }
+            vec.push_back(256);
+            vec.push_back(-8864);
+
+            return vec;
+          repeat: 
+            times: !lambda 'return repeat;'
+            wait_time: 0s
+
 button:
   - platform: restart
     name: "Restart"
@@ -60,28 +312,91 @@ button:
       - output.turn_off: dac_output
       - output.turn_off: dac_output_inv
       - logger.log: "Sprayed!"
-
-text_sensor:
-  - platform: version
-    hide_timestamp: true
-    name: "ESPHome Version"
-  - platform: wifi_info
-    ip_address:
-      name: "IP Address"
-      icon: mdi:wifi
-    ssid:
-      name: "Connected SSID"
-      icon: mdi:wifi-strength-2
-
-sensor:
-  - platform: wifi_signal
-    name: "WiFi Signal"
-    update_interval: 120s
-  - platform: uptime
-    type: seconds
-    name: Uptime Sensor
-  - platform: internal_temperature
-    name: "ESP32 Internal Temperature"
+  - platform: template
+    name: Ceiling Fan Light Toggle
+    icon: "mdi:ceiling-fan-light"
+    on_press:
+      - lambda: id(cc1101_transmit_ceiling_fan_code)->execute("11111101001111001001110011111101", 4);
+  - platform: template
+    name: Ceiling Fan Toggle
+    icon: "mdi:ceiling-fan"
+    on_press:
+      - lambda: id(cc1101_transmit_ceiling_fan_code)->execute("11111101001111001001110110101001", 4);
+  - platform: template
+    name: Ceiling Fan Speed 1
+    icon: "mdi:fan-chevron-down"
+    on_press:
+      - lambda: id(cc1101_transmit_ceiling_fan_code)->execute("11111101001111001001011110000001", 4);
+  - platform: template
+    name: Ceiling Fan Speed 2
+    icon: "mdi:fan-chevron-down"
+    on_press:
+      - lambda: id(cc1101_transmit_ceiling_fan_code)->execute("11111101001111001001011011010101", 4);
+  - platform: template
+    name: Ceiling Fan Speed 3
+    icon: "mdi:fan-chevron-down"
+    on_press:
+      - lambda: id(cc1101_transmit_ceiling_fan_code)->execute("11111101001111001001000110110100", 4);
+  - platform: template
+    name: Ceiling Fan Speed 4
+    icon: "mdi:fan-chevron-up"
+    on_press:
+      - lambda: id(cc1101_transmit_ceiling_fan_code)->execute("11111101001111001001101010101110", 4);
+  - platform: template
+    name: Ceiling Fan Speed 5
+    icon: "mdi:fan-chevron-up"
+    on_press:
+      - lambda: id(cc1101_transmit_ceiling_fan_code)->execute("11111101001111001001100000010111", 4);
+  - platform: template
+    name: Ceiling Fan Speed 6
+    icon: "mdi:fan-chevron-up"
+    on_press:
+      - lambda: id(cc1101_transmit_ceiling_fan_code)->execute("11111101001111001001100110001111", 4);
+  - platform: template
+    name: Ceiling Fan Direction Toggle
+    icon: "mdi:arrow-left-right"
+    on_press:
+      - lambda: id(cc1101_transmit_ceiling_fan_code)->execute("11111101001111001001111011111111", 4);
+  - platform: template
+    name: Ceiling Fan Dim Light
+    icon: "mdi:lightbulb-on-20"
+    on_press:
+      - lambda: id(cc1101_transmit_ceiling_fan_code)->execute("11111101001111001001011100101011", 4); 
+  - platform: template
+    name: Ceiling Fan Brighten Light
+    icon: "mdi:lightbulb-on-80"
+    on_press:
+      - lambda: id(cc1101_transmit_ceiling_fan_code)->execute("11111101001111001001101111001001", 4); 
+  - platform: template
+    name: Ceiling Fan Warm Light Color
+    icon: "mdi:heat-wave"
+    on_press:
+      - lambda: id(cc1101_transmit_ceiling_fan_code)->execute("11111101001111001001100100110100", 4); 
+  - platform: template
+    name: Ceiling Fan Neutral Light Color
+    icon: "mdi:emoticon-neutral-outline"
+    on_press:
+      - lambda: id(cc1101_transmit_ceiling_fan_code)->execute("11111101001111001001100011111001", 4); 
+  - platform: template
+    name: Ceiling Fan Cold Light Color
+    icon: "mdi:snowflake"
+    on_press:
+      - lambda: id(cc1101_transmit_ceiling_fan_code)->execute("11111101001111001001011001011101", 4);
+  - platform: template
+    name: Ceiling Fan Natural Wind
+    icon: "mdi:weather-windy"
+    on_press:
+      - lambda: id(cc1101_transmit_ceiling_fan_code)->execute("11111101001111001001010100111000", 4); 
+  - platform: template
+    name: Ceiling Fan 30 Minutes Timer
+    icon: "mdi:fan-clock"
+    on_press:
+      - lambda: id(cc1101_transmit_ceiling_fan_code)->execute("11111101001111001001101100010100", 4); 
+  - platform: template
+    name: Ceiling Fan 2 Hours Timer
+    icon: "mdi:fan-clock"
+    on_press:
+      - lambda: id(cc1101_transmit_ceiling_fan_code)->execute("11111101001111001001001100001101", 4); 
 
 binary_sensor:
   - platform: status
