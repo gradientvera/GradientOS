@@ -15,7 +15,7 @@
       192.168.1.12
     '';
     brscan5 = {
-      enable = true;
+      # enable = true; # TODO: Broken
       netDevices.brother = {
         model = "DCP-L2530DW";
         nodename = "BRW4CD5776D8616";

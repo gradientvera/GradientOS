@@ -48,7 +48,7 @@ in {
     buildInputs = prevAttrs.buildInputs ++ [ prev.libGL ];
   });
 
-  gotenberg = prev.gotenberg.override { pdfcpu = final.stable.pdfcpu; };
+  # gotenberg = prev.gotenberg.override { pdfcpu = final.stable.pdfcpu; };
 
   moonlight-qt = prev.moonlight-qt.overrideAttrs (prevAttrs: {
     nativeBuildInputs = prevAttrs.nativeBuildInputs ++ [ prev.copyDesktopItems ];

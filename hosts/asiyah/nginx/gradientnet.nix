@@ -67,5 +67,7 @@ in
   services.nginx.virtualHosts."radio.asiyah.gradient.moe" = mkInternalVHost { port = ports.openwebrx; };
   services.nginx.virtualHosts."esphome.asiyah.gradient.moe" = mkInternalVHost { port = ports.esphome; };
   services.nginx.virtualHosts."zigbee.asiyah.gradient.moe" = mkInternalVHost { port = ports.zigbee2mqtt; };
+  services.nginx.virtualHosts."hass.asiyah.gradient.moe" = mkInternalVHost { port = ports.home-assistant; };
+  services.nginx.virtualHosts."jellyfin.asiyah.gradient.moe" = mkInternalVHost { port = ports.jellyfin-http; };
 
 }

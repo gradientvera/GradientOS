@@ -248,7 +248,7 @@ in
         wlx-overlay-s
         android-tools # adb for standalone headsets
         bs-manager
-        immersed
+        # immersed
         xrgears
       ];
 
