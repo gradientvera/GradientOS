@@ -50,6 +50,7 @@ in
     "/var/lib/esphome/kaysun-ac-vera-bedroom.yaml".C = mkDevice "kaysun-ac-vera-bedroom.yaml";
     "/var/lib/esphome/sonoff-rf-bridge-r2.yaml".C = mkDevice "sonoff-rf-bridge-r2.yaml";
     "/var/lib/esphome/smart-air-freshener.yaml".C = mkDevice "smart-air-freshener.yaml";
+    "/var/lib/esphome/espbell-lite.yaml".C = mkDevice "espbell-lite.yaml";
   };
 
   networking.firewall.interfaces.gradientnet.allowedTCPPorts = [ ports.esphome ];
