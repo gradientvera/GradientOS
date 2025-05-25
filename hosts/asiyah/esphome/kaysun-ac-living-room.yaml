@@ -57,6 +57,17 @@ climate:
       - COOL
       - HEAT
       - DRY
+    custom_fan_modes:
+      - SILENT
+      - TURBO
+    supported_presets:
+      - ECO
+      - BOOST
+      - SLEEP
+    custom_presets:
+      - FREEZE_PROTECTION
+    supported_swing_modes:
+      - VERTICAL
     outdoor_temperature:
       name: Outdoor Temperature
       id: outdoor_temperature
