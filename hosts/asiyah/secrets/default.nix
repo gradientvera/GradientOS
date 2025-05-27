@@ -185,6 +185,10 @@
         restartUnits = [ "esphome.service" ];
       };
 
+      nextcloud-admin-password = {
+        owner = "nextcloud";
+      };
+
     };
   };
 

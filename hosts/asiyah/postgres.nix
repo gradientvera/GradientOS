@@ -18,6 +18,7 @@ in
       "forgejo"
       "grafana"
       "trmnl"
+      "nextcloud"
     ];
     ensureUsers = [
       {
@@ -48,15 +49,21 @@ in
         name = "trmnl";
         ensureDBOwnership = true;
       }
+      {
+        name = "nextcloud";
+        ensureDBOwnership = true;
+      }
     ];
     authentication = ''
       # Local services
       local hass hass peer
       local vaultwarden vaultwarden peer
       local forgejo forgejo peer
+      local nextcloud nextcloud peer
       host pufferpanel pufferpanel 127.0.0.1/32 trust
       host pufferpanel pufferpanel ::1/128 trust
       host grafana grafana 127.0.0.1/32 trust
+      host nextcloud nextcloud 127.0.0.1/32 trust
 
       # Podman network
       host bitmagnet bitmagnet 10.88.0.0/24 trust

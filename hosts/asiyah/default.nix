@@ -19,6 +19,7 @@
     ./duckdns.nix
     ./postgres.nix
     ./scrutiny.nix
+    ./nextcloud.nix
     ./paperless.nix
     ./cloudflare.nix
     ./filesystem.nix

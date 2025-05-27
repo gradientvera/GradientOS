@@ -123,6 +123,7 @@ in {
     };
     "calibredl.constellation.moe" = mkReverseProxy { port = ports.calibre-downloader; };
     "radio.constellation.moe" = mkReverseProxy { port = ports.openwebrx; };
+    "nextcloud.constellation.moe" = { useACMEHost = "constellation.moe"; forceSSL = true; };
   };
 
   # TODO: Figure out a way to automate the below list eugh
