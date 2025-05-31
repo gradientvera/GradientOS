@@ -6,6 +6,7 @@
     losslesscut-bin
     stable.freecad
     prusa-slicer
+    orca-slicer
     openscad
   ];
 
