@@ -4,10 +4,10 @@
   environment.systemPackages = with pkgs; [
     gradient-generator
     losslesscut-bin
-    stable.freecad
     prusa-slicer
     orca-slicer
     openscad
+    freecad
   ];
 
   services.flatpak.packages = [

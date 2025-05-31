@@ -24,7 +24,7 @@
   };
 
   environment.systemPackages = with pkgs; [
-    stable.xsane
+    xsane
   ];
 
 }

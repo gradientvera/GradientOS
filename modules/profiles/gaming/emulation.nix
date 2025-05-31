@@ -307,12 +307,12 @@ in
         # -- Retroarch --
         retroarch-full # A lot of systems
         # -- Standalone emulators --
-        stable.lime3ds # 3DS
+        azahar # 3DS
         dolphin-emu # Wii / GC
         cemu # WiiU
         ryubing # Switch
         pcsx2 # PS2
-        stable.rpcs3 # PS3
+        rpcs3 # PS3
         shadps4 # PS4
         ruffle # Flash
         # -- Utilities --
