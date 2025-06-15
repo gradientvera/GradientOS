@@ -33,6 +33,10 @@ in
         })
       ];
     })
+
+    (lib.mkIf (config.services.forgejo.enable && cfg.enable) {
+      catppuccin.forgejo.enable = true;
+    })
   ];
 
 }

@@ -77,6 +77,7 @@
   forgejo-ssh = 222;
   trmnl = 2300;
   openwebrx = 8073;
+  mopidy = 6600;
   
   # Paperless-ngx
   paperless = 28981;

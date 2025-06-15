@@ -189,6 +189,13 @@
         owner = "nextcloud";
       };
 
+      hass-secrets = {
+        owner = config.users.users.hass.name;
+        group = config.users.users.hass.group;
+        path = "${config.users.users.hass.home}/secrets.yaml";
+        restartUnits = [ "home-assistant.service" ];
+      };
+
     };
   };
 

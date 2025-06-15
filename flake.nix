@@ -371,6 +371,7 @@
           mixins.virtualisation
           mixins.nix-store-serve
           mixins.binfmt-emulation
+          mixins.hardware-bluetooth
           mixins.hardware-eaton-ups
           mixins.hardware-intelgpu-vaapi
           mixins.restic-repository-hokma
@@ -500,12 +501,14 @@
       default = self.overlays.gradientpkgs;
       gradientpkgs = import ./overlays/gradientpkgs.nix;
       gradientos = import ./overlays/gradientos.nix self;
+      home-assistant = import ./overlays/home-assistant.nix;
       kernel-allow-missing = import ./overlays/kernel-allow-missing.nix;
     };
 
     apps = self.lib.forAllSystemsWithOverlays [ self.overlays.gradientpkgs self.overlays.gradientos  ] (pkgs: (import ./misc/ansible/apps.nix pkgs));
 
     packages = self.lib.forAllSystems (pkgs: self.overlays.gradientpkgs pkgs pkgs);
-    legacyPackages = self.lib.forAllSystemsWithOverlays [ self.overlays.gradientpkgs self.overlays.gradientos  ] (pkgs: (pkgs));
+    legacyPackages = self.lib.forAllSystemsWithOverlays [ self.overlays.gradientpkgs self.overlays.gradientos self.overlays.home-assistant  ] (pkgs: (pkgs));
+
   };
 }

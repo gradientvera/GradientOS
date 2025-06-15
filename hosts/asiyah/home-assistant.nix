@@ -2,6 +2,7 @@
 let
   ports = config.gradient.currentHost.ports;
   addresses = config.gradient.const.wireguard.addresses.gradientnet;
+  pythonPkgs = config.services.home-assistant.package.python.pkgs;
 in
 {
 
@@ -12,22 +13,25 @@ in
       "homeassistant_alerts"
       "bluetooth_le_tracker"
       "pvpc_hourly_pricing"
-      #"private_ble_device" # Build failure
+      "private_ble_device"
       "bluetooth_adapters"
-      #"bluetooth_tracker" # Build failure
+      "bluetooth_tracker"
+      "device_automation"
       "mqtt_eventstream"
       "mqtt_statestream"
       "androidtv_remote"
       "assist_pipeline"
+      "speedtestdotnet"
+      "remote_calendar"
       "default_config"
       "haveibeenpwned"
+      "device_tracker"
       "python_script"
       "shell_command"
       "history_stats"
       "shopping_list"
       "utility_meter"
       "telegram_bot"
-      "raspberry_pi"
       "geo_location"
       "conversation"
       "image_upload"
@@ -35,7 +39,8 @@ in
       "air_quality"
       "nfandroidtv"
       "mobile_app"
-      #"xiaomi_ble" # Build failure
+      "vlc_telnet"
+      "xiaomi_ble"
       "bluetooth"
       "mqtt_json"
       "mqtt_room"
@@ -56,11 +61,17 @@ in
       "backup"
       "energy"
       "camera"
+      "radarr"
+      "sonarr"
       "stream"
       "config"
+      "webdav"
+      "vacuum"
       "cloud"
+      "tile"
       "moon"
       "mqtt"
+      "waqi"
       "dhcp"
       "ssdp"
       "tuya"
@@ -72,81 +83,35 @@ in
       "usb"
       "ios"
       "sql"
+      "vlc"
+      "mpd"
       "my"
     ];
-    customComponents = with pkgs.home-assistant-custom-components; [
+    customComponents = 
+      with pkgs.home-assistant-custom-components;
+      with pkgs.home-assistant-custom-components-gradientos;
+    [
+      radarr-upcoming-media
+      sonarr-upcoming-media
+      thermal-comfort
+      anniversaries
+      openrgb-ha
+      feedparser
       moonraker
+      smartir
+      bermuda
+      edata
 
       #auth_oidc # disable for now, not really that good
-
-      (let
-        owner = "uvejota";
-        version = "2024.07.6";
-      in pkgs.buildHomeAssistantComponent {
-        inherit version owner;
-        domain = "edata";
-
-        src = pkgs.fetchFromGitHub {
-          inherit owner;
-          repo = "homeassistant-edata";
-          rev = version;
-          hash = "sha256-HGCjwYf5aLFUMuh4InAjLZHHIU6aidjoAQuhH9W+pkw=";
-        };
-
-        propagatedBuildInputs = [
-          pkgs.python313Packages.python-dateutil
-          (let
-            pname = "e-data";
-            version = "1.2.22";
-          in pkgs.python313.pkgs.buildPythonPackage {
-            inherit pname version;
-
-            src = pkgs.fetchFromGitHub {
-              inherit owner;
-              repo = "python-edata";
-              rev = "v${version}";
-              hash = "sha256-h7nqrFKsh97GIebGeIC5E1m1BROTu8ZZ1TrDSO4nFWk=";
-            };
-
-            build-system = [
-              pkgs.python313Packages.setuptools
-            ];
-
-            dependencies = with pkgs.python313Packages; [
-              dateparser
-              freezegun
-              holidays
-              pytest
-              python-dateutil
-              requests
-              voluptuous
-              jinja2
-            ];
-          })
-        ];
-      })
-
-      (let
-        owner = "openrgb-ha";
-        version = "2.7.0";
-      in pkgs.buildHomeAssistantComponent {
-        inherit version owner;
-        domain = "openrgb";
-
-        src = pkgs.fetchFromGitHub {
-          inherit owner;
-          repo = "openrgb-ha";
-          rev = "v${version}";
-          hash = "sha256-cTOkTyOU3aBXIGU1FL1boKU/6RIeFMC8yKc+0wcTVUU=";
-        };
-
-        propagatedBuildInputs = [
-          pkgs.python313Packages.openrgb-python
-        ];
-      })
-
+      
     ];
     extraPackages = ps: with ps; [ psycopg2 ];
+
+    customLovelaceModules = with pkgs.home-assistant-custom-lovelace-modules; [
+      zigbee2mqtt-networkmap
+      valetudo-map-card
+      vacuum-card
+    ];
 
     config = {
       # Imports/includes
@@ -154,6 +119,16 @@ in
       automation = "!include automations.yaml";
       notify = "!include notifiers.yaml";
       script = "!include scripts.yaml";
+
+      homeassistant = {
+        media_dirs = {
+          media = "/var/lib/hass/media";
+          music = "/data/downloads/music";
+          tv = "/data/downloads/tv";
+          movies = "/data/downloads/movies";
+          adverts = "/data/downloads/adverts";
+        };
+      };
 
       zha.zigpy_config.ota.z2m_remote_index = "https://raw.githubusercontent.com/Koenkk/zigbee-OTA/master/index.json";
       lovelace.mode = "storage";
@@ -193,7 +168,129 @@ in
 
   };
 
-  networking.firewall.interfaces.gradientnet.allowedTCPPorts = [ ports.home-assistant ];
-  networking.firewall.interfaces.gradientnet.allowedUDPPorts = [ ports.home-assistant ];
+  # Media player support, local mpd support
+  # gradient.profiles.audio.enable = true;
+  users.users.hass.extraGroups = [ "audio" ];
+
+  hardware.alsa = {
+    enable = true;
+    enablePersistence = true;
+    config = ''
+pcm.!default {
+    type asym
+    playback.pcm "btspeaker"
+}
+
+
+pcm.btspeaker {
+        type plug
+        slave.pcm {
+                type bluealsa
+                device "11:75:58:21:AA:F7"
+                profile "a2dp"
+        }
+        hint {
+                show on
+                description "Bluetooth Speaker"
+        }
+}
+    '';
+  };
+
+  services.mopidy = {
+    enable = true;
+    extensionPackages = [
+      pkgs.mopidy-mpd
+      pkgs.mopidy-local
+    ];
+    configuration = ''
+      [mpd]
+      hostname = ::
+
+      [audio]
+      output = alsasink
+
+      [file]
+      enabled = true
+      media_dirs =
+          /var/lib/mopidy/media
+      show_dotfiles = false
+      excluded_file_extensions =
+        .directory
+        .html
+        .jpeg
+        .jpg
+        .log
+        .nfo
+        .pdf
+        .png
+        .txt
+        .zip
+      follow_symlinks = false
+      metadata_timeout = 1000
+
+      [http]
+      enabled = false
+
+      [stream]
+      enabled = true
+      protocols =
+          http
+          https
+          mms
+          rtmp
+          rtmps
+          rtsp
+
+      [softwaremixer]
+      enabled = true
+    '';
+  };
+
+  services.dbus.packages = [ pkgs.bluez-alsa ];
+  systemd.services.bluealsa = {
+    wantedBy = [ "bluetooth.target" ];
+    requires = [ "bluetooth.service" ];
+    requisite = [ "dbus.service" ];
+    after = [ "bluetooth.service" ];
+    serviceConfig = {
+      Type = "dbus";
+      BusName = "org.bluealsa";
+      Restart = "on-failure";
+      User = "root";
+      ExecStart = "${pkgs.bluez-alsa}/bin/bluealsa -S --device=hci0 -p a2dp-source -p a2dp-sink";
+      ReadWritePaths = "/var/lib/bluealsa";
+      StateDirectory = "bluealsa";
+      AmbientCapabilities = "CAP_NET_RAW";
+      CapabilityBoundingSet = "CAP_NET_RAW";
+      IPAddressDeny = "any";
+      LockPersonality = true;
+      MemoryDenyWriteExecute = true;
+      NoNewPrivileges = true;
+      PrivateDevices = true;
+      PrivateTmp = true;
+      PrivateUsers = false;
+      ProtectClock = true;
+      ProtectControlGroups = true;
+      ProtectHome = true;
+      ProtectHostname = true;
+      ProtectKernelLogs = true;
+      ProtectKernelModules = true;
+      ProtectKernelTunables = true;
+      ProtectProc = "invisible";
+      ProtectSystem = "strict";
+      RemoveIPC = true;
+      RestrictAddressFamilies = "AF_UNIX AF_BLUETOOTH";
+      RestrictNamespaces = true;
+      RestrictRealtime = true;
+      RestrictSUIDSGID = true;
+      SystemCallArchitectures = "native";
+      SystemCallErrorNumber = "EPERM";
+      UMask = 0077;
+    };
+  };
+
+  networking.firewall.allowedTCPPorts = [ ports.home-assistant ];
+  networking.firewall.allowedUDPPorts = [ ports.home-assistant ];
 
 }

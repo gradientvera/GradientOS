@@ -70,6 +70,7 @@ rec {
         overlays = [
           (import ../overlays/gradientos.nix self)
           (import ../overlays/gradientpkgs.nix)
+          (import ../overlays/home-assistant.nix)
         ] ++ overlays;
       };
 
