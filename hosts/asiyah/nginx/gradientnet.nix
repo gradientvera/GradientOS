@@ -69,5 +69,6 @@ in
   services.nginx.virtualHosts."zigbee.asiyah.gradient.moe" = mkInternalVHost { port = ports.zigbee2mqtt; };
   services.nginx.virtualHosts."hass.asiyah.gradient.moe" = mkInternalVHost { port = ports.home-assistant; };
   services.nginx.virtualHosts."jellyfin.asiyah.gradient.moe" = mkInternalVHost { port = ports.jellyfin-http; };
+  services.nginx.virtualHosts."k1c.asiyah.gradient.moe" = mkInternalVHost { address = "192.168.1.27"; port = 80; };
 
 }

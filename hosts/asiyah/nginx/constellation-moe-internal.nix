@@ -124,6 +124,7 @@ in {
     "calibredl.constellation.moe" = mkReverseProxy { port = ports.calibre-downloader; };
     "radio.constellation.moe" = mkReverseProxy { port = ports.openwebrx; };
     "nextcloud.constellation.moe" = { useACMEHost = "constellation.moe"; forceSSL = true; };
+    "k1c.constellation.moe" = mkReverseProxy { address = "192.168.1.27"; port = 80; };
   };
 
   # TODO: Figure out a way to automate the below list eugh
@@ -151,6 +152,7 @@ in {
     "calibre.constellation.moe" = {};
     "calibredl.constellation.moe" = {};
     "radio.constellation.moe" = {};
+    "k1c.constellation.moe" = {};
   };
   
 }
