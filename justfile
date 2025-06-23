@@ -8,6 +8,9 @@ run HOST *COMMAND:
 
 logs HOST UNIT: (run HOST "sudo journalctl -xefu" UNIT)
 
+check:
+    nix flake check --keep-going --show-trace
+
 [group('deployment')]
 switch HOST:
     @just apply switch {{HOST}}
