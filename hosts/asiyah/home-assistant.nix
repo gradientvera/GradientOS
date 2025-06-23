@@ -25,6 +25,7 @@ in
       "remote_calendar"
       "default_config"
       "haveibeenpwned"
+      "seventeentrack"
       "device_tracker"
       "python_script"
       "shell_command"
@@ -45,6 +46,7 @@ in
       "mqtt_json"
       "mqtt_room"
       "rpi_power"
+      "switchbot"
       "telegram"
       "fail2ban"
       "recorder"
@@ -83,6 +85,7 @@ in
       "usb"
       "ios"
       "sql"
+      "nut"
       "vlc"
       "mpd"
       "my"
@@ -109,8 +112,18 @@ in
 
     customLovelaceModules = with pkgs.home-assistant-custom-lovelace-modules; [
       zigbee2mqtt-networkmap
+      atomic-calendar-revive
+      advanced-camera-card
+      decluttering-card
       valetudo-map-card
+      mini-graph-card
+      # custom-sidebar
+      # auto-entities
+      sankey-chart
       vacuum-card
+      bubble-card
+      mushroom
+      card-mod
     ];
 
     config = {
