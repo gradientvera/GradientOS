@@ -173,6 +173,9 @@ in
 
     boot.loader.systemd-boot.netbootxyz.enable = true;
 
+    # Put jemalloc on a consistent folder, for use with LD_PRELOAD
+    systemd.tmpfiles.settings."10-jemalloc"."/run/jemalloc"."L+".argument = toString pkgs.jemalloc;
+
     # This value determines the NixOS release from which the default
     # settings for stateful data, like file locations and database versions
     # on your system were taken. It‘s perfectly fine and recommended to leave
