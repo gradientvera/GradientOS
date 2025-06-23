@@ -6,7 +6,6 @@ flake: final: prev:
 let
   steam-override = {
     extraArgs = "-console -pipewire";
-    extraEnv.ROBUST_SOUNDFONT_OVERRIDE = "${prev.soundfont-fluid}/share/soundfonts/FluidR3_GM2-2.sf2";
     extraPkgs = pkgs: with pkgs; [
       ffmpeg-full
       cups # Needed by Cookie Clicker because electron lol
@@ -18,9 +17,6 @@ let
     extraLibraries = pkgs: with pkgs; [
       # Extra Steam game dependencies go here.
       nss
-
-      # Needed for Space Station 14 MIDI support.
-      fluidsynth
 
       # Needed for GTK file dialogs in certain games.
       gtk3

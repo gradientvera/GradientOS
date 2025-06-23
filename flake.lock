@@ -799,8 +799,7 @@
         "nixpkgs-stable": "nixpkgs-stable",
         "nixpkgs-xr": "nixpkgs-xr",
         "polycule-constellation-moe": "polycule-constellation-moe",
-        "sops-nix": "sops-nix",
-        "ss14-watchdog": "ss14-watchdog"
+        "sops-nix": "sops-nix"
       }
     },
     "sops-nix": {
@@ -820,26 +819,6 @@
       "original": {
         "owner": "Mic92",
         "repo": "sops-nix",
-        "type": "github"
-      }
-    },
-    "ss14-watchdog": {
-      "inputs": {
-        "nixpkgs": [
-          "nixpkgs"
-        ]
-      },
-      "locked": {
-        "lastModified": 1739295514,
-        "narHash": "sha256-lAmSrhttSoDN6M+eVNsAOG3ycePD6fJA7alO6XYvOhU=",
-        "owner": "space-wizards",
-        "repo": "SS14.Watchdog",
-        "rev": "434312efc4a870f7631bc6bc1c09579de15b6611",
-        "type": "github"
-      },
-      "original": {
-        "owner": "space-wizards",
-        "repo": "SS14.Watchdog",
         "type": "github"
       }
     },

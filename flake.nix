@@ -61,11 +61,6 @@
       inputs.nixpkgs.follows = "nixpkgs";
     };
 
-    ss14-watchdog = {
-      url = "github:space-wizards/SS14.Watchdog";
-      inputs.nixpkgs.follows = "nixpkgs";
-    };
-
     colmena = {
       url = "github:zhaofengli/colmena";
       inputs.nixpkgs.follows = "nixpkgs";
@@ -98,7 +93,7 @@
     };
   };
 
-  outputs = { self, nixpkgs, gradient-generator, jovian-nixos, sops-nix, nixos-hardware, ss14-watchdog, declarative-flatpak, gpd-fan-driver, ... }:
+  outputs = { self, nixpkgs, gradient-generator, jovian-nixos, sops-nix, nixos-hardware, declarative-flatpak, gpd-fan-driver, ... }:
   let
     ips = import ./misc/wireguard-addresses.nix;
     colmena-tags = import ./misc/colmena-tags.nix;
@@ -114,7 +109,7 @@
         name = "bernkastel";
 
         modules = [
-          declarative-flatpak.nixosModules.default
+          declarative-flatpak.nixosModules.declarative-flatpak
 
           mixins.wine
           mixins.gnupg
@@ -169,7 +164,7 @@
 
         modules = [
           jovian-nixos.nixosModules.default
-          declarative-flatpak.nixosModules.default
+          declarative-flatpak.nixosModules.declarative-flatpak
 
           mixins.wine
           mixins.gnupg
@@ -210,7 +205,7 @@
 
         modules = [
           jovian-nixos.nixosModules.default
-          declarative-flatpak.nixosModules.default
+          declarative-flatpak.nixosModules.declarative-flatpak
           
           mixins.wine
           mixins.gnupg
@@ -257,7 +252,7 @@
 
         modules = [
           jovian-nixos.nixosModules.default
-          declarative-flatpak.nixosModules.default
+          declarative-flatpak.nixosModules.declarative-flatpak
           
           mixins.tor
           mixins.wine
@@ -306,7 +301,7 @@
         modules = [
           gpd-fan-driver.nixosModules.default
           jovian-nixos.nixosModules.default
-          declarative-flatpak.nixosModules.default
+          declarative-flatpak.nixosModules.declarative-flatpak
           nixos-hardware.nixosModules.gpd-win-mini-2024
           
           mixins.tor
@@ -423,8 +418,6 @@
         overlays = [ self.overlays.kernel-allow-missing ];
         
         modules = [
-          ss14-watchdog.nixosModules.default
-
           mixins.gnupg
           mixins.wireguard
           mixins.vera-locale
