@@ -17,10 +17,21 @@
     };
 
     upsmon.monitor."Eaton".user = "upsmon";
+    
+    upsd.listen = [
+      {
+        address = "0.0.0.0";
+        port = 3493;
+      }
+    ];
   };
 
   environment.systemPackages = [
     pkgs.nut
+  ];
+
+  networking.firewall.interfaces.gradientnet.allowedTCPPorts = [
+    3493
   ];
 
 }

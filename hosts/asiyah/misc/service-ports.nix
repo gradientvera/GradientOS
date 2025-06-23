@@ -78,6 +78,7 @@
   trmnl = 2300;
   openwebrx = 8073;
   mopidy = 6600;
+  nut = 3493;
   
   # Paperless-ngx
   paperless = 28981;
