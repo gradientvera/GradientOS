@@ -10,7 +10,9 @@
   };
 
   environment.etc."NetworkManager/dnsmasq.d/nameservers.conf".text = ''
-address=/.local/127.0.0.1
+local=/local/
+domain=local
+expand-hosts
 server=1.1.1.1
 server=1.0.0.1
 server=8.8.8.8
