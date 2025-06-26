@@ -12,6 +12,11 @@ check:
     nix flake check --keep-going --show-trace
 
 [group('deployment')]
+update-inputs:
+    nix flake update
+    nix flake check --keep-going --show-trace
+
+[group('deployment')]
 switch HOST:
     @just apply switch {{HOST}}
 
