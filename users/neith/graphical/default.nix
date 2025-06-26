@@ -18,7 +18,6 @@
     firefox
     discord
     spotify
-    carla
     vlc
     mpv
   ];

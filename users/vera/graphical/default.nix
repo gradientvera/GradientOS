@@ -28,7 +28,6 @@
     discord
     vesktop
     krita
-    carla
     vmpk
     peek
     vlc
