@@ -196,6 +196,12 @@
         restartUnits = [ "home-assistant.service" ];
       };
 
+      hass-ssh-priv = {
+        owner = config.users.users.hass.name;
+        group = config.users.users.hass.group;
+        restartUnits = [ "home-assistant.service" ];
+      };
+
     };
   };
 

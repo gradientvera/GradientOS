@@ -70,6 +70,8 @@ in
       "webdav"
       "vacuum"
       "cloud"
+      "html5"
+      "isal"
       "tile"
       "moon"
       "mqtt"
@@ -96,6 +98,7 @@ in
     [
       radarr-upcoming-media
       sonarr-upcoming-media
+      mqtt-vacuum-camera
       thermal-comfort
       anniversaries
       openrgb-ha
@@ -110,7 +113,10 @@ in
     ];
     extraPackages = ps: with ps; [ psycopg2 ];
 
-    customLovelaceModules = with pkgs.home-assistant-custom-lovelace-modules; [
+    customLovelaceModules = 
+      with pkgs.home-assistant-custom-lovelace-modules;
+      with pkgs.home-assistant-custom-lovelace-modules-gradientos;
+    [
       zigbee2mqtt-networkmap
       atomic-calendar-revive
       advanced-camera-card
@@ -176,6 +182,11 @@ in
           jails = (lib.map (x: x.name) (lib.attrsToList config.services.fail2ban.jails));
         }
       ];
+
+      shell_command = {
+        # Literally SSH into a host with the home assistant private SSH key and run a command
+        ssh = "${toString pkgs.openssh}/bin/ssh -i ${config.sops.secrets.hass-ssh-priv.path} {{ host }} {{ command }}";
+      };
 
     };
 
