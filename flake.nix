@@ -7,7 +7,7 @@
     nixpkgs-stable.url = "github:NixOS/nixpkgs/nixos-24.11";
 
     lix-module = {
-      url = "https://git.lix.systems/lix-project/nixos-module/archive/2.93.0.tar.gz";
+      url = "https://git.lix.systems/lix-project/nixos-module/archive/2.93.1.tar.gz";
       inputs.nixpkgs.follows = "nixpkgs";
     };
 
@@ -109,7 +109,7 @@
         name = "bernkastel";
 
         modules = [
-          declarative-flatpak.nixosModules.declarative-flatpak
+          declarative-flatpak.nixosModule
 
           mixins.wine
           mixins.gnupg
@@ -164,7 +164,7 @@
 
         modules = [
           jovian-nixos.nixosModules.default
-          declarative-flatpak.nixosModules.declarative-flatpak
+          declarative-flatpak.nixosModule
 
           mixins.wine
           mixins.gnupg
@@ -205,7 +205,7 @@
 
         modules = [
           jovian-nixos.nixosModules.default
-          declarative-flatpak.nixosModules.declarative-flatpak
+          declarative-flatpak.nixosModule
           
           mixins.wine
           mixins.gnupg
@@ -252,7 +252,7 @@
 
         modules = [
           jovian-nixos.nixosModules.default
-          declarative-flatpak.nixosModules.declarative-flatpak
+          declarative-flatpak.nixosModule
           
           mixins.tor
           mixins.wine
@@ -301,7 +301,7 @@
         modules = [
           gpd-fan-driver.nixosModules.default
           jovian-nixos.nixosModules.default
-          declarative-flatpak.nixosModules.declarative-flatpak
+          declarative-flatpak.nixosModule
           nixos-hardware.nixosModules.gpd-win-mini-2024
           
           mixins.tor
