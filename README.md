@@ -13,6 +13,8 @@ GradientOS supports the [auxolotl](https://auxolotl.org/) and [Lix](https://lix.
 - **[hosts](hosts)**: configurations specific to certain machines
 - **[lib](lib)**: utility functions
 - **[misc](misc)**: for files without a clear category
+- **[misc/ansible]**: ansible playbook written entirely in nixlang
+- **[misc/vacuum]**: shell scripts for my rooted vacuum robots to provision a writable overlay rootfs to chroot into 
 - **[mixins](mixins)**: configuration presets for certain programs and services
 - **[mixins/graphical](mixins/graphical)**: configuration presets for certain graphical programs and services
 - **[mixins/hardware](mixins/hardware)**: configuration presets specific to certain hardware
@@ -39,7 +41,12 @@ GradientOS supports the [auxolotl](https://auxolotl.org/) and [Lix](https://lix.
 - **[asiyah](hosts/asiyah)**: Custom Home Server.
 - **[yetzirah](hosts/yetzirah)**: ThinkCentre M900 Tiny Home Server.
 - **[briah](hosts/briah)**: Raspberry Pi 4 Home Server.
-- **[atziluth](hosts/atziluth)**: (WIP) BigTechTree CB1 running Armbian, Voron 2.4r2. (Managed with Ansible)
+
+#### Managed with Ansible
+
+- **[angela](hosts/angela)**: Xiaomi X10+ Robot Vacuum running a rooted firmware.
+- **[\*mute](hosts/mute)**: Xiaomi X10+ Robot Vacuum running a rooted firmware.
+- **[atziluth](hosts/atziluth)**: (WIP) BigTechTree CB1 running Armbian, Voron 2.4r2.
 
 ### FAQ
 

@@ -64,6 +64,9 @@ in
     gradient.const.wireguard.pubKeys = mkConstant "Wireguard public keys"
       ./../misc/wireguard-pub-keys.nix;
 
+    gradient.const.localAddresses = mkConstant "Local MDNS addresses"
+      ./../misc/local-addresses.nix;
+
     gradient.hosts = mkHosts;
 
     gradient.currentHost = mkCurrentHost;

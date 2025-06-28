@@ -26,6 +26,7 @@ in
         smartgithg
         pre-commit
         unityhub
+        ansible
         blender
         rustfmt
         poetry

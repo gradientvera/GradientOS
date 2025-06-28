@@ -59,7 +59,7 @@ in
     "grafana.gradient.moe" = mkReverseProxy { port = config.services.grafana.settings.server.http_port; };
     # Recommended settings by https://github.com/paperless-ngx/paperless-ngx/wiki/Using-a-Reverse-Proxy-with-Paperless-ngx#nginx
     "paperless.gradient.moe" = mkReverseProxy { port = ports.paperless; vhostExtraConfig = ''client_max_body_size 4G;''; rootExtraConfig = ''proxy_redirect off; add_header Referrer-Policy "strict-origin-when-cross-origin";''; };
-  };
+   };
 
   # Redirect to main site for all incorrect subdomains
   services.nginx.virtualHosts."_" = {

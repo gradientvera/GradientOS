@@ -6,4 +6,8 @@
 
     ];
   }
-] ++ (import ../../hosts/atziluth/playbook.nix)
+]
+++ (import ./vacuum-playbook.nix)
+++ (import ../../hosts/atziluth/playbook.nix)
+++ (import ../../hosts/angela/playbook.nix)
+++ (import ../../hosts/mute/playbook.nix)

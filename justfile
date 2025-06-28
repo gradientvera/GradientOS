@@ -11,6 +11,9 @@ logs HOST UNIT: (run HOST "sudo journalctl -xefu" UNIT)
 check:
     nix flake check --keep-going --show-trace
 
+playbook:
+    nix run .\#ansible-playbook
+
 [group('deployment')]
 update-inputs:
     nix flake update

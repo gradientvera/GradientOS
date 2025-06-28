@@ -3,6 +3,7 @@
 */
 { config, ... }:
 let
+  localAddresses = config.gradient.const.localAddresses;
   dashboard = builtins.toFile "dashboard.html" (dashboardReplaceConstants dashboardBaseHtml);
   dashboardReplaceConstants = html: builtins.replaceStrings 
     [
@@ -58,17 +59,21 @@ in
     '';
   };
 
-  services.nginx.virtualHosts."search.asiyah.gradient.moe" = mkInternalVHost { port = ports.searx; };
-  services.nginx.virtualHosts."trilium.asiyah.gradient.moe" = mkInternalVHost { port = ports.trilium; };
-  services.nginx.virtualHosts."syncthing.asiyah.gradient.moe" = mkInternalVHost { port = ports.syncthing; };
-  services.nginx.virtualHosts."scrutiny.asiyah.gradient.moe" = mkInternalVHost { port = ports.scrutiny; };
-  services.nginx.virtualHosts."bitwarden.asiyah.gradient.moe" = mkInternalVHost { port = ports.vaultwarden; };
-  services.nginx.virtualHosts."trmnl.asiyah.gradient.moe" = mkInternalVHost { port = ports.trmnl; };
-  services.nginx.virtualHosts."radio.asiyah.gradient.moe" = mkInternalVHost { port = ports.openwebrx; };
-  services.nginx.virtualHosts."esphome.asiyah.gradient.moe" = mkInternalVHost { port = ports.esphome; };
-  services.nginx.virtualHosts."zigbee.asiyah.gradient.moe" = mkInternalVHost { port = ports.zigbee2mqtt; };
-  services.nginx.virtualHosts."hass.asiyah.gradient.moe" = mkInternalVHost { port = ports.home-assistant; };
-  services.nginx.virtualHosts."jellyfin.asiyah.gradient.moe" = mkInternalVHost { port = ports.jellyfin-http; };
-  services.nginx.virtualHosts."k1c.asiyah.gradient.moe" = mkInternalVHost { address = "192.168.1.27"; port = 80; };
-
+  services.nginx.virtualHosts = {
+    "search.asiyah.gradient.moe" = mkInternalVHost { port = ports.searx; };
+    "trilium.asiyah.gradient.moe" = mkInternalVHost { port = ports.trilium; };
+    "syncthing.asiyah.gradient.moe" = mkInternalVHost { port = ports.syncthing; };
+    "scrutiny.asiyah.gradient.moe" = mkInternalVHost { port = ports.scrutiny; };
+    "bitwarden.asiyah.gradient.moe" = mkInternalVHost { port = ports.vaultwarden; };
+    "trmnl.asiyah.gradient.moe" = mkInternalVHost { port = ports.trmnl; };
+    "radio.asiyah.gradient.moe" = mkInternalVHost { port = ports.openwebrx; };
+    "esphome.asiyah.gradient.moe" = mkInternalVHost { port = ports.esphome; };
+    "zigbee.asiyah.gradient.moe" = mkInternalVHost { port = ports.zigbee2mqtt; };
+    "hass.asiyah.gradient.moe" = mkInternalVHost { port = ports.home-assistant; };
+    "jellyfin.asiyah.gradient.moe" = mkInternalVHost { port = ports.jellyfin-http; };
+    "k1c.asiyah.gradient.moe" = mkInternalVHost { address = "192.168.1.27"; port = 80; };
+    "angela.asiyah.gradient.moe" = mkInternalVHost { address = localAddresses.vacuum-angela; port = 80; };
+    "mute.asiyah.gradient.moe" = mkInternalVHost { address = localAddresses.vacuum-mute; port = 80; };
+  };
+  
 }
