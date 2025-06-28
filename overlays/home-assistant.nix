@@ -11,6 +11,6 @@ final: prev: {
     edata = prev.callPackage ../pkgs/hass/edata.nix { };
   };
   home-assistant-custom-lovelace-modules-gradientos = {
-
+    xiaomi-vacuum-map-card = prev.callPackage ../pkgs/hass/xiaomi-vacuum-map-card.nix { };
   };
 }

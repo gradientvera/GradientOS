@@ -118,6 +118,7 @@ in
       with pkgs.home-assistant-custom-lovelace-modules-gradientos;
     [
       zigbee2mqtt-networkmap
+      xiaomi-vacuum-map-card
       atomic-calendar-revive
       advanced-camera-card
       decluttering-card
