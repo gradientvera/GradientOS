@@ -11,6 +11,8 @@ echo "Initializing gradient_provision..."
 cd /tmp
 
 mkdir -p /opt
+mkdir -p /opt/etc/ssh
+mkdir -p /opt/etc/age
 
 echo "Waiting for network..."
 
@@ -63,3 +65,9 @@ echo "Initializing gradient_publish_photo daemon..."
 
 # Publish camera photos to MQTT
 /data/gradient_publish_photo.sh &
+
+if [ -f "/opt/bin/sops" ] && [ -f "/opt/bin/ssh-to-age" ]; then
+  # Set up sops for secrets
+  /data/gradient_sops_setup.sh
+fi
+

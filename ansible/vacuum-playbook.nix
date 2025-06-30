@@ -1,5 +1,9 @@
-{ }:
+{ pkgsCross
+, gradient-ansible-lib
+}:
 let
+  alib = gradient-ansible-lib;
+  pkgsAarch64 = pkgsCross.aarch64-multiplatform;
   sshPubKeys = import ../misc/ssh-pub-keys.nix;
   installOpkg = name: {
     name = "Install ${name}";
@@ -9,7 +13,7 @@ let
       executable = "/opt/bin/opkg";
     };
   };
-  copyScriptFile = name: src: dest: {
+  copyExecutable = name: src: dest: {
     inherit name;
     "ansible.builtin.copy" = {
       src = toString src;
@@ -32,7 +36,7 @@ let
       mode = "0644";
     };
   };
-in
+in with alib;
 [
   {
     name = "Robot Vacuums play";
@@ -48,29 +52,41 @@ in
       (copySshAuthorizedKeys "Copy SSH authorized keys to temporary home"
         "/tmp/.ssh/authorized_keys")
 
-      (copyScriptFile "Copy Gradient Postboot Script"
+      (copyExecutable "Copy Gradient Postboot Script"
         ../misc/vacuum/gradient_postboot.sh "/data/gradient_postboot.sh")
 
-      (copyScriptFile "Copy Gradient Provision Script"
+      (copyExecutable "Copy Gradient Provision Script"
         ../misc/vacuum/gradient_provision.sh "/data/gradient_provision.sh"
       )
 
-      (copyScriptFile "Copy Gradient Profile Script"
+      (copyExecutable "Copy Gradient Profile Script"
         ../misc/vacuum/gradient_shutdown.sh "/data/gradient_shutdown.sh")
 
-      (copyScriptFile "Copy Gradient Shutdown Script"
+      (copyExecutable "Copy Gradient Shutdown Script"
         ../misc/vacuum/gradient_profile.sh "/data/gradient_profile.sh")
 
-      (copyScriptFile "Copy Gradient Publish Photo Script"
+      (copyExecutable "Copy Gradient Publish Photo Script"
         ../misc/vacuum/gradient_publish_photo.sh "/data/gradient_publish_photo.sh")
+
+      (copyExecutable "Copy Gradient Sops Setup Script"
+        ../misc/vacuum/gradient_sops_setup.sh "/data/gradient_sops_setup.sh")
 
       # These two should already be installed, but just in case...
       (installOpkg "openssh-sftp-server")
       (installOpkg "python3")
 
+      (installOpkg "dropbearconvert")
+      (installOpkg "openssh-keygen")
+
       (installOpkg "imagemagick")
       (installOpkg "mosquitto-client-nossl")
       (installOpkg "jq")
+
+      # Sops secrets support
+      (installPackageExe { pkg = pkgsAarch64.sops; dest = "/opt/bin/sops"; })
+
+      # Does not actually work yet :(
+      (installPackageExe { pkg = pkgsAarch64.ssh-to-age; run = "/bin/ssh-to-age"; dest = "/opt/bin/ssh-to-age"; })
 
     ];
   }
