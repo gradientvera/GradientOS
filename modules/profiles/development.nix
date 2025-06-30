@@ -78,9 +78,10 @@ in
               ms-python.pylint
               ms-python.python
 
-              # vscode remote
+              # vscode remote & live-share
               ms-vscode-remote.remote-ssh-edit
               ms-vscode-remote.remote-ssh
+              ms-vsliveshare.vsliveshare
 
               # catppuccin
               catppuccin.catppuccin-vsc-icons

@@ -1,5 +1,6 @@
+{ }:
 let
-  sshPubKeys = import ../ssh-pub-keys.nix;
+  sshPubKeys = import ../misc/ssh-pub-keys.nix;
   installOpkg = name: {
     name = "Install ${name}";
     "community.general.opkg" = {
@@ -35,11 +36,11 @@ in
 [
   {
     name = "Robot Vacuums play";
-    hosts = [ "vacuums" ];
     environment = {
       PATH = "$PATH:/opt/bin:/opt/sbin:/opt/usr/bin:/opt/libexec";
       LD_LIBRARY_PATH = "$LD_LIBRARY_PATH:/opt/usr/lib";
     };
+    hosts = [ "vacuums" ];
     tasks = [
       (copySshAuthorizedKeys "Copy SSH authorized keys to persistent data"
         "/mnt/misc/authorized_keys")
@@ -48,20 +49,20 @@ in
         "/tmp/.ssh/authorized_keys")
 
       (copyScriptFile "Copy Gradient Postboot Script"
-        ../vacuum/gradient_postboot.sh "/data/gradient_postboot.sh")
+        ../misc/vacuum/gradient_postboot.sh "/data/gradient_postboot.sh")
 
       (copyScriptFile "Copy Gradient Provision Script"
-        ../vacuum/gradient_provision.sh "/data/gradient_provision.sh"
+        ../misc/vacuum/gradient_provision.sh "/data/gradient_provision.sh"
       )
 
       (copyScriptFile "Copy Gradient Profile Script"
-        ../vacuum/gradient_shutdown.sh "/data/gradient_shutdown.sh")
+        ../misc/vacuum/gradient_shutdown.sh "/data/gradient_shutdown.sh")
 
       (copyScriptFile "Copy Gradient Shutdown Script"
-        ../vacuum/gradient_profile.sh "/data/gradient_profile.sh")
+        ../misc/vacuum/gradient_profile.sh "/data/gradient_profile.sh")
 
       (copyScriptFile "Copy Gradient Publish Photo Script"
-        ../vacuum/gradient_publish_photo.sh "/data/gradient_publish_photo.sh")
+        ../misc/vacuum/gradient_publish_photo.sh "/data/gradient_publish_photo.sh")
 
       # These two should already be installed, but just in case...
       (installOpkg "openssh-sftp-server")

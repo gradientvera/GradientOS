@@ -21,8 +21,9 @@ in
 
   force-xwayland = prev.callPackage ../pkgs/scripts/force-xwayland.nix { };
 
-  gradient-ansible-inventory = prev.writeText "ansible-inventory.yml" (builtins.toJSON (import ../misc/ansible/inventory.nix));
-  gradient-ansible-playbook = prev.writeText "ansible-playbook.yml" (builtins.toJSON (import ../misc/ansible/playbook.nix));
+  gradient-ansible-lib = (prev.callPackage ../ansible/ansible-lib.nix { });
+  gradient-ansible-inventory = prev.callPackage ../ansible/inventory.nix { };
+  gradient-ansible-playbook = prev.callPackage ../ansible/playbook.nix { };
 
   godot-mono = prev.callPackage ../pkgs/godot-mono.nix { };
 
