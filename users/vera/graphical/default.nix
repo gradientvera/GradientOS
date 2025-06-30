@@ -16,7 +16,7 @@
     element-desktop
     master.discord-canary
     kdePackages.kate
-    google-chrome
+    # google-chrome # TODO: Broken build?? how??
     qbittorrent
     glabels-qt
     bitwarden

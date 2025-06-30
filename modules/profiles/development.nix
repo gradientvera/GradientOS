@@ -25,7 +25,6 @@ in
         godot-mono
         smartgithg
         pre-commit
-        unityhub
         ansible
         blender
         rustfmt

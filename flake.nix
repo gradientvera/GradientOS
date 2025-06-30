@@ -7,7 +7,7 @@
     nixpkgs-stable.url = "github:NixOS/nixpkgs/nixos-24.11";
 
     lix-module = {
-      url = "https://git.lix.systems/lix-project/nixos-module/archive/2.93.0.tar.gz";
+      url = "https://git.lix.systems/lix-project/nixos-module/archive/2.93.2-1.tar.gz";
       inputs.nixpkgs.follows = "nixpkgs";
     };
 
@@ -142,7 +142,7 @@
           mixins.hardware-openrazer
           mixins.hardware-home-dcp-l2530dw
           mixins.hardware-xbox-one-controller
-          mixins.hardware-logitech-driving-wheels
+          # mixins.hardware-logitech-driving-wheels # TODO: Build broken
         ];
 
         users.vera.modules = [

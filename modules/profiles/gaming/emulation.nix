@@ -313,15 +313,16 @@ in
         ryubing # Switch
         pcsx2 # PS2
         rpcs3 # PS3
-        shadps4 # PS4
+        # shadps4 # PS4 # TODO: borked
         ruffle # Flash
         # -- Utilities --
-        (emulationstation-de.overrideAttrs (prevAttrs: {
-          nativeBuildInputs = prevAttrs.nativeBuildInputs ++ [ makeWrapper ];
-          postInstall = ''
-            wrapProgram $out/bin/es-de --set ESDE_APPDATA_DIR ${ESDEDataPath}
-          '';
-        }))
+        # TODO: https://github.com/NixOS/nixpkgs/issues/418681
+        #(emulationstation-de.overrideAttrs (prevAttrs: {
+        #  nativeBuildInputs = prevAttrs.nativeBuildInputs ++ [ makeWrapper ];
+        #  postInstall = ''
+        #    wrapProgram $out/bin/es-de --set ESDE_APPDATA_DIR ${ESDEDataPath}
+        #  '';
+        #}))
       ];
     })
 
