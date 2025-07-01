@@ -11,8 +11,6 @@ echo "Initializing gradient_provision..."
 cd /tmp
 
 mkdir -p /opt
-mkdir -p /opt/etc/ssh
-mkdir -p /opt/etc/age
 
 echo "Waiting for network..."
 
@@ -56,6 +54,16 @@ opkg install openssh-sftp-server
 rm -f /usr/libexec/sftp-server
 ln -s /opt/libexec/sftp-server /usr/libexec/sftp-server
 
+echo "Fixing curl..."
+opkg install curl
+rm /usr/bin/curl
+ln -s /opt/bin/curl /usr/bin/curl
+
+echo "Fixing wget..."
+opkg install wget-ssl
+rm /usr/bin/wget
+ln -s /opt/bin/wget /usr/bin/wget
+
 echo "Initializing dropbear daemon on chroot with SFTP support at port 222."
 
 # SSH server with SFTP support
@@ -71,3 +79,7 @@ if [ -f "/opt/bin/sops" ] && [ -f "/opt/bin/ssh-to-age" ]; then
   /data/gradient_sops_setup.sh
 fi
 
+if [ -f "/opt/secrets.yml" ]; then
+  # Initialize services which require secrets here
+  
+fi

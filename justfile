@@ -48,6 +48,10 @@ edit-secret-core $EDITOR="code --wait":
     sops ./core/secrets/secrets.yml
 
 [group('secrets')]
+edit-secret-angela:
+    just edit-secret angela
+
+[group('secrets')]
 edit-secret-asiyah:
     just edit-secret asiyah
 
@@ -74,6 +78,10 @@ edit-secret-erika:
 [group('secrets')]
 edit-secret-featherine:
     just edit-secret featherine
+
+[group('secrets')]
+edit-secret-mute:
+    just edit-secret mute
 
 [group('secrets')]
 edit-secret-neith-deck:

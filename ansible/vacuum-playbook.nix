@@ -1,9 +1,11 @@
-{ pkgsCross
+{ lib
+, pkgsCross
 , gradient-ansible-lib
 }:
 let
   alib = gradient-ansible-lib;
-  pkgsAarch64 = pkgsCross.aarch64-multiplatform;
+  pkgsAarch64 = pkgsCross.aarch64-multiplatform-musl;
+  lixPkg = pkgsAarch64.pkgsStatic.lixPackageSets.latest.lix;
   sshPubKeys = import ../misc/ssh-pub-keys.nix;
   installOpkg = name: {
     name = "Install ${name}";
@@ -12,6 +14,25 @@ let
       state = "installed";
       executable = "/opt/bin/opkg";
     };
+  };
+  installNixPackage = pkg: alib.tasks.block { name = "Installing Nix package ${lib.getName pkg}"; } [
+    (alib.tasks.nixCopyClosureWithRoot { inherit pkg; rootDest = "/data/nix-roots"; remoteProgram = "/opt/bin/nix-store"; })
+    (alib.tasks.ansibleBuiltinFile { name = "Ensure existing ${lib.getName pkg} binary does not exist"; } { path = "/opt/bin/${baseNameOf (lib.getExe pkg)}"; state = "absent"; })
+    (alib.tasks.nixMakeSymlinkToMainExe { inherit pkg; destPath = "/opt/bin"; })
+  ];
+  installNixPackages = pkgList: alib.tasks.block { name = "Installing Nix packages"; } (map (p: installNixPackage p) pkgList);
+  installNixPackage = pkg: alib.tasks.block { name = "Installing Nix package ${lib.getName pkg}"; } [
+    (alib.tasks.nixCopyClosureWithRoot { inherit pkg; rootDest = "/data/nix-roots"; remoteProgram = "/opt/bin/nix-store"; })
+    (alib.tasks.ansibleBuiltinFile { name = "Ensure existing ${lib.getName pkg} binary does not exist"; } { path = "/opt/bin/${baseNameOf (lib.getExe pkg)}"; state = "absent"; })
+    (alib.tasks.nixMakeSymlinkToMainExe { inherit pkg; destPath = "/opt/bin"; })
+  ];
+  makeNixSymlink = name: alib.tasks.ansibleBuiltinFile { name = "Adding ${name} symlink"; } {
+    path = "/opt/bin/${name}";
+    src = "nix";
+    force = true;
+    owner = "root";
+    group = "root";
+    state = "link";
   };
   copyExecutable = name: src: dest: {
     inherit name;
@@ -36,7 +57,7 @@ let
       mode = "0644";
     };
   };
-in with alib;
+in with alib.tasks;
 [
   {
     name = "Robot Vacuums play";
@@ -71,23 +92,51 @@ in with alib;
       (copyExecutable "Copy Gradient Sops Setup Script"
         ../misc/vacuum/gradient_sops_setup.sh "/data/gradient_sops_setup.sh")
 
+      (ansibleBuiltinCommand { name = "Update opkg repositories"; } "/opt/bin/opkg update")
       # These two should already be installed, but just in case...
       (installOpkg "openssh-sftp-server")
       (installOpkg "python3")
 
-      (installOpkg "dropbearconvert")
       (installOpkg "openssh-keygen")
 
       (installOpkg "imagemagick")
       (installOpkg "mosquitto-client-nossl")
       (installOpkg "jq")
 
-      # Sops secrets support
-      (installPackageExe { pkg = pkgsAarch64.sops; dest = "/opt/bin/sops"; })
+      (makeNixSymlink "lix")
+      (makeNixSymlink "nix-build")
+      (makeNixSymlink "nix-channel")
+      (makeNixSymlink "nix-collect-garbage")
+      (makeNixSymlink "nix-copy-closure")
+      (makeNixSymlink "nix-daemon")
+      (makeNixSymlink "nix-env")
+      (makeNixSymlink "nix-hash")
+      (makeNixSymlink "nix-instantiate")
+      (makeNixSymlink "nix-prefetch-url")
+      (makeNixSymlink "nix-shell")
+      (makeNixSymlink "nix-store")
 
-      # Does not actually work yet :(
-      (installPackageExe { pkg = pkgsAarch64.ssh-to-age; run = "/bin/ssh-to-age"; dest = "/opt/bin/ssh-to-age"; })
+      (ansibleBuiltinStat { register = "lixStat"; } { path = "/opt/bin/nix"; })
 
+      # If Nix binary does not exist yet, copy the binary over.
+      (installPackageExe { pkg = lixPkg; dest = "/opt/bin/nix"; taskArgs = { when = "not (lixStat.stat.exists | default(false))"; }; })
+
+      # Recreate Nix GC roots folder 
+      (ansibleBuiltinFile { name = "Remove GC roots folder"; } { path = "/data/nix-roots"; state = "absent"; })
+      (ansibleBuiltinFile { name = "Create GC roots folder"; } { path = "/data/nix-roots"; state = "directory"; owner = "root"; group = "root"; mode = "0777"; })
+
+      # Install Nix packages with GC roots and symlinks to /opt/bin
+      (installNixPackages 
+      (with pkgsAarch64; [
+        lixPkg
+        sops
+        ssh-to-age
+      ]))
+
+      (installNixPackage )
+      
+      # And now we GC any old Nix paths >:)
+      (ansibleBuiltinCommand { name = "Run Nix garbage collector"; } "nix-collect-garbage")
     ];
   }
 ]
