@@ -180,9 +180,43 @@ rec {
     , get_attributes ? null
     , get_checksum ? null
     , get_mime ? null
+    , ...
     }:
     {
       "ansible.builtin.stat" = attrs;
+    };
+
+    ansibleBuiltinPip = attrs@
+    { break_system_packages ? null
+    , chdir ? null
+    , editable ? null
+    , executable ? null
+    , extra_args ? null
+    , name ? null
+    , requirements ? null
+    , state ? null
+    , umask ? null
+    , version ? null
+    , virtualenv ? null
+    , virtualenv_command ? null
+    , virtualenv_python ? null
+    , virtualenv_site_packages ? null
+    , ...
+    }:
+    {
+      "ansible.builtin.pip" = attrs;
+    };
+
+    communityGeneralOpkg = attrs@
+    { name
+    , executable ? null
+    , force ? null
+    , state ? null
+    , update_cache ? null
+    , ...
+    }:
+    {
+      "community.general.opkg" = attrs;
     };
   };
 
@@ -259,15 +293,17 @@ rec {
       ];
     };
 
-    nixMakeSymlinkToFile = { pkg, srcPath, destPath, taskArgs ? {}, moduleArgs ? {} }: let
+    nixMakeSymlinkToFile = { pkg, srcPath, destPath, taskArgs ? {}, moduleArgs ? {} }: 
+      tasks.nixMakeSymlinkCustom { inherit pkg srcPath taskArgs moduleArgs; destPath = "${destPath}/${baseNameOf srcPath}"; };
+
+    nixMakeSymlinkCustom = { pkg, srcPath, destPath, taskArgs ? {}, moduleArgs ? {} }: let
       filePath = "${pkg}${srcPath}";
-      fileName = baseNameOf srcPath;
     in mkAnsibleTask {
       task = {
-        name = "Make symlink from ${destPath}/${fileName} to ${filePath}";
+        name = "Make symlink from ${destPath} to ${filePath}";
       } // taskArgs;
       module = modules.ansibleBuiltinFile ({
-        path = "${destPath}/${fileName}";
+        path = destPath;
         src = filePath;
         state = "link";
       } // moduleArgs);
@@ -276,15 +312,28 @@ rec {
     nixMakeSymlinkToMainExe = { pkg, destPath, taskArgs ? {}, moduleArgs ? {} }: let
       pkgExe = lib.getExe pkg;
       pkgExeName = baseNameOf pkgExe;
+    in
+      tasks.nixMakeSymlinkCustom { inherit pkg taskArgs moduleArgs; srcPath = builtins.replaceStrings [ (toString pkg) ] [ "" ] pkgExe; destPath = "${destPath}/${baseNameOf pkgExeName}"; };
+
+    opkg = taskArgs@{ ... }: moduleArgs@{ name, ... }:
+    let
+      package = if builtins.isList name then builtins.concatStringsSep ", " name else toString name;
+    in mkAnsibleTask
+    {
+      task = {
+        name = if builtins.isList name then "Installing opkg packages ${package}" else "Installing opkg package ${package}";
+      } // taskArgs;
+      module = modules.communityGeneralOpkg moduleArgs;
+    };
+
+    pip = taskArgs@{ ... }: moduleArgs@{ name, ... }:
+    let
+      package = if builtins.isList name then builtins.concatStringsSep ", " name else toString name;
     in mkAnsibleTask {
       task = {
-        name = "Make symlink from ${destPath}/${pkgExeName} to ${pkgExe}";
+        name = if builtins.isList name then "Installing Python pip packages ${package}" else "Installing Python pip package ${package}";
       } // taskArgs;
-      module = modules.ansibleBuiltinFile ({
-        path = "${destPath}/${pkgExeName}";
-        src = pkgExe;
-        state = "link";
-      } // moduleArgs);
+      module = modules.ansibleBuiltinPip moduleArgs;
     };
   };
   

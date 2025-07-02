@@ -1,5 +1,4 @@
 { callPackage
-, writeText
 , formats
 }:
 (formats.yaml {}).generate "gradient-ansible-playbook.yml" 

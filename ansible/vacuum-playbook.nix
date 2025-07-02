@@ -7,24 +7,16 @@ let
   pkgsAarch64 = pkgsCross.aarch64-multiplatform-musl;
   lixPkg = pkgsAarch64.pkgsStatic.lixPackageSets.latest.lix;
   sshPubKeys = import ../misc/ssh-pub-keys.nix;
-  installOpkg = name: {
-    name = "Install ${name}";
-    "community.general.opkg" = {
-      inherit name;
-      state = "installed";
-      executable = "/opt/bin/opkg";
-    };
-  };
   installNixPackage = pkg: alib.tasks.block { name = "Installing Nix package ${lib.getName pkg}"; } [
     (alib.tasks.nixCopyClosureWithRoot { inherit pkg; rootDest = "/data/nix-roots"; remoteProgram = "/opt/bin/nix-store"; })
     (alib.tasks.ansibleBuiltinFile { name = "Ensure existing ${lib.getName pkg} binary does not exist"; } { path = "/opt/bin/${baseNameOf (lib.getExe pkg)}"; state = "absent"; })
     (alib.tasks.nixMakeSymlinkToMainExe { inherit pkg; destPath = "/opt/bin"; })
   ];
   installNixPackages = pkgList: alib.tasks.block { name = "Installing Nix packages"; } (map (p: installNixPackage p) pkgList);
-  installNixPackage = pkg: alib.tasks.block { name = "Installing Nix package ${lib.getName pkg}"; } [
+  installNixPackageCustom = pkg: binPath: destName: alib.tasks.block { name = "Installing Nix package ${lib.getName pkg} as ${destName}"; } [
     (alib.tasks.nixCopyClosureWithRoot { inherit pkg; rootDest = "/data/nix-roots"; remoteProgram = "/opt/bin/nix-store"; })
-    (alib.tasks.ansibleBuiltinFile { name = "Ensure existing ${lib.getName pkg} binary does not exist"; } { path = "/opt/bin/${baseNameOf (lib.getExe pkg)}"; state = "absent"; })
-    (alib.tasks.nixMakeSymlinkToMainExe { inherit pkg; destPath = "/opt/bin"; })
+    (alib.tasks.ansibleBuiltinFile { name = "Ensure existing ${baseNameOf destName} binary does not exist"; } { path = "/opt/bin/${destName}"; state = "absent"; })
+    (alib.tasks.nixMakeSymlinkCustom { inherit pkg; srcPath = binPath; destPath = "/opt/bin/${destName}"; })
   ];
   makeNixSymlink = name: alib.tasks.ansibleBuiltinFile { name = "Adding ${name} symlink"; } {
     path = "/opt/bin/${name}";
@@ -62,7 +54,7 @@ in with alib.tasks;
   {
     name = "Robot Vacuums play";
     environment = {
-      PATH = "$PATH:/opt/bin:/opt/sbin:/opt/usr/bin:/opt/libexec";
+      PATH = "$PATH:/opt/bin:/opt/sbin:/opt/usr/bin:/opt/libexec:{{ ansible_env.PATH }}";
       LD_LIBRARY_PATH = "$LD_LIBRARY_PATH:/opt/usr/lib";
     };
     hosts = [ "vacuums" ];
@@ -92,16 +84,25 @@ in with alib.tasks;
       (copyExecutable "Copy Gradient Sops Setup Script"
         ../misc/vacuum/gradient_sops_setup.sh "/data/gradient_sops_setup.sh")
 
-      (ansibleBuiltinCommand { name = "Update opkg repositories"; } "/opt/bin/opkg update")
-      # These two should already be installed, but just in case...
-      (installOpkg "openssh-sftp-server")
-      (installOpkg "python3")
 
-      (installOpkg "openssh-keygen")
+      (opkg { }
+      {
+        state = "present";
+        update_cache = true;
+        executable = "/opt/bin/opkg";
+        name = [
+          "openssh-sftp-server"
+          "python3"
+          "python3-pip"
 
-      (installOpkg "imagemagick")
-      (installOpkg "mosquitto-client-nossl")
-      (installOpkg "jq")
+          "openssh-keygen"
+          "strace"
+
+          "imagemagick"
+          "mosquitto-client-nossl"
+          "jq"
+        ];
+      })
 
       (makeNixSymlink "lix")
       (makeNixSymlink "nix-build")
@@ -130,11 +131,11 @@ in with alib.tasks;
       (with pkgsAarch64; [
         lixPkg
         sops
+        (lilipod.overrideAttrs (prevAttrs: { PATH="${pkgsAarch64.su}/bin"; }))
+        distrobox
         ssh-to-age
       ]))
 
-      (installNixPackage )
-      
       # And now we GC any old Nix paths >:)
       (ansibleBuiltinCommand { name = "Run Nix garbage collector"; } "nix-collect-garbage")
     ];

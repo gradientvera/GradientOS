@@ -81,5 +81,5 @@ fi
 
 if [ -f "/opt/secrets.yml" ]; then
   # Initialize services which require secrets here
-  
+  echo "Not implemented yet!"
 fi
