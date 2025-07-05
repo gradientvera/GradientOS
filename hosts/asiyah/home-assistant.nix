@@ -1,6 +1,7 @@
 { config, pkgs, lib, ... }:
 let
   ports = config.gradient.currentHost.ports;
+  localAddresses = config.gradient.const.localAddresses;
   addresses = config.gradient.const.wireguard.addresses.gradientnet;
   pythonPkgs = config.services.home-assistant.package.python.pkgs;
 in
@@ -101,6 +102,7 @@ in
       mqtt-vacuum-camera
       thermal-comfort
       anniversaries
+      hass-ingress
       openrgb-ha
       feedparser
       moonraker
@@ -187,6 +189,51 @@ in
       shell_command = {
         # Literally SSH into a host with the home assistant private SSH key and run a command
         ssh = "${toString pkgs.openssh}/bin/ssh -i ${config.sops.secrets.hass-ssh-priv.path} {{ host }} {{ command }}";
+      };
+
+      ingress = {
+        # Slugs need to use underscore, dashes are not allowed
+        robot_vacuums = {
+          work_mode = "custom";
+          url = "/files/ingress/ha-tabs-ingress.js";
+          title = "Robot Vacuums";
+          icon = "mdi:robot-vacuum";
+        };
+        angela = {
+          parent = "robot_vacuums";
+          title = "Angela";
+          icon = "mdi:home-floor-1";
+          work_mode = "ingress";
+          url = localAddresses.vacuum-angela;
+        };
+        mute = {
+          parent = "robot_vacuums";
+          title = "*Mute";
+          icon = "mdi:home-floor-0";
+          work_mode = "ingress";
+          url = localAddresses.vacuum-mute;
+        };
+        printer_k1c = {
+          title = "3D Printer K1C";
+          icon = "mdi:printer-3d-nozzle";
+          work_mode = "ingress";
+          url = localAddresses.printer-k1c;
+          ui_mode = "toolbar";
+        };
+        zigbee2mqtt = {
+          title = "Zigbee2MQTT";
+          icon = "mdi:zigbee";
+          work_mode = "ingress";
+          url = "127.0.0.1:${toString ports.zigbee2mqtt}";
+          ui_mode = "toolbar";
+        };
+        esphome = {
+          title = "ESPHome";
+          icon = "mdi:chip";
+          work_mode = "ingress";
+          url = "127.0.0.1:${toString ports.esphome}";
+          ui_mode = "toolbar";
+        };
       };
 
     };
