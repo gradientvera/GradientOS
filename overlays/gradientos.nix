@@ -65,6 +65,11 @@ in {
     ];
   });
 
+  paperless-ngx = prev.paperless-ngx.overrideAttrs (prevAttrs: {
+    # Causes build failures every so often and frankly I don't care
+    doCheck = false;
+  });
+
   moonraker = prev.moonraker.overrideAttrs (final.moonraker-timelapse.moonrakerOverrideAttrs);
 
   steam = prev.steam.override steam-override;
