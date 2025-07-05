@@ -84,6 +84,10 @@ in with alib.tasks;
       (copyExecutable "Copy Gradient Sops Setup Script"
         ../misc/vacuum/gradient_sops_setup.sh "/data/gradient_sops_setup.sh")
 
+      (ansibleBuiltinFile { name = "Create Oucher Directories"; } { path = "/data/oucher/ogg"; state = "directory"; recurse = true; owner = "root"; group = "root"; mode = "0777"; })
+
+      (copyExecutable "Copy Oucher Script"
+        ../misc/vacuum/oucher.sh "/data/oucher/oucher.sh")
 
       (opkg { }
       {
@@ -131,8 +135,6 @@ in with alib.tasks;
       (with pkgsAarch64; [
         lixPkg
         sops
-        (lilipod.overrideAttrs (prevAttrs: { PATH="${pkgsAarch64.su}/bin"; }))
-        distrobox
         ssh-to-age
       ]))
 

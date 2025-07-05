@@ -69,17 +69,25 @@ echo "Initializing dropbear daemon on chroot with SFTP support at port 222."
 # SSH server with SFTP support
 /usr/local/sbin/dropbear -s -p 222 &
 
-echo "Initializing gradient_publish_photo daemon..."
-
 # Publish camera photos to MQTT
-/data/gradient_publish_photo.sh &
+if [[ -x "/data/gradient_publish_photo.sh" ]]; then
+  echo "Initializing gradient_publish_photo daemon..."
+  /data/gradient_publish_photo.sh &
+fi
 
-if [ -f "/opt/bin/sops" ] && [ -f "/opt/bin/ssh-to-age" ]; then
+# Oucher script
+if [[ -x "/data/oucher/oucher.sh" ]]; then
+  echo "Initializing Oucher daemon..."
+	nohup /data/oucher/oucher.sh > /dev/null 2>&1 &
+fi
+
+if [ -f "/opt/bin/sops" ] && [ -f "/opt/bin/ssh-to-age" ] && [ -f "/data/gradient_sops_setup.sh" ]; then
   # Set up sops for secrets
+  echo "Initializing SOPS setup..."
   /data/gradient_sops_setup.sh
 fi
 
 if [ -f "/opt/secrets.yml" ]; then
   # Initialize services which require secrets here
-  echo "Not implemented yet!"
+  echo "Initializing services with secrets..."
 fi
