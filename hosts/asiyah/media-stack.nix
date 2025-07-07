@@ -251,7 +251,7 @@ in {
     };
 
     ersatztv = {
-      image = "jasongdove/ersatztv:latest-vaapi";
+      image = "jasongdove/ersatztv:latest";
       pull = "newer";
       volumes = [
         "/var/lib/${userName}/ersatztv:/root/.local/share/ersatztv"
