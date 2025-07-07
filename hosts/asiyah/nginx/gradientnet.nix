@@ -64,6 +64,7 @@ in
     "trilium.asiyah.gradient.moe" = mkInternalVHost { port = ports.trilium; };
     "syncthing.asiyah.gradient.moe" = mkInternalVHost { port = ports.syncthing; };
     "scrutiny.asiyah.gradient.moe" = mkInternalVHost { port = ports.scrutiny; };
+    "llm.asiyah.gradient.moe" = mkInternalVHost { port = ports.open-webui; };
     "bitwarden.asiyah.gradient.moe" = mkInternalVHost { port = ports.vaultwarden; };
     "trmnl.asiyah.gradient.moe" = mkInternalVHost { port = ports.trmnl; };
     "radio.asiyah.gradient.moe" = mkInternalVHost { port = ports.openwebrx; };

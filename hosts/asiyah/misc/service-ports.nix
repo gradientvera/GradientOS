@@ -79,6 +79,8 @@
   openwebrx = 8073;
   mopidy = 6600;
   nut = 3493;
+  open-webui = 8100;
+  ollama = 8101;
   
   # Paperless-ngx
   paperless = 28981;

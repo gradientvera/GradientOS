@@ -10,6 +10,7 @@
     ./trmnl.nix
     ./numad.nix
     ./radio.nix
+    ./ollama.nix
     ./zigbee.nix
     ./clamav.nix
     ./kanidm.nix
