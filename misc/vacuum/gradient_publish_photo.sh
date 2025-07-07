@@ -17,6 +17,7 @@ GetVars () {
     export VALETUDO_ID_LOWER=$(echo $VALETUDO_ID | tr '[:upper:]' '[:lower:]')
     export VALETUDO_FRIENDLY_NAME=$(cat $VALETUDO_CONFIG | jq .valetudo.customizations.friendlyName -r)
     export VALETUDO_VERSION=$(cat $VALETUDO_CONFIG | jq ._version -r)
+    export VALETUDO_DOCKED=$(curl -s -X 'GET' 'http://127.0.0.1:80/api/v2/robot/state/attributes' -H 'accept: application/json' | jq '.[] | select ( .__class == "StatusStateAttribute" ) | .value | . == "docked"')
     export MQTT_HOST=$(cat $VALETUDO_CONFIG | jq .mqtt.connection.host -r)
     export MQTT_PORT=$(cat $VALETUDO_CONFIG | jq .mqtt.connection.port -r)
     export TOPIC="valetudo/${VALETUDO_ID}/GradientPublishPhoto/file"
@@ -47,6 +48,10 @@ while true; do
 
     # Get them every time in case some value changes
     GetVars
+
+    if [ "$VALETUDO_DOCKED" = "true" ]; then
+        continue
+    fi;
 
     camerademo NV21 640 480 0 bmp /tmp 1 >> /dev/null || continue
 
