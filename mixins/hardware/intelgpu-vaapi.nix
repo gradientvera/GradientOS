@@ -9,28 +9,34 @@
   environment.systemPackages = with pkgs; [
     vdpauinfo
     libva-utils
-    intel-gpu-tools
   ];
 
   hardware.intelgpu.enableHybridCodec = true;
+  hardware.intel-gpu-tools.enable = true;
+
+  # Modern driver
+  environment.sessionVariables = { LIBVA_DRIVER_NAME = "iHD"; };
 
   hardware.graphics = {
     enable = true;
     enable32Bit = true;
     extraPackages = with pkgs; [
-      (intel-vaapi-driver.override { enableHybridCodec = true; })
-      intel-compute-runtime
+      # Accelerated Video Playback
       intel-media-driver
+
+      # vdpau
       libva-vdpau-driver
-      intel-media-sdk
-      libvdpau-va-gl
+
+      # QSV Support
       vpl-gpu-rt
+
+      # OpenCL support
+      intel-compute-runtime
+      intel-ocl
     ];
     extraPackages32 = with pkgs.driversi686Linux; [
+      # Accelerated Video Playback (32-bit support)
       (intel-vaapi-driver.override { enableHybridCodec = true; })
-      intel-media-driver
-      libvdpau-va-gl
-      libva-vdpau-driver
     ];
   };
 
