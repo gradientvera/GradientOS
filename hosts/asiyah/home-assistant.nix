@@ -66,6 +66,7 @@ in
       "camera"
       "radarr"
       "sonarr"
+      "ollama"
       "stream"
       "config"
       "webdav"
