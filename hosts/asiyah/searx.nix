@@ -19,8 +19,12 @@ in
   services.searx = {
     enable = true;
     package = pkgs.master.searxng;
+    runInUwsgi = true;
     redisCreateLocally = true;
     environmentFile = config.sops.secrets.searx.path;
+    uwsgiConfig = {
+      http = ":${toString ports.searx}";
+    };
     settings = {
       use_default_settings = true;
 
@@ -41,6 +45,10 @@ in
         default_lang = "en";
         autocomplete = "duckduckgo";
         favicon_resolver = "duckduckgo";
+        formats = [
+          "html"
+          "json"
+        ];
       };
 
       server = {
@@ -98,13 +106,29 @@ in
         ];
       };
 
+      valkey = {
+        url = "unix://${config.services.redis.servers.searx.unixSocket}";
+      };  
+
+      redis = lib.mkForce {};
+
       # Uncomment below for TOR proxy support.
       /*outgoing.proxies = {
         http  = [ "socks5://127.0.0.1:${toString ports.tor}" ];
         https = [ "socks5://127.0.0.1:${toString ports.tor}" ];
       };*/
 
-    };  
+    };
+    limiterSettings = {
+      "botdetection.ip_limit" = {
+        link_token = false;
+      };
+
+      "botdetection.ip_lists" = {
+        block_ip = [];
+        pass_ip = [];
+      };
+    };
   };
 
   systemd.services.searx-init-favicon = {
@@ -124,7 +148,7 @@ in
     '';
   };
 
-  systemd.services.searx = {
+  systemd.services.searx-init = {
     requires = [ "searx-init-favicon.service" ];
     after = [ "searx-init-favicon.service" ];
   };
