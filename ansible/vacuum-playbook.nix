@@ -4,8 +4,9 @@
 }:
 let
   alib = gradient-ansible-lib;
-  pkgsAarch64 = pkgsCross.aarch64-multiplatform-musl;
-  lixPkg = pkgsAarch64.pkgsStatic.lixPackageSets.latest.lix;
+  pkgsAarch64Musl = pkgsCross.aarch64-multiplatform-musl;
+  pkgsAarch64Glibc = pkgsCross.aarch64-multiplatform;
+  lixPkg = pkgsAarch64Musl.pkgsStatic.lixPackageSets.latest.lix;
   sshPubKeys = import ../misc/ssh-pub-keys.nix;
   installNixPackage = pkg: alib.tasks.block { name = "Installing Nix package ${lib.getName pkg}"; } [
     (alib.tasks.nixCopyClosureWithRoot { inherit pkg; rootDest = "/data/nix-roots"; remoteProgram = "/opt/bin/nix-store"; })
@@ -132,7 +133,7 @@ in with alib.tasks;
 
       # Install Nix packages with GC roots and symlinks to /opt/bin
       (installNixPackages 
-      (with pkgsAarch64; [
+      (with pkgsAarch64Musl; [
         lixPkg
         sops
         ssh-to-age

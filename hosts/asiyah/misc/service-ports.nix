@@ -63,6 +63,7 @@
   esphome = 6052;
   redis-oauth2 = 6380;
   redis-forgejo = 6381;
+  redis-open-webui = 6382;
   postgresql = 5432;
   trilium = 8081;
   searx = 8089;
