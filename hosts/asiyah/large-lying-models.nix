@@ -4,8 +4,10 @@ let
 in
 {
 
-  systemd.tmpfiles.settings."99-ollama-vulkan.conf"."/var/lib/ollama-vulkan".d = {
-    mode = "0775";
+  systemd.tmpfiles.settings."99-large-lying-models.conf" = {
+    "/var/lib/ollama-vulkan".d = {
+      mode = "0775";
+    };
   };
 
   virtualisation.oci-containers.containers.ollama-vulkan = {

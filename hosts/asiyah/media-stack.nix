@@ -501,6 +501,7 @@ in {
         internalNode = "true";
         inContainer = "true";
         ffmpegVersion = "7";
+        auth = "false"; # OAuth2 proxy handles this
         nodeName = config.networking.hostName;
       };
       extraOptions = [

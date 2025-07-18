@@ -10,7 +10,6 @@
     ./trmnl.nix
     ./numad.nix
     ./radio.nix
-    ./ollama.nix
     ./zigbee.nix
     ./clamav.nix
     ./kanidm.nix
@@ -34,6 +33,7 @@
     ./secrets/default.nix
     ./libvirtd/default.nix
     ./redbot-stardream.nix
+    ./large-lying-models.nix
     ./gradient-generator.nix
     # ./project-zomboid-server.nix
     ./hardware-configuration.nix
