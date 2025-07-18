@@ -29,6 +29,8 @@
       *.constellation.moe,
       calibre.constellation.moe,
       ftp.constellation.moe,
+      neko.constellation.moe,
+      iptv.constellation.moe,
       www.constellation.moe
     '';
   };
