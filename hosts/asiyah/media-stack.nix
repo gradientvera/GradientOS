@@ -144,6 +144,8 @@ in {
     "/data/downloads".d = rule;
     "/data/downloads/tv".d = rule;
     "/data/downloads/movies".d = rule;
+    "/data/downloads/adverts".d = rule;
+    "/data/downloads/youtube".d = rule;
     "/data/downloads/music".d = rule;
     "/data/downloads/books".d = rule;
     "/data/downloads/books-ingest".d = rule;
@@ -490,6 +492,7 @@ in {
         "/data/downloads/tv:/media/tv"
         "/data/downloads/movies:/media/movies"
         "/data/downloads/adverts:/media/adverts"
+        "/data/downloads/youtube:/media/youtube"
       ];
       environment = {
         TZ = config.time.timeZone;
@@ -853,6 +856,19 @@ in {
       dependsOn = [ "create-mediarr-pod" "gluetun" ];
     };
 
+  };
+
+  services.pinchflat = {
+    enable = true;
+    # Always get the latest, bleeding edge version
+    # because otherwise yt-dlp might not work...
+    # FUCK YOU GOOGLE!!!!
+    package = pkgs.master.pinchflat;
+    user = userName;
+    group = groupName;
+    mediaDir = "/data/downloads/youtube";
+    port = ports.pinchflat;
+    secretsFile = config.sops.secrets.pinchflat.path;
   };
 
   # -- Firewall Setup --

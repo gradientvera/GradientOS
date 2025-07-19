@@ -202,6 +202,12 @@
         restartUnits = [ "home-assistant.service" ];
       };
 
+      pinchflat = {
+        owner = config.services.pinchflat.user;
+        group = config.services.pinchflat.group;
+        restartUnits = [ "pinchflat.service" ];
+      };
+
     };
   };
 

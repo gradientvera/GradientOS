@@ -50,6 +50,7 @@
   proxy-vpn-uk = 1081;
   calibre-web-automated = 8078;
   calibre-downloader = 8077;
+  pinchflat = 8945;
 
   # NFS
   nfsd = 2049;
