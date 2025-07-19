@@ -56,10 +56,6 @@ edit-secret-asiyah:
     just edit-secret asiyah
 
 [group('secrets')]
-edit-secret-briah:
-    just edit-secret briah
-
-[group('secrets')]
 edit-secret-atziluth:
     just edit-secret atziluth
 

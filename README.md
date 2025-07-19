@@ -40,7 +40,6 @@ GradientOS supports the [auxolotl](https://auxolotl.org/) and [Lix](https://lix.
 - **[neith-deck](hosts/neith-deck)**: Steam Deck LCD.
 - **[asiyah](hosts/asiyah)**: Custom Home Server.
 - **[yetzirah](hosts/yetzirah)**: ThinkCentre M900 Tiny Home Server.
-- **[briah](hosts/briah)**: Raspberry Pi 4 Home Server.
 
 #### Managed with Ansible
 

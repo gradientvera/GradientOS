@@ -50,9 +50,6 @@ Host *
       "asiyah.gradient.moe" = {
         publicKey = ssh-pub-keys.asiyah;
       };
-      "briah.gradient.moe" = {
-        publicKey = ssh-pub-keys.briah;
-      };
       "bernkastel.gradient.moe" = {
         publicKey = ssh-pub-keys.bernkastel;
       };

@@ -61,7 +61,6 @@
   ];
 
   gradient.substituters = {
-    briah = "ssh-ng://nix-ssh@briah.gradient?priority=60";
     bernkastel = "ssh-ng://nix-ssh@bernkastel.gradient?priority=40";
     beatrice = "ssh-ng://nix-ssh@beatrice.gradient?priority=45";
     erika = "ssh-ng://nix-ssh@erika.gradient?priority=50";

@@ -413,39 +413,6 @@
       }
 
       {
-        name = "briah";
-        system = "aarch64-linux";
-        overlays = [ self.overlays.kernel-allow-missing ];
-        
-        modules = [
-          mixins.gnupg
-          mixins.wireguard
-          mixins.vera-locale
-          mixins.upgrade-diff
-          mixins.v4l2loopback
-          mixins.nix-store-serve
-          mixins.hardware-bluetooth
-          mixins.hardware-raspberrypi4
-          mixins.restic-repository-hokma
-        ];
-
-        users.vera.modules = [
-          sops-nix.homeManagerModule
-        ];
-
-        generators = [ "sd-aarch64" ];
-
-        importLix = false; # Failing to cross-compile on aarch64
-
-        deployment = {
-          targetHost = ips.gradientnet.briah;
-          tags = with colmena-tags; [ aarch64 raspberry-pi server vera ];
-          allowLocalDeployment = true;
-          #buildOnTarget = true;
-        };
-      }
-
-      {
         name = "GradientOS-x86_64";
         system = "x86_64-linux";
 

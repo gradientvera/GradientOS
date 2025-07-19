@@ -25,7 +25,7 @@ in
     extraDomainNames = lib.mkForce [
       "*.gradient.moe"
       "*.asiyah.gradient.moe"
-      "*.briah.gradient.moe"
+      "*.yetzirah.gradient.moe"
       "*.beatrice.gradient.moe"
       "*.bernkastel.gradient.moe"
       # TODO: Add the rest meh

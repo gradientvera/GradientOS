@@ -113,7 +113,7 @@ in
           id = "default";
           versioning.type = "trashcan";
           path = "~/Documents/Sync";
-          devices = [ "bernkastel" "beatrice" "erika" "asiyah" "briah" "vera-phone" "work-laptop" "featherine" "ange" ];
+          devices = [ "bernkastel" "beatrice" "erika" "asiyah" "vera-phone" "work-laptop" "featherine" "ange" ];
         };
         music = {
           id = "y0fft-chww4";

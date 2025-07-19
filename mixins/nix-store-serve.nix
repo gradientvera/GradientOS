@@ -13,7 +13,6 @@
       erika
       neith-deck
       asiyah
-      briah
     ];
   };
 
