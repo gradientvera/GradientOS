@@ -1,9 +1,11 @@
 { fetchFromGitHub
+, home-assistant
 , buildHomeAssistantComponent
 }:
 let
   owner = "dolezsa";
   version = "2.2.5";
+  pythonPkgs = home-assistant.python.pkgs;
 in buildHomeAssistantComponent {
   inherit version owner;
   domain = "thermal_comfort";

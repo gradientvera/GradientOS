@@ -6,24 +6,7 @@ in
 
   services.zigbee2mqtt = {
     enable = true;
-    package = pkgs.zigbee2mqtt_2.overrideAttrs (prevAttrs:
-      let
-        pname = "zigbee2mqtt";
-        version = "693f0d0a35231b529261fe1652bb6e355d5854fe";
-        src = pkgs.fetchFromGitHub {
-            owner = "Koenkk";
-            repo = pname;
-            rev = version;
-            hash = "sha256-iENB6+NEZDurS6zf/2lnJpPT9AKpXX6qqvewe21OEkU=";
-        };
-      in {
-      # TODO: Temporary, fixes a bug with my door/window sensors
-      inherit src version;
-      pnpmDeps = pkgs.pnpm_9.fetchDeps {
-        inherit pname version src;
-        hash = "sha256-SmCcubqmYta3GBF1EaAHQlH/rVLjVqbNDb/FQFMgp0M=";
-      };
-    });
+    package = pkgs.zigbee2mqtt_2;
     settings = {
       homeassistant = config.services.home-assistant.enable;
       mqtt = {

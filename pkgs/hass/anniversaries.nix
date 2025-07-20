@@ -27,7 +27,9 @@ in buildHomeAssistantComponent {
     in pythonPkgs.buildPythonPackage {
       inherit pname version;
 
-      src = pkgs.fetchFromGitHub {
+      pyproject = true;
+
+      src = fetchFromGitHub {
         inherit owner;
         repo = "integrationhelper";
         rev = version;
@@ -35,7 +37,7 @@ in buildHomeAssistantComponent {
       };
 
       build-system = [
-        pkgs.python313Packages.setuptools
+        pythonPkgs.setuptools
       ];
 
       dependencies = with pkgs.python313Packages; [

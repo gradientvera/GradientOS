@@ -1,9 +1,11 @@
 { fetchFromGitHub
+, home-assistant
 , buildHomeAssistantComponent
 }:
 let
   owner = "custom-components";
   version = "0.4.2";
+  pythonPkgs = home-assistant.python.pkgs;
 in buildHomeAssistantComponent {
   inherit version owner;
   domain = "radarr_upcoming_media";

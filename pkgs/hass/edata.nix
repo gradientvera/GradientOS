@@ -9,7 +9,6 @@ let
 in buildHomeAssistantComponent {
   inherit version owner;
   domain = "edata";
-
   src = fetchFromGitHub {
     inherit owner;
     repo = "homeassistant-edata";
@@ -25,7 +24,7 @@ in buildHomeAssistantComponent {
       version = "1.2.22";
     in pythonPkgs.buildPythonPackage {
       inherit pname version;
-
+      pyproject = true;
       src = fetchFromGitHub {
         inherit owner;
         repo = "python-edata";
