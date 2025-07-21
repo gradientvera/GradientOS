@@ -88,16 +88,17 @@ in
                  apprise
       '';
 
+      # As per https://jellyfin.org/docs/general/post-install/networking/advanced/fail2ban
       jellyfin = ''
         enabled = true
-        maxretry = 3
         backend = auto
         port = 80,443
         protocol = tcp
         filter = jellyfin
+        maxretry = 3
         bantime = 86400
         findtime = 43200
-        logpath = /var/lib/mediarr/jellyfin/config/log/log*.log
+        logpath = /var/lib/mediarr/jellyfin/config/log/*.log
         action = iptables-multiport[name=jellyfin]
                  apprise
       '';

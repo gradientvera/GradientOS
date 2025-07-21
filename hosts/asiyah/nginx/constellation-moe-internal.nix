@@ -31,28 +31,28 @@ in {
     addSSL = true;
     
     extraConfig = ''
-      # # https://jellyfin.org/docs/general/networking/nginx/
+      # # https://jellyfin.org/docs/general/post-install/networking/reverse-proxy/nginx/
       ## The default `client_max_body_size` is 1M, this might not be enough for some posters, etc.
       client_max_body_size 200M;
-    
+      
+      # Comment next line to allow TLSv1.0 and TLSv1.1 if you have very old clients
+      ssl_protocols TLSv1.3 TLSv1.2;
+      
       # Security / XSS Mitigation Headers
-      # NOTE: X-Frame-Options may cause issues with the webOS app
-      # add_header X-Frame-Options "SAMEORIGIN";
-      # add_header X-Content-Type-Options "nosniff";
+      add_header X-Content-Type-Options "nosniff";
 
       # Permissions policy. May cause issues with some clients
-      # add_header Permissions-Policy "accelerometer=(), ambient-light-sensor=(), battery=(), bluetooth=(), camera=(), clipboard-read=(), display-capture=(), document-domain=(), encrypted-media=(), gamepad=(), geolocation=(), gyroscope=(), hid=(), idle-detection=(), interest-cohort=(), keyboard-map=(), local-fonts=(), magnetometer=(), microphone=(), payment=(), publickey-credentials-get=(), serial=(), sync-xhr=(), usb=(), xr-spatial-tracking=()" always;
+      add_header Permissions-Policy "accelerometer=(), ambient-light-sensor=(), battery=(), bluetooth=(), camera=(), clipboard-read=(), display-capture=(), document-domain=(), encrypted-media=(), gamepad=(), geolocation=(), gyroscope=(), hid=(), idle-detection=(), interest-cohort=(), keyboard-map=(), local-fonts=(), magnetometer=(), microphone=(), payment=(), publickey-credentials-get=(), serial=(), sync-xhr=(), usb=(), xr-spatial-tracking=()" always;
 
       # Content Security Policy
       # See: https://developer.mozilla.org/en-US/docs/Web/HTTP/CSP
       # Enforces https content and restricts JS/CSS to origin
       # External Javascript (such as cast_sender.js for Chromecast) must be whitelisted.
-      # NOTE: The default CSP headers may cause issues with the webOS app
-      # add_header Content-Security-Policy "default-src https: data: blob: ; img-src 'self' https://* ; style-src 'self' 'unsafe-inline'; script-src 'self' 'unsafe-inline' https://www.gstatic.com https://www.youtube.com blob:; worker-src 'self' blob:; connect-src 'self'; object-src 'none'; frame-ancestors 'self'";
+      add_header Content-Security-Policy "default-src https: data: blob: ; img-src 'self' https://* ; style-src 'self' 'unsafe-inline'; script-src 'self' 'unsafe-inline' https://www.gstatic.com https://www.youtube.com blob:; worker-src 'self' blob:; connect-src 'self'; object-src 'none'; frame-ancestors 'self'; font-src 'self'";
     '';
 
     locations."/".extraConfig = ''
-      # https://jellyfin.org/docs/general/networking/nginx/
+      # https://jellyfin.org/docs/general/post-install/networking/reverse-proxy/nginx/
       # Proxy main Jellyfin traffic
       proxy_pass http://127.0.0.1:${toString ports.jellyfin-http};
       proxy_set_header Host $host;
@@ -67,7 +67,7 @@ in {
     '';
 
     locations."/socket".extraConfig = ''
-      # https://jellyfin.org/docs/general/networking/nginx/
+      # https://jellyfin.org/docs/general/post-install/networking/reverse-proxy/nginx/
       # Proxy Jellyfin Websockets traffic
       proxy_pass http://127.0.0.1:${toString ports.jellyfin-http};
       proxy_http_version 1.1;
