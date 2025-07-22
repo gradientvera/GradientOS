@@ -1,5 +1,6 @@
 { lib, self, config, ... }:
 let
+  gradientLib = (import ./../lib/default.nix) self;
   mkConstant = description: file:
     mkConstantBase description file (lib.types.attrsOf lib.types.str);
   mkConstantNested = description: file: 
@@ -28,10 +29,8 @@ let
     default =
       let
         hostNames = lib.map (f: f.name) (builtins.filter (f: f.value == "directory") (lib.attrsToList (builtins.readDir ../hosts)));
-        hasPortsFile = name: (builtins.pathExists ../hosts/${name}/misc/service-ports.nix);
-        mkPorts = name: if (hasPortsFile name) then (builtins.import ../hosts/${name}/misc/service-ports.nix) else {};
         mkHost = name: {
-          ports = mkPorts name;
+          ports = gradientLib.mkPorts name;
         };
       in
       builtins.listToAttrs (lib.map (h: { name = h; value = mkHost h;} ) hostNames);
@@ -79,7 +78,8 @@ in
 
     gradient.lib = lib.mkOption {
       type = lib.types.anything;
-      default = (import ./../lib/default.nix) self;
+      readOnly = true;
+      default = gradientLib;
     };
   };
 

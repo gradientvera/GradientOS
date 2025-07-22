@@ -49,7 +49,11 @@ rec {
 
       inherit system;
 
-      specialArgs = { inherit self; } // specialArgs;
+      specialArgs =
+      {
+        inherit self;
+        ports = mkPorts name;
+      } // specialArgs;
 
       pkgs = import nixpkgs {
         inherit system;
@@ -113,6 +117,9 @@ rec {
   forAllSystemsCustom = nixpkgsCfg: function:
     self.inputs.nixpkgs.lib.genAttrs [ "x86_64-linux" "aarch64-linux" ]
       (system: function (import self.inputs.nixpkgs (nixpkgsCfg // { inherit system; })));
+
+  hasPortsFile = name: (builtins.pathExists ../hosts/${name}/misc/service-ports.nix);
+  mkPorts = name: if (hasPortsFile name) then (builtins.import ../hosts/${name}/misc/service-ports.nix) else {};
 
   /*
   *   similar to switch statements in other programming languages.
