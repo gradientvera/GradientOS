@@ -871,6 +871,19 @@ in {
     mediaDir = "/data/downloads/youtube";
     port = ports.pinchflat;
     secretsFile = config.sops.secrets.pinchflat.path;
+    extraConfig = {
+      # aaaaa google whyyy
+      YT_DLP_WORKER_CONCURRENCY = 1;
+    };
+  };
+
+  systemd.services.pinchflat = {
+    wants = [ "podman-proxy-vpn-uk-socks5.service" ];
+    after = [ "podman-proxy-vpn-uk-socks5.service" ];
+    environment = {
+      HTTPS_PROXY = "socks5://asiyah.gradient.moe:${toString ports.proxy-vpn-uk}";
+      HTTP_PROXY = "socks5://asiyah.gradient.moe:${toString ports.proxy-vpn-uk}";
+    };
   };
 
   # -- Firewall Setup --
