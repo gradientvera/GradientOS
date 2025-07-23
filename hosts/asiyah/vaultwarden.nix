@@ -17,4 +17,9 @@ in
     };
   };
 
+  systemd.services.vaultwarden = {
+    wants = [ "postgresql.service" ];
+    after = [ "postgresql.service" ];
+  };
+
 }

@@ -64,8 +64,8 @@ in
   };
 
   systemd.services.open-webui = {
-    after = [ "redis-open-webui.service" "searx.service" ];
-    wants = [ "redis-open-webui.service" "searx.service" ];
+    wants = [ "redis-open-webui.service" "searx.service" "podman-ollama-vulkan.service" ];
+    after = [ "redis-open-webui.service" "searx.service" "podman-ollama-vulkan.service" ];
   };
 
   networking.firewall.interfaces.gradientnet.allowedTCPPorts = [

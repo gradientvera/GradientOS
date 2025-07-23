@@ -153,6 +153,11 @@ in
     after = [ "searx-init-favicon.service" ];
   };
 
+  systemd.services.searx = {
+    wants = [ "redis-searx.service" ];
+    after = [ "redis-searx.service" ];
+  };
+
   systemd.tmpfiles.settings."10-searxng.conf" = {
     "/var/cache/searxng".d = {
       user = config.users.users.searx.name;

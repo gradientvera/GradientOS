@@ -50,6 +50,8 @@ in {
   systemd.services.podman-create-mediarr-pod = 
   {
     wantedBy = [ "multi-user.target" ];
+    wants = [ "postgresql.service" ];
+    after = [ "postgresql.service" ];
     path = [ pkgs.podman ];
     # Static IP is needed because changing published ports and recreating the pod
     # will NOT clear the old NAT rules, because podman fucking sucks.

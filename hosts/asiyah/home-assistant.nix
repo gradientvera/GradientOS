@@ -152,6 +152,7 @@ in
           music = "/data/downloads/music";
           tv = "/data/downloads/tv";
           movies = "/data/downloads/movies";
+          youtube = "/data/downloads/youtube";
           adverts = "/data/downloads/adverts";
         };
       };
@@ -239,131 +240,14 @@ in
           ui_mode = "toolbar";
         };
       };
-
     };
-
   };
 
-  # Media player support, local mpd support
-  # gradient.profiles.audio.enable = true;
-  users.users.hass.extraGroups = [ "audio" ];
-
-  hardware.alsa = {
-    enable = true;
-    enablePersistence = true;
-    config = ''
-pcm.!default {
-    type asym
-    playback.pcm "btspeaker"
-}
-
-
-pcm.btspeaker {
-        type plug
-        slave.pcm {
-                type bluealsa
-                device "11:75:58:21:AA:F7"
-                profile "a2dp"
-        }
-        hint {
-                show on
-                description "Bluetooth Speaker"
-        }
-}
-    '';
-  };
-
-  services.mopidy = {
-    enable = true;
-    extensionPackages = [
-      pkgs.mopidy-mpd
-      pkgs.mopidy-local
-    ];
-    configuration = ''
-      [mpd]
-      hostname = ::
-
-      [audio]
-      output = alsasink
-
-      [file]
-      enabled = true
-      media_dirs =
-          /var/lib/mopidy/media
-      show_dotfiles = false
-      excluded_file_extensions =
-        .directory
-        .html
-        .jpeg
-        .jpg
-        .log
-        .nfo
-        .pdf
-        .png
-        .txt
-        .zip
-      follow_symlinks = false
-      metadata_timeout = 1000
-
-      [http]
-      enabled = false
-
-      [stream]
-      enabled = true
-      protocols =
-          http
-          https
-          mms
-          rtmp
-          rtmps
-          rtsp
-
-      [softwaremixer]
-      enabled = true
-    '';
-  };
-
-  services.dbus.packages = [ pkgs.bluez-alsa ];
-  systemd.services.bluealsa = {
-    wantedBy = [ "bluetooth.target" ];
-    requires = [ "bluetooth.service" ];
-    requisite = [ "dbus.service" ];
-    after = [ "bluetooth.service" ];
-    serviceConfig = {
-      Type = "dbus";
-      BusName = "org.bluealsa";
-      Restart = "on-failure";
-      User = "root";
-      ExecStart = "${pkgs.bluez-alsa}/bin/bluealsa -S --device=hci0 -p a2dp-source -p a2dp-sink";
-      ReadWritePaths = "/var/lib/bluealsa";
-      StateDirectory = "bluealsa";
-      AmbientCapabilities = "CAP_NET_RAW";
-      CapabilityBoundingSet = "CAP_NET_RAW";
-      IPAddressDeny = "any";
-      LockPersonality = true;
-      MemoryDenyWriteExecute = true;
-      NoNewPrivileges = true;
-      PrivateDevices = true;
-      PrivateTmp = true;
-      PrivateUsers = false;
-      ProtectClock = true;
-      ProtectControlGroups = true;
-      ProtectHome = true;
-      ProtectHostname = true;
-      ProtectKernelLogs = true;
-      ProtectKernelModules = true;
-      ProtectKernelTunables = true;
-      ProtectProc = "invisible";
-      ProtectSystem = "strict";
-      RemoveIPC = true;
-      RestrictAddressFamilies = "AF_UNIX AF_BLUETOOTH";
-      RestrictNamespaces = true;
-      RestrictRealtime = true;
-      RestrictSUIDSGID = true;
-      SystemCallArchitectures = "native";
-      SystemCallErrorNumber = "EPERM";
-      UMask = 0077;
-    };
+  users.users.hass.extraGroups = [ "mediarr" ];
+  
+  systemd.services.home-assistant = {
+    wants = [ "postgresql.service" "influxdb2.service" ];
+    after = [ "postgresql.service" "influxdb2.service" ];
   };
 
   networking.firewall.allowedTCPPorts = [ ports.home-assistant ];

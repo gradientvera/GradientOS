@@ -166,8 +166,8 @@ in
     };
 
     # Prevent race conditions with sshd in case of misconfiguration
-    wants = [ "sshd.service" "redis-forgejo.service" ];
-    requires = [ "sshd.service" "redis-forgejo.service" ];
+    wants = [ "sshd.service" "postgresql.service" "kanidm.service" "redis-forgejo.service" ];
+    after = [ "sshd.service" "postgresql.service" "kanidm.service" "redis-forgejo.service" ];
   };
 
   services.redis.servers.forgejo = {

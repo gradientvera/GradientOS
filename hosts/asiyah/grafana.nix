@@ -61,6 +61,11 @@ in
     };
   };
 
+  systemd.services.grafana = {
+    wants = [ "postgresql.service" ];
+    after = [ "postgresql.service" ];
+  };
+
   services.prometheus = {
     enable = true;
     port = ports.prometheus;
