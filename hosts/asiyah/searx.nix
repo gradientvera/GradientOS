@@ -154,8 +154,8 @@ in
   };
 
   systemd.services.searx = {
-    wants = [ "redis-searx.service" ];
-    after = [ "redis-searx.service" ];
+    wants = [ "redis-searx.service" "network-online.target" ];
+    after = [ "redis-searx.service" "network-online.target" ];
   };
 
   systemd.tmpfiles.settings."10-searxng.conf" = {
