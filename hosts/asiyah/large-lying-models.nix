@@ -28,6 +28,7 @@ in
       "--shm-size=32g"
       "--memory=32g"
       "--cap-add=PERFMON"
+      "--ip=10.88.0.10"
     ];
   };
 
