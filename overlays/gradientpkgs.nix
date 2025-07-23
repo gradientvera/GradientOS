@@ -5,7 +5,7 @@ final: prev:
 let
   patchKanidm = kanidm: kanidm.overrideAttrs (prevAttrs: {
     patches = (if prevAttrs ? patches then prevAttrs.patches else []) ++ [
-      ../pkgs/patches/kanidm/0001-Set-oauth-refresh-token-expiry-to-a-month.patch
+      ../pkgs/patches/kanidm/0001-Set-session-expiry-and-oauth-refresh-token-expiry-to-a-week.patch
     ];
   });
 in
