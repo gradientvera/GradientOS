@@ -18,8 +18,8 @@ in
   config = lib.mkMerge [
     (lib.mkIf cfg.profiles.development.enable {
       environment.systemPackages = with pkgs; [
-        jetbrains.rust-rover
-        jetbrains.rider
+        stable.jetbrains.rust-rover
+        stable.jetbrains.rider
         sqlitebrowser
         cargo-watch
         godot-mono

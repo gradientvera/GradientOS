@@ -7,14 +7,14 @@
   ];
 
   home.packages = with pkgs; [
+    stable.gimp-with-plugins
     jellyfin-media-player
+    master.discord-canary
     lxqt.pavucontrol-qt
     whatsapp-for-linux
     kdePackages.okular
     libreoffice-fresh
-    gimp-with-plugins
     element-desktop
-    master.discord-canary
     kdePackages.kate
     # google-chrome # TODO: Broken build?? how??
     qbittorrent
@@ -33,13 +33,5 @@
     vlc
     mpv
   ];
-
-  programs.obs-studio = {
-    enable = true;
-    plugins = with pkgs.obs-studio-plugins; [
-      obs-vkcapture
-      obs-vaapi
-    ];
-  };
 
 }
