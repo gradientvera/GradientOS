@@ -135,6 +135,7 @@ in
         postSetup = lib.mkIf isAsiyah (gen-post-setup "gradientnet" "eno1");
         postShutdown = lib.mkIf isAsiyah (gen-post-shutdown "gradientnet" "eno1");
         privateKeyFile = private-key;
+        dynamicEndpointRefreshSeconds = if isAsiyah then 0 else 25;
         peers = (if isAsiyah then [
           {
             allowedIPs = [ "${yetzirah}/32" ];
@@ -173,11 +174,6 @@ in
             dynamicEndpointRefreshSeconds = 25;
             dynamicEndpointRefreshRestartSeconds = 10;
           }
-          {
-            allowedIPs = [ "${gradientnet}/24" ];
-            endpoint = "192.168.1.48:${toString asiyahPorts.gradientnet}";
-            publicKey = keys.asiyah;
-          }
         ]);
       };
     })
@@ -193,6 +189,7 @@ in
         postSetup = lib.mkIf isAsiyah (gen-post-setup "lilynet" "eno1");
         postShutdown = lib.mkIf isAsiyah (gen-post-shutdown "lilynet" "eno1");
         privateKeyFile = private-key;
+        dynamicEndpointRefreshSeconds = if isAsiyah then 0 else 25;
         peers = (if isAsiyah then [
           {
             allowedIPs = [ "${yetzirah}/32" ];
@@ -234,11 +231,6 @@ in
             persistentKeepalive = 25;
             dynamicEndpointRefreshSeconds = 25;
             dynamicEndpointRefreshRestartSeconds = 10;
-          }
-          {
-            allowedIPs = [ "${lilynet}/24" ];
-            endpoint = "192.168.1.48:${toString asiyahPorts.lilynet}";
-            publicKey = keys.asiyah;
           }
         ]);
       };
