@@ -25,6 +25,7 @@
     ./filesystem.nix
     ./vaultwarden.nix
     ./media-stack.nix
+    ./uptime-kuma.nix
     ./nginx/default.nix
     ./home-assistant.nix
     ./esphome/default.nix
@@ -47,6 +48,8 @@
   gradient.profiles.graphics.enable = true;
 
   gradient.kernel.hugepages.enable = true;
+
+  virtualisation.podman.dockerSocket.enable = true;
 
   boot.kernel.sysctl = {
     # Increase max amount of connections
