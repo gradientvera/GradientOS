@@ -9,7 +9,7 @@
   boot.initrd.availableKernelModules = [ "xhci_pci" "ahci" "usbhid" "uas" "sd_mod" ];
   boot.initrd.kernelModules = [ ];
   boot.kernelModules = [ "kvm-intel" ];
-  boot.extraModulePackages = with config.boot.kernelPackages; [ ];
+  #boot.extraModulePackages = with config.boot.kernelPackages; [ ];
 
   boot.kernelParams = [
 
