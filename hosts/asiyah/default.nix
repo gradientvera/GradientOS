@@ -25,7 +25,6 @@
     ./filesystem.nix
     ./vaultwarden.nix
     ./media-stack.nix
-    ./healthchecks.nix
     ./nginx/default.nix
     ./home-assistant.nix
     ./esphome/default.nix

@@ -82,7 +82,6 @@
   nut = 3493;
   open-webui = 8100;
   ollama = 11434;
-  healthchecks = 8000;
   
   # Paperless-ngx
   paperless = 28981;
