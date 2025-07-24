@@ -120,33 +120,49 @@ in
           enable = true;
           antialias = true;
           cache32Bit = true;
+          subpixel.rgba = "rgb";
           hinting = {
             enable = true;
-            autohint = true;
+            autohint = false;
           };
           defaultFonts = {
-            monospace = [ "Source Code Pro" ];
-            sansSerif = [ "Source Sans Pro" ];
-            serif = [ "Source Serif Pro" ];
-            emoji = [ "Twitter Color Emoji" "Noto Color Emoji" ];
+            monospace = [ "NotoSansM Nerd Font Mono" ];
+            sansSerif = [ "NotoSans Nerd Font" ];
+            serif = [ "Noto Serif" ];
+            emoji = [ "Twitter Color Emoji" "Noto Color Emoji" "Noto Emoji" ];
           };
         };
+        enableDefaultPackages = true;
         packages = with pkgs; [
-          noto-fonts
+          noto-fonts-monochrome-emoji
+          nerd-fonts.sauce-code-pro
+          noto-fonts-emoji-blob-bin
+          nerd-fonts.ubuntu-sans
+          noto-fonts-color-emoji
+          nerd-fonts.roboto-mono
           noto-fonts-cjk-sans
+          twitter-color-emoji
+          ttf_bitstream_vera
+          ubuntu_font_family
+          fira-code-symbols
+          source-serif-pro
           noto-fonts-emoji
-          twemoji-color-font
+          nerd-fonts.noto
           source-code-pro
           source-sans-pro
-          source-serif-pro
           google-fonts
-          fira
+          dejavu_fonts
+          roboto-serif
+          roboto-slab
+          roboto-mono
+          roboto-flex
+          noto-fonts
           fira-mono
           fira-code
-          fira-code-symbols
-          unifont
           corefonts
-          ubuntu_font_family
+          unifont
+          roboto
+          fira
         ];
       };
     })
