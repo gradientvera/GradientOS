@@ -3,7 +3,7 @@
 {
   imports = [
     ./ssh.nix
-    ./nushell.nix
+    # ./nushell.nix
     ./secrets/default.nix
     #../../mixins/home/zsh.nix
   ];

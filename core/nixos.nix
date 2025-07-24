@@ -107,8 +107,24 @@ in
     '';
 
     environment.shells = with pkgs; [
-      nushell
-    ]; 
+      fish
+    ];
+
+    programs.fish.enable = true;
+    programs.starship = {
+      enable = true;
+      settings = {
+        hostname.disabled = false;
+        username.disabled = false;
+        dotnet.disabled = false;
+        direnv.disabled = false;
+      };
+      presets = [
+        "nerd-font-symbols"
+      ];
+    };
+    programs.nix-index.enable = true;
+    programs.nix-index.enableFishIntegration = true;
 
     # Enable systemd watchdog.
     systemd.watchdog = {
