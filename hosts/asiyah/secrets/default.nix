@@ -14,7 +14,7 @@
 
       nix-private-key = { };
       
-      oauth2-proxy-secrets = { restartUnits = [ "oauth2_proxy.service" ]; };
+      oauth2-proxy-secrets = { restartUnits = [ "oauth2-proxy.service" ]; };
 
       duckdns = {
         mode = "0500";
