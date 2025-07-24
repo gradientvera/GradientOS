@@ -119,11 +119,21 @@ in {
   stable = import flake.inputs.nixpkgs-stable {
     inherit (prev) system;
     config.allowUnfree = true;
+    overlays = [
+      (import ./gradientos.nix flake)
+      (import ./gradientpkgs.nix)
+      (import ./home-assistant.nix)
+    ];
   };
 
   # Master branch nixpkgs overlay.
   master = import flake.inputs.nixpkgs-master {
     inherit (prev) system;
     config.allowUnfree = true;
+    overlays = [
+      (import ./gradientos.nix flake)
+      (import ./gradientpkgs.nix)
+      (import ./home-assistant.nix)
+    ];
   };
 }
