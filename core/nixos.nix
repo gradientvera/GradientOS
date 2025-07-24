@@ -110,7 +110,14 @@ in
       fish
     ];
 
-    programs.fish.enable = true;
+    programs.fish = {
+      enable = true;
+      shellInit = ''
+        function fish_greeting
+          echo $(whoami)@$(hostname) - $(date --iso-8601) - $(date +%T)
+        end
+      '';
+    };
     programs.starship = {
       enable = true;
       settings = {
