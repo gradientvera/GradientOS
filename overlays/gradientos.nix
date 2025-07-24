@@ -40,9 +40,28 @@ in {
     });
   });
 
-  emulationstation-de = prev.emulationstation-de.overrideAttrs (prevAttrs: {
-    buildInputs = prevAttrs.buildInputs ++ [ prev.libGL ];
-  });
+  pythonPackagesExtensions = prev.pythonPackagesExtensions ++ [
+    (
+      python-final: python-prev: {
+        # See https://github.com/NixOS/nixpkgs/pull/413385
+        # Needed for pinchflat and yt-dlp to be able to impersonate again
+        curl-cffi = (python-prev.buildPythonPackage rec {
+        pname = "curl-cffi";
+        version = "0.12.1b2";
+        src = prev.fetchurl {
+          url = "https://github.com/lexiforest/curl_cffi/releases/download/v${version}/curl_cffi-${version}-cp39-abi3-manylinux_2_17_x86_64.manylinux2014_x86_64.whl";
+          hash = "sha256-J4TZkJbluJ1fg4cXrMmBsjnEL8INoRof37txBgx0T4E=";
+        };
+        format = "wheel";
+        buildInputs = [ prev.stdenv.cc.cc.lib ];
+        nativeBuildInputs = [
+          prev.stdenv.cc.cc.lib
+          prev.autoPatchelfHook
+        ];
+      });
+      }
+    )
+  ];
 
   # gotenberg = prev.gotenberg.override { pdfcpu = final.stable.pdfcpu; };
 
