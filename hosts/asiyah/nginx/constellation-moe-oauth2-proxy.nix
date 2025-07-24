@@ -36,30 +36,22 @@ in {
 
     keyFile = secrets.oauth2-proxy-secrets.path;
     reverseProxy = true;
-    cookie.refresh = "14m";
-    cookie.expire = "720h0m0s";
+    cookie.refresh = "167h59m0s";
+    cookie.expire = "168h0m0s";
     cookie.secure = true;
-    cookie.httpOnly = false;
+    cookie.httpOnly = true;
     cookie.domain = ".constellation.moe";
     cookie.name = "__Secure-oauth2_proxy_constellation";
     extraConfig = {
       pass-user-headers = "true";
-      session-store-type = "redis";
-      redis-connection-url = "redis://127.0.0.1:${toString ports.redis-oauth2}/0";
+      whitelist-domain = ".constellation.moe";
     };
     nginx.domain = "polycule.constellation.moe";
   };
 
-  services.redis.servers.oauth2 = {
-    enable = true;
-    databases = 1;
-    openFirewall = false;
-    port = ports.redis-oauth2;
-  };
-
   systemd.services.oauth2-proxy = {
-    wants = [ "redis-oauth2.service" "kanidm.service" "nginx.service" ];
-    after = [ "redis-oauth2.service" "kanidm.service" "nginx.service" ];
+    wants = [ "kanidm.service" "nginx.service" ];
+    after = [ "kanidm.service" "nginx.service" ];
   };
 
   networking.firewall.allowedTCPPorts = with ports; [ oauth2-proxy ];
