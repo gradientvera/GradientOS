@@ -8,6 +8,7 @@ in {
     ./gradientnet.nix
     ./gradient-moe.nix
     ./constellation-moe.nix
+    ./constellation-homepage.nix
     ./constellation-moe-internal.nix
     ./constellation-moe-oauth2-proxy.nix
   ];

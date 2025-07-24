@@ -6,6 +6,8 @@
   nginx-ssl = 443;
   oauth2-proxy = 4180;
   vdo-ninja = 8082;
+  constellation-homepage = 8099;
+  gradient-homepage = 8101;
 
   # wireguard
   gradientnet = 1194;
@@ -62,7 +64,6 @@
   home-assistant = 8123;
   zigbee2mqtt = 8124;
   esphome = 6052;
-  redis-oauth2 = 6380;
   redis-forgejo = 6381;
   redis-open-webui = 6382;
   postgresql = 5432;
