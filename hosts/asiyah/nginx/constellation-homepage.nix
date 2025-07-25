@@ -44,7 +44,7 @@
         hideVisitURL = false;
         provider = "custom";
         url = "https://search.constellation.moe/search?q=";
-        suggestionUrl = "https://search.constellation.moe/autocompleter?q=";
+        suggestionUrl = "http://127.0.0.1:${toString ports.searx}/autocompleter?q=";
         target = "_blank";
       };
     };
@@ -78,7 +78,7 @@
           showSearchSuggestions = true;
           provider = "custom";
           url = "https://search.constellation.moe/search?q=";
-          suggestionUrl = "https://search.constellation.moe/autocompleter?q=";
+          suggestionUrl = "http://127.0.0.1:${toString ports.searx}/autocompleter?q=";
           target = "_blank";
         };
       }
