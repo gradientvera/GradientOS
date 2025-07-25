@@ -208,6 +208,10 @@
         restartUnits = [ "pinchflat.service" ];
       };
 
+      constellation-homepage = {
+        restartUnits = [ "homepage-dashboard.service" ];
+      };
+
     };
   };
 
