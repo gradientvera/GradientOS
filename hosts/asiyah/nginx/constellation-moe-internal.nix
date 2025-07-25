@@ -20,10 +20,11 @@ let
 in {
 
   services.nginx.virtualHosts."polycule.constellation.moe" = {
-    # TODO: Make this an HTML page here, no need for a private repo
-    root = self.inputs.polycule-constellation-moe;
     useACMEHost = "constellation.moe";
     forceSSL = true;
+    locations."/" = {
+      return = "301 https://homepage.constellation.moe$request_uri";
+    };
   };
 
   services.nginx.virtualHosts."jellyfin.constellation.moe" = {
