@@ -5,7 +5,6 @@
   nginx = 80;
   nginx-ssl = 443;
   oauth2-proxy = 4180;
-  vdo-ninja = 8082;
   constellation-homepage = 8099;
   gradient-homepage = 8101;
 
