@@ -1,4 +1,4 @@
-{ config, ports, ... }:
+{ config, pkgs, ports, ... }:
 {
 
   services.homepage-dashboard = {
@@ -11,6 +11,13 @@
       title = "Constellation Homepage";
       favicon = "https://constellation.moe/images/favicon.svg";
       description = "Homepage for all the Constellation Internal Services.";
+      background = {
+        image = "https://constellation.moe/images/homepage-background.png";
+        blur = "md";
+        saturate = 50;
+        brightness = 10;
+        opacity = 5;
+      };
       language = "en";
       target = "_blank";
       headerStyle = "boxed";
@@ -48,6 +55,52 @@
         target = "_blank";
       };
     };
+    bookmarks = [
+      {
+        "Social" = [
+          {
+            YouTube = [
+              {
+                abbr = "YT";
+                href = "https://youtube.com";
+                icon = "sh-youtube.svg";
+              }
+            ];
+          }
+          {
+            Twitter = [
+              {
+                abbr = "TW";
+                href = "https://twitter.com";
+                icon = "sh-twitter.svg";
+              }
+            ];
+          }
+          {
+            Reddit = [
+              {
+                abbr = "RD";
+                href = "https://reddit.com";
+                icon = "sh-reddit.svg";
+              }
+            ];
+          }
+        ];
+      }
+      {
+        "Developer" = [
+          {
+            GitHub = [
+              {
+                abbr = "GH";
+                href = "https://github.com";
+                icon = "sh-github.svg";
+              }
+            ];
+          }
+        ];
+      }
+    ];
     widgets = [
       {
         logo = {

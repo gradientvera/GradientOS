@@ -65,11 +65,11 @@
     "constellation-moe": {
       "flake": false,
       "locked": {
-        "lastModified": 1692647699,
-        "narHash": "sha256-BIS0FszC5slwWslhZ5yyYDgi3Nys/ITyI5Ak4R/GYlk=",
+        "lastModified": 1753449331,
+        "narHash": "sha256-ZJT3+PGUMdKYxX6hDFWFg1nlifWC8cay/66S35NibII=",
         "ref": "refs/heads/main",
-        "rev": "873fec87032e82c6425df414d26bb06f7599d650",
-        "revCount": 3,
+        "rev": "c66af8a500ead6cd996db41f7a9aa17214ba6df8",
+        "revCount": 5,
         "type": "git",
         "url": "ssh://git@github.com/ConstellationNRV/constellation.moe"
       },
