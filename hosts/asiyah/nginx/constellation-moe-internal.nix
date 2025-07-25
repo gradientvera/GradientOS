@@ -85,6 +85,7 @@ in {
 
   services.nginx.virtualHosts = {
     "homepage.constellation.moe" = mkReverseProxy { port = ports.constellation-homepage; };
+    "status.constellation.moe" = mkReverseProxy { port = ports.uptime-kuma; };
     "ersatztv.constellation.moe" = mkReverseProxy { port = ports.ersatztv; rootExtraConfig = "proxy_buffering off;"; };
     "iptv.constellation.moe" = mkReverseProxy { port = ports.ersatztv; reverseProxyLocation = "/iptv"; reverseProxySubdomain = "/iptv"; rootExtraConfig = "proxy_buffering off;"; };
     "jellyseerr.constellation.moe" = mkReverseProxy { port = ports.jellyseerr; };
@@ -132,6 +133,7 @@ in {
   # TODO: Figure out a way to automate the below list eugh
   services.oauth2-proxy.nginx.virtualHosts = {
     "homepage.constellation.moe" = {};
+    "status.constellation.moe" = {};
     "polycule.constellation.moe" = {};
     # "jellyfin.constellation.moe" = {}; # Use built-in auth
     "ersatztv.constellation.moe" = {};
