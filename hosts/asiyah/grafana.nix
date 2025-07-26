@@ -1,6 +1,7 @@
-{ config, pkgs, ... }:
+{ config, ports, pkgs, ... }:
 let
-  ports = config.gradient.currentHost.ports;
+  addresses = config.gradient.const.wireguard.addresses.gradientnet;
+  hosts = config.gradient.hosts;
 in
 {
 
@@ -59,6 +60,59 @@ in
       };
 
     };
+
+    provision = {
+      enable = true;
+      datasources.settings = {
+        deleteDatasources = [
+          {
+            name = "Prometheus";
+            orgId = 1;
+          }
+          {
+            name = "Loki";
+            orgId = 1;
+          }
+          {
+            name = "InfluxDB";
+            orgId = 1;
+          }
+        ];
+
+        datasources = [
+          {
+            name = "Prometheus";
+            orgId = 1;
+            type = "prometheus";
+            access = "proxy";
+            basicAuth = false;
+            withCredentials = false;
+            url = "http://127.0.0.1:${toString ports.prometheus}";
+            editable = false;
+          }
+          {
+            name = "Loki";
+            orgId = 1;
+            type = "loki";
+            access = "proxy";
+            basicAuth = false;
+            withCredentials = false;
+            url = "http://127.0.0.1:${toString ports.loki}";
+            editable = false;
+          }
+          {
+            name = "InfluxDB";
+            orgId = 1;
+            type = "influxdb";
+            access = "proxy";
+            basicAuth = false;
+            withCredentials = false;
+            url = "http://127.0.0.1:${toString ports.influxdb}";
+            editable = false;
+          }
+        ];
+      };
+    };
   };
 
   systemd.services.grafana = {
@@ -69,16 +123,23 @@ in
   services.prometheus = {
     enable = true;
     port = ports.prometheus;
-    exporters.node = {
-      enable = true;
-      enabledCollectors = [ "systemd" ];
-      port = ports.prometheus-node-exporter;
-    };
     scrapeConfigs = [
       {
         job_name = "asiyah";
         static_configs = [
-          { targets = [ "127.0.0.1:${toString config.services.prometheus.exporters.node.port}" ]; }
+          { targets = [ "127.0.0.1:${toString ports.prometheus-node-exporter}" ]; }
+        ];
+      }
+      {
+        job_name = "yetzirah";
+        static_configs = [
+          { targets = [ "${addresses.yetzirah}:${toString hosts.yetzirah.ports.prometheus-node-exporter}" ]; }
+        ];
+      }
+      {
+        job_name = "bernkastel";
+        static_configs = [
+          { targets = [ "${addresses.bernkastel}:${toString hosts.bernkastel.ports.prometheus-node-exporter}" ]; }
         ];
       }
     ];
