@@ -45,6 +45,9 @@ in
     services.thermald.enable = lib.mkIf (pkgs.system != "aarch64-linux") true;
     services.irqbalance.enable = true;
 
+    # See https://github.com/NixOS/nixpkgs/issues/299476 and https://github.com/NixOS/nixpkgs/issues/408800
+    services.dbus.implementation = "broker";
+
     # Convenience
     # services.envfs.enable = true;
     
