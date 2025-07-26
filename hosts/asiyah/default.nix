@@ -26,6 +26,7 @@
     ./vaultwarden.nix
     ./media-stack.nix
     ./uptime-kuma.nix
+    ./victorialogs.nix
     ./nginx/default.nix
     ./home-assistant.nix
     ./esphome/default.nix

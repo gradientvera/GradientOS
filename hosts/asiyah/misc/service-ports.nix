@@ -93,7 +93,7 @@
   grafana = 8083;
   prometheus = 8084;
   prometheus-node-exporter = 8085;
-  loki = 8086;
+  victorialogs = 8086;
   alloy = 8087;
   victoriametrics = 8428;
   

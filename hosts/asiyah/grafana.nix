@@ -1,12 +1,12 @@
-{ config, ports, pkgs, ... }:
-let
-  addresses = config.gradient.const.wireguard.addresses.gradientnet;
-  hosts = config.gradient.hosts;
-in
+{ ports, pkgs, ... }:
 {
 
   services.grafana = {
     enable = true;
+    declarativePlugins = with pkgs.grafanaPlugins; [
+      victoriametrics-metrics-datasource
+      victoriametrics-logs-datasource
+    ];
     settings = {
 
       server = {
@@ -66,20 +66,41 @@ in
       datasources.settings = {
         deleteDatasources = [
           {
+            name = "VictoriaMetrics";
+            orgId = 1;
+          }
+          {
+            name = "VictoriaLogs";
+            orgId = 1;
+          }
+          {
             name = "Prometheus";
-            orgId = 1;
-          }
-          {
-            name = "Loki";
-            orgId = 1;
-          }
-          {
-            name = "InfluxDB";
             orgId = 1;
           }
         ];
 
         datasources = [
+          {
+            name = "VictoriaMetrics";
+            orgId = 1;
+            type = "victoriametrics-metrics-datasource";
+            access = "proxy";
+            basicAuth = false;
+            withCredentials = false;
+            url = "http://127.0.0.1:${toString ports.victoriametrics}";
+            isDefault = true;
+            editable = false;
+          }
+          {
+            name = "VictoriaLogs";
+            orgId = 1;
+            type = "victoriametrics-logs-datasource";
+            access = "proxy";
+            basicAuth = false;
+            withCredentials = false;
+            url = "http://127.0.0.1:${toString ports.victorialogs}";
+            editable = false;
+          }
           {
             name = "Prometheus";
             orgId = 1;
@@ -87,27 +108,7 @@ in
             access = "proxy";
             basicAuth = false;
             withCredentials = false;
-            url = "http://127.0.0.1:${toString ports.prometheus}";
-            editable = false;
-          }
-          {
-            name = "Loki";
-            orgId = 1;
-            type = "loki";
-            access = "proxy";
-            basicAuth = false;
-            withCredentials = false;
-            url = "http://127.0.0.1:${toString ports.loki}";
-            editable = false;
-          }
-          {
-            name = "InfluxDB";
-            orgId = 1;
-            type = "influxdb";
-            access = "proxy";
-            basicAuth = false;
-            withCredentials = false;
-            url = "http://127.0.0.1:${toString ports.influxdb}";
+            url = "http://127.0.0.1:${toString ports.victoriametrics}";
             editable = false;
           }
         ];
@@ -119,82 +120,5 @@ in
     wants = [ "postgresql.service" ];
     after = [ "postgresql.service" ];
   };
-
-  services.prometheus = {
-    enable = true;
-    port = ports.prometheus;
-    scrapeConfigs = [
-      {
-        job_name = "asiyah";
-        static_configs = [
-          { targets = [ "127.0.0.1:${toString ports.prometheus-node-exporter}" ]; }
-        ];
-      }
-      {
-        job_name = "yetzirah";
-        static_configs = [
-          { targets = [ "${addresses.yetzirah}:${toString hosts.yetzirah.ports.prometheus-node-exporter}" ]; }
-        ];
-      }
-      {
-        job_name = "bernkastel";
-        static_configs = [
-          { targets = [ "${addresses.bernkastel}:${toString hosts.bernkastel.ports.prometheus-node-exporter}" ]; }
-        ];
-      }
-    ];
-  };
-
-  services.loki = {
-    enable = true;
-    configFile = pkgs.writeText "loki-config.yaml" ''
-auth_enabled: false
-
-server:
-  http_listen_port: ${toString ports.loki}
-
-ingester:
-  lifecycler:
-    address: 0.0.0.0
-    ring:
-      kvstore:
-        store: inmemory
-      replication_factor: 1
-    final_sleep: 0s
-  chunk_idle_period: 1h       # Any chunk not receiving new logs in this time will be flushed
-  max_chunk_age: 1h           # All chunks will be flushed when they hit this age, default is 1h
-  chunk_target_size: 1048576  # Loki will attempt to build chunks up to 1.5MB, flushing first if chunk_idle_period or max_chunk_age is reached first
-  chunk_retain_period: 30s    # Must be greater than index read cache TTL if using an index cache (Default index read cache TTL is 5m)
-
-common:
-  path_prefix: /var/lib/loki
-
-schema_config:
-  configs:
-  - from: 2020-05-15
-    store: tsdb
-    object_store: filesystem
-    schema: v13
-    index:
-      prefix: index_
-      period: 24h
-
-storage_config:
-  filesystem:
-    directory: /var/lib/loki/chunks
-
-limits_config:
-  reject_old_samples: true
-  reject_old_samples_max_age: 168h
-
-table_manager:
-  retention_deletes_enabled: false
-  retention_period: 0s
-  '';
-  };
-
-  networking.firewall.interfaces.gradientnet.allowedTCPPorts = [
-    ports.loki
-  ];
 
 }
