@@ -33,6 +33,27 @@
         url = "http://${config.gradient.const.wireguard.addresses.gradientnet.asiyah}:${toString config.gradient.hosts.asiyah.ports.victorialogs}/insert/loki/api/v1/push"
       }
     }
+
+    prometheus.exporter.unix "local_system" {
+      include_exporter_metrics = true
+      enable_collectors = [ "systemd", "filesystem", "cpu", "netdev", "hwmon", "meminfo", "diskstats", "zfs", "perf", "sysctl", "vmstat" ]
+    }
+
+    prometheus.scrape "scrape_metrics" {
+      targets         = prometheus.exporter.unix.local_system.targets
+      forward_to      = [prometheus.relabel.filter_metrics.receiver]
+      scrape_interval = "10s"
+    }
+
+    prometheus.relabel "filter_metrics" {
+      forward_to = [prometheus.remote_write.endpoint.receiver]
+    }
+
+    prometheus.remote_write "endpoint" {
+      endpoint {
+        url = "http://${config.gradient.const.wireguard.addresses.gradientnet.asiyah}:${toString config.gradient.hosts.asiyah.ports.victoriametrics}/api/v1/write"
+      }
+    }
   '';
 
   networking.firewall.interfaces.gradientnet.allowedTCPPorts = [

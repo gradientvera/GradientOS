@@ -11,7 +11,6 @@
   nix-store-serve = ./mixins/nix-store-serve.nix;
   plymouth = ./mixins/plymouth.nix;
   podman = ./mixins/podman.nix;
-  prometheus-node-exporter = ./mixins/prometheus-node-exporter.nix;
   steamcmd = ./mixins/steamcmd.nix;
   system76-scheduler = ./mixins/system76-scheduler.nix;
   tdarr-node = ./mixins/tdarr-node.nix;

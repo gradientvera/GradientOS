@@ -133,7 +133,6 @@
           mixins.binfmt-emulation
           mixins.system76-scheduler
           mixins.declarative-flatpak
-          mixins.prometheus-node-exporter
 
           mixins.graphical-steam
           mixins.graphical-sunshine
@@ -339,7 +338,6 @@
           mixins.hardware-webcam
           mixins.hardware-bluetooth
           mixins.hardware-openrazer
-          mixins.prometheus-node-exporter
           mixins.hardware-home-dcp-l2530dw
           mixins.hardware-xbox-one-controller
         ];
@@ -381,7 +379,6 @@
           mixins.hardware-eaton-ups
           mixins.hardware-intelgpu-vaapi
           mixins.restic-repository-hokma
-          mixins.prometheus-node-exporter
         ];
 
         users.vera.modules = [
@@ -412,7 +409,6 @@
           mixins.hardware-eaton-ups
           mixins.hardware-intelgpu-vaapi
           mixins.restic-repository-hokma
-          mixins.prometheus-node-exporter
         ];
 
         users.vera.modules = [
