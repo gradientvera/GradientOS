@@ -119,6 +119,7 @@
 
           mixins.wine
           mixins.gnupg
+          mixins.alloy
           mixins.podman
           mixins.plymouth
           mixins.wireguard
@@ -313,6 +314,7 @@
           
           mixins.tor
           mixins.wine
+          mixins.alloy
           mixins.gnupg
           mixins.plymouth
           mixins.wireguard
@@ -364,6 +366,7 @@
 
           mixins.tor
           mixins.wine
+          mixins.alloy
           mixins.gnupg
           mixins.podman
           mixins.steamcmd
@@ -399,6 +402,7 @@
           nixos-hardware.nixosModules.common-cpu-intel
           nixos-hardware.nixosModules.common-gpu-intel
 
+          mixins.alloy
           mixins.podman
           mixins.wireguard
           mixins.vera-locale

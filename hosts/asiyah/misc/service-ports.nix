@@ -94,7 +94,7 @@
   prometheus = 8084;
   prometheus-node-exporter = 8085;
   loki = 8086;
-  promtail = 8087;
+  alloy = 8087;
   victoriametrics = 8428;
   
   # scrutiny

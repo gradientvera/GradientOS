@@ -1,6 +1,7 @@
 {
   core = ./core/default.nix;
 
+  alloy = ./mixins/alloy.nix;
   binfmt-emulation = ./mixins/binfmt-emulation.nix;
   declarative-flatpak = ./mixins/declarative-flatpak.nix;
   gnupg = ./mixins/gnupg.nix;
