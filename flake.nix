@@ -406,7 +406,6 @@
           mixins.upgrade-diff
           mixins.virtualisation
           mixins.binfmt-emulation
-          mixins.hardware-eaton-ups
           mixins.hardware-intelgpu-vaapi
           mixins.restic-repository-hokma
         ];
