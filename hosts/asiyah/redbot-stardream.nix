@@ -13,6 +13,7 @@
     extraOptions = [
       "--ip" "10.88.0.3"
     ];
+    labels = { "io.containers.autoupdate" = "registry"; };
   };
 
 }

@@ -240,6 +240,7 @@ in {
         "--mount" "type=bind,source=/data/downloads,target=/media"
         "--device=/dev/dri/:/dev/dri/"
       ] ++ defaultOptions;
+      labels = { "io.containers.autoupdate" = "registry"; };
       dependsOn = [ "create-mediarr-pod" "gluetun" ];
     };
 
@@ -251,11 +252,12 @@ in {
         LOG_LEVEL="info";
       };
       extraOptions = [] ++ defaultOptions;
+      labels = { "io.containers.autoupdate" = "registry"; };
       dependsOn = [ "create-mediarr-pod" "gluetun" ];
     };
 
     ersatztv = {
-      image = "jasongdove/ersatztv:latest";
+      image = "ghcr.io/ersatztv/ersatztv:latest";
       pull = "newer";
       volumes = [
         "/var/lib/${userName}/ersatztv:/root/.local/share/ersatztv"
@@ -271,6 +273,7 @@ in {
         "--mount" "type=tmpfs,destination=/root/.local/share/etv-transcode"
         "--device=/dev/dri/:/dev/dri/"
       ] ++ defaultOptions;
+      labels = { "io.containers.autoupdate" = "registry"; };
       dependsOn = [ "create-mediarr-pod" "gluetun" ];
     };
 
@@ -287,6 +290,7 @@ in {
         PGID = toString groupGid;
       };
       extraOptions = [] ++ defaultOptions;
+      labels = { "io.containers.autoupdate" = "registry"; };
       dependsOn = [ "create-mediarr-pod" "gluetun" ];
     };
 
@@ -303,6 +307,7 @@ in {
         PGID = toString groupGid;
       };
       extraOptions = [] ++ defaultOptions;
+      labels = { "io.containers.autoupdate" = "registry"; };
       dependsOn = [ "create-mediarr-pod" "gluetun" ];
     };
 
@@ -320,11 +325,12 @@ in {
         PGID = toString groupGid;
       };
       extraOptions = [] ++ defaultOptions;
+      labels = { "io.containers.autoupdate" = "registry"; };
       dependsOn = [ "create-mediarr-pod" "gluetun" ];
     };
 
     slskd = {
-      image = "slskd/slskd:latest";
+      image = "docker.io/slskd/slskd:latest";
       pull = "newer";
       volumes = [
         "/var/lib/${userName}/slskd:/app"
@@ -337,11 +343,12 @@ in {
         SLSKD_REMOTE_CONFIGURATION = "true";
       };  
       extraOptions = [] ++ defaultOptions ++ userOptions;
+      labels = { "io.containers.autoupdate" = "registry"; };
       dependsOn = [ "create-mediarr-pod" "gluetun" ];
     };
 
     soularr = {
-      image = "mrusse08/soularr:latest";
+      image = "docker.io/mrusse08/soularr:latest";
       pull = "newer";
       volumes = [
         "/var/lib/${userName}/soularr:/data"
@@ -354,6 +361,7 @@ in {
         SCRIPT_INTERVAL = "300";
       };  
       extraOptions = [] ++ defaultOptions ++ userOptions;
+      labels = { "io.containers.autoupdate" = "registry"; };
       dependsOn = [ "create-mediarr-pod" "gluetun" "lidarr" "slskd" ];
     };
 
@@ -371,6 +379,7 @@ in {
         PGID = toString groupGid;
       };
       extraOptions = [] ++ defaultOptions;
+      labels = { "io.containers.autoupdate" = "registry"; };
       dependsOn = [ "create-mediarr-pod" "gluetun" ];
     };
 
@@ -386,6 +395,7 @@ in {
         PGID = toString groupGid;
       };
       extraOptions = [] ++ defaultOptions;
+      labels = { "io.containers.autoupdate" = "registry"; };
       dependsOn = [ "create-mediarr-pod" "gluetun" ];
     };
 
@@ -403,11 +413,12 @@ in {
         PGID = toString groupGid;
       };
       extraOptions = [] ++ defaultOptions;
+      labels = { "io.containers.autoupdate" = "registry"; };
       dependsOn = [ "create-mediarr-pod" "gluetun" ];
     };
 
     jellyseerr = {
-      image = "fallenbagel/jellyseerr:latest";
+      image = "docker.io/fallenbagel/jellyseerr:latest";
       pull = "newer";
       volumes = [
         "/var/lib/${userName}/jellyseerr:/app/config"
@@ -418,6 +429,7 @@ in {
         PGID = toString groupGid;
       };
       extraOptions = [] ++ defaultOptions;
+      labels = { "io.containers.autoupdate" = "registry"; };
       dependsOn = [ "create-mediarr-pod" "gluetun" ];
     };
 
@@ -436,6 +448,7 @@ in {
         WEBUI_PORT = toString ports.qbittorrent-webui;
       };
       extraOptions = [] ++ defaultOptions;
+      labels = { "io.containers.autoupdate" = "registry"; };
       dependsOn = [ "create-mediarr-pod" "gluetun" ];
     };
 
@@ -479,6 +492,7 @@ in {
       };
       environmentFiles = [ config.sops.secrets.mediarr-decluttarr-env.path ];
       extraOptions = [] ++ defaultOptions;
+      labels = { "io.containers.autoupdate" = "registry"; };
       dependsOn = [ "create-mediarr-pod" "gluetun" "radarr" "sonarr" "lidarr" "readarr" "qbittorrent" ];
     };
 
@@ -512,11 +526,12 @@ in {
       extraOptions = [
         "--device=/dev/dri/:/dev/dri/"
       ] ++ defaultOptions;
+      labels = { "io.containers.autoupdate" = "registry"; };
       dependsOn = [ "create-mediarr-pod" "gluetun" ];
     };
 
     gluetun = {
-      image = "qmcgaw/gluetun:latest";
+      image = "docker.io/qmcgaw/gluetun:latest";
       pull = "newer";
       volumes = [
         "/var/lib/${userName}/gluetun:/gluetun"
@@ -540,21 +555,23 @@ in {
         "--dns=1.1.1.1"
         "--dns=1.0.0.1"
       ] ++ (builtins.filter (e: e != "--network=container:gluetun") defaultOptions);
+      labels = { "io.containers.autoupdate" = "registry"; };
       dependsOn = [ "create-mediarr-pod" ];
     };
 
     proxy-vpn-socks5 = {
-      image = "serjs/go-socks5-proxy:latest";
+      image = "docker.io/serjs/go-socks5-proxy:latest";
       pull = "newer";
       environment = {
         PROXY_PORT = toString ports.proxy-vpn;
       };
       extraOptions = [] ++ defaultOptions;
+      labels = { "io.containers.autoupdate" = "registry"; };
       dependsOn = [ "create-mediarr-pod" "gluetun" ];
     };
 
     gluetun-uk = {
-      image = "qmcgaw/gluetun:latest";
+      image = "docker.io/qmcgaw/gluetun:latest";
       pull = "newer";
       volumes = [
         "/var/lib/${userName}/gluetun-uk:/gluetun"
@@ -585,11 +602,12 @@ in {
         "--dns=1.1.1.1"
         "--dns=1.0.0.1"
       ];
+      labels = { "io.containers.autoupdate" = "registry"; };
       dependsOn = [  ];
     };
 
     proxy-vpn-uk-socks5 = {
-      image = "serjs/go-socks5-proxy:latest";
+      image = "docker.io/serjs/go-socks5-proxy:latest";
       pull = "newer";
       environment = {
         PROXY_PORT = toString ports.proxy-vpn-uk;
@@ -617,11 +635,12 @@ in {
         "--all"
       ];
       extraOptions = [] ++ defaultOptions;
+      labels = { "io.containers.autoupdate" = "registry"; };
       dependsOn = [ "create-mediarr-pod" "gluetun" ];
     };
 
     mikochi = {
-      image = "zer0tonin/mikochi:latest";
+      image = "docker.io/zer0tonin/mikochi:latest";
       pull = "newer";
       volumes = [
         "/data/downloads:/data"
@@ -635,11 +654,12 @@ in {
         GZIP = "true";
       };
       extraOptions = [] ++ defaultOptions ++ userOptions;
+      labels = { "io.containers.autoupdate" = "registry"; };
       dependsOn = [ "create-mediarr-pod" "gluetun" ];
     };
 
     unpackerr = {
-      image = "golift/unpackerr";
+      image = "docker.io/golift/unpackerr";
       pull = "newer";
       volumes = [
         "/var/lib/${userName}/unpackerr:/config"
@@ -664,6 +684,7 @@ in {
         config.sops.secrets.mediarr-unpackerr-env.path
       ];
       extraOptions = [] ++ defaultOptions ++ userOptions;
+      labels = { "io.containers.autoupdate" = "registry"; };
       dependsOn = [ "create-mediarr-pod" "gluetun" "sonarr" "radarr" "lidarr" "readarr" ];
     };
 
@@ -685,6 +706,7 @@ in {
       };
       cmd = [ "daemon" ];
       extraOptions = [] ++ defaultOptions ++ userOptions;
+      labels = { "io.containers.autoupdate" = "registry"; };
       dependsOn = [ "create-mediarr-pod" "gluetun" "prowlarr" "sonarr" "radarr" ];
     };*/
 
@@ -702,6 +724,7 @@ in {
         PGID = toString groupGid;
       };
       extraOptions = [] ++ defaultOptions;
+      labels = { "io.containers.autoupdate" = "registry"; };
       dependsOn = [ "create-mediarr-pod" "gluetun" ];
     };
 
@@ -729,6 +752,7 @@ in {
         LOG_STDOUT = "false";
         USER_NAME = userName;
       };
+      labels = { "io.containers.autoupdate" = "registry"; };
       extraOptions = [ "--ip=10.88.0.6" ];
     };
 
@@ -746,11 +770,12 @@ in {
         CRON_SCHEDULE = "@daily";
       };
       extraOptions = [] ++ defaultOptions ++ userOptions;
+      labels = { "io.containers.autoupdate" = "registry"; };
       dependsOn = [ "create-mediarr-pod" "gluetun" "sonarr" "radarr" ];
     };
 
     romm = {
-      image = "rommapp/romm:latest";
+      image = "docker.io/rommapp/romm:latest";
       pull = "newer";
       volumes = [
         "/data/downloads/games:/romm/library"
@@ -767,11 +792,12 @@ in {
       };
       environmentFiles = [ config.sops.secrets.mediarr-romm-env.path ];
       extraOptions = [] ++ defaultOptions ++ userOptions;
+      labels = { "io.containers.autoupdate" = "registry"; };
       dependsOn = [ "create-mediarr-pod" "gluetun" "mariadb" ];
     };
 
     mariadb = {
-      image = "mariadb:latest";
+      image = "docker.io/mariadb:latest";
       pull = "newer";
       volumes = [
         "/var/lib/${userName}/mariadb:/var/lib/mysql"
@@ -791,6 +817,7 @@ in {
         "--health-start-period" "30s"
         "--health-interval" "10s"*/
       ] ++ defaultOptions ++ userOptions;
+      labels = { "io.containers.autoupdate" = "registry"; };
       dependsOn = [ "create-mediarr-pod" "gluetun" ];
     };
 
@@ -817,11 +844,12 @@ in {
       extraOptions = [
         "--device=/dev/dri/:/dev/dri/"
       ] ++ (builtins.filter (e: e != "--network=container:gluetun") defaultOptions);
+      labels = { "io.containers.autoupdate" = "registry"; };
       dependsOn = [ "create-mediarr-pod" ];
     };
 
     calibre = {
-      image = "crocodilestick/calibre-web-automated:latest";
+      image = "docker.io/crocodilestick/calibre-web-automated:latest";
       pull = "newer";
       ports = [ "${toString ports.calibre-web-automated}:8083" ];
       volumes = [
@@ -838,6 +866,7 @@ in {
       extraOptions = [
         "--ip=10.88.0.7"
       ];
+      labels = { "io.containers.autoupdate" = "registry"; };
     };
 
     calibre-downloader = {
@@ -855,6 +884,7 @@ in {
         GID = toString groupGid;
       };
       extraOptions = [] ++ defaultOptions;
+      labels = { "io.containers.autoupdate" = "registry"; };
       dependsOn = [ "create-mediarr-pod" "gluetun" ];
     };
 

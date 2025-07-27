@@ -81,6 +81,7 @@ in
       "--network=host"
       "--device=/dev/dri/:/dev/dri/"
     ];
+    labels = { "io.containers.autoupdate" = "registry"; };
   };
 
   systemd.services.podman-tdarrNode = {

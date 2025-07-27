@@ -33,6 +33,7 @@ in {
     extraOptions = [
       "--ip" "10.88.0.4"
     ];
+    # labels = { "io.containers.autoupdate" = "registry"; };
   };
 
 }

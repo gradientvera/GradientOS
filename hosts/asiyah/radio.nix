@@ -4,7 +4,7 @@
   hardware.rtl-sdr.enable = true;
 
   virtualisation.oci-containers.containers.openwebrxplus = {
-    image = "slechev/openwebrxplus-softmbe:latest";
+    image = "docker.io/slechev/openwebrxplus-softmbe:latest";
     pull = "newer";
     ports = [ "127.0.0.1:${toString config.gradient.currentHost.ports.openwebrx}:8073" ];
     volumes = [
@@ -21,6 +21,7 @@
       "--ip" "10.88.0.8"
       "--device" "/dev/bus/usb"
     ];
+    labels = { "io.containers.autoupdate" = "registry"; };
   };
 
   /*systemd.services.openwebrx.serviceConfig = {

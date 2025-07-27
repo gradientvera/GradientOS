@@ -16,6 +16,7 @@ in
     extraOptions = [
       "--ip" "10.88.0.9"
     ];
+    labels = { "io.containers.autoupdate" = "registry"; };
   };
 
   systemd.services.podman-trmnl = {

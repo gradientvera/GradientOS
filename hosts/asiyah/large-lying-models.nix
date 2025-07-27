@@ -30,6 +30,7 @@ in
       "--cap-add=PERFMON"
       "--ip=10.88.0.10"
     ];
+    labels = { "io.containers.autoupdate" = "registry"; };
   };
 
   services.open-webui = {
