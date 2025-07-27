@@ -4,14 +4,14 @@ let
 in
 {
 
+  # TODO: Fix this stuff
   services.scrutiny = {
-    enable = true;
+    enable = false;
     influxdb.enable = false;
     collector.enable = true;
     collector.settings.host.id = config.networking.hostName;
     settings.web.listen.port = ports.scrutiny;
   };
-
 
   networking.firewall.interfaces.gradientnet = with ports; {
     allowedTCPPorts = [
