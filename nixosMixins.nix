@@ -20,6 +20,7 @@
   v4l2loopback = ./mixins/v4l2loopback.nix;
   vera-locale = ./mixins/vera-locale.nix;
   virtualisation = ./mixins/virtualisation.nix;
+  weylus = ./mixins/weylus.nix;
   wine = ./mixins/wine.nix;
   wireguard = ./mixins/wireguard.nix;
 
