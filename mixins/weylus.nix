@@ -4,7 +4,12 @@
   programs.weylus = {
     enable = true;
     users = [ "vera" ];
-    openFirewall = true;
+    openFirewall = false;
   };
+
+  networking.firewall.interfaces.gradientnet.allowedTCPPorts = [
+    1701
+    9001
+  ];
 
 }
