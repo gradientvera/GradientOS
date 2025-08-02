@@ -36,7 +36,7 @@ in {
 
     keyFile = secrets.oauth2-proxy-secrets.path;
     reverseProxy = true;
-    cookie.refresh = "167h59m0s";
+    cookie.refresh = "24h0m0s";
     cookie.expire = "168h0m0s";
     cookie.secure = true;
     cookie.httpOnly = true;
