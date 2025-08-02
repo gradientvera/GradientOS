@@ -150,8 +150,8 @@ in
             publicKey = keys.beatrice;
           }
           {
-            allowedIPs = [ "${vera-phone}/32" ];
-            publicKey = keys.vera-phone;
+            allowedIPs = [ "${vera-phone-old}/32" ];
+            publicKey = keys.vera-phone-old;
           }
           {
             allowedIPs = [ "${vera-laptop}/32" ];
@@ -164,6 +164,10 @@ in
           {
             allowedIPs = [ "${featherine}/32" ];
             publicKey = keys.featherine;
+          }
+          {
+            allowedIPs = [ "${vera-phone}/32" ];
+            publicKey = keys.vera-phone;
           }
         ] else [
           {

@@ -559,6 +559,7 @@ in {
       dependsOn = [ "create-mediarr-pod" ];
     };
 
+    # TODO: Replace with https://github.com/ynuwenhof/koblas
     proxy-vpn-socks5 = {
       image = "docker.io/serjs/go-socks5-proxy:latest";
       pull = "newer";

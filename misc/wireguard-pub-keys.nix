@@ -7,7 +7,8 @@
   asiyah = "sZ7toLMyaiDj/r2Lz9n7UNMs1tXeQn+qAP1hHclKiQs=";
   yetzirah = "5FPEWtc1C2nU3VpmLC7E6nHPrI0Z0+pZlvkjOHFVQFQ=";
   atziluth = "TODO";
-  vera-phone = "yySbF5AY5dmoTp5v/e6wwhl9VZqTvhXufGAnUqbfZkg=";
+  vera-phone = "zQIrZSCpzur972UVtivIUfFe/H2YFj6avF5ZFtfLPUQ=";
+  vera-phone-old = "yySbF5AY5dmoTp5v/e6wwhl9VZqTvhXufGAnUqbfZkg=";
   vera-laptop = "Ml8DDdUjufdmEc0//PATnJq007Sc6gfoiG2gIHD1mAw=";
   featherine = "ck7DAR0e7vBgAQ9atvzjHlXtBnuRqWPoPhmamw8ip0c=";
 
