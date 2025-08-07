@@ -13,4 +13,13 @@
 
   virtualisation.oci-containers.backend = "podman";
 
+  systemd.timers.podman-auto-update = {
+    enable = true;
+    wantedBy = [ "timers.target" ];
+    timerConfig = {
+      OnCalendar = [ "" "*-*-* 5:00:00" ];
+      Persistent = true;
+    };
+  };
+
 }

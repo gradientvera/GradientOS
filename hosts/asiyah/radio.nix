@@ -21,7 +21,10 @@
       "--ip" "10.88.0.8"
       "--device" "/dev/bus/usb"
     ];
-    labels = { "io.containers.autoupdate" = "registry"; };
+    labels = {
+      "io.containers.autoupdate" = "registry";
+      "PODMAN_SYSTEMD_UNIT" = "podman-openwebrxplus.service";
+    };
   };
 
   /*systemd.services.openwebrx.serviceConfig = {

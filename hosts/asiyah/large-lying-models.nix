@@ -11,7 +11,7 @@ in
   };
 
   virtualisation.oci-containers.containers.ollama-vulkan = {
-    image = "ghcr.io/wilgnne/ollama-vulkan";
+    image = "ghcr.io/wilgnne/ollama-vulkan:latest";
     pull = "newer";
     volumes = [ "/var/lib/ollama-vulkan:/root/.ollama" ];
     privileged = true;
@@ -30,7 +30,10 @@ in
       "--cap-add=PERFMON"
       "--ip=10.88.0.10"
     ];
-    labels = { "io.containers.autoupdate" = "registry"; };
+    labels = {
+      "io.containers.autoupdate" = "registry";
+      "PODMAN_SYSTEMD_UNIT" = "podman-ollama-vulkan.service";
+    };
   };
 
   services.open-webui = {

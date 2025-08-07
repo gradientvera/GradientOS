@@ -94,6 +94,8 @@ in {
         --sysctl="net.ipv4.ip_forward=1" \
         --sysctl="net.ipv4.conf.all.src_valid_mark=1" \
         --sysctl="net.ipv4.ping_group_range=0 2000000" \
+        --label io.containers.autoupdate=registry \
+        --label PODMAN_SYSTEMD_UNIT=podman-create-mediarr-pod.service \
         --userns=keep-id \
         --shm-size=2g \
         --replace \
@@ -103,6 +105,7 @@ in {
       podman pod rm --force --ignore ${userName}
       podman network reload --all
     '';
+    serviceConfig.Environment = "PODMAN_SYSTEMD_UNIT=podman-create-mediarr-pod.service";
     serviceConfig.Type = "oneshot";
     serviceConfig.RemainAfterExit = "yes";
   };
@@ -240,7 +243,10 @@ in {
         "--mount" "type=bind,source=/data/downloads,target=/media"
         "--device=/dev/dri/:/dev/dri/"
       ] ++ defaultOptions;
-      labels = { "io.containers.autoupdate" = "registry"; };
+      labels = {
+        "io.containers.autoupdate" = "registry";
+        "PODMAN_SYSTEMD_UNIT" = "podman-jellyfin.service";
+      };
       dependsOn = [ "create-mediarr-pod" "gluetun" ];
     };
 
@@ -252,7 +258,10 @@ in {
         LOG_LEVEL="info";
       };
       extraOptions = [] ++ defaultOptions;
-      labels = { "io.containers.autoupdate" = "registry"; };
+      labels = {
+        "io.containers.autoupdate" = "registry";
+        "PODMAN_SYSTEMD_UNIT" = "podman-flaresolverr.service";
+      };
       dependsOn = [ "create-mediarr-pod" "gluetun" ];
     };
 
@@ -270,10 +279,13 @@ in {
       };
       environmentFiles = [ config.sops.secrets.mediarr-iptv-env.path ];
       extraOptions = [
-        "--mount" "type=tmpfs,destination=/root/.local/share/etv-transcode"
+        "--mount" "type=tmpfs,destination=/transcode"
         "--device=/dev/dri/:/dev/dri/"
       ] ++ defaultOptions;
-      labels = { "io.containers.autoupdate" = "registry"; };
+      labels = {
+        "io.containers.autoupdate" = "registry";
+        "PODMAN_SYSTEMD_UNIT" = "podman-ersatztv.service";
+      };
       dependsOn = [ "create-mediarr-pod" "gluetun" ];
     };
 
@@ -290,7 +302,10 @@ in {
         PGID = toString groupGid;
       };
       extraOptions = [] ++ defaultOptions;
-      labels = { "io.containers.autoupdate" = "registry"; };
+      labels = {
+        "io.containers.autoupdate" = "registry";
+        "PODMAN_SYSTEMD_UNIT" = "podman-radarr.service";
+      };
       dependsOn = [ "create-mediarr-pod" "gluetun" ];
     };
 
@@ -307,7 +322,10 @@ in {
         PGID = toString groupGid;
       };
       extraOptions = [] ++ defaultOptions;
-      labels = { "io.containers.autoupdate" = "registry"; };
+      labels = {
+        "io.containers.autoupdate" = "registry";
+        "PODMAN_SYSTEMD_UNIT" = "podman-sonarr.service";
+      };
       dependsOn = [ "create-mediarr-pod" "gluetun" ];
     };
 
@@ -325,7 +343,10 @@ in {
         PGID = toString groupGid;
       };
       extraOptions = [] ++ defaultOptions;
-      labels = { "io.containers.autoupdate" = "registry"; };
+      labels = {
+        "io.containers.autoupdate" = "registry";
+        "PODMAN_SYSTEMD_UNIT" = "podman-lidarr.service";
+      };
       dependsOn = [ "create-mediarr-pod" "gluetun" ];
     };
 
@@ -343,7 +364,10 @@ in {
         SLSKD_REMOTE_CONFIGURATION = "true";
       };  
       extraOptions = [] ++ defaultOptions ++ userOptions;
-      labels = { "io.containers.autoupdate" = "registry"; };
+      labels = {
+        "io.containers.autoupdate" = "registry";
+        "PODMAN_SYSTEMD_UNIT" = "podman-slskd.service";
+      };
       dependsOn = [ "create-mediarr-pod" "gluetun" ];
     };
 
@@ -361,7 +385,10 @@ in {
         SCRIPT_INTERVAL = "300";
       };  
       extraOptions = [] ++ defaultOptions ++ userOptions;
-      labels = { "io.containers.autoupdate" = "registry"; };
+      labels = {
+        "io.containers.autoupdate" = "registry";
+        "PODMAN_SYSTEMD_UNIT" = "podman-soularr.service";
+      };
       dependsOn = [ "create-mediarr-pod" "gluetun" "lidarr" "slskd" ];
     };
 
@@ -379,7 +406,10 @@ in {
         PGID = toString groupGid;
       };
       extraOptions = [] ++ defaultOptions;
-      labels = { "io.containers.autoupdate" = "registry"; };
+      labels = {
+        "io.containers.autoupdate" = "registry";
+        "PODMAN_SYSTEMD_UNIT" = "podman-readarr.service";
+      };
       dependsOn = [ "create-mediarr-pod" "gluetun" ];
     };
 
@@ -395,7 +425,10 @@ in {
         PGID = toString groupGid;
       };
       extraOptions = [] ++ defaultOptions;
-      labels = { "io.containers.autoupdate" = "registry"; };
+      labels = {
+        "io.containers.autoupdate" = "registry";
+        "PODMAN_SYSTEMD_UNIT" = "podman-prowlarr.service";
+      };
       dependsOn = [ "create-mediarr-pod" "gluetun" ];
     };
 
@@ -413,7 +446,10 @@ in {
         PGID = toString groupGid;
       };
       extraOptions = [] ++ defaultOptions;
-      labels = { "io.containers.autoupdate" = "registry"; };
+      labels = {
+        "io.containers.autoupdate" = "registry";
+        "PODMAN_SYSTEMD_UNIT" = "podman-bazarr.service";
+      };
       dependsOn = [ "create-mediarr-pod" "gluetun" ];
     };
 
@@ -429,7 +465,10 @@ in {
         PGID = toString groupGid;
       };
       extraOptions = [] ++ defaultOptions;
-      labels = { "io.containers.autoupdate" = "registry"; };
+      labels = {
+        "io.containers.autoupdate" = "registry";
+        "PODMAN_SYSTEMD_UNIT" = "podman-jellyseerr.service";
+      };
       dependsOn = [ "create-mediarr-pod" "gluetun" ];
     };
 
@@ -448,7 +487,10 @@ in {
         WEBUI_PORT = toString ports.qbittorrent-webui;
       };
       extraOptions = [] ++ defaultOptions;
-      labels = { "io.containers.autoupdate" = "registry"; };
+      labels = {
+        "io.containers.autoupdate" = "registry";
+        "PODMAN_SYSTEMD_UNIT" = "podman-qbittorrent.service";
+      };
       dependsOn = [ "create-mediarr-pod" "gluetun" ];
     };
 
@@ -492,7 +534,10 @@ in {
       };
       environmentFiles = [ config.sops.secrets.mediarr-decluttarr-env.path ];
       extraOptions = [] ++ defaultOptions;
-      labels = { "io.containers.autoupdate" = "registry"; };
+      labels = {
+        "io.containers.autoupdate" = "registry";
+        "PODMAN_SYSTEMD_UNIT" = "podman-decluttarr.service";
+      };
       dependsOn = [ "create-mediarr-pod" "gluetun" "radarr" "sonarr" "lidarr" "readarr" "qbittorrent" ];
     };
 
@@ -526,7 +571,10 @@ in {
       extraOptions = [
         "--device=/dev/dri/:/dev/dri/"
       ] ++ defaultOptions;
-      labels = { "io.containers.autoupdate" = "registry"; };
+      labels = {
+        "io.containers.autoupdate" = "registry";
+        "PODMAN_SYSTEMD_UNIT" = "podman-tdarr.service";
+      };
       dependsOn = [ "create-mediarr-pod" "gluetun" ];
     };
 
@@ -555,7 +603,10 @@ in {
         "--dns=1.1.1.1"
         "--dns=1.0.0.1"
       ] ++ (builtins.filter (e: e != "--network=container:gluetun") defaultOptions);
-      labels = { "io.containers.autoupdate" = "registry"; };
+      labels = {
+        "io.containers.autoupdate" = "registry";
+        "PODMAN_SYSTEMD_UNIT" = "podman-gluetun.service";
+      };
       dependsOn = [ "create-mediarr-pod" ];
     };
 
@@ -567,7 +618,10 @@ in {
         PROXY_PORT = toString ports.proxy-vpn;
       };
       extraOptions = [] ++ defaultOptions;
-      labels = { "io.containers.autoupdate" = "registry"; };
+      labels = {
+        "io.containers.autoupdate" = "registry";
+        "PODMAN_SYSTEMD_UNIT" = "podman-proxy-vpn-socks5.service";
+      };
       dependsOn = [ "create-mediarr-pod" "gluetun" ];
     };
 
@@ -603,7 +657,10 @@ in {
         "--dns=1.1.1.1"
         "--dns=1.0.0.1"
       ];
-      labels = { "io.containers.autoupdate" = "registry"; };
+      labels = {
+        "io.containers.autoupdate" = "registry";
+        "PODMAN_SYSTEMD_UNIT" = "podman-gluetun-uk.service";
+      };
       dependsOn = [  ];
     };
 
@@ -614,6 +671,10 @@ in {
         PROXY_PORT = toString ports.proxy-vpn-uk;
       };
       extraOptions = [ "--network=container:gluetun-uk" ];
+      labels = {
+        "io.containers.autoupdate" = "registry";
+        "PODMAN_SYSTEMD_UNIT" = "podman-proxy-vpn-uk-socks5.service";
+      };
       dependsOn = [ "gluetun-uk" ];
     };
 
@@ -636,7 +697,10 @@ in {
         "--all"
       ];
       extraOptions = [] ++ defaultOptions;
-      labels = { "io.containers.autoupdate" = "registry"; };
+      labels = {
+        "io.containers.autoupdate" = "registry";
+        "PODMAN_SYSTEMD_UNIT" = "podman-bitmagnet.service";
+      };
       dependsOn = [ "create-mediarr-pod" "gluetun" ];
     };
 
@@ -655,7 +719,10 @@ in {
         GZIP = "true";
       };
       extraOptions = [] ++ defaultOptions ++ userOptions;
-      labels = { "io.containers.autoupdate" = "registry"; };
+      labels = {
+        "io.containers.autoupdate" = "registry";
+        "PODMAN_SYSTEMD_UNIT" = "podman-mikochi.service";
+      };
       dependsOn = [ "create-mediarr-pod" "gluetun" ];
     };
 
@@ -685,7 +752,10 @@ in {
         config.sops.secrets.mediarr-unpackerr-env.path
       ];
       extraOptions = [] ++ defaultOptions ++ userOptions;
-      labels = { "io.containers.autoupdate" = "registry"; };
+      labels = {
+        "io.containers.autoupdate" = "registry";
+        "PODMAN_SYSTEMD_UNIT" = "podman-unpackerr.service";
+      };
       dependsOn = [ "create-mediarr-pod" "gluetun" "sonarr" "radarr" "lidarr" "readarr" ];
     };
 
@@ -707,7 +777,10 @@ in {
       };
       cmd = [ "daemon" ];
       extraOptions = [] ++ defaultOptions ++ userOptions;
-      labels = { "io.containers.autoupdate" = "registry"; };
+      labels = {
+        "io.containers.autoupdate" = "registry";
+        "PODMAN_SYSTEMD_UNIT" = "podman-cross-seed.service";
+      };
       dependsOn = [ "create-mediarr-pod" "gluetun" "prowlarr" "sonarr" "radarr" ];
     };*/
 
@@ -725,7 +798,10 @@ in {
         PGID = toString groupGid;
       };
       extraOptions = [] ++ defaultOptions;
-      labels = { "io.containers.autoupdate" = "registry"; };
+      labels = {
+        "io.containers.autoupdate" = "registry";
+        "PODMAN_SYSTEMD_UNIT" = "podman-sabnzbd.service";
+      };
       dependsOn = [ "create-mediarr-pod" "gluetun" ];
     };
 
@@ -753,7 +829,10 @@ in {
         LOG_STDOUT = "false";
         USER_NAME = userName;
       };
-      labels = { "io.containers.autoupdate" = "registry"; };
+      labels = {
+        "io.containers.autoupdate" = "registry";
+        "PODMAN_SYSTEMD_UNIT" = "podman-mediarr-openssh.service";
+      };
       extraOptions = [ "--ip=10.88.0.6" ];
     };
 
@@ -771,7 +850,10 @@ in {
         CRON_SCHEDULE = "@daily";
       };
       extraOptions = [] ++ defaultOptions ++ userOptions;
-      labels = { "io.containers.autoupdate" = "registry"; };
+      labels = {
+        "io.containers.autoupdate" = "registry";
+        "PODMAN_SYSTEMD_UNIT" = "podman-recyclarr.service";
+      };
       dependsOn = [ "create-mediarr-pod" "gluetun" "sonarr" "radarr" ];
     };
 
@@ -793,7 +875,10 @@ in {
       };
       environmentFiles = [ config.sops.secrets.mediarr-romm-env.path ];
       extraOptions = [] ++ defaultOptions ++ userOptions;
-      labels = { "io.containers.autoupdate" = "registry"; };
+      labels = {
+        "io.containers.autoupdate" = "registry";
+        "PODMAN_SYSTEMD_UNIT" = "podman-romm.service";
+      };
       dependsOn = [ "create-mediarr-pod" "gluetun" "mariadb" ];
     };
 
@@ -818,7 +903,10 @@ in {
         "--health-start-period" "30s"
         "--health-interval" "10s"*/
       ] ++ defaultOptions ++ userOptions;
-      labels = { "io.containers.autoupdate" = "registry"; };
+      labels = {
+        "io.containers.autoupdate" = "registry";
+        "PODMAN_SYSTEMD_UNIT" = "podman-mariadb.service";
+      };
       dependsOn = [ "create-mediarr-pod" "gluetun" ];
     };
 
@@ -845,7 +933,10 @@ in {
       extraOptions = [
         "--device=/dev/dri/:/dev/dri/"
       ] ++ (builtins.filter (e: e != "--network=container:gluetun") defaultOptions);
-      labels = { "io.containers.autoupdate" = "registry"; };
+      labels = {
+        "io.containers.autoupdate" = "registry";
+        "PODMAN_SYSTEMD_UNIT" = "podman-neko.service";
+      };
       dependsOn = [ "create-mediarr-pod" ];
     };
 
@@ -867,7 +958,10 @@ in {
       extraOptions = [
         "--ip=10.88.0.7"
       ];
-      labels = { "io.containers.autoupdate" = "registry"; };
+      labels = {
+        "io.containers.autoupdate" = "registry";
+        "PODMAN_SYSTEMD_UNIT" = "podman-calibre.service";
+      };
     };
 
     calibre-downloader = {
@@ -885,7 +979,10 @@ in {
         GID = toString groupGid;
       };
       extraOptions = [] ++ defaultOptions;
-      labels = { "io.containers.autoupdate" = "registry"; };
+      labels = {
+        "io.containers.autoupdate" = "registry";
+        "PODMAN_SYSTEMD_UNIT" = "podman-calibre-downloader.service";
+      };
       dependsOn = [ "create-mediarr-pod" "gluetun" ];
     };
 
