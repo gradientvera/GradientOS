@@ -120,7 +120,6 @@
           mixins.wine
           mixins.gnupg
           mixins.alloy
-          mixins.weylus
           mixins.podman
           mixins.plymouth
           mixins.wireguard
