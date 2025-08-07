@@ -2,8 +2,6 @@
   gradientnet = {
     gradientnet = "192.168.24.0";
     asiyah = "192.168.24.1";
-    yetzirah = "192.168.24.8";
-    atziluth = "192.168.24.48";
     bernkastel = "192.168.24.2";
     beatrice = "192.168.24.3";
     vera-phone-old = "192.168.24.4";
@@ -11,6 +9,8 @@
     erika = "192.168.24.6";
     featherine = "192.168.24.7";
     vera-phone = "192.168.24.8";
+    yetzirah = "192.168.24.9";
+    atziluth = "192.168.24.48";
   };
   
   lilynet = {
