@@ -6,6 +6,8 @@
     declarativePlugins = with pkgs.grafanaPlugins; [
       victoriametrics-metrics-datasource
       victoriametrics-logs-datasource
+      yesoreyeram-infinity-datasource
+      grafana-mqtt-datasource
     ];
     settings = {
 
@@ -77,6 +79,14 @@
             name = "Prometheus";
             orgId = 1;
           }
+          {
+            name = "Infinity";
+            orgId = 1;
+          }
+          {
+            name = "MQTT";
+            orgId = 1;
+          }
         ];
 
         datasources = [
@@ -109,6 +119,30 @@
             basicAuth = false;
             withCredentials = false;
             url = "http://127.0.0.1:${toString ports.victoriametrics}";
+            editable = false;
+          }
+          {
+            name = "Infinity";
+            orgId = 1;
+            type = "yesoreyeram-infinity-datasource";
+            url = "__IGNORE_URL__";
+            basicAuth = false;
+            withCredentials = false;
+            jsonData = {
+              global_queries = [];
+              oauthPassThru = false;
+              auth_method = "none";
+            };
+            editable = false;
+          }
+          {
+            name = "MQTT";
+            orgId = 1;
+            type = "grafana-mqtt-datasource";
+            access = "proxy";
+            basicAuth = false;
+            withCredentials = false;
+            url = "tcp://127.0.0.1:${toString ports.mqtt}";
             editable = false;
           }
         ];
