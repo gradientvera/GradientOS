@@ -348,6 +348,9 @@ in
         "${home}/.config/Ryujinx".d = tmpFilesRule;
         "${home}/.config/Ryujinx/system".d = tmpFilesRule;
         "${home}/.config/Ryujinx/system/.stfolder".d = tmpFilesRule;
+        "${home}/.config/Ryujinx".d = tmpFilesRule;
+        "${home}/.config/Ryujinx/mods".d = tmpFilesRule;
+        "${home}/.config/Ryujinx/mods/.stfolder".d = tmpFilesRule;
         "${home}/.config/Ryujinx/profiles".d = tmpFilesRule;
         "${home}/.config/Ryujinx/profiles/.stfolder".d = tmpFilesRule;
         "${home}/.config/Ryujinx/sdcard".d = tmpFilesRule;
@@ -445,6 +448,12 @@ in
           id = "ryujinx-system";
           versioning.type = "trashcan";
           path = "${home}/.config/Ryujinx/system";
+        };
+        ryujinx-mods = {
+          inherit devices;
+          id = "ryujinx-mods";
+          versioning.type = "trashcan";
+          path = "${home}/.config/Ryujinx/mods";
         };
         ryujinx-profiles = {
           inherit devices;
