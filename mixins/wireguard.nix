@@ -67,32 +67,34 @@ in
           EXT_FAIL=false
           VPN_FAIL=false
           while true; do
-            if(ping vpn.gradient.moe -c 1 -W 5); then
+            if ping vpn.gradient.moe -c 1 -W 5 >/dev/null 2>&1; then
               EXT_FAIL=false
             else
               EXT_FAIL=true
             fi
-            if(ping $VPN -c 1 -W 5); then
+            if ping "$VPN" -c 1 -W 5 >/dev/null 2>&1; then
               VPN_FAIL=false
             else
               VPN_FAIL=true
             fi
 
             SLEEP_TIME=25
-            if [ EXT_FAIL = true ] || [ VPN_FAIL = true ]; then
+            if [ "$EXT_FAIL" = true ] || [ "$VPN_FAIL" = true ]; then
               FAILURES=$((FAILURES+1))
-              SLEEP_TIME=$((FAILURES>25 ? 60 : FAILURES))
+              if ((FAILURES > 25)); then
+                SLEEP_TIME=60
+              else
+                SLEEP_TIME=$FAILURES
+              fi
               echo "Failed to ping! Retrying in $SLEEP_TIME seconds..."
             fi
 
-            if [ EXT_FAIL = false ]; then
-              if((FAILURES > 2)); then
-                echo "Restarting VPN services..."
-                systemctl restart *wireguard* || echo "Failed to restart wireguard!"
-                echo "Restarted VPN!"
-                FAILURES=0
-                SLEEP_TIME=25
-              fi
+            if [ EXT_FAIL = false ] && ((FAILURES > 2)); then
+              echo "Restarting VPN services..."
+              systemctl restart *wireguard* || echo "Failed to restart wireguard!"
+              echo "Restarted VPN!"
+              FAILURES=0
+              SLEEP_TIME=25
             fi
 
             sleep "$SLEEP_TIME"
