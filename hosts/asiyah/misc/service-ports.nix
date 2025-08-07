@@ -77,7 +77,6 @@
   vaultwarden = 8222;
   forgejo = 3000;
   forgejo-ssh = 222;
-  trmnl = 2300;
   openwebrx = 8073;
   nut = 3493;
   open-webui = 8100;
