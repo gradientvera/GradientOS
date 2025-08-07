@@ -86,10 +86,10 @@ in
               else
                 SLEEP_TIME=$FAILURES
               fi
-              echo "Failed to ping! Retrying in $SLEEP_TIME seconds..."
+              echo "Failed to ping! Retrying in $SLEEP_TIME seconds... External Fail: $EXT_FAIL, VPN Fail: $VPN_FAIL, Failures: $FAILURES"
             fi
 
-            if [ EXT_FAIL = false ] && ((FAILURES > 2)); then
+            if [ "$EXT_FAIL" = false ] && ((FAILURES > 2)); then
               echo "Restarting VPN services..."
               systemctl restart *wireguard* || echo "Failed to restart wireguard!"
               echo "Restarted VPN!"

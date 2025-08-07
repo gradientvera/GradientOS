@@ -348,7 +348,6 @@ in
         "${home}/.config/Ryujinx".d = tmpFilesRule;
         "${home}/.config/Ryujinx/system".d = tmpFilesRule;
         "${home}/.config/Ryujinx/system/.stfolder".d = tmpFilesRule;
-        "${home}/.config/Ryujinx".d = tmpFilesRule;
         "${home}/.config/Ryujinx/mods".d = tmpFilesRule;
         "${home}/.config/Ryujinx/mods/.stfolder".d = tmpFilesRule;
         "${home}/.config/Ryujinx/profiles".d = tmpFilesRule;
