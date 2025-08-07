@@ -7,7 +7,7 @@
     ./fail2ban
     ./searx.nix
     ./redis.nix
-    ./trmnl.nix
+    ./alloy.nix
     ./numad.nix
     ./radio.nix
     ./zigbee.nix
