@@ -66,7 +66,7 @@ in
 
     gradient.profiles.gaming.emulation.sync.devices = lib.mkOption {
       type = lib.types.listOf lib.types.str;
-      default = [ "asiyah" "bernkastel" "erika" "featherine" ];
+      default = [ "asiyah" "bernkastel" "erika" "featherine" "vera-phone" ];
       description = ''
         Syncthing devices with which to share the synced folders.
       '';
@@ -356,14 +356,14 @@ in
         "${home}/.config/Ryujinx/sdcard/.stfolder".d = tmpFilesRule;
         "${home}/.config/Ryujinx/bis".d = tmpFilesRule;
         "${home}/.config/Ryujinx/bis/.stfolder".d = tmpFilesRule;
-        # Lime3DS
-        "${home}/.local/share/lime3ds-emu".d = tmpFilesRule;
-        "${home}/.local/share/lime3ds-emu/nand".d = tmpFilesRule;
-        "${home}/.local/share/lime3ds-emu/nand/.stfolder".d = tmpFilesRule;
-        "${home}/.local/share/lime3ds-emu/sdmc".d = tmpFilesRule;
-        "${home}/.local/share/lime3ds-emu/sdmc/.stfolder".d = tmpFilesRule;
-        "${home}/.local/share/lime3ds-emu/sysdata".d = tmpFilesRule;
-        "${home}/.local/share/lime3ds-emu/sysdata/.stfolder".d = tmpFilesRule;
+        # Azahar (3DS)
+        "${home}/.local/share/azahar-emu".d = tmpFilesRule;
+        "${home}/.local/share/azahar-emu/nand".d = tmpFilesRule;
+        "${home}/.local/share/azahar-emu/nand/.stfolder".d = tmpFilesRule;
+        "${home}/.local/share/azahar-emu/sdmc".d = tmpFilesRule;
+        "${home}/.local/share/azahar-emu/sdmc/.stfolder".d = tmpFilesRule;
+        "${home}/.local/share/azahar-emu/sysdata".d = tmpFilesRule;
+        "${home}/.local/share/azahar-emu/sysdata/.stfolder".d = tmpFilesRule;
         # Dolphin
         "${home}/.local/share/dolphin-emu".d = tmpFilesRule;
         "${home}/.local/share/dolphin-emu/Wii".d = tmpFilesRule;
@@ -472,24 +472,24 @@ in
           versioning.type = "trashcan";
           path = "${home}/.config/Ryujinx/bis";
         };
-        # Lime3DS
-        lime3ds-nand = {
+        # Azahar (3DS)
+        azahar-nand = {
           inherit devices;
-          id = "lime3ds-nand";
+          id = "azahar-nand";
           versioning.type = "trashcan";
-          path = "${home}/.local/share/lime3ds-emu/nand";
+          path = "${home}/.local/share/azahar-emu/nand";
         };
-        lime3ds-sdmc = {
+        azahar-sdmc = {
           inherit devices;
-          id = "lime3ds-sdmc";
+          id = "azahar-sdmc";
           versioning.type = "trashcan";
-          path = "${home}/.local/share/lime3ds-emu/sdmc";
+          path = "${home}/.local/share/azahar-emu/sdmc";
         };
-        lime3ds-sysdata = {
+        azahar-sysdata = {
           inherit devices;
-          id = "lime3ds-sysdata";
+          id = "azahar-sysdata";
           versioning.type = "trashcan";
-          path = "${home}/.local/share/lime3ds-emu/sysdata";
+          path = "${home}/.local/share/azahar-emu/sysdata";
         };
         # Dolphin
         dolphin-wii = {
@@ -578,24 +578,27 @@ in
     }))
 
     (lib.mkIf (cfg.profiles.gaming.emulation.sync.roms.enable) {
-      gradient.presets.syncthing.folders = let
-        mkSyncFolder = f: {
+      gradient.presets.syncthing.folders = {
+        # Roms
+        roms = {
           inherit devices;
-          id = "roms-${f}";
+          id = "roms";
           versioning.type = "trashcan";
-          path = "${romPath}/${f}";
-          copyOwnershipFromParent = true;
+          path = "${romPath}";
         };
-      in builtins.listToAttrs 
-        (builtins.map
-          (f: { name = "roms-${f}"; value = mkSyncFolder f; })
-          cfg.profiles.gaming.emulation.systems);
+      };
 
       # Generate syncthing markers for ROM folders.
-      systemd.tmpfiles.settings."10-emulation.conf" = builtins.listToAttrs
-        (builtins.map
-          (f: { name = "${romPath}/${f}/.stfolder"; value = { d = tmpFilesRule; }; })
-          cfg.profiles.gaming.emulation.systems);
+      systemd.tmpfiles.settings."10-emulation.conf" = {
+        # Roms folder
+        "${romPath}".d = tmpFilesRule;
+        "${romPath}/.stfolder".d = tmpFilesRule;
+        "${romPath}/.stignore"."f+" = tmpFilesRule // { argument = 
+          ''
+            ${(lib.strings.concatLines (builtins.map (s: "!${s}/**") cfg.profiles.gaming.emulation.systems))}
+            **
+          ''; };
+      };
     })
   ];
 
