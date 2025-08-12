@@ -52,8 +52,9 @@ in
   # Overclocking/underclocking AMD GPU support
   programs.corectrl = {
     enable = true;
-    gpuOverclock.enable = true;
   };
+
+  hardware.amdgpu.overdrive.enable = true;
 
   # WOL support.
   networking.interfaces.enp16s0.wakeOnLan.enable = true;

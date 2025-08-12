@@ -19,8 +19,8 @@
   # Breaks suspend due to ppfeaturemask
   programs.corectrl = {
     enable = lib.mkForce false;
-    gpuOverclock.enable = lib.mkForce false;
   };
+  hardware.amdgpu.overdrive.enable = lib.mkForce false;
 
   hardware.sensor.iio.enable = true;
 

@@ -99,15 +99,27 @@ in
 
     # Increase number of files per process
     # prevents build failures sometimes
-    systemd.extraConfig = ''
-      DefaultTimeoutStopSec=30s
-      DefaultLimitNOFILE=16384:524288
-    '';
+    systemd.settings.Manager = {
+      DefaultTimeoutStopSec = "30s";
+      DefaultLimitNOFILE = "16384:524288";
+
+      # Enable systemd watchdog.
+      RuntimeWatchdogSec = "10s";
+      RebootWatchdogSec = "45s";
+      KExecWatchdogSec = "45s";
+    };
 
     systemd.user.extraConfig = ''
       DefaultTimeoutStopSec=30s
       DefaultLimitNOFILE=16384:524288
     '';
+
+    security.pam.loginLimits = [{
+      domain = "*";
+      type = "hard";
+      item = "nofile";
+      value = "524288";
+    }];
 
     environment.shells = with pkgs; [
       fish
@@ -135,13 +147,6 @@ in
     };
     programs.nix-index.enable = true;
     programs.nix-index.enableFishIntegration = true;
-
-    # Enable systemd watchdog.
-    systemd.watchdog = {
-      runtimeTime = "10s";
-      rebootTime = "45s";
-      kexecTime = "45s";
-    };
 
     security.pam.u2f = {
       enable = true;

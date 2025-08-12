@@ -14,7 +14,6 @@
 
   catppuccin.enable = true;
   catppuccin.flavor = "mocha";
-  catppuccin.gtk.enable = true;
   catppuccin.kvantum.enable = true;
   catppuccin.kvantum.apply = true;
 
