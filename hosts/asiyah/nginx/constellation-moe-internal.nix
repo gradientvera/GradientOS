@@ -129,6 +129,8 @@ in {
     "nextcloud.constellation.moe" = { useACMEHost = "constellation.moe"; forceSSL = true; };
     "k1c.constellation.moe" = mkReverseProxy { address = "192.168.1.27"; port = 80; };
     "pinchflat.constellation.moe" = mkReverseProxy { port = ports.pinchflat; };
+    "crafty.constellation.moe" = mkReverseProxy { port = ports.crafty; protocol = "https"; };
+    "craftydynmap.constellation.moe" = mkReverseProxy { port = ports.crafty-dynmap; protocol = "https"; vhostExtraConfig = "client_max_body_size 4G;"; };
   };
 
   # TODO: Figure out a way to automate the below list eugh
@@ -160,6 +162,8 @@ in {
     "radio.constellation.moe" = {};
     "k1c.constellation.moe" = {};
     "pinchflat.constellation.moe" = {};
+    "crafty.constellation.moe" = {};
+    "craftydynmap.constellation.moe" = {};
   };
   
 }

@@ -105,4 +105,9 @@
   project-zomboid-direct = 16262;
   project-zomboid-steam-1 = 21971;
   project-zomboid-steam-2 = 21972;
+  crafty = 8444;
+  crafty-dynmap = 8125;
+  crafty-server-start = 25500;
+  crafty-server-end = 25600;
+
 }

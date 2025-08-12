@@ -439,6 +439,26 @@
               };
             };
           }
+          {
+            "Crafty Controller" = {
+              description = "Crafty Controller is a free and open-source Minecraft launcher and manager that allows users to start and administer Minecraft servers from a user-friendly interface.";
+              href = "https://crafty.constellation.moe/";
+              icon = "sh-crafty-controller.svg";
+              server = "asiyah";
+              container = "crafty";
+              showStats = true;
+            };
+          }
+          {
+            "Crafty Dynamic Map" = {
+              description = "A Minecraft Dynamic Map for servers managed by Crafty Controllers.";
+              href = "https://craftydynmap.constellation.moe/";
+              icon = "sh-minecraft.svg";
+              server = "asiyah";
+              container = "crafty";
+              showStats = true;
+            };
+          }
         ];
       }
     ];

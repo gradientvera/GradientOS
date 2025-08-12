@@ -10,6 +10,7 @@
     ./alloy.nix
     ./numad.nix
     ./radio.nix
+    ./crafty.nix
     ./zigbee.nix
     ./clamav.nix
     ./kanidm.nix
