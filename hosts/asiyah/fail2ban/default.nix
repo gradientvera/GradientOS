@@ -64,18 +64,6 @@ in
       # As per https://notes.abhinavsarkar.net/2022/fail2ban-nginx-cloudflare-nixos
       nginx-noagent = mkNginxJail { filter = "nginx-noagent"; maxretry = 1; };
 
-      sshd-mediarr = ''
-        enabled = true
-        maxretry = 1
-        findtime = 3600
-        filter = sshd[mode=aggressive,_daemon=mediarr-openssh(?:-session)?]
-        port = ${toString ports.mediarr-openssh}
-        backend = auto
-        logpath = /var/lib/mediarr/sshlogs/current
-        action = iptables-multiport[chain=FORWARD, name=mediarr-openssh, port=${toString ports.mediarr-openssh}]
-                 apprise
-      '';
-
       # As per https://www.home-assistant.io/integrations/fail2ban/
       home-assistant = ''
         enabled = true

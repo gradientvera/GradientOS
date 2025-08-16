@@ -805,37 +805,6 @@ in {
       dependsOn = [ "create-mediarr-pod" "gluetun" ];
     };
 
-    # sftp://mediarr@ftp.constellation.moe:2222
-    mediarr-openssh = {
-      image = "lscr.io/linuxserver/openssh-server:latest";
-      pull = "newer";
-      ports = [
-        "${toString ports.mediarr-openssh}:2222"
-      ];
-      volumes = [
-        "/var/lib/${userName}/.ssh:/config/.ssh"
-        "/var/lib/${userName}/sshd:/config/sshd"
-        "/var/lib/${userName}/ssh_host_keys:/config/ssh_host_keys"
-        "/var/lib/${userName}:/mediarr-config"
-        "/var/lib/${userName}/sshlogs:/config/logs/openssh"
-        "/data/downloads:/downloads"
-      ];
-      environment = {
-        TZ = config.time.timeZone;
-        PUID = toString userUid;
-        PGID = toString groupGid;
-        SUDO_ACCESS = "false";
-        PASSWORD_ACCESS = "false";
-        LOG_STDOUT = "false";
-        USER_NAME = userName;
-      };
-      labels = {
-        "io.containers.autoupdate" = "registry";
-        "PODMAN_SYSTEMD_UNIT" = "podman-mediarr-openssh.service";
-      };
-      extraOptions = [ "--ip=10.88.0.6" ];
-    };
-
     recyclarr = {
       image = "ghcr.io/recyclarr/recyclarr:latest";
       pull = "newer";
