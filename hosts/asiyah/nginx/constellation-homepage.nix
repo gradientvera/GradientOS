@@ -117,6 +117,11 @@
           cputemp = true;
           uptime = true;
           units = "metric";
+        };
+      }
+      {
+        resources = {
+          label = "Root";
           disk = "/";
         };
       }
