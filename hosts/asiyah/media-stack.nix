@@ -50,6 +50,36 @@ in {
   systemd.services.podman-create-mediarr-pod = 
   {
     wantedBy = [ "multi-user.target" ];
+    requiredBy = [
+      "podman-jellyfin.service"
+      "podman-flaresolverr.service"
+      "podman-ersatztv.service"
+      "podman-radarr.service"
+      "podman-sonarr.service"
+      "podman-lidarr.service"
+      "podman-slskd.service"
+      "podman-soularr.service"
+      "podman-readarr.service"
+      "podman-prowlarr.service"
+      "podman-bazarr.service"
+      "podman-jellyseerr.service"
+      "podman-qbittorrent.service"
+      "podman-decluttarr.service"
+      "podman-tdarr.service"
+      "podman-gluetun.service"
+      "podman-proxy-vpn-socks5.service"
+      "podman-bitmagnet.service"
+      "podman-mikochi.service"
+      "podman-unpackerr.service"
+      # "podman-cross-seed.service"
+      "podman-sabnzbd.service"
+      "podman-recyclarr.service"
+      "podman-romm.service"
+      "podman-mariadb.service"
+      "podman-neko.service"
+      "podman-calibre-downloader.service"
+
+    ];
     wants = [ "postgresql.service" ];
     after = [ "postgresql.service" ];
     path = [ pkgs.podman ];
@@ -247,7 +277,7 @@ in {
         "io.containers.autoupdate" = "registry";
         "PODMAN_SYSTEMD_UNIT" = "podman-jellyfin.service";
       };
-      dependsOn = [ "create-mediarr-pod" "gluetun" ];
+      dependsOn = [ "gluetun" ];
     };
 
     flaresolverr = {
@@ -262,7 +292,7 @@ in {
         "io.containers.autoupdate" = "registry";
         "PODMAN_SYSTEMD_UNIT" = "podman-flaresolverr.service";
       };
-      dependsOn = [ "create-mediarr-pod" "gluetun" ];
+      dependsOn = [ "gluetun" ];
     };
 
     ersatztv = {
@@ -286,7 +316,7 @@ in {
         "io.containers.autoupdate" = "registry";
         "PODMAN_SYSTEMD_UNIT" = "podman-ersatztv.service";
       };
-      dependsOn = [ "create-mediarr-pod" "gluetun" ];
+      dependsOn = [ "gluetun" ];
     };
 
     radarr = {
@@ -306,7 +336,7 @@ in {
         "io.containers.autoupdate" = "registry";
         "PODMAN_SYSTEMD_UNIT" = "podman-radarr.service";
       };
-      dependsOn = [ "create-mediarr-pod" "gluetun" ];
+      dependsOn = [ "gluetun" ];
     };
 
     sonarr = {
@@ -326,7 +356,7 @@ in {
         "io.containers.autoupdate" = "registry";
         "PODMAN_SYSTEMD_UNIT" = "podman-sonarr.service";
       };
-      dependsOn = [ "create-mediarr-pod" "gluetun" ];
+      dependsOn = [ "gluetun" ];
     };
 
     lidarr = {
@@ -347,7 +377,7 @@ in {
         "io.containers.autoupdate" = "registry";
         "PODMAN_SYSTEMD_UNIT" = "podman-lidarr.service";
       };
-      dependsOn = [ "create-mediarr-pod" "gluetun" ];
+      dependsOn = [ "gluetun" ];
     };
 
     slskd = {
@@ -368,7 +398,7 @@ in {
         "io.containers.autoupdate" = "registry";
         "PODMAN_SYSTEMD_UNIT" = "podman-slskd.service";
       };
-      dependsOn = [ "create-mediarr-pod" "gluetun" ];
+      dependsOn = [ "gluetun" ];
     };
 
     soularr = {
@@ -389,7 +419,7 @@ in {
         "io.containers.autoupdate" = "registry";
         "PODMAN_SYSTEMD_UNIT" = "podman-soularr.service";
       };
-      dependsOn = [ "create-mediarr-pod" "gluetun" "lidarr" "slskd" ];
+      dependsOn = [ "gluetun" "lidarr" "slskd" ];
     };
 
     readarr = {
@@ -410,7 +440,7 @@ in {
         "io.containers.autoupdate" = "registry";
         "PODMAN_SYSTEMD_UNIT" = "podman-readarr.service";
       };
-      dependsOn = [ "create-mediarr-pod" "gluetun" ];
+      dependsOn = [ "gluetun" ];
     };
 
     prowlarr = {
@@ -429,7 +459,7 @@ in {
         "io.containers.autoupdate" = "registry";
         "PODMAN_SYSTEMD_UNIT" = "podman-prowlarr.service";
       };
-      dependsOn = [ "create-mediarr-pod" "gluetun" ];
+      dependsOn = [ "gluetun" ];
     };
 
     bazarr = {
@@ -450,7 +480,7 @@ in {
         "io.containers.autoupdate" = "registry";
         "PODMAN_SYSTEMD_UNIT" = "podman-bazarr.service";
       };
-      dependsOn = [ "create-mediarr-pod" "gluetun" ];
+      dependsOn = [ "gluetun" ];
     };
 
     jellyseerr = {
@@ -469,7 +499,7 @@ in {
         "io.containers.autoupdate" = "registry";
         "PODMAN_SYSTEMD_UNIT" = "podman-jellyseerr.service";
       };
-      dependsOn = [ "create-mediarr-pod" "gluetun" ];
+      dependsOn = [ "gluetun" ];
     };
 
     qbittorrent = {
@@ -491,7 +521,7 @@ in {
         "io.containers.autoupdate" = "registry";
         "PODMAN_SYSTEMD_UNIT" = "podman-qbittorrent.service";
       };
-      dependsOn = [ "create-mediarr-pod" "gluetun" ];
+      dependsOn = [ "gluetun" ];
     };
 
     decluttarr = {
@@ -538,7 +568,7 @@ in {
         "io.containers.autoupdate" = "registry";
         "PODMAN_SYSTEMD_UNIT" = "podman-decluttarr.service";
       };
-      dependsOn = [ "create-mediarr-pod" "gluetun" "radarr" "sonarr" "lidarr" "readarr" "qbittorrent" ];
+      dependsOn = [ "gluetun" "radarr" "sonarr" "lidarr" "readarr" "qbittorrent" ];
     };
 
     tdarr = {
@@ -575,7 +605,7 @@ in {
         "io.containers.autoupdate" = "registry";
         "PODMAN_SYSTEMD_UNIT" = "podman-tdarr.service";
       };
-      dependsOn = [ "create-mediarr-pod" "gluetun" ];
+      dependsOn = [ "gluetun" ];
     };
 
     gluetun = {
@@ -607,7 +637,7 @@ in {
         "io.containers.autoupdate" = "registry";
         "PODMAN_SYSTEMD_UNIT" = "podman-gluetun.service";
       };
-      dependsOn = [ "create-mediarr-pod" ];
+      dependsOn = [ ];
     };
 
     # TODO: Replace with https://github.com/ynuwenhof/koblas
@@ -622,7 +652,7 @@ in {
         "io.containers.autoupdate" = "registry";
         "PODMAN_SYSTEMD_UNIT" = "podman-proxy-vpn-socks5.service";
       };
-      dependsOn = [ "create-mediarr-pod" "gluetun" ];
+      dependsOn = [ "gluetun" ];
     };
 
     gluetun-uk = {
@@ -661,7 +691,7 @@ in {
         "io.containers.autoupdate" = "registry";
         "PODMAN_SYSTEMD_UNIT" = "podman-gluetun-uk.service";
       };
-      dependsOn = [  ];
+      dependsOn = [ ];
     };
 
     proxy-vpn-uk-socks5 = {
@@ -701,7 +731,7 @@ in {
         "io.containers.autoupdate" = "registry";
         "PODMAN_SYSTEMD_UNIT" = "podman-bitmagnet.service";
       };
-      dependsOn = [ "create-mediarr-pod" "gluetun" ];
+      dependsOn = [ "gluetun" ];
     };
 
     mikochi = {
@@ -723,7 +753,7 @@ in {
         "io.containers.autoupdate" = "registry";
         "PODMAN_SYSTEMD_UNIT" = "podman-mikochi.service";
       };
-      dependsOn = [ "create-mediarr-pod" "gluetun" ];
+      dependsOn = [ "gluetun" ];
     };
 
     unpackerr = {
@@ -756,7 +786,7 @@ in {
         "io.containers.autoupdate" = "registry";
         "PODMAN_SYSTEMD_UNIT" = "podman-unpackerr.service";
       };
-      dependsOn = [ "create-mediarr-pod" "gluetun" "sonarr" "radarr" "lidarr" "readarr" ];
+      dependsOn = [ "gluetun" "sonarr" "radarr" "lidarr" "readarr" ];
     };
 
     # TODO: Broken! Fix sometime
@@ -781,7 +811,7 @@ in {
         "io.containers.autoupdate" = "registry";
         "PODMAN_SYSTEMD_UNIT" = "podman-cross-seed.service";
       };
-      dependsOn = [ "create-mediarr-pod" "gluetun" "prowlarr" "sonarr" "radarr" ];
+      dependsOn = [ "gluetun" "prowlarr" "sonarr" "radarr" ];
     };*/
 
     sabnzbd = {
@@ -802,7 +832,7 @@ in {
         "io.containers.autoupdate" = "registry";
         "PODMAN_SYSTEMD_UNIT" = "podman-sabnzbd.service";
       };
-      dependsOn = [ "create-mediarr-pod" "gluetun" ];
+      dependsOn = [ "gluetun" ];
     };
 
     recyclarr = {
@@ -823,7 +853,7 @@ in {
         "io.containers.autoupdate" = "registry";
         "PODMAN_SYSTEMD_UNIT" = "podman-recyclarr.service";
       };
-      dependsOn = [ "create-mediarr-pod" "gluetun" "sonarr" "radarr" ];
+      dependsOn = [ "gluetun" "sonarr" "radarr" ];
     };
 
     romm = {
@@ -848,7 +878,7 @@ in {
         "io.containers.autoupdate" = "registry";
         "PODMAN_SYSTEMD_UNIT" = "podman-romm.service";
       };
-      dependsOn = [ "create-mediarr-pod" "gluetun" "mariadb" ];
+      dependsOn = [ "gluetun" "mariadb" ];
     };
 
     mariadb = {
@@ -876,7 +906,7 @@ in {
         "io.containers.autoupdate" = "registry";
         "PODMAN_SYSTEMD_UNIT" = "podman-mariadb.service";
       };
-      dependsOn = [ "create-mediarr-pod" "gluetun" ];
+      dependsOn = [ "gluetun" ];
     };
 
     neko = {
@@ -906,7 +936,7 @@ in {
         "io.containers.autoupdate" = "registry";
         "PODMAN_SYSTEMD_UNIT" = "podman-neko.service";
       };
-      dependsOn = [ "create-mediarr-pod" ];
+      dependsOn = [ ];
     };
 
     calibre = {
@@ -952,7 +982,7 @@ in {
         "io.containers.autoupdate" = "registry";
         "PODMAN_SYSTEMD_UNIT" = "podman-calibre-downloader.service";
       };
-      dependsOn = [ "create-mediarr-pod" "gluetun" ];
+      dependsOn = [ "gluetun" ];
     };
 
   };

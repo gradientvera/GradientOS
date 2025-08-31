@@ -73,7 +73,7 @@ in
         DISABLE_SSH = false;
         START_SSH_SERVER = true;
         SSH_DOMAIN = "ssh.gradient.moe"; # Not proxied through cloudflare... TODO: figure out a better solution?
-        BUILTIN_SSH_SERVER_USER = config.users.users.git.name;
+        BUILTIN_SSH_SERVER_USER = "git";
         SSH_LISTEN_HOST = "0.0.0.0";
         SSH_PORT = ports.forgejo-ssh;
         SSH_SERVER_HOST_KEYS = "${config.sops.secrets.forgejo-ssh-priv.path}";

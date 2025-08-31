@@ -36,7 +36,7 @@
     ./secrets/default.nix
     ./libvirtd/default.nix
     ./redbot-stardream.nix
-    ./large-lying-models.nix
+    # ./large-lying-models.nix # Borked
     ./gradient-generator.nix
     # ./project-zomboid-server.nix
     ./hardware-configuration.nix

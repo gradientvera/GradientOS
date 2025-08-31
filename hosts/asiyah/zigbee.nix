@@ -8,7 +8,7 @@ in
     enable = true;
     package = pkgs.zigbee2mqtt_2;
     settings = {
-      homeassistant = config.services.home-assistant.enable;
+      homeassistant.enabled = true;
       mqtt = {
         server = "mqtt://127.0.0.1:${toString ports.mqtt}";
         include_device_information = true;

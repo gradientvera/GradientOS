@@ -307,13 +307,13 @@ in
         # -- Retroarch --
         retroarch-full # A lot of systems
         # -- Standalone emulators --
-        azahar # 3DS
+        # azahar # 3DS # TODO: borked
         dolphin-emu # Wii / GC
         cemu # WiiU
         ryubing # Switch
         pcsx2 # PS2
         rpcs3 # PS3
-        # shadps4 # PS4 # TODO: borked
+        shadps4 # PS4 # TODO: borked
         ruffle # Flash
         # -- Utilities --
         # TODO: https://github.com/NixOS/nixpkgs/issues/418681

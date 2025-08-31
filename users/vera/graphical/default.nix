@@ -8,7 +8,6 @@
 
   home.packages = with pkgs; [
     stable.gimp-with-plugins
-    jellyfin-media-player
     master.discord-canary
     lxqt.pavucontrol-qt
     whatsapp-for-linux

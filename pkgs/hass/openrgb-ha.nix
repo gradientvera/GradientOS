@@ -4,7 +4,7 @@
 }:
 let
   owner = "openrgb-ha";
-  version = "2.7.0";
+  version = "2.7.2";
   pythonPkgs = home-assistant.python.pkgs;
 in buildHomeAssistantComponent {
   inherit version owner;
@@ -14,7 +14,7 @@ in buildHomeAssistantComponent {
     inherit owner;
     repo = "openrgb-ha";
     rev = "v${version}";
-    hash = "sha256-cTOkTyOU3aBXIGU1FL1boKU/6RIeFMC8yKc+0wcTVUU=";
+    hash = "sha256-CABmizTZM3kbEaUyi7Ni/ONIiewU4NAF/wZCzz+DjOw=";
   };
 
   propagatedBuildInputs = [

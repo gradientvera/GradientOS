@@ -38,7 +38,7 @@
           };
         }
         {
-          "Media Internal" = {
+          "Internal" = {
             style = "row";
             columns = 4;
           };
@@ -263,7 +263,7 @@
         ];
       }
       {
-        "Media Internal" = [
+        "Internal" = [
           {
             "ErsatzTV" = {
               description = "Software for configuring and streaming custom live channels using your media library.";
