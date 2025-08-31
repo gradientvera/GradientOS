@@ -14,6 +14,17 @@
             }
           ];
         }
+        {
+          job_name = "uptime";
+          scrape_interval = "30s";
+          scheme = "http";
+          metrics_path = "/metrics";
+          static_configs = [
+            {
+              targets = [ "127.0.0.1:${toString ports.uptime-kuma}" ];
+            }
+          ];
+        }
       ];
     };
   };
