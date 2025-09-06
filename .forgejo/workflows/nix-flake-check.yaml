@@ -1,0 +1,11 @@
+on: [push, workflow_dispatch]
+jobs:
+  nix-flake-check:
+    runs-on: alpine-latest
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v5
+      - name: Install Lix
+        uses: actions/install-lix@v1
+      - name: Run nix flake check
+        run: nix flake check
