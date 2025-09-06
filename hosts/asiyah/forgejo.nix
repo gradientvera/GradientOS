@@ -142,8 +142,15 @@ in
 
         "alpine-latest:docker://node:24-alpine"
       ];
+      settings = {
+        cache.enabled = true;
+        cache.port = 0;
+      };
     };
   };
+
+  # As per https://forgejo.org/docs/latest/admin/actions/runner-installation/
+  networking.firewall.trustedInterfaces = [ "br-+" ];
 
   systemd.services.forgejo = {
     serviceConfig = {
