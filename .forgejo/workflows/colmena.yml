@@ -1,3 +1,4 @@
+name: Run Colmena Deployment
 on:
   workflow_dispatch:
     inputs:
@@ -36,20 +37,24 @@ jobs:
         uses: ./.forgejo/setup-gradientnet
         with:
           wireguard-private-key: ${{ secrets.WIREGUARD_PRIVATE_KEY }}
-      - uses: actions/cache/restore@v4
+      - name: Restore Nix store cache
+        uses: actions/cache/restore@v4
         id: cachenix
         with:
           path: |
             /nix
             ~/.cache/nix
           key: nix-${{ runner.os }}-${{ hashFiles('**/*.nix', '**/flake.lock') }}
-      - name: Run Colmena Apply ${{ inputs.operation }} on ${{ inputs.hosts }}, build on target
-        if: "inputs.build-on-target"
-        runs: nix run .#colmena -- apply ${{ inputs.operation }} --on ${{ inputs.hosts }} --show-trace --evaluator=streaming --build-on-target 
-      - name: Run Colmena Apply ${{ inputs.operation }} on ${{ inputs.hosts }}, don't build on target
-        if: "!inputs.build-on-target"
-        runs: nix run .#colmena -- apply ${{ inputs.operation }} --on ${{ inputs.hosts }} --show-trace --evaluator=streaming --no-build-on-target
-      - uses: actions/cache/save@v4
+      - name: Fetch flake inputs
+        run: nix flake archive
+      - name: Run Colmena Apply with build on target
+        if: ${{ inputs.build-on-target }}
+        run: nix run .#colmena -- apply ${{ inputs.operation }} --on "${{ inputs.hosts }}" --show-trace --evaluator=streaming --build-on-target 
+      - name: Run Colmena Apply with no build on target
+        if: ${{ !inputs.build-on-target }}
+        run: nix run .#colmena -- apply ${{ inputs.operation }} --on "${{ inputs.hosts }}" --show-trace --evaluator=streaming --no-build-on-target
+      - name: Save Nix store cache
+        uses: actions/cache/save@v4
         with:
           path: |
             /nix

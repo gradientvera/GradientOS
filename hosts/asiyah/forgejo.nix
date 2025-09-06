@@ -143,6 +143,8 @@ in
         "alpine-latest:docker://node:24-alpine"
       ];
       settings = {
+        # Run 10 jobs at once
+        runner.capacity = 10;
         cache.enabled = true;
         cache.port = 0;
         container.options = "--cap-add=NET_ADMIN --device=/dev/net/tun:/dev/net/tun";

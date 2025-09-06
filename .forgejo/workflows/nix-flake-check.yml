@@ -13,9 +13,5 @@ jobs:
         uses: actions/setup-ssh@v1
         with:
           ssh-private-key: ${{ secrets.SSH_PRIVATE_KEY }}
-      - name: Setup GradientNet
-        uses: ./.forgejo/setup-gradientnet
-        with:
-          wireguard-private-key: ${{ secrets.WIREGUARD_PRIVATE_KEY }}
       - name: Run nix flake check
         run: nix flake check
