@@ -1,6 +1,9 @@
 { callPackage
 , formats
 }:
+let
+  gradient-ansible-lib = (callPackage ./ansible-lib.nix { });
+in
 (formats.yaml {}).generate "gradient-ansible-playbook.yml" 
 ([
   {
@@ -11,7 +14,7 @@
     ];
   }
 ]
-++ (callPackage ./vacuum-playbook.nix { })
-++ (callPackage ../hosts/atziluth/playbook.nix { })
-++ (callPackage ../hosts/angela/playbook.nix { })
-++ (callPackage ../hosts/mute/playbook.nix { }))
+++ (callPackage ./vacuum-playbook.nix { inherit gradient-ansible-lib; })
+++ (callPackage ../hosts/atziluth/playbook.nix { inherit gradient-ansible-lib; })
+++ (callPackage ../hosts/angela/playbook.nix { inherit gradient-ansible-lib; })
+++ (callPackage ../hosts/mute/playbook.nix { inherit gradient-ansible-lib; }))

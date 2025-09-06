@@ -1,4 +1,4 @@
-{ }:
+{ gradient-ansible-lib }:
 [
   {
     name = "Atziluth play";

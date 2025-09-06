@@ -21,7 +21,7 @@ in
 
   force-xwayland = prev.callPackage ../pkgs/scripts/force-xwayland.nix { };
 
-  gradient-ansible-lib = (prev.callPackage ../ansible/ansible-lib.nix { });
+  # gradient-ansible-lib = (prev.callPackage ../ansible/ansible-lib.nix { });
   gradient-ansible-inventory = prev.callPackage ../ansible/inventory.nix { };
   gradient-ansible-playbook = prev.callPackage ../ansible/playbook.nix { };
 
