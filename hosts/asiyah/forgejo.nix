@@ -135,22 +135,12 @@ in
     instances.asiyah = {
       enable = true;
       name = "asiyah";
-      url = "127.0.0.1:${toString ports.forgejo}";
+      url = "https://git.gradient.moe";
       tokenFile = config.sops.secrets.forgejo-runner-token.path;
       labels = [
-        "docker:docker://alpine:latest"
-        
-        "ubuntu-latest:docker://ubuntu:latest"
-        "ubuntu-24.04:docker://ubuntu:noble"
-        "ubuntu-22.04:docker://ubuntu:jammy"
+        "docker:docker://node:24-alpine"
 
-        "debian-latest:docker://debian:latest"
-        "debian-12.10:docker://debian:bookworm"
-        "debian-11.11:docker://debian:bullseye"
-
-        "alpine-latest:docker://alpine:latest"
-        "alpine-3.21:docker://alpine:3.21"
-        "alpine-3.20:docker://alpine:3.20"
+        "alpine-latest:docker://node:24-alpine"
       ];
     };
   };
