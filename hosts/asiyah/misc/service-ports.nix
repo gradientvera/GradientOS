@@ -76,6 +76,7 @@
   syncthing = 8384;
   vaultwarden = 8222;
   forgejo = 3000;
+  forgejo-cache = 3001;
   forgejo-ssh = 222;
   openwebrx = 8073;
   nut = 3493;

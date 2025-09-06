@@ -4,9 +4,8 @@
   Thank you, Lix infra team! <3
 
 */
-{ config, pkgs, lib, ... }:
+{ config, pkgs, lib, ports, ... }:
 let
-  ports = config.gradient.currentHost.ports;
   repositoryRoot = "/data/repositories";
   lfsRoot = "/data/lfs";
 in
@@ -145,9 +144,15 @@ in
       settings = {
         # Run 10 jobs at once
         runner.capacity = 10;
-        cache.enabled = true;
-        cache.port = 0;
-        container.options = "--cap-add=NET_ADMIN --device=/dev/net/tun:/dev/net/tun";
+        cache = {
+          enabled = true;
+          port = ports.forgejo-cache;
+          host = "";
+        };
+        container = {
+          network = "bridge";
+          options = "--cap-add=NET_ADMIN --device=/dev/net/tun:/dev/net/tun";
+        };
       };
     };
   };
@@ -195,6 +200,7 @@ in
 
   networking.firewall.allowedTCPPorts = [
     ports.forgejo-ssh
+    ports.forgejo-cache
   ];
 
   environment.systemPackages = [
