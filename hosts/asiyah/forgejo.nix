@@ -145,6 +145,7 @@ in
       settings = {
         cache.enabled = true;
         cache.port = 0;
+        container.options = "--cap-add=NET_ADMIN";
       };
     };
   };
