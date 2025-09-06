@@ -145,9 +145,15 @@ in
       settings = {
         cache.enabled = true;
         cache.port = 0;
-        container.options = "--cap-add=NET_ADMIN";
+        container.options = "--cap-add=NET_ADMIN --device=/dev/net/tun:/dev/net/tun";
       };
     };
+  };
+
+  # Add CAP_NET_ADMIN to hopefully allow Wireguard network creation inside containers?
+  systemd.services.gitea-runner-asiyah.serviceConfig = {
+    AmbientCapabilities = [ "CAP_NET_ADMIN" ];
+    CapabilityBoundingSet = [ "CAP_NET_ADMIN" ];
   };
 
   # As per https://forgejo.org/docs/latest/admin/actions/runner-installation/

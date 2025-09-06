@@ -13,43 +13,31 @@ runs:
       id: asiyahpubkey
       with:
         file: ./misc/wireguard-pub-keys.nix
-        expresion: "asiyah"
-        extraArgs: "--raw"
-    - name: Evaluate Asiyah Wireguard address
-      uses: actions/eval-nix@v1
-      id: asiyahaddress
-      with:
-        file: ./misc/wireguard-addresses.nix
-        expresion: "gradientnet.asiyah"
-        extraArgs: "--raw"
-    - name: Evaluate Forgejo Deployment Wireguard address
-      uses: actions/eval-nix@v1
-      id: forgejodeploymentaddress
-      with:
-        file: ./misc/wireguard-addresses.nix
-        expresion: "gradientnet.forgejo-deployment"
-        extraArgs: "--raw"
+        expr: asiyah
+        extraArgs: --raw
     - name: Evaluate GradientNet Wireguard address
       id: gradientnetaddress
       uses: actions/eval-nix@v1
       with:
         file: ./misc/wireguard-addresses.nix
-        expresion: "gradientnet.gradientnet"
-        extraArgs: "--raw"
+        expr: gradientnet.gradientnet
+        extraArgs: --raw
     - name: Evaluate GradientNet Port
       id: gradientnetport
       uses: actions/eval-nix@v1
       with:
         file: ./hosts/asiyah/misc/service-ports.nix
-        expresion: "gradientnet"
-        extraArgs: "--raw"
+        expr: gradientnet
     - name: Setup GradientNet
       uses: actions/setup-wireguard@v1
       with:
-        wireguard-interface-name: gradientnet
-        wireguard-private-key: ${{ inputs.wireguard-private-key }}
-        wireguard-address: ${{ steps.forgejodeploymentaddress.result }}
-        wireguard-peer-address: ${{ steps.asiyahaddress.result }}
-        wireguard-peer-public-key: ${{ steps.asiyahpubkey.result }}
-        wireguard-peer-endpoint: vpn.gradient.moe:${{ steps.gradientnetport.result }}
-        wireguard-peer-allowed-ips: ${{ steps.gradientnetaddress.result }}/24
+        wireguard-interface: fgjdplygrdnt0
+        wireguard-config: |
+          [Interface]
+          PrivateKey = ${{ inputs.wireguard-private-key }}
+
+          [Peer]
+          PublicKey = ${{ steps.asiyahpubkey.outputs.result }}
+          AllowedIPs = ${{ steps.gradientnetaddress.outputs.result }}/24
+          Endpoint = vpn.gradient.moe:${{ steps.gradientnetport.outputs.result }}
+          PersistentKeepalive = 25
