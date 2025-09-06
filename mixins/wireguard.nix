@@ -171,6 +171,10 @@ in
             allowedIPs = [ "${vera-phone}/32" ];
             publicKey = keys.vera-phone;
           }
+          {
+            allowedIPs = [ "${forgejo-deployment}/32" ];
+            publicKey = keys.forgejo-deployment;
+          }
         ] else [
           {
             allowedIPs = [ "${gradientnet}/24" ];

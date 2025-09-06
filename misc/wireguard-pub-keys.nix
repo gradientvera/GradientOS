@@ -12,6 +12,8 @@
   vera-laptop = "Ml8DDdUjufdmEc0//PATnJq007Sc6gfoiG2gIHD1mAw=";
   featherine = "ck7DAR0e7vBgAQ9atvzjHlXtBnuRqWPoPhmamw8ip0c=";
 
+  forgejo-deployment = "iUOpJjNyD9TxVmXnHmKPFJ6ANym1ZN1lacfw277GBio=";
+
   neith = "VK93plqvZl1SOkgSjIuTCZBxj3TKw5it/NCZUTv8Ank=";
   remie = "5H/fvb3jGGoUBwp0c+OAUbsj0ujuIf+FBOwFxCNkPgc=";
 

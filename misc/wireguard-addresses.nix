@@ -10,6 +10,7 @@
     featherine = "192.168.24.7";
     vera-phone = "192.168.24.8";
     yetzirah = "192.168.24.9";
+    forgejo-deployment = "192.168.24.10";
     atziluth = "192.168.24.48";
   };
   
