@@ -8,7 +8,6 @@ in
     enable = true;
     exporter.enable = true;
     database.createLocally = true;
-    domain = "paperless.gradient.moe";
 
     address = "127.0.0.1";
     port = ports.paperless;
