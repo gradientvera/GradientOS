@@ -22,18 +22,32 @@ runs:
         file: ./misc/wireguard-addresses.nix
         expr: gradientnet.gradientnet
         extraArgs: --raw
+    - name: Evaluate Forgejo Deployment Wireguard address
+      id: forgejoaddress
+      uses: actions/eval-nix@v1
+      with:
+        file: ./misc/wireguard-addresses.nix
+        expr: gradientnet.forgejo-deployment
+        extraArgs: --raw
     - name: Evaluate GradientNet Port
       id: gradientnetport
       uses: actions/eval-nix@v1
       with:
         file: ./hosts/asiyah/misc/service-ports.nix
         expr: gradientnet
+    - name: Disable SSH Strict Host Key Checking for GradientNet
+      run: |
+        HOST=$(echo ${{ steps.gradientnetaddress.outputs.result }} | rev | cut -c 2- | rev | cat - <(echo "*") | tr -d '\n')
+        echo "Disabling SSH Strict Host Key checking for $HOST"
+        echo "Host $HOST" >> ~/.ssh/known_hosts
+        echo "    StrictHostKeyChecking=no" >> ~/.ssh/known_hosts
     - name: Setup GradientNet
       uses: actions/setup-wireguard@v1
       with:
         wireguard-interface: fgjdplygrdnt0
         wireguard-config: |
           [Interface]
+          Address = ${{ steps.forgejoaddress.outputs.result }}/32
           PrivateKey = ${{ inputs.wireguard-private-key }}
 
           [Peer]
