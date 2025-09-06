@@ -1,0 +1,57 @@
+on:
+  workflow_dispatch:
+    inputs:
+      operation:
+        description: Which NixOS build operation to use.
+        default: "switch"
+        type: choice
+        options:
+          - switch
+          - boot
+          - push
+      hosts:
+        description: Which hosts to target.
+        required: true
+        type: string
+      build-on-target:
+        description: Build on target
+        default: false
+        required: false
+        type: boolean
+
+jobs:
+  build:
+    runs-on: alpine-latest
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v5
+      - name: Install Lix
+        uses: actions/install-lix@v1
+      - name: Setup SSH
+        id: setupssh
+        uses: actions/setup-ssh@v1
+        with:
+          ssh-private-key: ${{ secrets.SSH_PRIVATE_KEY }}
+      - name: Setup GradientNet
+        uses: ./.forgejo/setup-gradientnet
+        with:
+          wireguard-private-key: ${{ secrets.WIREGUARD_PRIVATE_KEY }}
+      - uses: actions/cache/restore@v4
+        id: cachenix
+        with:
+          path: |
+            /nix
+            ~/.cache/nix
+          key: nix-${{ runner.os }}-${{ hashFiles('**/*.nix', '**/flake.lock') }}
+      - name: Run Colmena Apply ${{ inputs.operation }} on ${{ inputs.hosts }}, build on target
+        if: "inputs.build-on-target"
+        runs: nix run .#colmena -- apply ${{ inputs.operation }} --on ${{ inputs.hosts }} --show-trace --evaluator=streaming --build-on-target 
+      - name: Run Colmena Apply ${{ inputs.operation }} on ${{ inputs.hosts }}, don't build on target
+        if: "!inputs.build-on-target"
+        runs: nix run .#colmena -- apply ${{ inputs.operation }} --on ${{ inputs.hosts }} --show-trace --evaluator=streaming --no-build-on-target
+      - uses: actions/cache/save@v4
+        with:
+          path: |
+            /nix
+            ~/.cache/nix
+          key: ${{ steps.cachenix.outputs.cache-primary-key }}

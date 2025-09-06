@@ -75,5 +75,8 @@ Host *
 
   users.users.root.openssh.authorizedKeys.keys = with ssh-pub-keys; [
     vera
+    
+    # Ugh I hate that I have to do this
+    forgejo-deployment
   ];
 }
