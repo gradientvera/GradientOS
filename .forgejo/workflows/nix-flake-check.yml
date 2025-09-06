@@ -1,4 +1,5 @@
 on: [push, workflow_dispatch]
+name: Check Flake
 jobs:
   nix-flake-check:
     runs-on: alpine-latest
@@ -7,5 +8,9 @@ jobs:
         uses: actions/checkout@v5
       - name: Install Lix
         uses: actions/install-lix@v1
+      - name: Setup SSH
+        uses: actions/setup-ssh@v1
+        with:
+          ssh-private-key: ${{ secrets.SSH_PRIVATE_KEY }}
       - name: Run nix flake check
         run: nix flake check

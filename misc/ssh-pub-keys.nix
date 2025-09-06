@@ -12,6 +12,7 @@
   featherine = "ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIN8H187QhA3tbMFUf8Ht4BDJDbNvTB0+/0BtVK2cgCIl";
 
   forgejo = "ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIDUcf1iQMcd4DQHdA8Y0EsG5Ci4ZAqKoR7Fhcx5uheL4 git-gradient-moe";
+  forgejo-deployment = "ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIDDJgKMkf84j14iNHOzc5lkNmyceMqrH8mshmfe2uxnO forgejo deployment";
   hass = "ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIBiYFZWpuBABMJXJ7K5sMc5l0CeDCcEOx1c+Pb2hbb4J hass";
 
 }
