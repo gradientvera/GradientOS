@@ -47,7 +47,7 @@ let
 in {
 
   # -- Pod Creation --
-  systemd.services.podman-create-mediarr-pod = 
+  systemd.services.podman-create-mediarr-pod = rec
   {
     wantedBy = [ "multi-user.target" ];
     requiredBy = [
@@ -80,6 +80,7 @@ in {
       "podman-calibre-downloader.service"
 
     ];
+    before = requiredBy;
     wants = [ "postgresql.service" ];
     after = [ "postgresql.service" ];
     path = [ pkgs.podman ];
