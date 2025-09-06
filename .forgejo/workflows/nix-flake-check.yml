@@ -1,5 +1,11 @@
-on: [push, workflow_dispatch]
 name: Check Flake
+on:
+  push:
+    paths:
+      - "**/*.nix"
+      - "**/flake.lock"
+  workflow_dispatch:
+  
 jobs:
   nix-flake-check:
     runs-on: alpine-latest
