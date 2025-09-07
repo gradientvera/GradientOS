@@ -25,6 +25,11 @@ jobs:
       - name: Fetch flake inputs
         run: nix flake archive
       - name: Run Colmena Build
+        id: colmenabuild
         run: nix run .#colmena -- apply build --on "*" --show-trace --evaluator=streaming --no-build-on-target
+        continue-on-error: true
       - name: Cache all store paths to Attic
         uses: ./.forgejo/cache-to-attic
+      - name: On failure
+        if: ${{ failure() }}
+        run: exit 1

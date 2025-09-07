@@ -45,9 +45,14 @@ jobs:
         run: nix flake archive
       - name: Run Colmena Apply with build on target
         if: ${{ inputs.build-on-target }}
+        continue-on-error: true
         run: nix run .#colmena -- apply ${{ inputs.operation }} --on "${{ inputs.hosts }}" --show-trace --evaluator=streaming --build-on-target 
       - name: Run Colmena Apply with no build on target
         if: ${{ !inputs.build-on-target }}
+        continue-on-error: true
         run: nix run .#colmena -- apply ${{ inputs.operation }} --on "${{ inputs.hosts }}" --show-trace --evaluator=streaming --no-build-on-target
       - name: Cache all store paths to Attic
         uses: ./.forgejo/cache-to-attic
+      - name: On failure
+        if: ${{ failure() }}
+        run: exit 1
