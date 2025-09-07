@@ -45,6 +45,7 @@ in
       ])
       smartmontools
       appimage-run
+      attic-client
       imagemagick
       ffmpeg-full
       nix-weather

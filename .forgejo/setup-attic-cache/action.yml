@@ -1,0 +1,21 @@
+name: "Setup Gradient Attic Cache"
+description: "Install and set up the Attic client with a cache."
+inputs:
+  attic-token:
+    description: "The private token to log in with."
+    required: true
+outputs: {}
+runs:
+  using: composite
+  steps:
+    - name: "Log into Attic"
+      run: |
+        echo "Logging into Attic server..."
+        nix run nixpkgs#attic-client -- login gradient https://cache.gradient.moe ${{ inputs.attic-token }}
+        echo "Logged in!"
+    - name: "Use Attic Gradient Cache"
+      run: |
+        echo "Enabling Gradient cache..."
+        nix run nixpkgs#attic-client -- use gradient
+        nix run nixpkgs#attic-client -- watch-store gradient &
+        echo "Now using the Gradient cache!"

@@ -83,6 +83,7 @@
   open-webui = 8100;
   ollama = 11434;
   uptime-kuma = 4003;
+  attic = 8060;
   
   # Paperless-ngx
   paperless = 28981;

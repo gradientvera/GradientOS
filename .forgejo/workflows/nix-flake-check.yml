@@ -19,5 +19,9 @@ jobs:
         uses: actions/setup-ssh@v1
         with:
           ssh-private-key: ${{ secrets.SSH_PRIVATE_KEY }}
+      - name: Setup Attic Cache
+        uses: ./.forgejo/setup-attic-cache
+        with:
+          attic-token: ${{ secrets.ATTIC_TOKEN }}
       - name: Run nix flake check
         run: nix flake check

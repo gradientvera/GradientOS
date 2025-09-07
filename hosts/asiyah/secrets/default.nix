@@ -212,6 +212,10 @@
         restartUnits = [ "homepage-dashboard.service" ];
       };
 
+      atticd-environment = {
+        restartUnits = [ "atticd.service" ];
+      };
+
     };
   };
 
