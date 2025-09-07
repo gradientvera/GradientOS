@@ -49,3 +49,5 @@ jobs:
       - name: Run Colmena Apply with no build on target
         if: ${{ !inputs.build-on-target }}
         run: nix run .#colmena -- apply ${{ inputs.operation }} --on "${{ inputs.hosts }}" --show-trace --evaluator=streaming --no-build-on-target
+      - name: Cache all store paths to Attic
+        uses: ./.forgejo/cache-to-attic

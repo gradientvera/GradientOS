@@ -25,3 +25,5 @@ jobs:
           attic-token: ${{ secrets.ATTIC_TOKEN }}
       - name: Run nix flake check
         run: nix flake check
+      
+      # No need to push to cache, this is meant to be a quick action
