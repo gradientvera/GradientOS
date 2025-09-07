@@ -17,5 +17,5 @@ runs:
       run: |
         echo "Enabling Gradient cache..."
         nix run nixpkgs#attic-client -- use gradient
-        nix run nixpkgs#attic-client -- watch-store gradient &
+        nohup nix run nixpkgs#attic-client -- watch-store gradient &
         echo "Now using the Gradient cache!"
