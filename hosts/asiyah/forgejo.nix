@@ -144,27 +144,13 @@ in
       settings = {
         # Run 10 jobs at once
         runner.capacity = 10;
-        cache = {
-          enabled = true;
-          port = ports.forgejo-cache;
-          host = "";
-        };
         container = {
           network = "bridge";
-          options = "--cap-add=NET_ADMIN --device=/dev/net/tun:/dev/net/tun";
+          options = "--cap-add=NET_ADMIN";
         };
       };
     };
   };
-
-  # Add CAP_NET_ADMIN to hopefully allow Wireguard network creation inside containers?
-  systemd.services.gitea-runner-asiyah.serviceConfig = {
-    AmbientCapabilities = [ "CAP_NET_ADMIN" ];
-    CapabilityBoundingSet = [ "CAP_NET_ADMIN" ];
-  };
-
-  # As per https://forgejo.org/docs/latest/admin/actions/runner-installation/
-  networking.firewall.trustedInterfaces = [ "br-+" ];
 
   systemd.services.forgejo = {
     serviceConfig = {
