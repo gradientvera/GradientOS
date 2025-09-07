@@ -7,7 +7,7 @@ in
 
   systemd.tmpfiles.settings."10-attic.conf" = {
     ${storagePath}.d = {
-      mode = "0750";
+      mode = "0777";
     };
   };
 
