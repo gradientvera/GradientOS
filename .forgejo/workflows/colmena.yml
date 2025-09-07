@@ -26,8 +26,6 @@ jobs:
     steps:
       - name: Checkout repository
         uses: actions/checkout@v5
-      - name: Install tar
-        run: apk add tar
       - name: Install Lix
         uses: actions/install-lix@v1
       - name: Setup SSH
