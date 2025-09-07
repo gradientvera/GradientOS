@@ -39,8 +39,8 @@ runs:
       run: |
         HOST=$(echo ${{ steps.gradientnetaddress.outputs.result }} | rev | cut -c 2- | rev | cat - <(echo "*") | tr -d '\n')
         echo "Disabling SSH Strict Host Key checking for $HOST"
-        echo "Host $HOST" >> ~/.ssh/known_hosts
-        echo "    StrictHostKeyChecking=no" >> ~/.ssh/known_hosts
+        echo "Host $HOST" >> ~/.ssh/config
+        echo "    StrictHostKeyChecking=no" >> ~/.ssh/config
     - name: Setup GradientNet
       uses: actions/setup-wireguard@v1
       with:

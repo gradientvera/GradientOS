@@ -8,5 +8,5 @@ runs:
       run: |
         echo "Caching all store paths to Gradient Attic..."
         nix build nixpkgs#attic-client
-        find /nix/store -mindepth 1 -maxdepth 1 -type d -not -name '.*' -exec ./result/bin/attic push gradient {} \;
+        find /nix/store -mindepth 1 -maxdepth 1 -type d -not -name '.*' | ./result/bin/attic push gradient --stdin
         echo "Cached all paths successfully!"
