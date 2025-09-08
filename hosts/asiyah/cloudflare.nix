@@ -16,6 +16,7 @@
       *.gradient.moe,
       game.gradient.moe,
       vpn.gradient.moe,
+      cache.gradient.moe,
       www.gradient.moe,
       ssh.gradient.moe
 
