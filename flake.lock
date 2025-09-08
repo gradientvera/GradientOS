@@ -286,11 +286,11 @@
         "nixpkgs": "nixpkgs_3"
       },
       "locked": {
-        "lastModified": 1757282653,
-        "narHash": "sha256-XasBUfgnHWGt4MN3M+cEEYPVYRcYusmBO4xn4G4UWdk=",
+        "lastModified": 1757317672,
+        "narHash": "sha256-vM26La2uWcvS3J4HMfnY65Ys3HEBFT9btg5hIt23k4A=",
         "ref": "refs/heads/main",
-        "rev": "ea36da6ce3c57c7e9ea160dabfeef9b65b4c1d72",
-        "revCount": 24,
+        "rev": "7b76bdeb5fc4cb334db4add2c89e2da944055e8b",
+        "revCount": 25,
         "type": "git",
         "url": "ssh://git@github.com/gradientvera/gradient.moe"
       },
