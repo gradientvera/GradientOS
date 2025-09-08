@@ -1,0 +1,18 @@
+name: Check Action Workflows
+on:
+  push:
+    paths:
+      - "**/*.yml"
+      - "**/*.yaml"
+  workflow_dispatch:
+  
+jobs:
+  validate-workflows:
+    runs-on: alpine-latest
+    steps:
+      - name: Install Lix
+        uses: actions/install-lix@v1
+      - name: Checkout repository
+        uses: actions/checkout@v5
+      - name: Validate All Action Workflows
+        run: nix run nixpkgs#forgejo-runner -- validate --repository $FORGEJO_WORKSPACE
