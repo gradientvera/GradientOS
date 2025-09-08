@@ -152,6 +152,13 @@ in
     };
   };
 
+  # Takes the form of gitea-runner-<instance>
+  systemd.services.gitea-runner-asiyah = {
+    # Prevents Forgejo runner deployments
+    # from dying on system switch.
+    restartIfChanged = false;
+  };
+
   systemd.services.forgejo = {
     serviceConfig = {
       # Allow binding to port below 1024, for ssh
