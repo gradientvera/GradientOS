@@ -159,7 +159,7 @@
 
         deployment = {
           targetHost = ips.gradientnet.bernkastel;
-          tags = with colmena-tags; [ x86_64 desktop vera ];
+          tags = with colmena-tags; [ x86_64 desktop vera nightly ];
           allowLocalDeployment = true;
           buildOnTarget = true;
         };
@@ -349,7 +349,7 @@
 
         deployment = {
           targetHost = ips.gradientnet.featherine;
-          tags = with colmena-tags; [ x86_64 desktop vera ];
+          tags = with colmena-tags; [ x86_64 desktop vera nightly ];
           allowLocalDeployment = true;
         };
       }
@@ -387,7 +387,7 @@
 
         deployment = {
           targetHost = ips.gradientnet.asiyah;
-          tags = with colmena-tags; [ x86_64 server vera ];
+          tags = with colmena-tags; [ x86_64 server vera nightly ];
           allowLocalDeployment = true;
         };
       }
@@ -416,7 +416,7 @@
 
         deployment = {
           targetHost = ips.gradientnet.yetzirah;
-          tags = with colmena-tags; [ x86_64 server vera ];
+          tags = with colmena-tags; [ x86_64 server vera nightly ];
           allowLocalDeployment = true;
         };
       }

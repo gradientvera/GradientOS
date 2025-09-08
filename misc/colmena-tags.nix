@@ -10,4 +10,6 @@
 
   vera = "vera";
   neith = "neith";
+
+  nightly = "nightly";
 }
