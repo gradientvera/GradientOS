@@ -202,6 +202,9 @@ in
       "nfs4" = true;
     };
 
+    # Slow to build, fails to build on containers too
+    documentation.man.generateCaches = lib.mkForce false;
+
     boot.loader.systemd-boot.netbootxyz.enable = true;
 
     # Put jemalloc on a consistent folder, for use with LD_PRELOAD
