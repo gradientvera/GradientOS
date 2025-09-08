@@ -26,7 +26,7 @@ jobs:
         run: nix flake archive
       - name: Run Colmena Build
         id: colmenabuild
-        run: nix run .#colmena -- apply build --on "*" --show-trace --evaluator=streaming --no-build-on-target
+        run: nix run .#lixPackageSets.latest.colmena -- apply build --on "*" --show-trace --evaluator=streaming --no-build-on-target
         continue-on-error: true
       - name: Cache all store paths to Attic
         uses: ./.forgejo/cache-to-attic
