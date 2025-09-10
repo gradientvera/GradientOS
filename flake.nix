@@ -52,10 +52,7 @@
       flake = false;
     };
 
-    jovian-nixos = {
-      url = "github:Jovian-Experiments/Jovian-NixOS";
-      inputs.nixpkgs.follows = "nixpkgs";
-    };
+    jovian-nixos.url = "github:Jovian-Experiments/Jovian-NixOS";
 
     sops-nix = {
       url = "github:Mic92/sops-nix";
