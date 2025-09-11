@@ -8,14 +8,18 @@ outputs: {}
 runs:
   using: composite
   steps:
+    - name: "Install Attic Client"
+      run: |
+        echo "Installing Attic client..."
+        nix profile install nixpkgs#attic-client --inputs-from $FORGEJO_WORKSPACE
     - name: "Log into Attic"
       run: |
         echo "Logging into Attic server..."
-        nix run nixpkgs#attic-client -- login gradient https://cache.gradient.moe ${{ inputs.attic-token }}
+        attic login gradient https://cache.gradient.moe ${{ inputs.attic-token }}
         echo "Logged in!"
     - name: "Use Attic Gradient Cache"
       run: |
         echo "Enabling Gradient cache..."
-        nix run nixpkgs#attic-client -- use gradient
-        nohup nix run nixpkgs#attic-client -- watch-store gradient &
+        attic use gradient
+        nohup attic watch-store gradient &
         echo "Now using the Gradient cache!"

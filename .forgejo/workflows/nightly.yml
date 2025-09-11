@@ -22,11 +22,13 @@ jobs:
         uses: ./.forgejo/setup-attic-cache
         with:
           attic-token: ${{ secrets.ATTIC_TOKEN }}
+      - name: Install Colmena
+        run: nix profile install nixpkgs#lixPackageSets.latest.colmena --inputs-from $FORGEJO_WORKSPACE
       - name: Fetch flake inputs
         run: nix flake archive
       - name: Run Colmena Build
         id: colmenabuild
-        run: nix run .#lixPackageSets.latest.colmena -- apply build --on @nightly --show-trace --evaluator=streaming --no-build-on-target
+        run: colmena apply build --on @nightly --show-trace --evaluator=streaming --no-build-on-target
         continue-on-error: true
       - name: Cache all store paths to Attic
         uses: ./.forgejo/cache-to-attic

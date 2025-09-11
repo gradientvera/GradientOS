@@ -1,5 +1,5 @@
 name: "Cache all store paths to Gradient Attic"
-description: "Install and set up the Attic client with a cache."
+description: "Caches all store paths under /nix/store to an Attic cache. The Attic client must be available on PATH."
 outputs: {}
 runs:
   using: composite
@@ -7,6 +7,5 @@ runs:
     - name: "Cache all store paths to Gradient Attic"
       run: |
         echo "Caching all store paths to Gradient Attic..."
-        nix build nixpkgs#attic-client
-        find /nix/store -mindepth 1 -maxdepth 1 -type d -not -name '.*' -exec ./result/bin/attic push gradient {} \;
+        find /nix/store -mindepth 1 -maxdepth 1 -type d -not -name '.*' -exec attic push gradient {} \;
         echo "Cached all paths successfully!"
