@@ -286,11 +286,11 @@
         "nixpkgs": "nixpkgs_3"
       },
       "locked": {
-        "lastModified": 1757444107,
-        "narHash": "sha256-H70zWq1WOAH9Rr5+QnSIOsIuHK8FFewaJ6E/kZ00G60=",
+        "lastModified": 1757582349,
+        "narHash": "sha256-osi27GkOebrWp4SCax0NybE7hNolenQGm/+wFTXhS7Q=",
         "ref": "refs/heads/main",
-        "rev": "1ee1f23e79d4c4b2aa8a5c7c0c3874f62b17e977",
-        "revCount": 36,
+        "rev": "47b1e7b97bc56dcd8ccd9baaaf711db3cf21e787",
+        "revCount": 39,
         "type": "git",
         "url": "ssh://git@github.com/gradientvera/gradient.moe"
       },
@@ -648,11 +648,11 @@
     },
     "nixpkgs_4": {
       "locked": {
-        "lastModified": 1757347588,
-        "narHash": "sha256-tLdkkC6XnsY9EOZW9TlpesTclELy8W7lL2ClL+nma8o=",
+        "lastModified": 1756125398,
+        "narHash": "sha256-XexyKZpf46cMiO5Vbj+dWSAXOnr285GHsMch8FBoHbc=",
         "owner": "NixOS",
         "repo": "nixpkgs",
-        "rev": "b599843bad24621dcaa5ab60dac98f9b0eb1cabe",
+        "rev": "3b9f00d7a7bf68acd4c4abb9d43695afb04e03a5",
         "type": "github"
       },
       "original": {

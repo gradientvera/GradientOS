@@ -25,7 +25,7 @@ jobs:
       - name: Install Colmena
         run: nix profile install nixpkgs#lixPackageSets.latest.colmena --inputs-from $FORGEJO_WORKSPACE
       - name: Fetch flake inputs
-        run: nix flake archive
+        run: nix flake archive --no-update-lock-file
       - name: Run Colmena Build
         id: colmenabuild
         run: colmena apply build --on @nightly --show-trace --evaluator=streaming --no-build-on-target

@@ -24,6 +24,6 @@ jobs:
         with:
           attic-token: ${{ secrets.ATTIC_TOKEN }}
       - name: Run nix flake check
-        run: nix flake check
+        run: nix flake check --no-update-lock-file
       
       # No need to push to cache, this is meant to be a quick action
