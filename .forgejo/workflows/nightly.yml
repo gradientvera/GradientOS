@@ -4,7 +4,11 @@ on:
   schedule:
     - cron: "0 4 * * *"
   workflow_dispatch:
-
+env:
+  # Listen, listen, listen...
+  # Life's too short for this crap, eh?
+  NIXPKGS_ALLOW_INSECURE: 1
+  NIXPKGS_ALLOW_BROKEN: 1
 jobs:
   build:
     runs-on: alpine-latest
@@ -28,7 +32,7 @@ jobs:
         run: nix flake archive --no-update-lock-file
       - name: Run Colmena Build
         id: colmenabuild
-        run: colmena apply build --on @nightly --show-trace --evaluator=streaming --no-build-on-target
+        run: colmena apply build --on @nightly --show-trace --evaluator=streaming --impure --no-build-on-target
         continue-on-error: true
       - name: Cache all store paths to Attic
         uses: ./.forgejo/cache-to-attic

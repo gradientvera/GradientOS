@@ -19,7 +19,11 @@ on:
         default: false
         required: false
         type: boolean
-
+env:
+  # Listen, listen, listen...
+  # Life's too short for this crap, eh?
+  NIXPKGS_ALLOW_INSECURE: 1
+  NIXPKGS_ALLOW_BROKEN: 1
 jobs:
   build:
     runs-on: alpine-latest
@@ -49,12 +53,12 @@ jobs:
         id: colmenabuild
         if: ${{ inputs.build-on-target }}
         continue-on-error: true
-        run: colmena apply ${{ inputs.operation }} --on "${{ inputs.hosts }}" --show-trace --evaluator=streaming --build-on-target 
+        run: colmena apply ${{ inputs.operation }} --on "${{ inputs.hosts }}" --show-trace --impure --evaluator=streaming --build-on-target 
       - name: Run Colmena Apply with no build on target
         id: colmenabuildnotarget
         if: ${{ !inputs.build-on-target }}
         continue-on-error: true
-        run: colmena apply ${{ inputs.operation }} --on "${{ inputs.hosts }}" --show-trace --evaluator=streaming --no-build-on-target
+        run: colmena apply ${{ inputs.operation }} --on "${{ inputs.hosts }}" --show-trace --impure --evaluator=streaming --no-build-on-target
       - name: Cache all store paths to Attic
         uses: ./.forgejo/cache-to-attic
       - name: On failure
