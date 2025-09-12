@@ -7,11 +7,11 @@
   ];
 
   home.packages = with pkgs; [
-    stable.gimp-with-plugins
     master.discord-canary
     lxqt.pavucontrol-qt
     whatsapp-for-linux
     kdePackages.okular
+    gimp-with-plugins
     libreoffice-fresh
     element-desktop
     kdePackages.kate
