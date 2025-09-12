@@ -106,6 +106,8 @@ in with alib.tasks;
           "imagemagick"
           "mosquitto-client-nossl"
           "jq"
+
+          "espeak-ng"
         ];
       })
 
