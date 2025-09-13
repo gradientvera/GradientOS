@@ -71,7 +71,7 @@ jobs:
         run: colmena apply ${{ inputs.a_operation }} --on "${{ inputs.b_hosts }}" --show-trace --impure --evaluator=streaming --build-on-target 
       - name: Run Colmena Apply with no build on target
         id: colmenabuildnotarget
-        if: ${{ !inputs.build-on-target }}
+        if: ${{ !inputs.c_build-on-target }}
         continue-on-error: true
         run: colmena apply ${{ inputs.a_operation }} --on "${{ inputs.b_hosts }}" --show-trace --impure --evaluator=streaming --no-build-on-target
       - name: Commit flake.lock
