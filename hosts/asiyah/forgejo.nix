@@ -126,6 +126,10 @@ in
         DEFAULT_ACTIONS_URL = "https://git.gradient.moe";
       };
 
+      federation = {
+        ENABLED = true;
+        MAX_SIZE = 16;
+      };
     };
   };
 
