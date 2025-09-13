@@ -75,7 +75,7 @@ jobs:
         continue-on-error: true
         run: colmena apply ${{ inputs.a_operation }} --on "${{ inputs.b_hosts }}" --show-trace --impure --evaluator=streaming --no-build-on-target
       - name: Commit flake.lock
-        if: ${{ inputs.d_update-inputs && steps.colmenabuild.outcome != 'failure' && steps.colmenabuildnotarget.outcome == 'failure' }}
+        if: ${{ inputs.d_update-inputs && steps.colmenabuild.outcome != 'failure' && steps.colmenabuildnotarget.outcome != 'failure' }}
         continue-on-error: true
         run: |
           echo "Configure Git"
