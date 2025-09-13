@@ -12,6 +12,7 @@ on:
           - switch
           - boot
           - push
+          - build
       b_hosts:
         description: Which hosts to target.
         required: true
@@ -84,7 +85,7 @@ jobs:
           git config --global user.signingkey '${{ vars.SSH_PUBLIC_KEY }}'
           echo "Commiting and pushing flake.lock"
           git add flake.lock
-          git commit -m "Update gradient.moe input"
+          git commit -S -m "Update gradient.moe input"
           git push
           echo "Done!"
       - name: Cache all store paths to Attic
