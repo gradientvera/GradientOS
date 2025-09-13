@@ -86,7 +86,7 @@ jobs:
           git config --global user.signingkey '${{ vars.SSH_PUBLIC_KEY }}'
           echo "Commiting and pushing flake.lock"
           git add flake.lock
-          git commit -S -m "Update gradient.moe input"
+          git commit -S -m "Update flake inputs" -m "Updated: ${{ inputs.e_inputs-to-update }}"
           git push
           echo "Done!"
       - name: Cache all store paths to Attic
