@@ -1,4 +1,7 @@
 ## GradientOS
+![nix flake check badge](https://git.gradient.moe/vera/GradientOS/badges/workflows/nix-flake-check.yml/badge.svg)
+![nightly badge](https://git.gradient.moe/vera/GradientOS/badges/workflows/nightly.yml/badge.svg)
+
 Flake for different NixOS system configurations.
 GradientOS supports the [auxolotl](https://auxolotl.org/) and [Lix](https://lix.systems/) projects and so should you!
 
