@@ -81,6 +81,7 @@ jobs:
           echo "Configure Git"
           git config --global user.name "Forgejo Deployment"
           git config --global user.email "vera@noreply.git.gradient.moe"
+          git config --global user.signingkey '${{ vars.SSH_PUBLIC_KEY }}'
           echo "Commiting and pushing flake.lock"
           git add flake.lock
           git commit -m "Update gradient.moe input"
