@@ -2,7 +2,9 @@ name: Run Colmena Deployment
 on:
   workflow_dispatch:
     inputs:
-      operation:
+      # Prefixed with letters for ordering.
+      # Stupid solution but...
+      a_operation:
         description: Which NixOS build operation to use.
         default: "switch"
         type: choice
@@ -10,22 +12,22 @@ on:
           - switch
           - boot
           - push
-      hosts:
+      b_hosts:
         description: Which hosts to target.
         required: true
         type: string
-      build-on-target:
+      c_build-on-target:
         description: Build on target
         default: false
         required: false
         type: boolean
-      update-inputs:
-        description: Whether to update flake inputs before deployment.
+      d_update-inputs:
+        description: Update Flake inputs before deployment?
         default: false
         type: boolean
         required: true
-      inputs-to-update:
-        description: 'Flake inputs to update, leave empty to update all inputs. Only used if "Update Inputs" is set.'
+      e_inputs-to-update:
+        description: 'Flake inputs to update or empty to update all inputs.'
         default: ""
         type: string
         required: false
@@ -58,22 +60,23 @@ jobs:
       - name: Install Colmena
         run: nix profile install nixpkgs#lixPackageSets.latest.colmena --inputs-from $FORGEJO_WORKSPACE
       - name: Update flake inputs
-        if: ${{ inputs.update-inputs }}
-        run: nix flake update ${{ inputs.inputs-to-update }}
+        if: ${{ inputs.d_update-inputs }}
+        run: nix flake update ${{ inputs.e_inputs-to-update }}
       - name: Fetch flake inputs
         run: nix flake archive --no-update-lock-file
       - name: Run Colmena Apply with build on target
         id: colmenabuild
-        if: ${{ inputs.build-on-target }}
+        if: ${{ inputs.c_build-on-target }}
         continue-on-error: true
-        run: colmena apply ${{ inputs.operation }} --on "${{ inputs.hosts }}" --show-trace --impure --evaluator=streaming --build-on-target 
+        run: colmena apply ${{ inputs.a_operation }} --on "${{ inputs.b_hosts }}" --show-trace --impure --evaluator=streaming --build-on-target 
       - name: Run Colmena Apply with no build on target
         id: colmenabuildnotarget
         if: ${{ !inputs.build-on-target }}
         continue-on-error: true
-        run: colmena apply ${{ inputs.operation }} --on "${{ inputs.hosts }}" --show-trace --impure --evaluator=streaming --no-build-on-target
+        run: colmena apply ${{ inputs.a_operation }} --on "${{ inputs.b_hosts }}" --show-trace --impure --evaluator=streaming --no-build-on-target
       - name: Commit flake.lock
-        if: ${{ inputs.update-inputs && steps.colmenabuild.outcome != 'failure' && steps.colmenabuildnotarget.outcome == 'failure' }}
+        if: ${{ inputs.d_update-inputs && steps.colmenabuild.outcome != 'failure' && steps.colmenabuildnotarget.outcome == 'failure' }}
+        continue-on-error: true
         run: |
           echo "Configure Git"
           git config --global user.name "Forgejo Deployment"
