@@ -8,6 +8,8 @@
       "/data/stardream"
       "/var/lib/mediarr"
       "/data/gradient-data"
+      "/data/lfs"
+      "/data/repositories"
     ];
   };
 
