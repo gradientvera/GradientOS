@@ -133,6 +133,12 @@ in
           path = "~/Documents/TheMidnightHall";
           devices = [ "bernkastel" "asiyah" "featherine" "neith-deck" "hadal-rainbow" ];
         };
+        constellation = {
+          id = "constellation";
+          versioning.type = "trashcan";
+          path = "~/Documents/Constellation";
+          devices = [ "bernkastel" "asiyah" "featherine" "neith-deck" "hadal-rainbow" "remie" ];
+        };
         important-documents = {
           id = "egytl-udh2q";
           versioning.type = "trashcan";
