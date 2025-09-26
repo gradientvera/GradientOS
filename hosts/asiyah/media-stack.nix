@@ -32,6 +32,7 @@ let
     tdarr-webui
     tdarr-server
     ersatztv
+    tunarr
     qbittorrent-webui
     qbittorrent-peer
     mikochi
@@ -206,6 +207,7 @@ in {
     "/var/lib/${userName}/qbittorrent".d = rule;
     "/var/lib/${userName}/qbittorrent/incomplete".d = rule;
     "/var/lib/${userName}/ersatztv".d = rule;
+    "/var/lib/${userName}/tunarr".d = rule;
     "/var/lib/${userName}/jellyfin".d = rule;
     "/var/lib/${userName}/jellyfin/config".d = rule;
     "/var/lib/${userName}/jellyfin/cache".d = rule;
@@ -318,6 +320,34 @@ in {
         "PODMAN_SYSTEMD_UNIT" = "podman-ersatztv.service";
       };
       dependsOn = [ "gluetun" ];
+    };
+
+    tunarr = {
+      image = "ghcr.io/chrisbenincasa/tunarr:latest";
+      pull = "newer";
+      ports = [
+        "${toString ports.tunarr}:8000"
+      ];
+      volumes = [
+        "/var/lib/${userName}/tunarr:/config/tunarr"
+        "/data/downloads:/media:ro"
+      ];
+      environment = {
+        TZ = config.time.timeZone;
+        PUID = toString userUid;
+        PGID = toString groupGid;
+        TUNARR_SERVER_TRUST_PROXY = "true";
+      };
+      environmentFiles = [ ];
+      extraOptions = [
+        "--device=/dev/dri/:/dev/dri/"
+        "--ip=10.88.0.12"
+      ];
+      labels = {
+        "io.containers.autoupdate" = "registry";
+        "PODMAN_SYSTEMD_UNIT" = "podman-tunarr.service";
+      };
+      dependsOn = [ ];
     };
 
     radarr = {

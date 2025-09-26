@@ -275,6 +275,16 @@
             };
           }
           {
+            "Tunarr" = {
+              description = "Create live TV channels from media on your Jellyfin server, and more!";
+              href = "https://tunarr.constellation.moe/";
+              icon = "sh-tunarr.png";
+              server = "asiyah";
+              container = "tunarr";
+              showStats = true;
+            };
+          }
+          {
             "Pinchflat" = {
               description = "A self-hosted app for downloading YouTube content built using yt-dlp.";
               href = "https://pinchflat.constellation.moe/";

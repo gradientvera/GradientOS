@@ -33,6 +33,7 @@
   qbittorrent-peer = 36494;
   flaresolverr = 8191;
   ersatztv = 8409;
+  tunarr = 8410;
   tdarr-webui = 8265;
   tdarr-server = 8266;
   bitmagnet-webui = 3333;
