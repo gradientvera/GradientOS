@@ -122,6 +122,7 @@ in {
         -p ${toString ports.neko-epr-start}-${toString ports.neko-epr-end}:${toString ports.neko-epr-start}-${toString ports.neko-epr-end}/udp \
         -p ${toString ports.proxy-vpn}:${toString ports.proxy-vpn} \
         -p ${toString ports.calibre-downloader}:${toString ports.calibre-downloader} \
+        -p ${toString ports.pinchflat}:8945 \
         --ip "10.88.0.2" \
         --sysctl="net.ipv4.ip_forward=1" \
         --sysctl="net.ipv4.conf.all.src_valid_mark=1" \
@@ -227,6 +228,7 @@ in {
     "/var/lib/${userName}/romm/resources".d = rule;
     "/var/lib/${userName}/mariadb".d = rule;
     "/var/lib/${userName}/calibre-web-automated".d = rule;
+    "/var/lib/${userName}/pinchflat".d = rule;
     "/var/lib/${userName}/.mozilla".d = rule;
     "/var/lib/${userName}/.mozilla/firefox".d = rule;
     "/var/lib/${userName}/sshlogs".d = rule;
@@ -1005,6 +1007,7 @@ in {
         FLASK_DEBUG = "false";
         BOOK_LANGUAGE = "en";
         INGEST_DIR = "/ingest";
+        TZ = config.time.timeZone;
         UID = toString userUid;
         GID = toString groupGid;
       };
@@ -1016,32 +1019,28 @@ in {
       dependsOn = [ "gluetun" ];
     };
 
-  };
-
-  services.pinchflat = {
-    enable = true;
-    # Always get the latest, bleeding edge version
-    # because otherwise yt-dlp might not work...
-    # FUCK YOU GOOGLE!!!!
-    package = pkgs.master.pinchflat;
-    user = userName;
-    group = groupName;
-    mediaDir = "/data/downloads/youtube";
-    port = ports.pinchflat;
-    secretsFile = config.sops.secrets.pinchflat.path;
-    extraConfig = {
-      # aaaaa google whyyy
-      YT_DLP_WORKER_CONCURRENCY = 1;
+    pinchflat = {
+      image = "ghcr.io/kieraneglin/pinchflat:latest";
+      pull = "newer";
+      volumes = [
+        "/var/lib/${userName}/pinchflat:/config"
+        "/data/downloads/youtube:/downloads"
+        # For existing downloads
+        "/data/downloads/youtube:/data/downloads/youtube"
+      ];
+      environmentFiles = [ config.sops.secrets.pinchflat.path ];
+      environment = {
+        TZ = config.time.timeZone;
+        YT_DLP_WORKER_CONCURRENCY = "1";
+      };
+      extraOptions = [] ++ defaultOptions;
+      labels = {
+        "io.containers.autoupdate" = "registry";
+        "PODMAN_SYSTEMD_UNIT" = "podman-pinchflat.service";
+      };
+      dependsOn = [ "gluetun" ];
     };
-  };
 
-  systemd.services.pinchflat = {
-    wants = [ "podman-proxy-vpn-uk-socks5.service" ];
-    after = [ "podman-proxy-vpn-uk-socks5.service" ];
-    environment = {
-      HTTPS_PROXY = "socks5://asiyah.gradient.moe:${toString ports.proxy-vpn-uk}";
-      HTTP_PROXY = "socks5://asiyah.gradient.moe:${toString ports.proxy-vpn-uk}";
-    };
   };
 
   # -- Firewall Setup --
