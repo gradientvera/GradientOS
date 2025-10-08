@@ -111,14 +111,12 @@ in {
 
   # Unmodified unstable nixpkgs overlay.
   unstable = import flake.inputs.nixpkgs {
-    inherit (prev) system;
-    config.allowUnfree = true;
+    inherit (prev) system config;
   };
 
   # Stable nixpkgs overlay.
   stable = import flake.inputs.nixpkgs-stable {
-    inherit (prev) system;
-    config.allowUnfree = true;
+    inherit (prev) system config;
     overlays = [
       (import ./gradientos.nix flake)
       (import ./gradientpkgs.nix)
@@ -128,8 +126,7 @@ in {
 
   # Master branch nixpkgs overlay.
   master = import flake.inputs.nixpkgs-master {
-    inherit (prev) system;
-    config.allowUnfree = true;
+    inherit (prev) system config;
     overlays = [
       (import ./gradientos.nix flake)
       (import ./gradientpkgs.nix)
