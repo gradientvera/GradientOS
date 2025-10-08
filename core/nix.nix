@@ -46,12 +46,14 @@ in
             "https://nix-gaming.cachix.org?priority=10"
             "https://nix-community.cachix.org?priority=20"
             "https://cache.lix.systems?priority=20"
+            "https://cache.aux-cache.dev?priority=20"
           ];
 
           trusted-public-keys = with cfg.const.nix.pubKeys; [
             "nix-gaming.cachix.org-1:nbjlureqMbRAxR1gJ/f3hxemL9svXaZF/Ees8vCUUs4="
             "nix-community.cachix.org-1:mB9FSh9qf2dCimDSUo8Zy7bkq5CX+/rkCWyvRCYg3Fs="
             "cache.lix.systems:aBnZUw8zA7H35Cz2RyKFVs3H4PlGTLawyY5KRbvJR8o="
+            "aux-cache.dev-1:ywKsFPXTku4fvm8Scw4gZztmJ+R6zkeKFZCe5k3zoLE="
             asiyah
             bernkastel
             beatrice
