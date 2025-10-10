@@ -34,6 +34,7 @@ let
       ${vhostExtraConfig}
     '';
     useACMEHost = "gradient.moe";
+    quic = true;
     forceSSL = true;
     locations."/" = {
       proxyPass = "http://${address}:${toString port}${reverseProxySubdomain}";
@@ -47,6 +48,7 @@ in
     listenAddresses = [ ips.gradientnet.asiyah ];
     extraConfig = vhostConfig;
     useACMEHost = "gradient.moe";
+    quic = true;
     forceSSL = true;
 
     serverAliases = [

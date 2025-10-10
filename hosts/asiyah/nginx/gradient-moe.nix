@@ -6,9 +6,10 @@
 { self, pkgs, lib, config, ... }:
 let
   ports = config.gradient.currentHost.ports;
-  mkReverseProxy = { port, address ? "127.0.0.1", protocol ? "http", generateOwnCert ? false, rootExtraConfig ? "", vhostExtraConfig ? "", useACMEHost ? "gradient.moe" }: {
+  mkReverseProxy = { port, address ? "127.0.0.1", protocol ? "http", generateOwnCert ? false, rootExtraConfig ? "", vhostExtraConfig ? "", useACMEHost ? "gradient.moe", extraConfig ? {} }: {
     useACMEHost = if (!generateOwnCert) then useACMEHost else null;
     enableACME = generateOwnCert;
+    quic = true;
     forceSSL = true;
     extraConfig = vhostExtraConfig;
     locations."/" = {
@@ -16,7 +17,7 @@ let
       proxyWebsockets = true;
       extraConfig = rootExtraConfig;
     };
-  };
+  } // extraConfig;
 in
 {
 
@@ -39,11 +40,10 @@ in
     root = toString self.inputs.gradient-moe.packages.${pkgs.system}.default;
     enableACME = true;
     acmeRoot = null;
+    quic = true;
     forceSSL = true;
     serverAliases = [
       "www.gradient.moe"
-      "zumorica.es"
-      "www.zumorica.es"
     ];
     locations."/daily_gradient/data/" = {
       alias = "/data/gradient-data/";
@@ -59,7 +59,7 @@ in
     "grafana.gradient.moe" = mkReverseProxy { port = config.services.grafana.settings.server.http_port; };
     # Recommended settings by https://github.com/paperless-ngx/paperless-ngx/wiki/Using-a-Reverse-Proxy-with-Paperless-ngx#nginx
     "paperless.gradient.moe" = mkReverseProxy { port = ports.paperless; vhostExtraConfig = ''client_max_body_size 4G;''; rootExtraConfig = ''proxy_redirect off; add_header Referrer-Policy "strict-origin-when-cross-origin";''; };
-    "cache.gradient.moe" = mkReverseProxy { port = ports.attic; vhostExtraConfig = "client_max_body_size 32G; proxy_buffering off; proxy_cache off;"; };
+    "cache.gradient.moe" = mkReverseProxy { port = ports.attic; vhostExtraConfig = "client_max_body_size 32G; proxy_buffering off; proxy_cache off;"; extraConfig = { http2 = false; http3 = false; }; };
    };
 
   # Redirect to main site for all incorrect subdomains
@@ -69,7 +69,7 @@ in
     enableACME = false;
     useACMEHost = "gradient.moe";
     serverName = ''""'';
-    extraConfig = "return 301 https://gradient.moe$request_uri ;";
+    globalRedirect = "gradient.moe";
   };
 
 }

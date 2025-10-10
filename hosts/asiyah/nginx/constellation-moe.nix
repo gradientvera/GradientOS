@@ -18,6 +18,7 @@
       root = self.inputs.constellation-moe;
       enableACME = true;
       acmeRoot = null;
+      quic = true;
       forceSSL = true;
       serverAliases = [
         "www.constellation.moe"

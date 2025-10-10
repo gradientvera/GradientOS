@@ -9,6 +9,7 @@ let
   {
     useACMEHost = if (!generateOwnCert) then useACMEHost else null;
     enableACME = generateOwnCert;
+    quic = true;
     forceSSL = true;
     extraConfig = vhostExtraConfig;
     locations.${reverseProxyLocation} = {
@@ -29,6 +30,7 @@ in {
 
   services.nginx.virtualHosts."jellyfin.constellation.moe" = {
     useACMEHost = "constellation.moe";
+    quic = true;
     addSSL = true;
     
     extraConfig = ''
@@ -65,6 +67,7 @@ in {
 
       # Disable buffering when the nginx proxy gets very resource heavy upon streaming
       proxy_buffering off;
+      proxy_cache off;
     '';
 
     locations."/socket".extraConfig = ''
@@ -82,7 +85,6 @@ in {
       proxy_set_header X-Forwarded-Host $http_host;
     '';
   };
-
 
   services.nginx.virtualHosts = {
     "homepage.constellation.moe" = mkReverseProxy { port = ports.constellation-homepage; };

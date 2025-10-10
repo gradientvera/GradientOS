@@ -17,16 +17,20 @@ in {
 
   services.nginx = {
     enable = true;
-    package = pkgs.nginxStable.override {
+    package = pkgs.nginxQuic.override {
       withSlice = true;
     };
     defaultHTTPListenPort = ports.nginx;
     defaultSSLListenPort = ports.nginx-ssl;
+
     recommendedGzipSettings = true;
     recommendedOptimisation = true;
     recommendedProxySettings = true;
     recommendedTlsSettings = true;
     recommendedBrotliSettings = true;
+    proxyTimeout = "120s";
+
+    enableQuicBPF = true;
 
     logError = "/var/log/nginx/error.log";
 

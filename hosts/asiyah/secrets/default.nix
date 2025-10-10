@@ -203,7 +203,6 @@
       };
 
       pinchflat = {
-
         owner = config.users.users.mediarr.name;
         group = config.users.users.mediarr.group;
         restartUnits = [ "pinchflat.service" ];
