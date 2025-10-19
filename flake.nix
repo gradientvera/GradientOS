@@ -71,8 +71,6 @@
       inputs.flake-compat.follows = "flake-compat";
     };
 
-    declarative-flatpak.url = "github:GermanBread/declarative-flatpak/stable-v3";
-
     gpd-fan-driver.url = "github:Cryolitia/gpd-fan-driver";
     gpd-fan-driver.inputs.nixpkgs.follows = "nixpkgs";
 
@@ -96,7 +94,7 @@
     };
   };
 
-  outputs = { self, nixpkgs, gradient-generator, jovian-nixos, sops-nix, nixos-hardware, declarative-flatpak, gpd-fan-driver, ... }:
+  outputs = { self, nixpkgs, gradient-generator, jovian-nixos, sops-nix, nixos-hardware, gpd-fan-driver, ... }:
   let
     ips = import ./misc/wireguard-addresses.nix;
     colmena-tags = import ./misc/colmena-tags.nix;
@@ -112,8 +110,6 @@
         name = "bernkastel";
 
         modules = [
-          declarative-flatpak.nixosModule
-
           mixins.wine
           mixins.gnupg
           mixins.alloy
@@ -129,7 +125,6 @@
           mixins.nix-store-serve
           mixins.binfmt-emulation
           mixins.system76-scheduler
-          mixins.declarative-flatpak
 
           mixins.graphical-steam
           mixins.graphical-sunshine
@@ -168,7 +163,6 @@
 
         modules = [
           jovian-nixos.nixosModules.default
-          declarative-flatpak.nixosModule
 
           mixins.wine
           mixins.gnupg
@@ -180,7 +174,6 @@
           mixins.neith-locale
           mixins.nix-store-serve
           mixins.system76-scheduler
-          mixins.declarative-flatpak
           
           mixins.graphical-steam
           
@@ -209,8 +202,7 @@
 
         modules = [
           jovian-nixos.nixosModules.default
-          declarative-flatpak.nixosModule
-          
+
           mixins.wine
           mixins.gnupg
           mixins.wireguard
@@ -223,7 +215,6 @@
           mixins.graphical-steam
           mixins.nix-store-serve
           mixins.system76-scheduler
-          mixins.declarative-flatpak
           
           mixins.hardware-qmk
           mixins.hardware-amdcpu
@@ -256,8 +247,7 @@
 
         modules = [
           jovian-nixos.nixosModules.default
-          declarative-flatpak.nixosModule
-          
+
           mixins.tor
           mixins.wine
           mixins.gnupg
@@ -270,7 +260,6 @@
           mixins.virtualisation
           mixins.nix-store-serve
           mixins.system76-scheduler
-          mixins.declarative-flatpak
           
           mixins.graphical-steam
           
@@ -305,7 +294,6 @@
         modules = [
           gpd-fan-driver.nixosModules.default
           jovian-nixos.nixosModules.default
-          declarative-flatpak.nixosModule
           nixos-hardware.nixosModules.gpd-win-mini-2024
           
           mixins.tor
@@ -323,7 +311,6 @@
           #mixins.nix-store-serve
           mixins.jovian-decky-loader
           mixins.system76-scheduler
-          mixins.declarative-flatpak
           
           mixins.graphical-steam
 

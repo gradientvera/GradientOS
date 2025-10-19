@@ -3,7 +3,6 @@
 
   alloy = ./mixins/alloy.nix;
   binfmt-emulation = ./mixins/binfmt-emulation.nix;
-  declarative-flatpak = ./mixins/declarative-flatpak.nix;
   gnupg = ./mixins/gnupg.nix;
   jovian-decky-loader = ./mixins/jovian-decky-loader.nix;
   neith-locale = ./mixins/neith-locale.nix;

@@ -5,8 +5,4 @@
     
   ];
 
-  services.flatpak.packages = [
-
-  ];
-
 }

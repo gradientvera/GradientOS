@@ -94,22 +94,6 @@
         "url": "ssh://git@github.com/CRP3092/Portafolio.git"
       }
     },
-    "declarative-flatpak": {
-      "locked": {
-        "lastModified": 1754772718,
-        "narHash": "sha256-AlYxWTqGiYlyMbMkh7Zt+2wekPxd3d1x6INbr2nQtTI=",
-        "owner": "GermanBread",
-        "repo": "declarative-flatpak",
-        "rev": "8ca8ff9fffb6c94561b74f79569a0ac0e43464c2",
-        "type": "github"
-      },
-      "original": {
-        "owner": "GermanBread",
-        "ref": "stable-v3",
-        "repo": "declarative-flatpak",
-        "type": "github"
-      }
-    },
     "flake-compat": {
       "flake": false,
       "locked": {
@@ -742,7 +726,6 @@
         "colmena": "colmena",
         "constellation-moe": "constellation-moe",
         "crp3092": "crp3092",
-        "declarative-flatpak": "declarative-flatpak",
         "flake-compat": "flake-compat",
         "gpd-fan-driver": "gpd-fan-driver",
         "gradient-generator": "gradient-generator",
