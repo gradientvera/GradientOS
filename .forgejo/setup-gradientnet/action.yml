@@ -33,7 +33,7 @@ runs:
       id: gradientnetport
       uses: actions/eval-nix@v1
       with:
-        file: ./hosts/asiyah/misc/service-ports.nix
+        file: ./hosts/briah/misc/service-ports.nix
         expr: gradientnet
     - name: Disable SSH Strict Host Key Checking for GradientNet
       run: |
