@@ -14,7 +14,6 @@ in {
     onShutdown = "shutdown";
     qemu = {
       runAsRoot = true;
-      ovmf.enable = true;
     };
     hooks.qemu = {
       "win10-hooks.sh" = "${win10-hooks}/bin/win10-hooks";
