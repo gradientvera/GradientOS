@@ -77,7 +77,10 @@ let
   asiyahForwardedPorts = with asiyahPorts; [
     nginx
     nginx-ssl
+
     lilynet
+
+    forgejo-ssh
 
     minecraft
   ];
