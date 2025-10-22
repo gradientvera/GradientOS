@@ -96,6 +96,7 @@
 
   outputs = { self, nixpkgs, gradient-generator, jovian-nixos, sops-nix, nixos-hardware, gpd-fan-driver, ... }:
   let
+    addr = import ./misc/addresses.nix;
     ips = import ./misc/wireguard-addresses.nix;
     colmena-tags = import ./misc/colmena-tags.nix;
     mkFlake = (import ./lib/mkFlake.nix self);
@@ -371,6 +372,31 @@
 
         deployment = {
           targetHost = ips.gradientnet.asiyah;
+          tags = with colmena-tags; [ x86_64 server vera nightly ];
+          allowLocalDeployment = true;
+        };
+      }
+
+      {
+        name = "briah";
+
+        modules = [
+          nixos-hardware.nixosModules.common-cpu-amd
+
+          #mixins.alloy
+          #mixins.podman
+          mixins.wireguard
+          #mixins.vera-locale
+          #mixins.upgrade-diff
+          #mixins.restic-repository-hokma
+        ];
+
+        #users.vera.modules = [
+          #sops-nix.homeManagerModule
+        #];
+
+        deployment = {
+          targetHost = addr.briah;
           tags = with colmena-tags; [ x86_64 server vera nightly ];
           allowLocalDeployment = true;
         };

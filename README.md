@@ -42,6 +42,7 @@ GradientOS supports the [auxolotl](https://auxolotl.org/) and [Lix](https://lix.
 - **[beatrice](hosts/beatrice)**: Steam Deck LCD used as a Server.
 - **[neith-deck](hosts/neith-deck)**: Steam Deck LCD.
 - **[asiyah](hosts/asiyah)**: Custom Home Server.
+- **[briah](hosts/briah)**: VPS for tunneling.
 - **[yetzirah](hosts/yetzirah)**: ThinkCentre M900 Tiny Home Server.
 
 #### Managed with Ansible

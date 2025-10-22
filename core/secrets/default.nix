@@ -28,6 +28,14 @@ in
       upsmon-password = {
         sopsFile = ./secrets.yml;
       };
+      rathole-credentials-server = {
+        sopsFile = ./secrets.yml;
+        restartUnits = [ "rathole.service" ];
+      };
+      rathole-credentials-client = {
+        sopsFile = ./secrets.yml;
+        restartUnits = [ "rathole.service" ];
+      };
     };
   });
 

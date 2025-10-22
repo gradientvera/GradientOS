@@ -1,12 +1,15 @@
 { config, pkgs, lib, ... }:
 let
 
+  ipAddr = config.gradient.const.addresses;
+
   addr = config.gradient.const.wireguard.addresses;
   keys = config.gradient.const.wireguard.pubKeys;
 
   private-key = config.sops.secrets.wireguard-private-key.path;
 
   asiyahPorts = config.gradient.hosts.asiyah.ports;
+  briahPorts = config.gradient.hosts.briah.ports;
 
   iptablesCmd = "${pkgs.iptables}/bin/iptables";
   ip6tablesCmd = "${pkgs.iptables}/bin/ip6tables";
@@ -14,22 +17,23 @@ let
   gen-post-setup = vpn: interface: 
   "
     ${iptablesCmd} -A FORWARD -i ${vpn} -j ACCEPT;
-    ${iptablesCmd} -t nat -A POSTROUTING -o ${interface} -j MASQUERADE;
+    # ${iptablesCmd} -t nat -A POSTROUTING -o ${interface} -j MASQUERADE;
     ${ip6tablesCmd} -A FORWARD -i ${vpn} -j ACCEPT;
-    ${ip6tablesCmd} -t nat -A POSTROUTING -o ${interface} -j MASQUERADE
+    # ${ip6tablesCmd} -t nat -A POSTROUTING -o ${interface} -j MASQUERADE;
   ";
 
   gen-post-shutdown = vpn: interface:
   "
     ${iptablesCmd} -D FORWARD -i ${vpn} -j ACCEPT;
-    ${iptablesCmd} -t nat -D POSTROUTING -o ${interface} -j MASQUERADE;
+    # ${iptablesCmd} -t nat -D POSTROUTING -o ${interface} -j MASQUERADE;
     ${ip6tablesCmd} -D FORWARD -i ${vpn} -j ACCEPT;
-    ${ip6tablesCmd} -t nat -D POSTROUTING -o ${interface} -j MASQUERADE
+    # ${ip6tablesCmd} -t nat -D POSTROUTING -o ${interface} -j MASQUERADE;
   ";
 
   generateHosts = suffix: addresses: lib.attrsets.mapAttrs' (name: value: { name = value; value = ["${name}${suffix}"]; }) addresses;
 
   asiyahHost = "asiyah";
+  briahHost = "briah";
   yetzirahHost = "yetzirah";
   bernkastelHost = "bernkastel";
   neithDeckHost = "neith-deck";
@@ -39,6 +43,44 @@ let
 
   hostName = config.networking.hostName;
   isAsiyah = hostName == asiyahHost;
+  isBriah = hostName == briahHost;
+
+  mkRatholeServices = servicePrefix: mode: ports:
+    builtins.listToAttrs
+      (builtins.concatLists
+        (builtins.map (port:
+          [
+            {
+              name = "${servicePrefix}-${toString port}-tcp";
+              value = if mode == "server" then {
+                bind_addr = "0.0.0.0:${toString port}";
+                type = "tcp";
+              } else if mode == "client" then {
+                local_addr = "127.0.0.1:${toString port}";
+                type = "tcp";
+              } else throw "Expected mode to be either 'server' or 'client'";
+            }
+            {
+              name = "${servicePrefix}-${toString port}-udp";
+              value = if mode == "server" then {
+                bind_addr = "0.0.0.0:${toString port}";
+                type = "udp";
+              } else if mode == "client" then {
+                local_addr = "127.0.0.1:${toString port}";
+                type = "udp";
+              } else throw "Expected mode to be either 'server' or 'client'";
+            }
+          ]
+        ) ports)
+      );
+
+  asiyahForwardedPorts = with asiyahPorts; [
+    nginx
+    nginx-ssl
+    lilynet
+
+    minecraft
+  ];
 
 in
 {
@@ -55,11 +97,11 @@ in
         wants = [ "network.target" ];
         before = [ "network.target" ];
         wantedBy = [ "multi-user.target" ];
-        enable = !isAsiyah; # Asiyah shouldn't need this.
+        enable = !isAsiyah && !isBriah; # Asiyah and Briah shouldn't need this.
         path = with pkgs; [ systemd unixtools.ping ];
         script = ''
           ${if config.networking.wireguard.interfaces ? "gradientnet" then ''
-          VPN="${addr.gradientnet.asiyah}"
+          VPN="${addr.gradientnet.briah}"
           '' else if config.networking.wireguard.interfaces ? "lilynet" then ''
           VPN="${addr.lilynet.asiyah}"
           '' else "echo 'No Wireguard VPN configured!'; exit 1"}
@@ -108,7 +150,7 @@ in
       };
     }
 
-    (lib.mkIf isAsiyah {
+    (lib.mkIf (isAsiyah || isBriah) {
       # Enables routing.
       boot.kernel.sysctl = {
         "net.ipv4.conf.all.forwarding" = lib.mkOverride 98 true;
@@ -116,14 +158,52 @@ in
         "net.ipv6.conf.all.forwarding" = lib.mkOverride 98 true;
         "net.ipv6.conf.default.forwarding" = lib.mkOverride 98 true;
       };
+    })
 
+    (lib.mkIf isBriah {
       networking.firewall = {
-        allowedTCPPorts = with asiyahPorts; [ gradientnet lilynet ];
-        allowedUDPPorts = with asiyahPorts; [ gradientnet lilynet ];
+        allowedTCPPorts = with briahPorts; [ gradientnet ] ++ asiyahForwardedPorts;
+        allowedUDPPorts = with briahPorts; [ gradientnet ] ++ asiyahForwardedPorts;
+      };
+
+      networking.firewall.interfaces.gradientnet = {
+        allowedTCPPorts = with briahPorts; [ rathole ];
+        allowedUDPPorts = with briahPorts; [ rathole ];
+      };
+
+      services.rathole = {
+        enable = true;
+        role = "server";
+        credentialsFile = config.sops.secrets.rathole-credentials-server.path;
+        settings = {
+          server = {
+            bind_addr = "${addr.gradientnet.briah}:${toString briahPorts.rathole}";
+            services = (mkRatholeServices "asiyah" "server" asiyahForwardedPorts);
+          };
+        };
       };
     })
 
-    (lib.mkIf (builtins.any (v: hostName == v) [ asiyahHost yetzirahHost bernkastelHost beatriceHost erikaHost featherineHost ]) {
+    (lib.mkIf isAsiyah {
+      networking.firewall = {
+        allowedTCPPorts = with asiyahPorts; [ lilynet ] ++ asiyahForwardedPorts;
+        allowedUDPPorts = with asiyahPorts; [ lilynet ] ++ asiyahForwardedPorts;
+      };
+
+      services.rathole = {
+        enable = true;
+        role = "client";
+        credentialsFile = config.sops.secrets.rathole-credentials-client.path;
+        settings = {
+          client = {
+            remote_addr = "${addr.gradientnet.briah}:${toString briahPorts.rathole}";
+            services = (mkRatholeServices "asiyah" "client" asiyahForwardedPorts);
+          };
+        };
+      };
+    })
+
+    (lib.mkIf (builtins.any (v: hostName == v) [ asiyahHost briahHost yetzirahHost bernkastelHost beatriceHost erikaHost featherineHost ]) {
       systemd.network.wait-online.ignoredInterfaces = [ "gradientnet" ];
 
       # Allow SSH over gradientnet
@@ -132,13 +212,17 @@ in
       networking.hosts = generateHosts ".gradient" addr.gradientnet;
 
       networking.wireguard.interfaces.gradientnet = with addr.gradientnet; {
-        ips = ["${addr.gradientnet.${hostName}}/${if isAsiyah then "24" else "32"}"];
-        listenPort = lib.mkIf isAsiyah asiyahPorts.gradientnet;
-        postSetup = lib.mkIf isAsiyah (gen-post-setup "gradientnet" "eno1");
-        postShutdown = lib.mkIf isAsiyah (gen-post-shutdown "gradientnet" "eno1");
+        ips = ["${addr.gradientnet.${hostName}}/${if isBriah then "24" else "32"}"];
+        listenPort = lib.mkIf isBriah briahPorts.gradientnet;
+        #postSetup = lib.mkIf isBriah (gen-post-setup "gradientnet" "eth0");
+        #postShutdown = lib.mkIf isBriah (gen-post-shutdown "gradientnet" "eth0");
         privateKeyFile = private-key;
-        dynamicEndpointRefreshSeconds = if isAsiyah then 0 else 25;
-        peers = (if isAsiyah then [
+        dynamicEndpointRefreshSeconds = if isBriah then 0 else 25;
+        peers = (if isBriah then [
+          {
+            allowedIPs = [ "${asiyah}/32" ];
+            publicKey = keys.asiyah;
+          }
           {
             allowedIPs = [ "${yetzirah}/32" ];
             publicKey = keys.yetzirah;
@@ -178,8 +262,8 @@ in
         ] else [
           {
             allowedIPs = [ "${gradientnet}/24" ];
-            endpoint = "vpn.gradient.moe:${toString asiyahPorts.gradientnet}";
-            publicKey = keys.asiyah;
+            endpoint = "vpn.gradient.moe:${toString briahPorts.gradientnet}";
+            publicKey = keys.briah;
             persistentKeepalive = 25;
             dynamicEndpointRefreshSeconds = 25;
             dynamicEndpointRefreshRestartSeconds = 10;

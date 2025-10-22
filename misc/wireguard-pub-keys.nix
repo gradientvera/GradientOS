@@ -5,6 +5,7 @@
   erika = "okNBZAPQiNALnW0Z6AXz+pXv1CJfo+YfCTtnx07fLEo=";
   neith-deck = "p4dmhuDzBmzHvudnT2nnSTrGQY047ubuCEjEk2U2zFw=";
   asiyah = "sZ7toLMyaiDj/r2Lz9n7UNMs1tXeQn+qAP1hHclKiQs=";
+  briah = "50IkCcY/owboBb6BDGQarGcEwBSSF/gsyYQXFedbliE=";
   yetzirah = "5FPEWtc1C2nU3VpmLC7E6nHPrI0Z0+pZlvkjOHFVQFQ=";
   atziluth = "TODO";
   vera-phone = "zQIrZSCpzur972UVtivIUfFe/H2YFj6avF5ZFtfLPUQ=";

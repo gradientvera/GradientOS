@@ -12,6 +12,7 @@
     yetzirah = "192.168.24.9";
     forgejo-deployment = "192.168.24.10";
     atziluth = "192.168.24.48";
+    briah = "192.168.24.128";
   };
   
   lilynet = {

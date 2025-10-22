@@ -111,6 +111,7 @@
   crafty = 8444;
   crafty-dynmap = 8125;
   crafty-server-start = 25500;
+  minecraft = 25565;
   crafty-server-end = 25600;
 
 }

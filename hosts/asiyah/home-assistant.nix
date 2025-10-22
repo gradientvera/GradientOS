@@ -108,7 +108,7 @@ in
       anniversaries
       hass-ingress
       openrgb-ha
-      feedparser
+      # feedparser # TODO: fix
       moonraker
       smartir
       bermuda

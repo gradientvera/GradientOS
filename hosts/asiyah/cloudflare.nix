@@ -2,7 +2,7 @@
 {
 
   services.ddclient = {
-    enable = true;
+    enable = false; # true;
     verbose = true;
     protocol = "cloudflare";
     ssl = true;
@@ -14,25 +14,14 @@
       zone=gradient.moe
       gradient.moe,
       *.gradient.moe,
-      game.gradient.moe,
-      vpn.gradient.moe,
-      cache.gradient.moe,
-      www.gradient.moe,
-      ssh.gradient.moe
 
       zone=zumorica.es
       zumorica.es,
       *.zumorica.es,
-      www.zumorica.es
 
       zone=constellation.moe
       constellation.moe,
       *.constellation.moe,
-      calibre.constellation.moe,
-      ftp.constellation.moe,
-      neko.constellation.moe,
-      iptv.constellation.moe,
-      www.constellation.moe
     '';
   };
 

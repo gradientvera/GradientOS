@@ -33,7 +33,6 @@
   environment.systemPackages = with pkgs; [
     steam-rom-manager
     steamtinkerlaunch
-    proton-caller
     protontricks
     protonup-qt
     steam-run
