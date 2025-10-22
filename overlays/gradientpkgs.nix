@@ -29,8 +29,8 @@ in
 
   jack-matchmaker = prev.callPackage ../pkgs/jack-matchmaker.nix { };
 
-  kanidmWithSecretProvisioningAndGradientPatches = patchKanidm prev.kanidmWithSecretProvisioning;
-  kanidmWithGradientPatches = patchKanidm prev.kanidm;
+  kanidmWithSecretProvisioningAndGradientPatches_1_7 = patchKanidm prev.kanidmWithSecretProvisioning_1_7;
+  kanidmWithGradientPatches_1_7 = patchKanidm prev.kanidm_1_7;
 
   moonraker-timelapse = prev.callPackage ../pkgs/moonraker-timelapse.nix { };
 
