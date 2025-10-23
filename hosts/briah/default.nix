@@ -1,7 +1,6 @@
 { ... }:
 {
   imports = [
-    ./networking.nix
     ./secrets/default.nix
     ./hardware-configuration.nix
   ];
@@ -16,7 +15,6 @@
   boot.tmp.cleanOnBoot = true;
   zramSwap.enable = true;
   networking.hostName = "briah";
-  networking.domain = "";
+  networking.domain = "vps.ovh.net";
   services.openssh.enable = true;
-  users.users.root.openssh.authorizedKeys.keys = [''ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIOH4ZOMQX/C9x2s4D7mvP7ip1ll+Nhar+tCJiTpy1DuY'' ];
 }

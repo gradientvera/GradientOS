@@ -383,7 +383,7 @@
         modules = [
           nixos-hardware.nixosModules.common-cpu-amd
 
-          #mixins.alloy
+          mixins.alloy
           #mixins.podman
           mixins.wireguard
           #mixins.vera-locale
