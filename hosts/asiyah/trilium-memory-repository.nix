@@ -4,8 +4,11 @@ let
 in {
 
   virtualisation.oci-containers.containers.memory-repository = {
-    # image = "triliumnext/trilium:latest"; # TODO: Port scripts
-    image = "zadam/trilium:0.62.6";
+    # AAAAAAAAAAAAa!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+    # IF YOU UPDATE THE BELOW
+    # DON'T FORGET TO FIX THE INTERNAL ADAPTER SCRIPTS
+    # FUCK YOU IF YOU FORGET FUCK YOU FUCK YOU FUCK YOU
+    image = "ghcr.io/triliumnext/trilium:v0.99.3";
     pull = "newer";
     ports = [ "127.0.0.1:${toString ports.trilium}:8080" ];
     volumes = [ "/data/trilium:/home/node/trilium-data" ];
