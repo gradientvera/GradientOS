@@ -54,17 +54,17 @@ jobs:
         uses: ./.forgejo/setup-gradientnet
         with:
           wireguard-private-key: ${{ secrets.WIREGUARD_PRIVATE_KEY }}
+      - name: Update flake inputs
+        if: ${{ inputs.d_update-inputs }}
+        run: nix flake update ${{ inputs.e_inputs-to-update }}
+      - name: Fetch flake inputs
+        run: nix flake archive --no-update-lock-file
       - name: Setup Attic Cache
         uses: ./.forgejo/setup-attic-cache
         with:
           attic-token: ${{ secrets.ATTIC_TOKEN }}
       - name: Install Colmena
         run: nix profile install nixpkgs#lixPackageSets.latest.colmena --inputs-from $FORGEJO_WORKSPACE
-      - name: Update flake inputs
-        if: ${{ inputs.d_update-inputs }}
-        run: nix flake update ${{ inputs.e_inputs-to-update }}
-      - name: Fetch flake inputs
-        run: nix flake archive --no-update-lock-file
       - name: Run Colmena Apply with build on target
         id: colmenabuild
         if: ${{ inputs.c_build-on-target }}

@@ -22,14 +22,14 @@ jobs:
         uses: actions/setup-ssh@v1
         with:
           ssh-private-key: ${{ secrets.SSH_PRIVATE_KEY }}
+      - name: Fetch flake inputs
+        run: nix flake archive --no-update-lock-file
       - name: Setup Attic Cache
         uses: ./.forgejo/setup-attic-cache
         with:
           attic-token: ${{ secrets.ATTIC_TOKEN }}
       - name: Install Colmena
         run: nix profile install nixpkgs#lixPackageSets.latest.colmena --inputs-from $FORGEJO_WORKSPACE
-      - name: Fetch flake inputs
-        run: nix flake archive --no-update-lock-file
       - name: Run Colmena Build
         id: colmenabuild
         run: colmena apply build --on @nightly --show-trace --evaluator=streaming --impure --no-build-on-target
