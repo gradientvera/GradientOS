@@ -141,9 +141,9 @@ in
       url = "https://git.gradient.moe";
       tokenFile = config.sops.secrets.forgejo-runner-token.path;
       labels = [
-        "docker:docker://node:24-alpine"
+        "docker:docker://node:25-alpine"
 
-        "alpine-latest:docker://node:24-alpine"
+        "alpine-latest:docker://node:25-alpine"
       ];
       settings = {
         # Run 10 jobs at once
