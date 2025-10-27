@@ -36,6 +36,10 @@ in
         sopsFile = ./secrets.yml;
         restartUnits = [ "rathole.service" ];
       };
+      wgautomesh-gossip-secret = {
+        sopsFile = ./secrets.yml;
+        restartUnits = [ "wgautomesh.service" ];
+      };
     };
   });
 

@@ -85,6 +85,8 @@
   ollama = 11434;
   uptime-kuma = 4003;
   attic = 8060;
+  wgautomesh-gossip = 1666;
+  wgautomesh-external = 33723;
   
   # Paperless-ngx
   paperless = 28981;

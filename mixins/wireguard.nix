@@ -93,64 +93,6 @@ in
     {
       networking.wireguard.enable = true;
       environment.systemPackages = [ pkgs.wireguard-tools ];
-
-      systemd.services.vpn-watchdog = {
-        description = "VPN Watchdog";
-        after = [ "network-pre.target" ];
-        wants = [ "network.target" ];
-        before = [ "network.target" ];
-        wantedBy = [ "multi-user.target" ];
-        enable = !isAsiyah && !isBriah; # Asiyah and Briah shouldn't need this.
-        path = with pkgs; [ systemd unixtools.ping ];
-        script = ''
-          ${if config.networking.wireguard.interfaces ? "gradientnet" then ''
-          VPN="${addr.gradientnet.briah}"
-          '' else if config.networking.wireguard.interfaces ? "lilynet" then ''
-          VPN="${addr.lilynet.asiyah}"
-          '' else "echo 'No Wireguard VPN configured!'; exit 1"}
-          FAILURES=0
-          EXT_FAIL=false
-          VPN_FAIL=false
-          while true; do
-            if ping vpn.gradient.moe -c 1 -W 5 >/dev/null 2>&1; then
-              EXT_FAIL=false
-            else
-              EXT_FAIL=true
-            fi
-            if ping "$VPN" -c 1 -W 5 >/dev/null 2>&1; then
-              VPN_FAIL=false
-            else
-              VPN_FAIL=true
-            fi
-
-            SLEEP_TIME=25
-            if [ "$EXT_FAIL" = true ] || [ "$VPN_FAIL" = true ]; then
-              FAILURES=$((FAILURES+1))
-              if ((FAILURES > 25)); then
-                SLEEP_TIME=60
-              else
-                SLEEP_TIME=$FAILURES
-              fi
-              echo "Failed to ping! Retrying in $SLEEP_TIME seconds... External Fail: $EXT_FAIL, VPN Fail: $VPN_FAIL, Failures: $FAILURES"
-            fi
-
-            if [ "$EXT_FAIL" = false ] && ((FAILURES > 2)); then
-              echo "Restarting VPN services..."
-              systemctl restart *wireguard* || echo "Failed to restart wireguard!"
-              echo "Restarted VPN!"
-              FAILURES=0
-              SLEEP_TIME=25
-            fi
-
-            sleep "$SLEEP_TIME"
-          done
-        '';
-        serviceConfig = {
-          Type = "exec";
-          Restart = "always";
-          RestartSec = 10;
-        };
-      };
     }
 
     (lib.mkIf (isAsiyah || isBriah) {
@@ -213,10 +155,10 @@ in
       networking.firewall.interfaces.gradientnet.allowedTCPPorts = config.services.openssh.ports;
 
       networking.hosts = generateHosts ".gradient" addr.gradientnet;
-
+ 
       networking.wireguard.interfaces.gradientnet = with addr.gradientnet; {
         ips = ["${addr.gradientnet.${hostName}}/${if isBriah then "24" else "32"}"];
-        listenPort = lib.mkIf isBriah briahPorts.gradientnet;
+        listenPort = if isBriah then briahPorts.gradientnet else config.gradient.currentHost.ports.wgautomesh-external;
         #postSetup = lib.mkIf isBriah (gen-post-setup "gradientnet" "eth0");
         #postShutdown = lib.mkIf isBriah (gen-post-shutdown "gradientnet" "eth0");
         privateKeyFile = private-key;
@@ -273,6 +215,38 @@ in
           }
         ]);
       };
+
+      networking.firewall.allowedTCPPorts = with config.gradient.currentHost.ports; [ wgautomesh-gossip wgautomesh-external ];
+      networking.firewall.allowedUDPPorts = with config.gradient.currentHost.ports; [ wgautomesh-gossip wgautomesh-external ];
+
+      services.wgautomesh = {
+        enable = true;
+        gossipSecretFile = config.sops.secrets.wgautomesh-gossip-secret.path;
+        openFirewall = true;
+        
+        settings = {
+          interface = "gradientnet";
+          lan_discovery = true;
+          gossip_port = config.gradient.currentHost.ports.wgautomesh-gossip;
+          upnp_forward_external_port = config.gradient.currentHost.ports.wgautomesh-external;
+          peers = 
+            (builtins.map 
+              (a: {
+                    address = a.value;
+                    pubkey = keys.${a.name};
+                    endpoint = 
+                      if a.name == "briah" then
+                        "vpn.gradient.moe:${toString briahPorts.gradientnet}"
+                      else
+                        # Try local hostname resolution, since this is the case for most peers here
+                        "${a.name}.local:${toString config.gradient.hosts.${a.name}.ports.wgautomesh-external}"; 
+                  })
+            (builtins.filter (a: a.name != config.networking.hostName && lib.hasAttrByPath [a.name "ports" "wgautomesh-external"] config.gradient.hosts) (lib.attrsToList addr.gradientnet)));
+        };
+      };
+
+      systemd.services.wgautomesh.after = [ "wireguard-gradientnet.service" ];
+      systemd.services.wgautomesh.wants = [ "wireguard-gradientnet.service" ];
     })
 
     (lib.mkIf (builtins.any (v: hostName == v) [ asiyahHost yetzirahHost bernkastelHost neithDeckHost beatriceHost erikaHost featherineHost ]) {
