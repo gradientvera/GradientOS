@@ -15,6 +15,6 @@
   boot.tmp.cleanOnBoot = true;
   zramSwap.enable = true;
   networking.hostName = "briah";
-  networking.domain = "vps.ovh.net";
+  networking.domain = "";
   services.openssh.enable = true;
 }
