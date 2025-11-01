@@ -305,7 +305,6 @@ in {
       pull = "newer";
       volumes = [
         "/var/lib/${userName}/ersatztv:/root/.local/share/ersatztv"
-        "/data/downloads:/media:ro"
       ];
       environment = {
         TZ = config.time.timeZone;
@@ -314,6 +313,7 @@ in {
       };
       environmentFiles = [ config.sops.secrets.mediarr-iptv-env.path ];
       extraOptions = [
+        "--mount" "type=bind,source=/data/downloads,target=/media"
         "--mount" "type=tmpfs,destination=/transcode"
         "--device=/dev/dri/:/dev/dri/"
       ] ++ defaultOptions;
