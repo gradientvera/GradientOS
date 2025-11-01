@@ -2,13 +2,6 @@
 *   Overlay with packages that can be consumed without using a GradientOS configuration.
 */
 final: prev:
-let
-  patchKanidm = kanidm: kanidm.overrideAttrs (prevAttrs: {
-    patches = (if prevAttrs ? patches then prevAttrs.patches else []) ++ [
-      ../pkgs/patches/kanidm/0001-Set-session-expiry-and-oauth-refresh-token-expiry-to-a-week.patch
-    ];
-  });
-in
 {
   beyond-all-reason-launcher = prev.callPackage ../pkgs/beyond-all-reason-launcher.nix { }; 
 
@@ -28,9 +21,6 @@ in
   godot-mono = prev.callPackage ../pkgs/godot-mono.nix { };
 
   jack-matchmaker = prev.callPackage ../pkgs/jack-matchmaker.nix { };
-
-  kanidmWithSecretProvisioningAndGradientPatches_1_7 = patchKanidm prev.kanidmWithSecretProvisioning_1_7;
-  kanidmWithGradientPatches_1_7 = patchKanidm prev.kanidm_1_7;
 
   moonraker-timelapse = prev.callPackage ../pkgs/moonraker-timelapse.nix { };
 
