@@ -3,7 +3,9 @@
 
   # nginx
   nginx = 80;
+  nginx-proxy = 81;
   nginx-ssl = 443;
+  nginx-ssl-proxy = 444;
   oauth2-proxy = 4180;
   constellation-homepage = 8099;
   gradient-homepage = 8101;

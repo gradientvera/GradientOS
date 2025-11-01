@@ -20,8 +20,12 @@ in {
     package = pkgs.nginxQuic.override {
       withSlice = true;
     };
-    defaultHTTPListenPort = ports.nginx;
-    defaultSSLListenPort = ports.nginx-ssl;
+    defaultListen = [
+      { addr = "0.0.0.0"; port = ports.nginx; ssl = false; proxyProtocol = false; }
+      { addr = "0.0.0.0"; port = ports.nginx-proxy; ssl = false; proxyProtocol = true; }
+      { addr = "0.0.0.0"; port = ports.nginx-ssl; ssl = true; proxyProtocol = false; }
+      { addr = "0.0.0.0"; port = ports.nginx-ssl-proxy; ssl = true; proxyProtocol = true; }
+    ];
 
     recommendedGzipSettings = true;
     recommendedOptimisation = true;
@@ -35,29 +39,9 @@ in {
     logError = "/var/log/nginx/error.log";
 
     appendHttpConfig = ''
-      set_real_ip_from 173.245.48.0/20;
-      set_real_ip_from 103.21.244.0/22;
-      set_real_ip_from 103.22.200.0/22;
-      set_real_ip_from 103.31.4.0/22;
-      set_real_ip_from 141.101.64.0/18;
-      set_real_ip_from 108.162.192.0/18;
-      set_real_ip_from 190.93.240.0/20;
-      set_real_ip_from 188.114.96.0/20;
-      set_real_ip_from 197.234.240.0/22;
-      set_real_ip_from 198.41.128.0/17;
-      set_real_ip_from 162.158.0.0/15;
-      set_real_ip_from 104.16.0.0/13;
-      set_real_ip_from 104.24.0.0/14;
-      set_real_ip_from 172.64.0.0/13;
-      set_real_ip_from 131.0.72.0/22;
-      set_real_ip_from 2400:cb00::/32;
-      set_real_ip_from 2606:4700::/32;
-      set_real_ip_from 2803:f800::/32;
-      set_real_ip_from 2405:b500::/32;
-      set_real_ip_from 2405:8100::/32;
-      set_real_ip_from 2a06:98c0::/29;
-      set_real_ip_from 2c0f:f248::/32;
-      real_ip_header CF-Connecting-IP;
+      set_real_ip_from ${config.gradient.const.wireguard.addresses.gradientnet.gradientnet}/24;
+      real_ip_header proxy_protocol;
+      real_ip_recursive on;
 
       map $username $xusername {
         ~^(\w+)@identity.gradient.moe $1;
@@ -77,7 +61,10 @@ in {
   };
 
   networking.firewall.allowedTCPPorts = with ports; [
-    nginx nginx-ssl
+    nginx nginx-ssl nginx-proxy nginx-ssl-proxy
+  ];
+  networking.firewall.allowedUDPPorts = with ports; [
+    nginx nginx-ssl nginx-proxy nginx-ssl-proxy
   ];
 
 }

@@ -75,8 +75,8 @@ let
       );
 
   asiyahForwardedPorts = with asiyahPorts; [
-    nginx
-    nginx-ssl
+    #nginx
+    #nginx-ssl
 
     lilynet
 

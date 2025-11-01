@@ -39,7 +39,6 @@ let
     cross-seed
     sabnzbd
     neko
-    mediarr-openssh
     proxy-vpn
     proxy-vpn-uk
     calibre-web-automated
@@ -163,20 +162,10 @@ in {
 
   # -- Folder and Permissions Setup --
   systemd.tmpfiles.settings."10-media.conf" = let
-    keys = config.gradient.const.ssh.pubKeys;
-    authorizedKeysPath = toString (pkgs.writeText "authorized_keys" ''
-      ${keys.neith}
-      ${keys.remie}
-      ${keys.vera}
-    '');
     rule = {
       user = userName;
       group = groupName;
       mode = "0775";
-    };
-    # Restrictive permissions required for sshd
-    sshRule = rule // {
-      mode = "0700";
     };
   in {
     "/data/downloads".d = rule;
@@ -231,17 +220,7 @@ in {
     "/var/lib/${userName}/pinchflat".d = rule;
     "/var/lib/${userName}/.mozilla".d = rule;
     "/var/lib/${userName}/.mozilla/firefox".d = rule;
-    "/var/lib/${userName}/sshlogs".d = rule;
-    "/var/lib/${userName}/.ssh".d = sshRule;
-    "/var/lib/${userName}/.ssh/*".z = sshRule;
-    "/var/lib/${userName}/sshd".d = sshRule;
-    "/var/lib/${userName}/sshd/*".z = sshRule;
-    "/var/lib/${userName}/ssh_host_keys/*".z = sshRule;
-    "/var/lib/${userName}/.ssh/authorized_keys".C = {
-      argument = authorizedKeysPath;
-      repoPath = authorizedKeysPath;
-      doCheck = true;
-    } // sshRule;
+    "/var/lib/${userName}/modcache".d = rule;
   };
 
   services.clamav.scanner.scanDirectories = [ "/data/downloads" ]; # /var/lib already scanned by default
@@ -267,6 +246,7 @@ in {
       volumes = [
         "/var/lib/${userName}/jellyfin/config:/config"
         "/var/lib/${userName}/jellyfin/cache:/cache"
+        "/var/lib/${userName}/modcache:/modcache"
       ];
       environment = {
         TZ = config.time.timeZone;
@@ -1049,10 +1029,6 @@ in {
     gradientnet.allowedTCPPorts = allowedPorts;
     gradientnet.allowedUDPPorts = allowedPorts;
   };
-
-  networking.firewall.allowedTCPPorts = with ports; [
-    mediarr-openssh
-  ];
 
   networking.firewall.allowedUDPPorts = with ports; [
     qbittorrent-peer

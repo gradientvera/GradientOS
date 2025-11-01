@@ -7,4 +7,7 @@
 
   wgautomesh-gossip = 1666;
   wgautomesh-external = 1194;
+
+  haproxy = 80;
+  haproxy-ssl = 443;
 }

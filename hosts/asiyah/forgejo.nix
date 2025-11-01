@@ -10,20 +10,6 @@ let
   lfsRoot = "/data/lfs";
 in
 {
-
-  systemd.tmpfiles.settings."10-forgejo.conf" =
-  let
-    rule = {
-      user = config.services.forgejo.user;
-      group = config.services.forgejo.group;
-      mode = "0770";
-    };
-  in
-  {
-    ${repositoryRoot}.d = rule;
-    ${lfsRoot}.d = rule;
-  };
-
   services.forgejo = {
     inherit repositoryRoot;
     enable = true;

@@ -1,6 +1,7 @@
 { ... }:
 {
   imports = [
+    ./haproxy.nix
     ./secrets/default.nix
     ./hardware-configuration.nix
   ];
