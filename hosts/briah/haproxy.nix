@@ -33,12 +33,10 @@ in
 
       backend asiyahweb
         mode tcp
-        balance roundrobin
         server asiyah ${gradientnet.asiyah}:${toString asiyahPorts.nginx-proxy} check send-proxy-v2
 
       backend asiyahwebsecure
         mode tcp
-        balance roundrobin
         server asiyah ${gradientnet.asiyah}:${toString asiyahPorts.nginx-ssl-proxy} check send-proxy-v2
     '';
   };
