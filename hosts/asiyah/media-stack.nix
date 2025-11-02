@@ -538,7 +538,8 @@ in {
     };
 
     decluttarr = {
-      image = "ghcr.io/manimatter/decluttarr:latest";
+      # v2 has a *lot* of breaking changes! can't be bothered to upgrade
+      image = "ghcr.io/manimatter/decluttarr:v1.50.2";
       pull = "newer";
       environment = {
         TZ = config.time.timeZone;
