@@ -129,7 +129,6 @@ in {
     };
     "calibredl.constellation.moe" = mkReverseProxy { port = ports.calibre-downloader; };
     "radio.constellation.moe" = mkReverseProxy { port = ports.openwebrx; };
-    "nextcloud.constellation.moe" = { useACMEHost = "constellation.moe"; forceSSL = true; };
     "k1c.constellation.moe" = mkReverseProxy { address = "192.168.1.27"; port = 80; };
     "pinchflat.constellation.moe" = mkReverseProxy { port = ports.pinchflat; };
     "crafty.constellation.moe" = mkReverseProxy { port = ports.crafty; protocol = "https"; };

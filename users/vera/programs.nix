@@ -4,9 +4,11 @@
 
   programs.git = {
     enable = true;
-    userName = "Vera Aguilera Puerto";
-    userEmail = "gradientvera@outlook.com";
-    extraConfig = {
+    settings = {
+      user = {
+        name = "Vera Aguilera Puerto";
+        email = "gradientvera@outlook.com";
+      };
       init = {
         defaultBranch = "main";
       };

@@ -107,7 +107,6 @@ in
       thermal-comfort
       anniversaries
       hass-ingress
-      openrgb-ha
       # feedparser # TODO: fix
       moonraker
       smartir

@@ -3,7 +3,7 @@
 {
 
   services.uvcvideo.dynctrl = {
-    enable = true;
+    # enable = true; # TODO: Borked!
     packages = [ pkgs.tiscamera ]; # Workaround until nixpkgs unstable fixes tiscamera
   };
   

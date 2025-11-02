@@ -26,18 +26,13 @@ in
     extraDomainNames = lib.mkForce [
       "*.gradient.moe"
       "*.asiyah.gradient.moe"
-      "*.yetzirah.gradient.moe"
-      "*.beatrice.gradient.moe"
-      "*.bernkastel.gradient.moe"
-      # TODO: Add the rest meh
-      
       "zumorica.es"
       "*.zumorica.es"
     ];
   };
 
   services.nginx.virtualHosts."gradient.moe" = {
-    root = toString self.inputs.gradient-moe.packages.${pkgs.system}.default;
+    root = toString self.inputs.gradient-moe.packages.${pkgs.stdenv.hostPlatform.system}.default;
     enableACME = true;
     acmeRoot = null;
     quic = true;

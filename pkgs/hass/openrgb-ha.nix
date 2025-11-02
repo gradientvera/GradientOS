@@ -1,3 +1,4 @@
+# Official integration has been merged
 { fetchFromGitHub
 , home-assistant
 , buildHomeAssistantComponent

@@ -185,10 +185,6 @@
         restartUnits = [ "esphome.service" ];
       };
 
-      nextcloud-admin-password = {
-        owner = "nextcloud";
-      };
-
       hass-secrets = {
         owner = config.users.users.hass.name;
         group = config.users.users.hass.group;

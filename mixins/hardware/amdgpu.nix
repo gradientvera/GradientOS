@@ -14,9 +14,9 @@
 
   hardware.graphics.extraPackages = with pkgs; [
     lact
-    vaapiVdpau
     libvdpau-va-gl
     rocmPackages.clr
+    libva-vdpau-driver
     rocmPackages.rocm-runtime
     rocmPackages.rocm-device-libs
   ];

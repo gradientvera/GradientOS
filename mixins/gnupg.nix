@@ -10,7 +10,6 @@
 
   environment.systemPackages = with pkgs; [
     gnupg
-    pinentry
     pinentry-curses
   ];
 }

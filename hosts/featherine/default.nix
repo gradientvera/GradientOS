@@ -63,7 +63,7 @@
 
   services.openssh.openFirewall = true;
 
-  # services.handheld-daemon.enable = true; # TODO: Borked 
+  services.handheld-daemon.enable = true;
   services.handheld-daemon.user = "vera";
 
   gradient.substituters = {

@@ -42,7 +42,7 @@ in
     # Performance and power saving
     powerManagement.powertop.enable = true;
     services.power-profiles-daemon.enable = true; # Replace with "tuned" when available
-    services.thermald.enable = lib.mkIf (pkgs.system != "aarch64-linux") true;
+    services.thermald.enable = lib.mkIf (pkgs.stdenv.hostPlatform.system != "aarch64-linux") true;
     services.irqbalance.enable = true;
 
     # See https://github.com/NixOS/nixpkgs/issues/299476 and https://github.com/NixOS/nixpkgs/issues/408800

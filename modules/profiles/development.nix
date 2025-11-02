@@ -23,8 +23,8 @@ in
         sqlitebrowser
         cargo-watch
         godot-mono
-        smartgithg
         pre-commit
+        smartgit
         ansible
         blender
         rustfmt

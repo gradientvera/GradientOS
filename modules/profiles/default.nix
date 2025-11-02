@@ -32,7 +32,6 @@ in
     services.udev.packages = with pkgs; [
       steam-devices-udev-rules
       game-devices-udev-rules
-      android-udev-rules
       qmk-udev-rules
     ];
 
@@ -77,10 +76,10 @@ in
       age
       dig
       eza
-    ] ++ (if pkgs.system == "x86_64-linux" then [
+    ] ++ (if pkgs.stdenv.hostPlatform.system == "x86_64-linux" then [
       unrar
       rar
-    ] else if pkgs.system == "aarch64-linux" then [
+    ] else if pkgs.stdenv.hostPlatform.system == "aarch64-linux" then [
 
     ] else []);
   };

@@ -8,12 +8,12 @@
     kdePackages.okular
     gimp-with-plugins
     kdePackages.kate
+    telegram-desktop
     discord-canary
     google-chrome
     moonlight-qt
     qbittorrent
     chromium
-    tdesktop
     qpwgraph
     firefox
     discord

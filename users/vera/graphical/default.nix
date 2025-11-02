@@ -9,22 +9,20 @@
   home.packages = with pkgs; [
     master.discord-canary
     lxqt.pavucontrol-qt
-    whatsapp-for-linux
     kdePackages.okular
+    bitwarden-desktop
     gimp-with-plugins
     libreoffice-fresh
-    element-desktop
+    telegram-desktop
     kdePackages.kate
-    # google-chrome # TODO: Broken build?? how??
+    element-desktop
+    master.discord
     qbittorrent
     glabels-qt
-    bitwarden
-    tdesktop
     tenacity
     chromium
     inkscape
     firefox
-    discord
     vesktop
     krita
     vmpk

@@ -13,22 +13,26 @@ in
     config = ''
       global
         daemon
-        log 127.0.0.1 local0
-        log 127.0.0.1 local1 notice
+        log /dev/log local0 info
         maxconn 60000
 
       defaults
         log global
         retries 3
+        timeout connect 10s
+        timeout client 30s
+        timeout server 30s
 
       frontend web
         mode tcp
-        bind :${toString ports.haproxy}
+        bind *:${toString ports.haproxy} v4v6
+        bind :::${toString ports.haproxy} v6only
         default_backend asiyahweb
 
       frontend websecure
         mode tcp
-        bind :${toString ports.haproxy-ssl}
+        bind *:${toString ports.haproxy-ssl} v4v6
+        bind :::${toString ports.haproxy-ssl} v6only
         default_backend asiyahwebsecure
 
       backend asiyahweb

@@ -2,7 +2,7 @@
 let
   cfg = config.gradient;
   adb = "${pkgs.android-tools}/bin/adb";
-  pkgs-xr = self.inputs.nixpkgs-xr.packages.${pkgs.system};
+  pkgs-xr = self.inputs.nixpkgs-xr.packages.${pkgs.stdenv.hostPlatform.system};
 
   # As per https://github.com/olekolek1000/wayvr-dashboard#assigning-wayvr-dashboard-to-the-wayvr-config-in-wlx-overlay-s
   wayvr-dashboard-yaml = pkgs.writeText "wayvr-dashboard.yaml" ''

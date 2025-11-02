@@ -142,13 +142,12 @@ in
           noto-fonts-cjk-sans
           twitter-color-emoji
           ttf_bitstream_vera
-          ubuntu_font_family
           fira-code-symbols
           source-serif-pro
-          noto-fonts-emoji
           nerd-fonts.noto
           source-code-pro
           source-sans-pro
+          ubuntu-classic
           google-fonts
           dejavu_fonts
           roboto-serif

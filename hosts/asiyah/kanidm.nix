@@ -170,7 +170,7 @@ in
 
   # kanidm relies heavily on a couple CLI tools for management, so
   environment.systemPackages = [
-    pkgs.kanidm
+    config.services.kanidm.package
   ];
 
   networking.firewall.interfaces.podman0.allowedTCPPorts = with ports; [
