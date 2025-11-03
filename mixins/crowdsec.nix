@@ -308,7 +308,7 @@ in
       update_frequency = "10s";
       scenarios_containing = [ "ssh" "http" ];
       scopes = [ "Ip" "Range" ];
-      origins = [ "cscli" "crowdsec" "CAPI" ];
+      origins = [ "cscli" "crowdsec" "CAPI" "lists" ];
       api_url = "http://${gradientnet.asiyah}:${toString asiyahPorts.crowdsec-lapi}";
       api_key = "\${CROWDSEC_BOUNCER_API_KEY}";
       iptables_chains = [ "INPUT" ];
