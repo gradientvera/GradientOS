@@ -15,6 +15,7 @@
 
   boot.tmp.cleanOnBoot = true;
   zramSwap.enable = true;
+  services.swapspace.enable = true;
   networking.hostName = "briah";
   networking.domain = "";
   services.openssh.enable = true;
