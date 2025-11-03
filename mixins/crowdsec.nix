@@ -34,6 +34,7 @@ in
     # Adds new parsing and detection behaviours
     hub.collections = [
       "crowdsecurity/linux"
+      "crowdsecurity/auditd"
       "crowdsecurity/iptables"
       "crowdsecurity/linux-lpe"
     ] 
@@ -70,6 +71,13 @@ in
         source = "journalctl";
         journalctl_filter = [ "_TRANSPORT=kernel" ];
         labels.type = "syslog";
+      }
+      {
+        source = "file";
+        filenames = [
+          "/var/log/audit/*.log"
+        ];
+        labels.type = "auditd";
       }
     ]
     ++ (if config.services.nginx.enable then [
@@ -264,7 +272,7 @@ in
     settings.console.tokenFile = config.sops.secrets.crowdsec-console-token.path;
   };
 
-  users.users.${config.services.crowdsec.user}.extraGroups = [ "nginx" ];
+  users.users.${config.services.crowdsec.user}.extraGroups = [ "nginx" "auditd" ];
 
   systemd.services.crowdsec = {
     # Load secrets
@@ -322,6 +330,7 @@ in
     after = [ "crowdsec.service" ];
     wantedBy = [ "multi-user.target" ];
     serviceConfig.EnvironmentFile = config.sops.secrets.crowdsec-env.path;
+    serviceConfig.Restart = "always";
     # Dependencies of bouncer
     path = [ pkgs.ipset pkgs.iptables ];
     script = ''

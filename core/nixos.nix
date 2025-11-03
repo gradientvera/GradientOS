@@ -78,6 +78,11 @@ in
     };
     security.polkit.enable = true;
     security.auditd.enable = true;
+    security.auditd.settings = {
+      # For Crowdsec
+      log_group = config.users.groups.auditd.name;
+    };
+    users.groups.auditd = {};
     services.journald.audit = true;
     security.audit.enable = true;
     security.audit.rules = [
@@ -101,7 +106,7 @@ in
     # prevents build failures sometimes
     systemd.settings.Manager = {
       DefaultTimeoutStopSec = "30s";
-      DefaultLimitNOFILE = "16384:524288";
+      DefaultLimitNOFILE = "32768:1048576";
 
       # Enable systemd watchdog.
       RuntimeWatchdogSec = "10s";
@@ -111,15 +116,23 @@ in
 
     systemd.user.extraConfig = ''
       DefaultTimeoutStopSec=30s
-      DefaultLimitNOFILE=16384:524288
+      DefaultLimitNOFILE=32768:1048576
     '';
 
-    security.pam.loginLimits = [{
-      domain = "*";
-      type = "hard";
-      item = "nofile";
-      value = "524288";
-    }];
+    security.pam.loginLimits = [
+      {
+        domain = "*";
+        type = "soft";
+        item = "nofile";
+        value = "32768";
+      }
+      {
+        domain = "*";
+        type = "hard";
+        item = "nofile";
+        value = "1048576";
+      }
+    ];
 
     environment.shells = with pkgs; [
       fish
