@@ -292,7 +292,7 @@ in
       EnvironmentFile = config.sops.secrets.crowdsec-env.path;
     };
     # Use cscli from environment, which already has the config file specified
-    path = [ config.system.path ]; # ugly hack lol
+    path = [ "/run/current-system/sw" ]; # ugly hack lol
     script = ''
       ${if isAsiyah then ''
       cscli bouncers add gradient --key $CROWDSEC_BOUNCER_API_KEY || echo "Done adding bouncer!"
