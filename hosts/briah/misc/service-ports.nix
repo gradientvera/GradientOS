@@ -10,4 +10,6 @@
 
   haproxy = 80;
   haproxy-ssl = 443;
+
+  crowdsec-metrics = 6060;
 }

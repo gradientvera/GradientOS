@@ -4,7 +4,6 @@
   imports = [
     ./nfs.nix
     ./mqtt.nix
-    ./fail2ban
     ./searx.nix
     ./redis.nix
     ./alloy.nix

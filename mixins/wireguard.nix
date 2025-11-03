@@ -93,6 +93,8 @@ in
     {
       networking.wireguard.enable = true;
       environment.systemPackages = [ pkgs.wireguard-tools ];
+      boot.kernelModules = [ "wireguard" ];
+      boot.kernelParams = [ "wireguard.dyndbg=\"+p\"" ];
     }
 
     (lib.mkIf (isAsiyah || isBriah) {

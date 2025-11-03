@@ -40,6 +40,14 @@ in
         sopsFile = ./secrets.yml;
         restartUnits = [ "wgautomesh.service" ];
       };
+      crowdsec-env = {
+        sopsFile = ./secrets.yml;
+        restartUnits = [ "crowdsec.service" "crowdsec-firewall-bouncer.service" ];
+      };
+      crowdsec-console-token = {
+        sopsFile = ./secrets.yml;
+        restartUnits = [ "crowdsec.service" ];
+      };
     };
   });
 

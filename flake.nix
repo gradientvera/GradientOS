@@ -352,6 +352,7 @@
           mixins.alloy
           mixins.gnupg
           mixins.podman
+          mixins.crowdsec
           mixins.steamcmd
           mixins.wireguard
           mixins.vera-locale
@@ -385,6 +386,7 @@
 
           mixins.alloy
           #mixins.podman
+          mixins.crowdsec
           mixins.wireguard
           #mixins.vera-locale
           #mixins.upgrade-diff

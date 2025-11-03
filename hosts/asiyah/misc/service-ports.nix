@@ -89,6 +89,8 @@
   attic = 8060;
   wgautomesh-gossip = 1666;
   wgautomesh-external = 33723;
+  crowdsec-lapi = 8076;
+  crowdsec-metrics = 6060;
   
   # Paperless-ngx
   paperless = 28981;
