@@ -116,7 +116,6 @@ in {
         proxy_buffers 4 256k;
         proxy_busy_buffers_size 256k;
         auth_request_set $username $upstream_http_x_auth_request_preferred_username;
-      
       '';
       rootExtraConfig = ''
         proxy_set_header X-Forwarded-Preferred-Username $xusername;

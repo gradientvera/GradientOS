@@ -8,6 +8,10 @@
     ];
   };
 
+  systemd.services.alloy.serviceConfig.SupplementaryGroups = [
+    "auditd"
+  ];
+
   environment.etc."alloy/config.alloy".text = ''
     loki.relabel "journal" {
       forward_to = []
@@ -28,6 +32,13 @@
       }
     }
     
+    loki.source.file "audit" {
+      targets = [
+        { __path__ = "/var/log/audit/audit.log", "type" = "auditd", "component" = "loki.source.file", "job" = "auditd", "unit" = "auditd.service", "host" = "${config.networking.hostName}" },
+      ]
+      forward_to = [loki.write.endpoint.receiver]
+    }
+
     loki.write "endpoint" {
       endpoint {
         url = "http://${config.gradient.const.wireguard.addresses.gradientnet.asiyah}:${toString config.gradient.hosts.asiyah.ports.victorialogs}/insert/loki/api/v1/push"

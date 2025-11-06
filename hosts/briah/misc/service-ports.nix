@@ -8,8 +8,8 @@
   wgautomesh-gossip = 1666;
   wgautomesh-external = 1194;
 
-  haproxy = 80;
-  haproxy-ssl = 443;
+  http = 80;
+  https = 443;
 
   crowdsec-metrics = 6060;
 }

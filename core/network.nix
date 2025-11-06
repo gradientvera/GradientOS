@@ -17,6 +17,8 @@ server=1.1.1.1
 server=1.0.0.1
 server=8.8.8.8
 server=8.8.4.4
+server=2606:4700:4700::1111
+server=2606:4700:4700::1001
   '';
 
   # Ignore loopback/virtual interfaces.

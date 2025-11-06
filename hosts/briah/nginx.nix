@@ -1,0 +1,38 @@
+ { config, lib, ... }:
+ let
+    ports = config.gradient.currentHost.ports;
+    gradientnet = config.gradient.const.wireguard.addresses.gradientnet;
+    asiyahPorts = config.gradient.hosts.asiyah.ports;
+in
+ {
+
+  networking.firewall.allowedTCPPorts = [ ports.http ports.https ];
+
+  services.nginx = {
+    enable = true;
+    config = ''
+      worker_processes auto;
+
+      error_log /var/log/nginx/error.log crit;
+
+      events {}
+      
+      stream {
+        server {
+          listen ${toString ports.http};
+          listen [::]:${toString ports.http};
+          proxy_pass ${gradientnet.asiyah}:${toString asiyahPorts.nginx-proxy};
+          proxy_protocol on;
+        }
+
+        server {
+          listen ${toString ports.https};
+          listen [::]:${toString ports.https};
+          proxy_pass ${gradientnet.asiyah}:${toString asiyahPorts.nginx-ssl-proxy};
+          proxy_protocol on;
+        }
+      }
+    '';
+  };
+
+ }

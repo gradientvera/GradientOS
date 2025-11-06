@@ -93,6 +93,7 @@ in
     # What action to take for alerts
     localConfig.profiles = [
       {
+        name = "default_ip_remediation";
         decisions = [
           {
             duration = "4h";
@@ -105,10 +106,10 @@ in
         notifications = [
           # "http_discord"
         ];
-        name = "default_ip_remediation";
         on_success = "break";
       }
       {
+        name = "default_range_remediation";
         decisions = [
           {
             duration = "4h";
@@ -121,7 +122,18 @@ in
         notifications = [
           # "http_discord"
         ];
-        name = "default_range_remediation";
+        on_success = "break";
+      }
+      {
+        name = "pid_alert";
+        filters = [
+          "Alert.GetScope() == 'pid'"
+        ];
+        decisions = [];
+        notifications = [
+          # "http_discord_pid"
+        ];
+        ## Please edit the above line to match your notification name
         on_success = "break";
       }
     ];
@@ -141,6 +153,20 @@ in
             "192.168.1.0/24"
             "${gradientnet.gradientnet}/24"
             "${lilynet.lilynet}/24"
+          ];
+        };
+      }
+    ];
+
+    # What FQDNs to whitelist
+    localConfig.postOverflows.s01Whitelist = [
+      {
+        description = "Whitelist my own IPs";
+        name = "myfqdns/whitelist";
+        whitelist = {
+          expression = [
+            ''evt.Overflow.Alert.Source.IP in LookupHost("gradient.moe")''
+            ''evt.Overflow.Alert.Source.IP in LookupHost("gradientvera.duckdns.org")''
           ];
         };
       }

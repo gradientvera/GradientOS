@@ -1,7 +1,8 @@
 { ... }:
 {
   imports = [
-    ./haproxy.nix
+    ./nginx.nix
+    ./networking.nix
     ./secrets/default.nix
     ./hardware-configuration.nix
   ];
