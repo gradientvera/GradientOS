@@ -95,8 +95,10 @@ in
 
     (lib.mkIf (cfg.profiles.desktop.enable && cfg.profiles.desktop.wayland.enable && cfg.profiles.desktop.wayland.autologin.enable) {
       # Hack to get Wayland autologin to work.
-      systemd.services."getty@tty1".enable = false;
-      systemd.services."autovt@tty1".enable = false;
+      # systemd.services."getty@tty1".enable = false;
+      # systemd.services."autovt@tty1".enable = false;
+      services.displayManager.autoLogin.enable = true;
+      services.displayManager.autoLogin.user = "vera";
     })
 
     (lib.mkIf (cfg.profiles.desktop.enable && cfg.profiles.desktop.wayland.enable && cfg.profiles.desktop.wayland.environment.enable) {
