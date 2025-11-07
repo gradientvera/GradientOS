@@ -17,10 +17,8 @@
       oauth2-proxy-secrets = { restartUnits = [ "oauth2-proxy.service" ]; };
 
       duckdns = {
-        mode = "0500";
-        owner = config.users.users.duckdns.name;
-        group = config.users.users.duckdns.group;
-        restartUnits = [ "duckdns" ];
+        mode = "0440";
+        restartUnits = [ "duckdns.service" ];
       };
 
       searx = {
