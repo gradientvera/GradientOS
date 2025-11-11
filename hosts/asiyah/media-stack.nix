@@ -54,6 +54,7 @@ in {
       "podman-jellyfin.service"
       "podman-flaresolverr.service"
       "podman-ersatztv.service"
+      "podman-tunarr.service"
       "podman-radarr.service"
       "podman-sonarr.service"
       "podman-lidarr.service"
@@ -257,12 +258,12 @@ in {
       extraOptions = [
         "--mount" "type=bind,source=/data/downloads,target=/media"
         "--device=/dev/dri/:/dev/dri/"
-      ] ++ defaultOptions;
+      ] ++ podOptions;
       labels = {
         "io.containers.autoupdate" = "registry";
         "PODMAN_SYSTEMD_UNIT" = "podman-jellyfin.service";
       };
-      dependsOn = [ "gluetun" ];
+      dependsOn = [ ];
     };
 
     flaresolverr = {
@@ -296,12 +297,12 @@ in {
         "--mount" "type=bind,source=/data/downloads,target=/media"
         "--mount" "type=tmpfs,destination=/transcode"
         "--device=/dev/dri/:/dev/dri/"
-      ] ++ defaultOptions;
+      ] ++ podOptions;
       labels = {
         "io.containers.autoupdate" = "registry";
         "PODMAN_SYSTEMD_UNIT" = "podman-ersatztv.service";
       };
-      dependsOn = [ "gluetun" ];
+      dependsOn = [ ];
     };
 
     tunarr = {
@@ -323,8 +324,7 @@ in {
       environmentFiles = [ ];
       extraOptions = [
         "--device=/dev/dri/:/dev/dri/"
-        "--ip=10.88.0.12"
-      ];
+      ] ++ podOptions;
       labels = {
         "io.containers.autoupdate" = "registry";
         "PODMAN_SYSTEMD_UNIT" = "podman-tunarr.service";
@@ -507,12 +507,12 @@ in {
         PUID = toString userUid;
         PGID = toString groupGid;
       };
-      extraOptions = [] ++ defaultOptions;
+      extraOptions = [] ++ podOptions;
       labels = {
         "io.containers.autoupdate" = "registry";
         "PODMAN_SYSTEMD_UNIT" = "podman-jellyseerr.service";
       };
-      dependsOn = [ "gluetun" ];
+      dependsOn = [ ];
     };
 
     qbittorrent = {
@@ -577,12 +577,12 @@ in {
         QBITTORRENT_URL = "http://127.0.0.1:${toString ports.qbittorrent-webui}";
       };
       environmentFiles = [ config.sops.secrets.mediarr-decluttarr-env.path ];
-      extraOptions = [] ++ defaultOptions;
+      extraOptions = [] ++ podOptions;
       labels = {
         "io.containers.autoupdate" = "registry";
         "PODMAN_SYSTEMD_UNIT" = "podman-decluttarr.service";
       };
-      dependsOn = [ "gluetun" "radarr" "sonarr" "lidarr" "readarr" "qbittorrent" ];
+      dependsOn = [ "radarr" "sonarr" "lidarr" "qbittorrent" ];
     };
 
     tdarr = {
@@ -614,12 +614,12 @@ in {
       };
       extraOptions = [
         "--device=/dev/dri/:/dev/dri/"
-      ] ++ defaultOptions;
+      ] ++ podOptions;
       labels = {
         "io.containers.autoupdate" = "registry";
         "PODMAN_SYSTEMD_UNIT" = "podman-tdarr.service";
       };
-      dependsOn = [ "gluetun" ];
+      dependsOn = [ ];
     };
 
     gluetun = {
@@ -762,12 +762,12 @@ in {
         NO_AUTH = "true";
         GZIP = "true";
       };
-      extraOptions = [] ++ defaultOptions ++ userOptions;
+      extraOptions = [] ++ podOptions ++ userOptions;
       labels = {
         "io.containers.autoupdate" = "registry";
         "PODMAN_SYSTEMD_UNIT" = "podman-mikochi.service";
       };
-      dependsOn = [ "gluetun" ];
+      dependsOn = [ ];
     };
 
     unpackerr = {
@@ -795,12 +795,12 @@ in {
       environmentFiles = [
         config.sops.secrets.mediarr-unpackerr-env.path
       ];
-      extraOptions = [] ++ defaultOptions ++ userOptions;
+      extraOptions = [] ++ podOptions ++ userOptions;
       labels = {
         "io.containers.autoupdate" = "registry";
         "PODMAN_SYSTEMD_UNIT" = "podman-unpackerr.service";
       };
-      dependsOn = [ "gluetun" "sonarr" "radarr" "lidarr" "readarr" ];
+      dependsOn = [ "sonarr" "radarr" "lidarr" "readarr" ];
     };
 
     # TODO: Broken! Fix sometime
@@ -841,12 +841,12 @@ in {
         PUID = toString userUid;
         PGID = toString groupGid;
       };
-      extraOptions = [] ++ defaultOptions;
+      extraOptions = [] ++ podOptions;
       labels = {
         "io.containers.autoupdate" = "registry";
         "PODMAN_SYSTEMD_UNIT" = "podman-sabnzbd.service";
       };
-      dependsOn = [ "gluetun" ];
+      dependsOn = [ ];
     };
 
     recyclarr = {
@@ -862,12 +862,12 @@ in {
         RECYCLARR_CREATE_CONFIG = "true";
         CRON_SCHEDULE = "@daily";
       };
-      extraOptions = [] ++ defaultOptions ++ userOptions;
+      extraOptions = [] ++ podOptions ++ userOptions;
       labels = {
         "io.containers.autoupdate" = "registry";
         "PODMAN_SYSTEMD_UNIT" = "podman-recyclarr.service";
       };
-      dependsOn = [ "gluetun" "sonarr" "radarr" ];
+      dependsOn = [ "sonarr" "radarr" ];
     };
 
     romm = {
@@ -887,12 +887,12 @@ in {
         DB_NAME = "romm";
       };
       environmentFiles = [ config.sops.secrets.mediarr-romm-env.path ];
-      extraOptions = [] ++ defaultOptions ++ userOptions;
+      extraOptions = [] ++ podOptions ++ userOptions;
       labels = {
         "io.containers.autoupdate" = "registry";
         "PODMAN_SYSTEMD_UNIT" = "podman-romm.service";
       };
-      dependsOn = [ "gluetun" "mariadb" ];
+      dependsOn = [ "mariadb" ];
     };
 
     mariadb = {
@@ -915,12 +915,12 @@ in {
         "--health-cmd='--innodb_initialized'"
         "--health-start-period" "30s"
         "--health-interval" "10s"*/
-      ] ++ defaultOptions ++ userOptions;
+      ] ++ podOptions ++ userOptions;
       labels = {
         "io.containers.autoupdate" = "registry";
         "PODMAN_SYSTEMD_UNIT" = "podman-mariadb.service";
       };
-      dependsOn = [ "gluetun" ];
+      dependsOn = [ ];
     };
 
     neko = {
@@ -945,7 +945,7 @@ in {
       environmentFiles = [ config.sops.secrets.mediarr-neko-env.path ];
       extraOptions = [
         "--device=/dev/dri/:/dev/dri/"
-      ] ++ (builtins.filter (e: e != "--network=container:gluetun") defaultOptions);
+      ] ++ podOptions;
       labels = {
         "io.containers.autoupdate" = "registry";
         "PODMAN_SYSTEMD_UNIT" = "podman-neko.service";
