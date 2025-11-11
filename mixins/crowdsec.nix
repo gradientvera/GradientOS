@@ -335,6 +335,25 @@ in
     '';
   };
 
+  systemd.services.auto-crowdsec-unban = {
+    enable = isAsiyah;
+    after = [ "network.target" ];
+    wantedBy = [ "multi-user.target" ];
+    startAt = "*:0/5";
+    serviceConfig = {
+      Type = "simple";
+      User = config.services.crowdsec.user;
+      Group = config.services.crowdsec.group;
+    };
+    path = [ "/run/current-system/sw" ]; # same as above guh
+    script = ''
+      ipv4addr=$(curl -s https://api.ipify.org)
+      ipv6addr=$(curl -s https://api6.ipify.org)
+      cscli decisions remove -i $ipv4addr || echo "Done ipv4!"
+      cscli decisions remove -i $ipv6addr || echo "Done ipv6!"
+    '';
+  };
+
   # Bouncer
   systemd.services.crowdsec-firewall-bouncer =
   let
