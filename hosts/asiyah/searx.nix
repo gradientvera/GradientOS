@@ -110,8 +110,6 @@ in
         url = "unix://${config.services.redis.servers.searx.unixSocket}";
       };  
 
-      redis = lib.mkForce {};
-
       # Uncomment below for TOR proxy support.
       /*outgoing.proxies = {
         http  = [ "socks5://127.0.0.1:${toString ports.tor}" ];
