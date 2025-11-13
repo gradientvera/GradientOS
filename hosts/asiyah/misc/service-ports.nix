@@ -26,7 +26,6 @@
   radarr = 7878;
   sonarr = 8989;
   lidarr = 8686;
-  readarr = 8787;
   prowlarr = 9696;
   bazarr = 6767;
   jellyseerr = 5055;
@@ -35,7 +34,6 @@
   qbittorrent-peer = 36494;
   flaresolverr = 8191;
   ersatztv = 8409;
-  tunarr = 8410;
   tdarr-webui = 8265;
   tdarr-server = 8266;
   bitmagnet-webui = 3333;

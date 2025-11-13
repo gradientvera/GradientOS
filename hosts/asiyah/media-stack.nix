@@ -23,7 +23,6 @@ let
     radarr
     sonarr
     lidarr
-    readarr
     prowlarr
     bazarr
     flaresolverr
@@ -32,7 +31,6 @@ let
     tdarr-webui
     tdarr-server
     ersatztv
-    tunarr
     qbittorrent-webui
     qbittorrent-peer
     mikochi
@@ -54,13 +52,11 @@ in {
       "podman-jellyfin.service"
       "podman-flaresolverr.service"
       "podman-ersatztv.service"
-      "podman-tunarr.service"
       "podman-radarr.service"
       "podman-sonarr.service"
       "podman-lidarr.service"
       "podman-slskd.service"
       "podman-soularr.service"
-      "podman-readarr.service"
       "podman-prowlarr.service"
       "podman-bazarr.service"
       "podman-jellyseerr.service"
@@ -101,7 +97,6 @@ in {
         -p ${toString ports.slskd}:5030 \
         -p ${toString ports.slskd-peer}:26156 \
         -p ${toString ports.slskd-peer}:26156/udp \
-        -p ${toString ports.readarr}:8787 \
         -p ${toString ports.prowlarr}:9696 \
         -p ${toString ports.bazarr}:6767 \
         -p ${toString ports.jellyseerr}:5055 \
@@ -189,7 +184,6 @@ in {
     "/var/lib/${userName}/lidarr".d = rule;
     "/var/lib/${userName}/slskd".d = rule;
     "/var/lib/${userName}/soularr".d = rule;
-    "/var/lib/${userName}/readarr".d = rule;
     "/var/lib/${userName}/prowlarr".d = rule;
     "/var/lib/${userName}/bazarr".d = rule;
     "/var/lib/${userName}/whisper".d = rule;
@@ -198,7 +192,6 @@ in {
     "/var/lib/${userName}/qbittorrent".d = rule;
     "/var/lib/${userName}/qbittorrent/incomplete".d = rule;
     "/var/lib/${userName}/ersatztv".d = rule;
-    "/var/lib/${userName}/tunarr".d = rule;
     "/var/lib/${userName}/jellyfin".d = rule;
     "/var/lib/${userName}/jellyfin/config".d = rule;
     "/var/lib/${userName}/jellyfin/cache".d = rule;
@@ -305,33 +298,6 @@ in {
       dependsOn = [ ];
     };
 
-    tunarr = {
-      image = "ghcr.io/chrisbenincasa/tunarr:latest";
-      pull = "newer";
-      ports = [
-        "${toString ports.tunarr}:8000"
-      ];
-      volumes = [
-        "/var/lib/${userName}/tunarr:/config/tunarr"
-        "/data/downloads:/media:ro"
-      ];
-      environment = {
-        TZ = config.time.timeZone;
-        PUID = toString userUid;
-        PGID = toString groupGid;
-        TUNARR_SERVER_TRUST_PROXY = "true";
-      };
-      environmentFiles = [ ];
-      extraOptions = [
-        "--device=/dev/dri/:/dev/dri/"
-      ] ++ podOptions;
-      labels = {
-        "io.containers.autoupdate" = "registry";
-        "PODMAN_SYSTEMD_UNIT" = "podman-tunarr.service";
-      };
-      dependsOn = [ ];
-    };
-
     radarr = {
       image = "lscr.io/linuxserver/radarr:latest";
       pull = "newer";
@@ -433,27 +399,6 @@ in {
         "PODMAN_SYSTEMD_UNIT" = "podman-soularr.service";
       };
       dependsOn = [ "gluetun" "lidarr" "slskd" ];
-    };
-
-    readarr = {
-      image = "lscr.io/linuxserver/readarr:develop";
-      pull = "newer";
-      volumes = [
-        "/var/lib/${userName}/readarr:/config"
-        "/data/downloads/books:/books"
-        "/data/downloads:/downloads"
-      ];
-      environment = {
-        TZ = config.time.timeZone;
-        PUID = toString userUid;
-        PGID = toString groupGid;
-      };
-      extraOptions = [] ++ defaultOptions;
-      labels = {
-        "io.containers.autoupdate" = "registry";
-        "PODMAN_SYSTEMD_UNIT" = "podman-readarr.service";
-      };
-      dependsOn = [ "gluetun" ];
     };
 
     prowlarr = {
@@ -573,7 +518,6 @@ in {
         RADARR_URL = "http://127.0.0.1:7878";
         SONARR_URL = "http://127.0.0.1:8989";
         LIDARR_URL = "http://127.0.0.1:8686";
-        READARR_URL = "http://127.0.0.1:8787";
         QBITTORRENT_URL = "http://127.0.0.1:${toString ports.qbittorrent-webui}";
       };
       environmentFiles = [ config.sops.secrets.mediarr-decluttarr-env.path ];
@@ -789,7 +733,6 @@ in {
         UN_SONARR_0_URL = "http://127.0.0.1:8989";
         UN_RADARR_0_URL = "http://127.0.0.1:7878";
         UN_LIDARR_0_URL = "http://127.0.0.1:8686";
-        UN_READARR_0_URL = "http://127.0.0.1:8787";
         UN_WEBHOOK_0_TEMPLATE = "discord";
       };
       environmentFiles = [
@@ -800,7 +743,7 @@ in {
         "io.containers.autoupdate" = "registry";
         "PODMAN_SYSTEMD_UNIT" = "podman-unpackerr.service";
       };
-      dependsOn = [ "sonarr" "radarr" "lidarr" "readarr" ];
+      dependsOn = [ "sonarr" "radarr" "lidarr" ];
     };
 
     # TODO: Broken! Fix sometime

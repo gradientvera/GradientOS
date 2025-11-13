@@ -275,16 +275,6 @@
             };
           }
           {
-            "Tunarr" = {
-              description = "Create live TV channels from media on your Jellyfin server, and more!";
-              href = "https://tunarr.constellation.moe/";
-              icon = "sh-tunarr.png";
-              server = "asiyah";
-              container = "tunarr";
-              showStats = true;
-            };
-          }
-          {
             "Pinchflat" = {
               description = "A self-hosted app for downloading YouTube content built using yt-dlp.";
               href = "https://pinchflat.constellation.moe/";
@@ -347,20 +337,6 @@
                 type = "bazarr";
                 url = "http://127.0.0.1:${toString ports.bazarr}";
                 key = "{{HOMEPAGE_VAR_BAZARR_API_KEY}}";
-              };
-            };
-          }
-          {
-            "Readarr" = {
-              description = "Monitors RSS feeds for new books and downloads them with clients and indexers.";
-              href = "https://readarr.constellation.moe/";
-              icon = "sh-readarr.svg";
-              server = "asiyah";
-              container = "readarr";
-              widget = {
-                type = "readarr";
-                url = "http://127.0.0.1:${toString ports.readarr}";
-                key = "{{HOMEPAGE_VAR_READARR_API_KEY}}";
               };
             };
           }

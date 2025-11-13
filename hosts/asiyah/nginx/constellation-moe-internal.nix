@@ -90,14 +90,12 @@ in {
     "homepage.constellation.moe" = mkReverseProxy { port = ports.constellation-homepage; };
     "status.constellation.moe" = mkReverseProxy { port = ports.uptime-kuma; };
     "ersatztv.constellation.moe" = mkReverseProxy { port = ports.ersatztv; rootExtraConfig = "proxy_buffering off;"; };
-    "tunarr.constellation.moe" = mkReverseProxy { port = ports.tunarr; rootExtraConfig = "proxy_buffering off;"; };
     "iptv.constellation.moe" = mkReverseProxy { port = ports.ersatztv; reverseProxyLocation = "/iptv"; reverseProxySubdomain = "/iptv"; rootExtraConfig = "proxy_buffering off; proxy_cache off; add_header 'Cache-Control' 'no-store, no-cache, must-revalidate, proxy-revalidate, max-age=0'; add_header Pragma 'no-cache'; add_header Expires 0;"; };
     "jellyseerr.constellation.moe" = mkReverseProxy { port = ports.jellyseerr; };
     "radarr.constellation.moe" = mkReverseProxy { port = ports.radarr; };
     "sonarr.constellation.moe" = mkReverseProxy { port = ports.sonarr; };
     "lidarr.constellation.moe" = mkReverseProxy { port = ports.lidarr; };
     "slskd.constellation.moe" = mkReverseProxy { port = ports.slskd; };
-    "readarr.constellation.moe" = mkReverseProxy { port = ports.readarr; };
     "bazarr.constellation.moe" = mkReverseProxy { port = ports.bazarr; };
     "prowlarr.constellation.moe" = mkReverseProxy { port = ports.prowlarr; };
     "tdarr.constellation.moe" = mkReverseProxy { port = ports.tdarr-webui; };
@@ -141,14 +139,12 @@ in {
     "polycule.constellation.moe" = {};
     # "jellyfin.constellation.moe" = {}; # Use built-in auth
     "ersatztv.constellation.moe" = {};
-    "tunarr.constellation.moe" = {};
     # "iptv.constellation.moe" = {}; # Use built-in auth
     # "jellyseerr.constellation.moe" = {}; # Use built-in auth
     "radarr.constellation.moe" = {};
     "sonarr.constellation.moe" = {};
     "lidarr.constellation.moe" = {};
     "slskd.constellation.moe" = {};
-    "readarr.constellation.moe" = {};
     "bazarr.constellation.moe" = {};
     "prowlarr.constellation.moe" = {};
     "tdarr.constellation.moe" = {};
