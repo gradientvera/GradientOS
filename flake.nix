@@ -78,6 +78,11 @@
 
     nixpkgs-xr.url = "github:nix-community/nixpkgs-xr";
 
+    lanzaboote = {
+      url = "github:nix-community/lanzaboote/v0.4.3";
+      inputs.nixpkgs.follows = "nixpkgs";
+    };
+
     klipper-adaptive-meshing-purging = {
       url = "github:kyleisah/Klipper-Adaptive-Meshing-Purging";
       flake = false;
@@ -94,7 +99,7 @@
     };
   };
 
-  outputs = { self, nixpkgs, gradient-generator, jovian-nixos, sops-nix, nixos-hardware, gpd-fan-driver, ... }:
+  outputs = { self, nixpkgs, gradient-generator, jovian-nixos, sops-nix, nixos-hardware, gpd-fan-driver, lanzaboote, ... }:
   let
     addr = import ./misc/addresses.nix;
     ips = import ./misc/wireguard-addresses.nix;
@@ -293,8 +298,9 @@
         name = "featherine";
 
         modules = [
-          gpd-fan-driver.nixosModules.default
           jovian-nixos.nixosModules.default
+          lanzaboote.nixosModules.lanzaboote
+          gpd-fan-driver.nixosModules.default
           nixos-hardware.nixosModules.gpd-win-mini-2024
           
           mixins.tor

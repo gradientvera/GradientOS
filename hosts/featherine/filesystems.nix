@@ -1,11 +1,16 @@
-{ pkgs, ... }:
+{ pkgs, lib, ... }:
 let
   auroraUuid = "e98ab311-b656-4421-971c-cbfdd6560829";
 in
 {
 
   # Bootloader.
-  boot.loader.systemd-boot.enable = true;
+  boot.loader.systemd-boot.enable = lib.mkForce false;
+  boot.lanzaboote = {
+    enable = true;
+    pkiBundle = "/var/lib/sbctl";
+  };
+
   boot.loader.efi.canTouchEfiVariables = true;
 
   boot.initrd.luks.devices."luks-4b159de8-a815-46ef-94bd-52a9d0e03e3a" = {
@@ -49,6 +54,7 @@ in
   ];
 
   environment.systemPackages = [
+    pkgs.sbctl # For Lanzaboote
     (pkgs.writeShellScriptBin "decrypt-aurora" ''
       sudo ${pkgs.cryptsetup}/bin/cryptsetup luksOpen /dev/disk/by-uuid/${auroraUuid} luks-${auroraUuid}
       sudo ${pkgs.util-linux}/bin/mount /data

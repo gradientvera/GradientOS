@@ -13,6 +13,7 @@ in {
     onBoot = "ignore";
     onShutdown = "shutdown";
     qemu = {
+      package = pkgs.qemu;
       runAsRoot = true;
     };
     hooks.qemu = {

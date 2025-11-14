@@ -10,7 +10,7 @@
     onBoot = "ignore";
     onShutdown = "suspend";
     qemu = {
-      package = pkgs.qemu_full;
+      package = pkgs.qemu;
       runAsRoot = true;
       swtpm.enable = true;
       vhostUserPackages = [
