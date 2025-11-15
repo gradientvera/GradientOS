@@ -16,10 +16,10 @@
     telegram-desktop
     kdePackages.kate
     element-desktop
+    master.tenacity # unstable was broken
     master.discord
     qbittorrent
     glabels-qt
-    tenacity
     chromium
     inkscape
     firefox
