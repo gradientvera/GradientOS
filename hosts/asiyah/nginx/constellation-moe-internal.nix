@@ -100,7 +100,6 @@ in {
     "prowlarr.constellation.moe" = mkReverseProxy { port = ports.prowlarr; };
     "tdarr.constellation.moe" = mkReverseProxy { port = ports.tdarr-webui; };
     "torrent.constellation.moe" = mkReverseProxy { port = ports.qbittorrent-webui; };
-    "bitmagnet.constellation.moe" = mkReverseProxy { port = ports.bitmagnet-webui; };
     "sabnzbd.constellation.moe" = mkReverseProxy { port = ports.sabnzbd; };
     "romm.constellation.moe" = mkReverseProxy { port = ports.romm; };
     "search.constellation.moe" = mkReverseProxy { port = ports.searx; };
@@ -149,7 +148,6 @@ in {
     "prowlarr.constellation.moe" = {};
     "tdarr.constellation.moe" = {};
     "torrent.constellation.moe" = {};
-    "bitmagnet.constellation.moe" = {};
     "sabnzbd.constellation.moe" = {};
     "romm.constellation.moe" = {};
     "search.constellation.moe" = {};

@@ -65,7 +65,6 @@ in {
       "podman-tdarr.service"
       "podman-gluetun.service"
       "podman-proxy-vpn-socks5.service"
-      "podman-bitmagnet.service"
       "podman-mikochi.service"
       "podman-unpackerr.service"
       # "podman-cross-seed.service"
@@ -106,9 +105,6 @@ in {
         -p ${toString ports.qbittorrent-webui}:${toString ports.qbittorrent-webui} \
         -p ${toString ports.tdarr-webui}:8265 \
         -p ${toString ports.tdarr-server}:8266 \
-        -p ${toString ports.bitmagnet-webui}:3333 \
-        -p ${toString ports.bitmagnet-peer}:3334/tcp \
-        -p ${toString ports.bitmagnet-peer}:3334/udp \
         -p ${toString ports.mikochi}:${toString ports.mikochi} \
         -p ${toString ports.cross-seed}:2468 \
         -p ${toString ports.sabnzbd}:${toString ports.sabnzbd} \
@@ -199,7 +195,6 @@ in {
     "/var/lib/${userName}/tdarr/config".d = rule;
     "/var/lib/${userName}/tdarr/logs".d = rule;
     "/var/lib/${userName}/tdarr/temp".d = rule;
-    "/var/lib/${userName}/bitmagnet".d = rule;
     "/var/lib/${userName}/gluetun".d = rule;
     "/var/lib/${userName}/gluetun-uk".d = rule;
     "/var/lib/${userName}/cross-seed".d = rule;
@@ -664,32 +659,6 @@ in {
         "PODMAN_SYSTEMD_UNIT" = "podman-proxy-vpn-uk-socks5.service";
       };
       dependsOn = [ "gluetun-uk" ];
-    };
-
-    bitmagnet = {
-      image = "ghcr.io/bitmagnet-io/bitmagnet:latest";
-      pull = "newer";
-      volumes = [
-        "/var/lib/${userName}/bitmagnet:/root/.config/bitmagnet"
-      ];
-      environment = {
-        TZ = config.time.timeZone;
-        PUID = toString userUid;
-        PGID = toString groupGid;
-        POSTGRES_HOST = "host.containers.internal";
-        POSTGRES_USER = "bitmagnet";
-      };
-      cmd = [
-        "worker"
-        "run"
-        "--all"
-      ];
-      extraOptions = [] ++ defaultOptions;
-      labels = {
-        "io.containers.autoupdate" = "registry";
-        "PODMAN_SYSTEMD_UNIT" = "podman-bitmagnet.service";
-      };
-      dependsOn = [ "gluetun" ];
     };
 
     mikochi = {

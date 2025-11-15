@@ -407,16 +407,6 @@
             };
           }
           {
-            "Bitmagnet" = {
-              description = "A software that crawls the DHT network and indexes torrents from any source, allowing you to search and classify content.";
-              href = "https://bitmagnet.constellation.moe/";
-              icon = "sh-bitmagnet.png";
-              server = "asiyah";
-              container = "bitmagnet";
-              showStats = true;
-            };
-          }
-          {
             "SABnzbd" = {
               description = "An open-source binary newsreader that automates downloading, verifying, repairing and extracting .nzb files.";
               href = "https://sabnzbd.constellation.moe/";

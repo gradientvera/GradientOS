@@ -12,7 +12,6 @@ in
     settings.port = ports.postgresql;
     ensureDatabases = [
       "hass"
-      "bitmagnet"
       "pufferpanel"
       "vaultwarden"
       "forgejo"
@@ -23,10 +22,6 @@ in
     ensureUsers = [
       {
         name = "hass";
-        ensureDBOwnership = true;
-      }
-      {
-        name = "bitmagnet";
         ensureDBOwnership = true;
       }
       {
@@ -64,10 +59,6 @@ in
       host pufferpanel pufferpanel ::1/128 trust
       host grafana grafana 127.0.0.1/32 trust
       host atticd atticd 127.0.0.1/32 trust
-
-      # Podman network
-      host bitmagnet bitmagnet 10.88.0.0/24 trust
-      host trmnl trmnl 10.88.0.0/24 trust
     '';
     # PGTune settings
     settings = {

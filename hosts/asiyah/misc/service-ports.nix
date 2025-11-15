@@ -36,8 +36,6 @@
   ersatztv = 8409;
   tdarr-webui = 8265;
   tdarr-server = 8266;
-  bitmagnet-webui = 3333;
-  bitmagnet-peer = 3334;
   mikochi = 8091;
   cross-seed = 2468;
   sabnzbd = 8092;
