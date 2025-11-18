@@ -122,6 +122,11 @@ in {
         auth_request off;
         proxy_pass http://127.0.0.1:${toString ports.calibre-web-automated};
       '';
+      extraConfig.locations."/opds".extraConfig = ''
+        auth_request off;
+        auth_basic_user_file ${config.sops.secrets.calibre-opds-credentials.path};
+        proxy_pass http://127.0.0.1:${toString ports.calibre-web-automated};
+      '';
     };
     "calibredl.constellation.moe" = mkReverseProxy { port = ports.calibre-downloader; };
     "radio.constellation.moe" = mkReverseProxy { port = ports.openwebrx; };

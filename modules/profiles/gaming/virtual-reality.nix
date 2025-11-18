@@ -179,7 +179,7 @@ in
         (let
           monadoXr = "${pkgs.monado}/share/openxr/1/openxr_monado.json";
           monadoUnstableXr = "${pkgs-xr.monado}/share/openxr/1/openxr_monado.json";
-          wivrnXr = "${pkgs.wivrn}/share/openxr/1/openxr_wivrn.json";
+          wivrnXr = "${config.services.wivrn.package}/share/openxr/1/openxr_wivrn.json";
           steamXr = "~/.local/share/Steam/steamapps/common/SteamVR/steamxr_linux64.json";
         in pkgs.writeScriptBin "openxr-runtime" ''
           #!/usr/bin/env -S ${pkgs.just}/bin/just --chooser=${pkgs.fzf}/bin/fzf --justfile
@@ -227,6 +227,7 @@ in
 
       programs.alvr = {
         enable = true;
+        package = pkgs.master.alvr;
         openFirewall = true;
       };
 
@@ -317,6 +318,7 @@ in
       # env PRESSURE_VESSEL_FILESYSTEMS_RW=$XDG_RUNTIME_DIR/wivrn/comp_ipc %command%
       services.wivrn = {
         enable = true;
+        package = pkgs.stable.wivrn;
         openFirewall = true;
 
         # Write information to /etc/xdg/openxr/1/active_runtime.json, VR applications

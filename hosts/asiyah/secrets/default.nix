@@ -210,6 +210,12 @@
         restartUnits = [ "atticd.service" ];
       };
 
+      calibre-opds-credentials = {
+        restartUnits = [ "nginx.service" ];
+        owner = "nginx";
+        group = "nginx";
+      };
+
     };
   };
 
