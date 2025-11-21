@@ -34,6 +34,8 @@ in
   services.nginx.virtualHosts."gradient.moe" = {
     root = toString self.inputs.gradient-moe.packages.${pkgs.stdenv.hostPlatform.system}.default;
     enableACME = true;
+    # Only specify ONCE!
+    reuseport = true;
     acmeRoot = null;
     quic = true;
     forceSSL = true;

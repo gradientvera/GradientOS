@@ -13,6 +13,7 @@ in {
     ./constellation-moe-oauth2-proxy.nix
   ];
 
+  gradient.nginx.enableQuic = true;
   gradient.nginx.enableBlockAIBots = true;
 
   services.nginx = {
@@ -21,10 +22,21 @@ in {
       withSlice = true;
     };
     defaultListen = [
+      # HTTP
       { addr = "0.0.0.0"; port = ports.nginx; ssl = false; proxyProtocol = false; }
+      { addr = "[::]"; port = ports.nginx; ssl = false; proxyProtocol = false; }
+
+      # Proxy Protocol HTTP
       { addr = "0.0.0.0"; port = ports.nginx-proxy; ssl = false; proxyProtocol = true; }
+      { addr = "[::]"; port = ports.nginx-proxy; ssl = false; proxyProtocol = true; }
+
+      # HTTPS
       { addr = "0.0.0.0"; port = ports.nginx-ssl; ssl = true; proxyProtocol = false; }
+      { addr = "[::]"; port = ports.nginx-ssl; ssl = true; proxyProtocol = false; }
+    
+      # Proxy Protocol HTTPS
       { addr = "0.0.0.0"; port = ports.nginx-ssl-proxy; ssl = true; proxyProtocol = true; }
+      { addr = "[::]"; port = ports.nginx-ssl-proxy; ssl = true; proxyProtocol = true; }
     ];
 
     recommendedGzipSettings = true;
@@ -41,6 +53,7 @@ in {
     appendHttpConfig = ''
       set_real_ip_from ${config.gradient.const.wireguard.addresses.gradientnet.gradientnet}/24;
       real_ip_header proxy_protocol;
+      real_ip_header X-Forwarded-For;
       real_ip_recursive on;
 
       map $username $xusername {

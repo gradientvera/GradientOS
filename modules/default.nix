@@ -9,7 +9,7 @@
     ./hardware/default.nix
     ./profiles/default.nix
 
-    ./nginx-robots.nix
+    ./nginx-extras.nix
     ./tmpfiles-check.nix
     ./substituter-switcher.nix
   ];
