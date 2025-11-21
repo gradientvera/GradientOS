@@ -42,6 +42,7 @@ in
         dotnet_9.sdk
         dotnet_9.aspnetcore
       ])
+      lixPackageSets.latest.colmena
       smartmontools
       appimage-run
       attic-client
@@ -57,7 +58,6 @@ in
       pciutils
       nettools
       pmutils
-      colmena
       tcpdump
       sysstat
       python3

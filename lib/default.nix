@@ -42,7 +42,6 @@ rec {
     , importCore ? true
     , importHost ? true
     , importModules ? true
-    , importLix ? true
     , ...
     }:
     {
@@ -86,7 +85,6 @@ rec {
         ++ (if importCore then [../core/default.nix] else [])
         ++ (if importHost then [../hosts/${name}/default.nix] else [])
         ++ (if importModules then [../modules/default.nix] else [])
-        ++ (if importLix then [self.inputs.lix-module.nixosModules.default] else [])
         ++ (if deployment != null then [{ inherit deployment; }] else []);
 
     } // (if deployment != null then {

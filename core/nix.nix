@@ -34,6 +34,7 @@ in
     (lib.mkIf cfg.core.nix.enable {
       nix =
       {
+        package = pkgs.lix;
  
         settings = {
           cores = 0;
