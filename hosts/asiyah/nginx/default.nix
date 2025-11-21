@@ -53,7 +53,6 @@ in {
     appendHttpConfig = ''
       set_real_ip_from ${config.gradient.const.wireguard.addresses.gradientnet.gradientnet}/24;
       real_ip_header proxy_protocol;
-      real_ip_header X-Forwarded-For;
       real_ip_recursive on;
 
       map $username $xusername {
