@@ -1,4 +1,4 @@
-{ config, ... }:
+{ config, pkgs, ... }:
 let
   ports = config.gradient.currentHost.ports;
 in
@@ -64,6 +64,7 @@ in
 
   services.tika = {
     enable = true;
+    package = pkgs.stable.tika;
     port = ports.tika;
     enableOcr = true;
   };
