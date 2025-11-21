@@ -60,6 +60,10 @@ in
   # WOL support.
   networking.interfaces.enp16s0.wakeOnLan.enable = true;
 
+  services.udev.extraRules = ''
+    SUBSYSTEM=="usb", ATTRS{idVendor}=="0489", ATTRS{idProduct}=="e10d", TAG+="uaccess"
+  '';
+
   gradient.substituters = {
     asiyah = "ssh-ng://nix-ssh@asiyah.gradient?priority=40";
     beatrice = "ssh-ng://nix-ssh@beatrice.gradient?priority=45";
