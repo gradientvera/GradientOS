@@ -183,11 +183,7 @@ in
       };
 
       sensor = [
-        {
-          platform = "fail2ban";
-          # Actually get all jails that are configured
-          jails = (lib.map (x: x.name) (lib.attrsToList config.services.fail2ban.jails));
-        }
+
       ];
 
       shell_command = {
