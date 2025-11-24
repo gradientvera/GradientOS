@@ -13,6 +13,17 @@ let
       # Useful tools for games
       gamescope # games cope hehehehehehehe
       gamemode
+
+      # See: https://wiki.nixos.org/wiki/Steam#Gamescope_fails_to_launch_when_used_within_Steam
+      xorg.libXcursor
+      xorg.libXi
+      xorg.libXinerama
+      xorg.libXScrnSaver
+      libpng
+      libpulseaudio
+      libvorbis
+      stdenv.cc.cc.lib # Provides libstdc++.so.6
+      libkrb5
     ];
     extraLibraries = pkgs: with pkgs; [
       # Extra Steam game dependencies go here.
@@ -26,6 +37,11 @@ let
       zlib
       glib
       gdk-pixbuf
+      libpng
+      libpulseaudio
+      libvorbis
+      stdenv.cc.cc.lib # Provides libstdc++.so.6
+      libkrb5
     ];
   };
 in {
