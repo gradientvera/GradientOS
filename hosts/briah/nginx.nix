@@ -7,7 +7,7 @@ in
  {
 
   networking.firewall.allowedTCPPorts = [ ports.http ports.https ];
-  networking.firewall.allowedUDPPorts = [ ports.http ports.https ];
+  # networking.firewall.allowedUDPPorts = [ ports.http ports.https ];
 
   services.nginx = {
     enable = true;
@@ -21,18 +21,18 @@ in
       stream {
         server {
           listen ${toString ports.http} reuseport;
-          listen ${toString ports.http} udp reuseport;
+          # listen ${toString ports.http} udp reuseport;
           listen [::]:${toString ports.http} reuseport;
-          listen [::]:${toString ports.http} udp reuseport;
+          # listen [::]:${toString ports.http} udp reuseport;
           proxy_pass ${gradientnet.asiyah}:${toString asiyahPorts.nginx-proxy};
           proxy_protocol on;
         }
 
         server {
           listen ${toString ports.https} reuseport;
-          listen ${toString ports.https} udp reuseport;
+          # listen ${toString ports.https} udp reuseport;
           listen [::]:${toString ports.https} reuseport;
-          listen [::]:${toString ports.https} udp reuseport;
+          # listen [::]:${toString ports.https} udp reuseport;
           proxy_pass ${gradientnet.asiyah}:${toString asiyahPorts.nginx-ssl-proxy};
           proxy_protocol on;
         }

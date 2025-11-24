@@ -33,6 +33,10 @@ in {
       # HTTPS
       { addr = "0.0.0.0"; port = ports.nginx-ssl; ssl = true; proxyProtocol = false; }
       { addr = "[::]"; port = ports.nginx-ssl; ssl = true; proxyProtocol = false; }
+
+      # HTTPS but for udppp
+      { addr = "127.0.0.1"; port = ports.nginx-ssl; ssl = true; proxyProtocol = false; }
+      { addr = "[::1]"; port = ports.nginx-ssl; ssl = true; proxyProtocol = false; }
     
       # Proxy Protocol HTTPS
       { addr = "0.0.0.0"; port = ports.nginx-ssl-proxy; ssl = true; proxyProtocol = true; }

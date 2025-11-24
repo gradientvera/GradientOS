@@ -10,6 +10,9 @@
   constellation-homepage = 8099;
   gradient-homepage = 8101;
 
+  # mmproxy
+  mmproxy-quic = 445;
+
   # wireguard
   gradientnet = 1194;
   lilynet = 1195;

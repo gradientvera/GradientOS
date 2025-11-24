@@ -129,6 +129,16 @@ in
           };
         };
       };
+
+      services.udppp.enable = true;
+      services.udppp.reverseProxies.quic = {
+        enable = true;
+        openFirewall = true;
+        proxyProtocol = true;
+        hostAddress = addr.gradientnet.asiyah;
+        localPort = briahPorts.https;
+        remotePort = asiyahPorts.mmproxy-quic;
+      };
     })
 
     (lib.mkIf isAsiyah {
@@ -147,6 +157,18 @@ in
             services = (mkRatholeServices "asiyah" "client" asiyahForwardedPorts);
           };
         };
+      };
+
+      services.mmproxy-rs.enable = true;
+      services.mmproxy-rs.instances.quic = {
+        openFirewall = true;
+        # Use .2 instead of .1 to allow reverse proxying on nginx lmao
+        ipv4 = "127.0.0.2:${toString asiyahPorts.nginx-ssl}";
+        ipv6 = "[::1]:${toString asiyahPorts.nginx-ssl}";
+        allowedSubnets = [ "${addr.gradientnet.gradientnet}/24" ];
+        protocol = "udp";
+        mark = 123;
+        listenAddress = "${addr.gradientnet.asiyah}:${toString asiyahPorts.mmproxy-quic}";
       };
     })
 
