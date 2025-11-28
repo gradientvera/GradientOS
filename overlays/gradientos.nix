@@ -45,6 +45,15 @@ let
     ];
   };
 in {
+  crowdsec = prev.crowdsec.overrideAttrs (prevAttrs: {
+    nativeBuildInputs = prevAttrs.nativeBuildInputs ++ [ prev.patchelf ];
+    subPackages = prevAttrs.subPackages ++ [ "cmd/notification-http" ];
+    postFixup = ''
+      interp="$(cat $NIX_CC/nix-support/dynamic-linker)"
+      patchelf --set-interpreter $interp $out/bin/notification-http
+    '';
+  });
+
   discord = (prev.discord.override {
     withOpenASAR = true;
     withVencord = true;

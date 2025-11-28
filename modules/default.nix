@@ -9,8 +9,6 @@
     ./hardware/default.nix
     ./profiles/default.nix
 
-    ./udppp.nix
-    ./mmproxy-rs.nix
     ./nginx-extras.nix
     ./tmpfiles-check.nix
     ./substituter-switcher.nix

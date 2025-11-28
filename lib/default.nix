@@ -75,6 +75,7 @@ rec {
       modules = [
         (mkHostNameModule name)
         self.inputs.home-manager.nixosModules.home-manager
+        self.inputs.mmproxy-rs.nixosModules.default
         {
           home-manager.useGlobalPkgs = true;
           home-manager.useUserPackages = true;

@@ -86,6 +86,11 @@
       url = "github:ai-robots-txt/ai.robots.txt";
       flake = false;
     };
+
+    mmproxy-rs = {
+      url = "github:gradientvera/mmproxy-rs";
+      inputs.nixpkgs.follows = "nixpkgs";
+    };
   };
 
   outputs = { self, nixpkgs, gradient-generator, jovian-nixos, sops-nix, nixos-hardware, gpd-fan-driver, lanzaboote, ... }:

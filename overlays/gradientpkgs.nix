@@ -14,8 +14,6 @@ final: prev:
 
   force-xwayland = prev.callPackage ../pkgs/scripts/force-xwayland.nix { };
 
-  udppp = prev.callPackage ../pkgs/udppp/default.nix { };
-
   # gradient-ansible-lib = (prev.callPackage ../ansible/ansible-lib.nix { });
   gradient-ansible-inventory = prev.callPackage ../ansible/inventory.nix { };
   gradient-ansible-playbook = prev.callPackage ../ansible/playbook.nix { };
@@ -24,8 +22,6 @@ final: prev:
 
   jack-matchmaker = prev.callPackage ../pkgs/jack-matchmaker.nix { };
 
-  mmproxy-rs = prev.callPackage ../pkgs/mmproxy-rs.nix { };
-  
   moonraker-timelapse = prev.callPackage ../pkgs/moonraker-timelapse.nix { };
 
   starsector-gamescope-wrap = prev.callPackage ../pkgs/starsector-gamescope-wrap.nix { }; 

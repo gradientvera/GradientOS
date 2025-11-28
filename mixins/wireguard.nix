@@ -130,14 +130,13 @@ in
         };
       };
 
-      services.udppp.enable = true;
-      services.udppp.reverseProxies.quic = {
+      services.mmproxy-rs.enable = true;
+      services.mmproxy-rs.reverseProxies.quic = {
         enable = true;
         openFirewall = true;
-        proxyProtocol = true;
-        hostAddress = addr.gradientnet.asiyah;
-        localPort = briahPorts.https;
-        remotePort = asiyahPorts.mmproxy-quic;
+        protocol = "udp";
+        listenAddress = "[::]:${toString briahPorts.https}";
+        forwardAddress = "${addr.gradientnet.asiyah}:${toString asiyahPorts.mmproxy-quic}";
       };
     })
 
@@ -160,7 +159,7 @@ in
       };
 
       services.mmproxy-rs.enable = true;
-      services.mmproxy-rs.instances.quic = {
+      services.mmproxy-rs.mmproxies.quic = {
         openFirewall = true;
         # Use .2 instead of .1 to allow reverse proxying on nginx lmao
         ipv4 = "127.0.0.2:${toString asiyahPorts.nginx-ssl}";
