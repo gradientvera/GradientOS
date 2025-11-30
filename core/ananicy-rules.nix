@@ -6,6 +6,7 @@
   { name = "ErsatzTV"; type = "Player-Video"; }
   { name = "ffmpeg"; type = "Heavy_CPU"; }
   { name = "tdarr-ffmpeg"; type = "Heavy_CPU"; }
+  { name = "mmproxy"; type = "LowLatency_RT"; }
 
   # Set VR relevant programs to low-latency
   { name = "wivrn-server"; type = "LowLatency_RT"; }
