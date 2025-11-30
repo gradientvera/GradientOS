@@ -431,11 +431,11 @@
         ]
       },
       "locked": {
-        "lastModified": 1764354725,
-        "narHash": "sha256-bW84p98LApJoav7XpGioAp1Ymfqm2XMCtLXgDm7zMJI=",
+        "lastModified": 1764507834,
+        "narHash": "sha256-m7+Beu07ZFoBpeGIvTMLnWYQDrS2X3W9tEFEfeEet3U=",
         "owner": "gradientvera",
         "repo": "mmproxy-rs",
-        "rev": "2d89262b738e22d18281bf7c60192dec23c48651",
+        "rev": "5c52f4789567d3962bfa4374c8d55fae3656b33e",
         "type": "github"
       },
       "original": {
