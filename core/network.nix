@@ -3,6 +3,13 @@
 {
   networking.wireless.enable = lib.mkForce false;
 
+  networking.interfaces.lo.ipv6.addresses = [
+    {
+      address = "::2";
+      prefixLength = 128;
+    }
+  ];
+
   # Enable NetworkManager with dnsmasq
   networking.networkmanager = {
     enable = lib.mkDefault true;
