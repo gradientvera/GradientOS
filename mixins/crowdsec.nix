@@ -7,6 +7,7 @@ let
   ports = config.gradient.currentHost.ports;
   hostName = config.networking.hostName;
   isAsiyah = hostName == "asiyah";
+  writeYamlFile = (pkgs.formats.yaml {}).generate;
 in
 {
 
@@ -21,15 +22,6 @@ in
     enable = true;
     openFirewall = false;
     autoUpdateService = true;
-
-    /*
-    package = pkgs.crowdsec.overrideAttrs (prevAttrs: {
-      # Add notification binaries to build here
-      subPackages = prevAttrs.subPackages ++ [
-        "cmd/notification-http"
-      ];
-    });
-    */
 
     # Adds new parsing and detection behaviours
     hub.collections = [
@@ -103,8 +95,8 @@ in
         filters = [
           "Alert.Remediation == true && Alert.GetScope() == 'Ip'"
         ];
-        notifications = [
-          # "http_discord"
+        notifications = lib.mkIf isAsiyah [
+          #"http_discord"
         ];
         on_success = "break";
       }
@@ -119,8 +111,8 @@ in
         filters = [
           "Alert.Remediation == true && Alert.GetScope() == 'Range'"
         ];
-        notifications = [
-          # "http_discord"
+        notifications = lib.mkIf isAsiyah [
+          #"http_discord"
         ];
         on_success = "break";
       }
@@ -130,7 +122,7 @@ in
           "Alert.GetScope() == 'pid'"
         ];
         decisions = [];
-        notifications = [
+        notifications = lib.mkIf isAsiyah [
           # "http_discord_pid"
         ];
         ## Please edit the above line to match your notification name
@@ -173,96 +165,9 @@ in
       }
     ];
 
-    # TODO: Broken!
-    /*
-    localConfig.notifications = [
-      # Discord notification
-      {
-        type = "http";
-        name = "http_discord";
-        # Taken from https://gist.github.com/bpbradley/6628f7c7486b46dfeefaa95a83373f01
-        format = ''
-          {
-            "embeds": [
-              {
-                {{range . -}}
-                {{$alert := . -}}
-                {{range .Decisions -}}
-                {{- $cti := .Value | CrowdsecCTI  -}}
-                "timestamp": "{{$alert.StartAt}}",
-                "title": "Crowdsec Alert",
-                "color": 16711680,
-                "description": "Potential threat detected. View details in [Crowdsec Console](<https://app.crowdsec.net/cti/{{.Value}}>)",
-                "url": "https://app.crowdsec.net/cti/{{.Value}}",
-                "fields": [
-                      {
-                        "name": "Scenario",
-                        "value": "`{{ .Scenario }}`",
-                        "inline": "true"
-                      },
-                      {
-                        "name": "IP",
-                        "value": "[{{.Value}}](<https://www.whois.com/whois/{{.Value}}>)",
-                        "inline": "true"
-                      },
-                      {
-                        "name": "Ban Duration",
-                        "value": "{{.Duration}}",
-                        "inline": "true"
-                      },
-                      {{if $alert.Source.Cn -}}
-                      { 
-                        "name": "Country",
-                        "value": "{{$alert.Source.Cn}} :flag_{{ $alert.Source.Cn | lower }}:",
-                        "inline": "true"
-                      }
-                      {{if $cti.Location.City -}}
-                      ,
-                      { 
-                        "name": "City",
-                        "value": "{{$cti.Location.City}}",
-                        "inline": "true"
-                      },
-                      { 
-                        "name": "Maliciousness",
-                        "value": "{{mulf $cti.GetMaliciousnessScore 100 | floor}} %",
-                        "inline": "true"
-                      }
-                      {{end}}
-                      {{end}}
-                      {{if not $alert.Source.Cn -}}
-                      { 
-                        "name": "Location",
-                        "value": "Unknown :pirate_flag:"
-                      }
-                      {{end}}
-                      {{end -}}
-                      {{end -}}
-                      {{range . -}}
-                      {{$alert := . -}}
-                      {{range .Meta -}}
-                        ,{
-                        "name": "{{.Key}}",
-                        "value": "{{ (splitList "," (.Value | replace "\"" "`" | replace "[" "" |replace "]" "")) | join "\\n"}}"
-                      } 
-                      {{end -}}
-                      {{end -}}
-                ]
-              }
-            ]
-          }
-        '';
-        group_threshold = 5;
-        log_level = "info";
-        method = "POST";
-        headers = { Content-Type = "application/json"; };
-        url = "\${CROWDSEC_DISCORD_WEBHOOK_URL}";
-      }
-    ];
-    */
-
     settings.general = {
       # Needed for HTTP notifications
+      config_paths.plugin_dir = lib.mkForce "/etc/crowdsec/plugins";
       plugin_config = {
         user = "crowdsec";
         group = "crowdsec";
@@ -301,9 +206,130 @@ in
 
   users.users.${config.services.crowdsec.user}.extraGroups = [ "nginx" "auditd" ];
 
-  systemd.services.crowdsec = {
+  environment.etc."crowdsec/plugins/notification-http" = {
+    enable = false;#isAsiyah;
+    user = "crowdsec";
+    group = "crowdsec";
+    mode = "0700";
+    source = "${pkgs.crowdsec}/bin/notification-http";
+  };
+
+  environment.etc."crowdsec/notifications/http_discord.yaml" = {
+    enable = false;#isAsiyah;
+    user = "crowdsec";
+    group = "crowdsec";
+    mode = "0770";
+    source = writeYamlFile "crowdsec-notification-http-discord.yaml" {
+      type = "http";
+      name = "http_discord";
+      # Taken from https://gist.github.com/bpbradley/6628f7c7486b46dfeefaa95a83373f01
+      format = ''
+        {
+          "embeds": [
+            {
+              {{range . -}}
+              {{$alert := . -}}
+              {{range .Decisions -}}
+              {{- $cti := .Value | CrowdsecCTI  -}}
+              "timestamp": "{{$alert.StartAt}}",
+              "title": "Crowdsec Alert",
+              "color": 16711680,
+              "description": "Potential threat detected. View details in [Crowdsec Console](<https://app.crowdsec.net/cti/{{.Value}}>)",
+              "url": "https://app.crowdsec.net/cti/{{.Value}}",
+              "fields": [
+                    {
+                      "name": "Scenario",
+                      "value": "`{{ .Scenario }}`",
+                      "inline": "true"
+                    },
+                    {
+                      "name": "IP",
+                      "value": "[{{.Value}}](<https://www.whois.com/whois/{{.Value}}>)",
+                      "inline": "true"
+                    },
+                    {
+                      "name": "Ban Duration",
+                      "value": "{{.Duration}}",
+                      "inline": "true"
+                    },
+                    {{if $alert.Source.Cn -}}
+                    { 
+                      "name": "Country",
+                      "value": "{{$alert.Source.Cn}} :flag_{{ $alert.Source.Cn | lower }}:",
+                      "inline": "true"
+                    }
+                    {{if $cti.Location.City -}}
+                    ,
+                    { 
+                      "name": "City",
+                      "value": "{{$cti.Location.City}}",
+                      "inline": "true"
+                    },
+                    { 
+                      "name": "Maliciousness",
+                      "value": "{{mulf $cti.GetMaliciousnessScore 100 | floor}} %",
+                      "inline": "true"
+                    }
+                    {{end}}
+                    {{end}}
+                    {{if not $alert.Source.Cn -}}
+                    { 
+                      "name": "Location",
+                      "value": "Unknown :pirate_flag:"
+                    }
+                    {{end}}
+                    {{end -}}
+                    {{end -}}
+                    {{range . -}}
+                    {{$alert := . -}}
+                    {{range .Meta -}}
+                      ,{
+                      "name": "{{.Key}}",
+                      "value": "{{ (splitList "," (.Value | replace "\"" "`" | replace "[" "" |replace "]" "")) | join "\\n"}}"
+                    } 
+                    {{end -}}
+                    {{end -}}
+              ]
+            }
+          ]
+        }
+      '';
+      group_threshold = 5;
+      log_level = "info";
+      method = "POST";
+      headers = { Content-Type = "application/json"; };
+      url = "\${CROWDSEC_DISCORD_WEBHOOK_URL}";
+    };
+  };
+
+  systemd.services.crowdsec.serviceConfig = {
     # Load secrets
-    serviceConfig.EnvironmentFile = config.sops.secrets.crowdsec-env.path;
+    EnvironmentFile = config.sops.secrets.crowdsec-env.path;
+    /*CapabilityBoundingSet=lib.mkForce [""];
+    DevicePolicy=lib.mkForce [""];
+    LockPersonality=lib.mkForce [""];
+    NoNewPrivileges=lib.mkForce [""];
+    PrivateDevices=lib.mkForce [""];
+    PrivateTmp=lib.mkForce [""];
+    PrivateUsers=lib.mkForce [""];
+    ProtectClock=lib.mkForce [""];
+    ProtectControlGroups=lib.mkForce [""];
+    ProtectHome=lib.mkForce [""];
+    ProtectHostname=lib.mkForce [""];
+    ProtectKernelLogs=lib.mkForce [""];
+    ProtectKernelModules=lib.mkForce [""];
+    ProtectKernelTunables=lib.mkForce [""];
+    ProtectProc=lib.mkForce [""];
+    ProtectSystem=lib.mkForce [""];
+    ReadWritePaths=lib.mkForce [""];
+    RemoveIPC=lib.mkForce [""];
+    RestrictAddressFamilies=lib.mkForce [""];
+    RestrictNamespaces=lib.mkForce [""];
+    RestrictRealtime=lib.mkForce [""];
+    RestrictSUIDSGID=lib.mkForce [""];
+    SystemCallArchitectures=lib.mkForce [""];
+    SystemCallFilter=lib.mkForce [""];*/
+
   };
 
   # Auto-register machines
