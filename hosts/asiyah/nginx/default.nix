@@ -18,7 +18,7 @@ in {
 
   services.nginx = {
     enable = true;
-    package = pkgs.nginxQuic.override {
+    package = pkgs.nginx.override {
       withSlice = true;
     };
     defaultListen = [
