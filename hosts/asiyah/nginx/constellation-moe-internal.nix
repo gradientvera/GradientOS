@@ -30,7 +30,6 @@ in {
 
   services.nginx.virtualHosts."jellyfin.constellation.moe" = {
     useACMEHost = "constellation.moe";
-    quic = true;
     addSSL = true;
     
     extraConfig = ''
@@ -89,7 +88,7 @@ in {
   services.nginx.virtualHosts = {
     "homepage.constellation.moe" = mkReverseProxy { port = ports.constellation-homepage; };
     "status.constellation.moe" = mkReverseProxy { port = ports.uptime-kuma; };
-    "ersatztv.constellation.moe" = mkReverseProxy { port = ports.ersatztv; rootExtraConfig = "proxy_buffering off;"; };
+    "ersatztv.constellation.moe" = mkReverseProxy { port = ports.ersatztv; rootExtraConfig = "proxy_cache off; proxy_buffering off;"; extraConfig = { quic = lib.mkForce false; http3_hq = lib.mkForce false; }; };
     "iptv.constellation.moe" = mkReverseProxy { port = ports.ersatztv; reverseProxyLocation = "/iptv"; reverseProxySubdomain = "/iptv"; rootExtraConfig = "proxy_buffering off; proxy_cache off; add_header 'Cache-Control' 'no-store, no-cache, must-revalidate, proxy-revalidate, max-age=0'; add_header Pragma 'no-cache'; add_header Expires 0;"; };
     "jellyseerr.constellation.moe" = mkReverseProxy { port = ports.jellyseerr; };
     "radarr.constellation.moe" = mkReverseProxy { port = ports.radarr; };
@@ -98,6 +97,7 @@ in {
     "slskd.constellation.moe" = mkReverseProxy { port = ports.slskd; };
     "bazarr.constellation.moe" = mkReverseProxy { port = ports.bazarr; };
     "prowlarr.constellation.moe" = mkReverseProxy { port = ports.prowlarr; };
+    "profilarr.constellation.moe" = mkReverseProxy { port = ports.profilarr; };
     "tdarr.constellation.moe" = mkReverseProxy { port = ports.tdarr-webui; };
     "torrent.constellation.moe" = mkReverseProxy { port = ports.qbittorrent-webui; };
     "sabnzbd.constellation.moe" = mkReverseProxy { port = ports.sabnzbd; };
@@ -151,6 +151,7 @@ in {
     "slskd.constellation.moe" = {};
     "bazarr.constellation.moe" = {};
     "prowlarr.constellation.moe" = {};
+    "profilarr.constellation.moe" = {};
     "tdarr.constellation.moe" = {};
     "torrent.constellation.moe" = {};
     "sabnzbd.constellation.moe" = {};

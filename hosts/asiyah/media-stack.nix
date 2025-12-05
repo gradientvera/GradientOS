@@ -39,6 +39,7 @@ let
     neko
     proxy-vpn
     proxy-vpn-uk
+    profilarr
     calibre-web-automated
     calibre-downloader
   ];
@@ -69,7 +70,7 @@ in {
       "podman-unpackerr.service"
       # "podman-cross-seed.service"
       "podman-sabnzbd.service"
-      "podman-recyclarr.service"
+      "podman-profilarr.service"
       "podman-romm.service"
       "podman-mariadb.service"
       "podman-neko.service"
@@ -97,6 +98,7 @@ in {
         -p ${toString ports.slskd-peer}:26156 \
         -p ${toString ports.slskd-peer}:26156/udp \
         -p ${toString ports.prowlarr}:9696 \
+        -p ${toString ports.profilarr}:6868 \
         -p ${toString ports.bazarr}:6767 \
         -p ${toString ports.jellyseerr}:5055 \
         -p ${toString ports.unpackerr}:${toString ports.unpackerr} \
@@ -200,7 +202,7 @@ in {
     "/var/lib/${userName}/cross-seed".d = rule;
     "/var/lib/${userName}/sabnzbd".d = rule;
     "/var/lib/${userName}/sabnzbd/incomplete".d = rule;
-    "/var/lib/${userName}/recyclarr".d = rule;
+    "/var/lib/${userName}/profilarr".d = rule;
     "/var/lib/${userName}/romm".d = rule;
     "/var/lib/${userName}/romm/redis".d = rule;
     "/var/lib/${userName}/romm/resources".d = rule;
@@ -761,23 +763,19 @@ in {
       dependsOn = [ ];
     };
 
-    recyclarr = {
-      image = "ghcr.io/recyclarr/recyclarr:latest";
+    profilarr = {
+      image = "docker.io/santiagosayshey/profilarr:latest";
       pull = "newer";
       volumes = [
-        "/var/lib/${userName}/recyclarr:/config"
+        "/var/lib/${userName}/profilarr:/config"
       ];
       environment = {
         TZ = config.time.timeZone;
-        PUID = toString userUid;
-        PGID = toString groupGid;
-        RECYCLARR_CREATE_CONFIG = "true";
-        CRON_SCHEDULE = "@daily";
       };
-      extraOptions = [] ++ podOptions ++ userOptions;
+      extraOptions = [] ++ podOptions;
       labels = {
         "io.containers.autoupdate" = "registry";
-        "PODMAN_SYSTEMD_UNIT" = "podman-recyclarr.service";
+        "PODMAN_SYSTEMD_UNIT" = "podman-profilarr.service";
       };
       dependsOn = [ "sonarr" "radarr" ];
     };

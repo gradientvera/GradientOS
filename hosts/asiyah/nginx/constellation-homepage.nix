@@ -421,6 +421,16 @@
             };
           }
           {
+            "Profilarr" = {
+              description = "Configuration Management Platform for Radarr/Sonarr.";
+              href = "https://profilarr.constellation.moe/";
+              icon = "sh-profilarr.svg";
+              server = "asiyah";
+              container = "profilarr";
+              showStats = true;
+            };
+          }
+          {
             "Crafty Controller" = {
               description = "Crafty Controller is a free and open-source Minecraft launcher and manager that allows users to start and administer Minecraft servers from a user-friendly interface.";
               href = "https://crafty.constellation.moe/";

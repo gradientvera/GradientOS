@@ -30,6 +30,7 @@
   sonarr = 8989;
   lidarr = 8686;
   prowlarr = 9696;
+  profilarr = 6868;
   bazarr = 6767;
   jellyseerr = 5055;
   unpackerr = 5656;
