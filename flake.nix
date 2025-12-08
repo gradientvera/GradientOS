@@ -114,7 +114,7 @@
           mixins.gnupg
           mixins.alloy
           mixins.podman
-          mixins.plymouth
+          #mixins.plymouth
           mixins.wireguard
           mixins.uwu-style
           #mixins.tdarr-node
