@@ -67,6 +67,7 @@ in
         request_timeout = 5.0;
         pool_connections = 200;
         pool_maxsize = 30;
+        source_ips = [ "0.0.0.0" "::" ];
       };
 
       enabled_plugins = [
@@ -76,6 +77,7 @@ in
         "Tracker URL remover"
         "Unit converter plugin"
         #"Ahmia blacklist"  # activation depends on outgoing.using_tor_proxy
+        "Infinite scroll"
         "Hostnames plugin"
         "Open Access DOI rewrite"
         #"Tor check plugin"
