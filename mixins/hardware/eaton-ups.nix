@@ -9,11 +9,17 @@
       summary = ''
         vendorid = 0463
       '';
+      directives = [
+        "override.battery.charge.low = 5"
+        "override.battery.runtime.low = 60"
+      ];
     };
 
     users.upsmon = {
       passwordFile = config.sops.secrets.upsmon-password.path;
       upsmon = "primary";
+      actions = [ "set" "fsd" ];
+      instcmds = [ "ALL" ];
     };
 
     upsmon.monitor."Eaton".user = "upsmon";
