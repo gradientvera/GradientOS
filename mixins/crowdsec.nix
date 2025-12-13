@@ -38,6 +38,13 @@ in
       "crowdsecurity/http-dos"
     ] else []);
 
+    hub.parsers = [
+      "crowdsecurity/whitelists"
+      "crowdsecurity/jellyfin-whitelist"
+      "crowdsecurity/jellyseerr-whitelist"
+      "crowdsecurity/calibre-web-whitelist"
+    ];
+
     hub.postOverflows = [
       "crowdsecurity/auditd-nix-wrappers-whitelist-process"
     ];
@@ -146,6 +153,17 @@ in
             addresses.briahv6-cidr
             "${gradientnet.gradientnet}/24"
             "${lilynet.lilynet}/24"
+          ];
+        };
+      }
+      {
+        description = "Whitelist some Mediarr paths";
+        name = "mediarr/whitelist";
+        filter = "evt.Meta.service == 'http' && evt.Meta.log_type in ['http_access-log', 'http_error-log']";
+        whitelist = {
+          reason = "Mediarr whitelist";
+          expression = [
+            "evt.Meta.http_status in ['200', '304'] && evt.Meta.http_verb == 'GET' && evt.Meta.http_path matches '^/(QuickConnect|Branding|Persons|Artists|Items|JellyfinEnhanced|JavaScriptInjector|JellyTweaks|PluginPages|System|UserViews|HomeScreen|Playback|CustomTabs|DisplayPreferences|Users|web).*'"
           ];
         };
       }
