@@ -55,7 +55,8 @@ in
     enable = true;
   };
 
-  hardware.amdgpu.overdrive.enable = true;
+  # Buggy? Not the pirate clown! As in, this is prolly quite bug-prone
+  # hardware.amdgpu.overdrive.enable = true;
 
   # WOL support.
   networking.interfaces.enp16s0.wakeOnLan.enable = true;

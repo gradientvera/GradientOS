@@ -21,7 +21,7 @@
     "acpi_enforce_resources=lax"
 
     # enable amdgpu overclocking, see https://wiki.archlinux.org/title/AMDGPU#Boot_parameter
-    "amdgpu.ppfeaturemask=0xfff7ffff"
+    # "amdgpu.ppfeaturemask=0xfff7ffff"
   ];
   boot.extraModulePackages = with config.boot.kernelPackages; [ amdgpu-i2c ];
   boot.extraModprobeConfig = ''
