@@ -19,4 +19,9 @@
     };
   };
 
+  systemd.services.podman-stardream = {
+    wants = [ "network-online.target" ];
+    after = [ "network-online.target" ];
+  };
+
 }

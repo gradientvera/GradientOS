@@ -132,7 +132,7 @@ in
   };
 
   systemd.services.searx-init-favicon = {
-    requires = [ "network-online.target" ];
+    wants = [ "network-online.target" ];
     after = [ "network-online.target" ];
     description = "Initialise Searxng favicon settings";
     serviceConfig = {
@@ -151,7 +151,7 @@ in
   };
 
   systemd.services.searx-init = {
-    requires = [ "searx-init-favicon.service" "network-online.target" ];
+    wants = [ "searx-init-favicon.service" "network-online.target" ];
     after = [ "searx-init-favicon.service" "network-online.target" ];
   };
 
