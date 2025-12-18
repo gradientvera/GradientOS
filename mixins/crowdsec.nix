@@ -233,7 +233,7 @@ in
           reason = "Paths whitelist";
           expression = [
             # Mediarr
-            "evt.Meta.http_status in ['200', '304'] && evt.Meta.http_verb == 'GET' && evt.Meta.http_path matches '^/(QuickConnect|Branding|Persons|Artists|Items|JellyfinEnhanced|JavaScriptInjector|JellyTweaks|PluginPages|System|UserViews|HomeScreen|Playback|CustomTabs|DisplayPreferences|Users|web|ui/oauth2).*'"
+            "evt.Meta.http_status in ['200', '304'] && evt.Meta.http_verb == 'GET' && evt.Meta.http_path matches '^/(QuickConnect|Branding|Persons|Artists|Items|JellyfinEnhanced|JavaScriptInjector|JellyTweaks|PluginPages|System|UserViews|HomeScreen|Playback|CustomTabs|DisplayPreferences|Users|web|ui/oauth2|api/services|api/docker|api/widget|api/siteMonitor).*'"
             "evt.Meta.http_status in ['200', '304'] && evt.Meta.http_verb == 'POST' && evt.Meta.http_path matches '^/(api/actions/runner.v1.RunnerService/FetchTask).*'"
           ];
         };
