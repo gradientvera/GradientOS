@@ -52,11 +52,6 @@
 
   virtualisation.podman.dockerSocket.enable = true;
 
-  boot.kernel.sysctl = {
-    # Increase max amount of connections
-    "net.core.somaxconn" = "8192";
-  };
-
   environment.systemPackages = with pkgs; [
     numactl
     numatop

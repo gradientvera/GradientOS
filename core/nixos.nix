@@ -186,6 +186,9 @@ in
       # Enable MTU probing
       "net.ipv4.tcp_mtu_probing" = lib.mkDefault true;
 
+      # Increase max amount of connections
+      "net.core.somaxconn" = "8192";
+
       # Log martian packets
       "net.ipv4.conf.default.log_martians" = "1";
       "net.ipv4.conf.all.log_martians" = "1";
