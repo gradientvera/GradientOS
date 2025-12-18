@@ -50,8 +50,8 @@ in {
   };
 
   systemd.services.oauth2-proxy = {
-    wants = [ "kanidm.service" "nginx.service" ];
-    after = [ "kanidm.service" "nginx.service" ];
+    wants = [ "kanidm.service" "nginx.service" "network-online.target" ];
+    after = [ "kanidm.service" "nginx.service" "network-online.target" ];
   };
 
   networking.firewall.allowedTCPPorts = with ports; [ oauth2-proxy ];
