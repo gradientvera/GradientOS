@@ -47,6 +47,7 @@ in
       "mqtt_room"
       "rpi_power"
       "switchbot"
+      "mikrotik"
       "telegram"
       "recorder"
       "zeroconf"
