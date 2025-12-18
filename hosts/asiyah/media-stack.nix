@@ -78,8 +78,8 @@ in {
 
     ];
     before = requiredBy;
-    wants = [ "postgresql.service" ];
-    after = [ "postgresql.service" ];
+    wants = [ "postgresql.service" "network-online.target" ];
+    after = [ "postgresql.service" "network-online.target" ];
     path = [ pkgs.podman ];
     # Static IP is needed because changing published ports and recreating the pod
     # will NOT clear the old NAT rules, because podman fucking sucks.
