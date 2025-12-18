@@ -8,6 +8,12 @@ let
   hostName = config.networking.hostName;
   isAsiyah = hostName == "asiyah";
   writeYamlFile = (pkgs.formats.yaml {}).generate;
+  etcDefaults = {
+    enable = true;
+    user = "crowdsec";
+    group = "crowdsec";
+    mode = "0770";
+  };
 in
 {
 
@@ -103,7 +109,7 @@ in
           "Alert.Remediation == true && Alert.GetScope() == 'Ip'"
         ];
         notifications = lib.mkIf isAsiyah [
-          #"http_discord"
+          "http_discord"
         ];
         on_success = "break";
       }
@@ -119,7 +125,7 @@ in
           "Alert.Remediation == true && Alert.GetScope() == 'Range'"
         ];
         notifications = lib.mkIf isAsiyah [
-          #"http_discord"
+          "http_discord"
         ];
         on_success = "break";
       }
@@ -134,52 +140,6 @@ in
         ];
         ## Please edit the above line to match your notification name
         on_success = "break";
-      }
-    ];
-
-    # What IPs and ranges to whitelist
-    localConfig.parsers.s02Enrich = [
-      {
-        description = "Whitelist my own IPs";
-        name = "myips/whitelist";
-        whitelist = {
-          ip = [
-            addresses.briah
-            addresses.briahv6
-          ];
-          cidr = [
-            "10.0.0.0/8"
-            "192.168.1.0/24"
-            addresses.briahv6-cidr
-            "${gradientnet.gradientnet}/24"
-            "${lilynet.lilynet}/24"
-          ];
-        };
-      }
-      {
-        description = "Whitelist some Mediarr paths";
-        name = "mediarr/whitelist";
-        filter = "evt.Meta.service == 'http' && evt.Meta.log_type in ['http_access-log', 'http_error-log']";
-        whitelist = {
-          reason = "Mediarr whitelist";
-          expression = [
-            "evt.Meta.http_status in ['200', '304'] && evt.Meta.http_verb == 'GET' && evt.Meta.http_path matches '^/(QuickConnect|Branding|Persons|Artists|Items|JellyfinEnhanced|JavaScriptInjector|JellyTweaks|PluginPages|System|UserViews|HomeScreen|Playback|CustomTabs|DisplayPreferences|Users|web).*'"
-          ];
-        };
-      }
-    ];
-
-    # What FQDNs to whitelist
-    localConfig.postOverflows.s01Whitelist = [
-      {
-        description = "Whitelist my own IPs";
-        name = "myfqdns/whitelist";
-        whitelist = {
-          expression = [
-            ''evt.Overflow.Alert.Source.IP in LookupHost("gradient.moe")''
-            ''evt.Overflow.Alert.Source.IP in LookupHost("gradientvera.duckdns.org")''
-          ];
-        };
       }
     ];
 
@@ -224,130 +184,185 @@ in
 
   users.users.${config.services.crowdsec.user}.extraGroups = [ "nginx" "auditd" ];
 
-  environment.etc."crowdsec/plugins/notification-http" = {
-    enable = false;#isAsiyah;
-    user = "crowdsec";
-    group = "crowdsec";
-    mode = "0700";
-    source = "${pkgs.crowdsec}/bin/notification-http";
-  };
+  environment.etc = {
+    "crowdsec/plugins/notification-http" = etcDefaults // {
+      enable = isAsiyah;
+      mode = "0700";
+      source = "${pkgs.crowdsec}/bin/notification-http";
+    };
 
-  environment.etc."crowdsec/notifications/http_discord.yaml" = {
-    enable = false;#isAsiyah;
-    user = "crowdsec";
-    group = "crowdsec";
-    mode = "0770";
-    source = writeYamlFile "crowdsec-notification-http-discord.yaml" {
-      type = "http";
-      name = "http_discord";
-      # Taken from https://gist.github.com/bpbradley/6628f7c7486b46dfeefaa95a83373f01
-      format = ''
-        {
-          "embeds": [
-            {
-              {{range . -}}
-              {{$alert := . -}}
-              {{range .Decisions -}}
-              {{- $cti := .Value | CrowdsecCTI  -}}
-              "timestamp": "{{$alert.StartAt}}",
-              "title": "Crowdsec Alert",
-              "color": 16711680,
-              "description": "Potential threat detected. View details in [Crowdsec Console](<https://app.crowdsec.net/cti/{{.Value}}>)",
-              "url": "https://app.crowdsec.net/cti/{{.Value}}",
-              "fields": [
-                    {
-                      "name": "Scenario",
-                      "value": "`{{ .Scenario }}`",
-                      "inline": "true"
-                    },
-                    {
-                      "name": "IP",
-                      "value": "[{{.Value}}](<https://www.whois.com/whois/{{.Value}}>)",
-                      "inline": "true"
-                    },
-                    {
-                      "name": "Ban Duration",
-                      "value": "{{.Duration}}",
-                      "inline": "true"
-                    },
-                    {{if $alert.Source.Cn -}}
-                    { 
-                      "name": "Country",
-                      "value": "{{$alert.Source.Cn}} :flag_{{ $alert.Source.Cn | lower }}:",
-                      "inline": "true"
-                    }
-                    {{if $cti.Location.City -}}
-                    ,
-                    { 
-                      "name": "City",
-                      "value": "{{$cti.Location.City}}",
-                      "inline": "true"
-                    },
-                    { 
-                      "name": "Maliciousness",
-                      "value": "{{mulf $cti.GetMaliciousnessScore 100 | floor}} %",
-                      "inline": "true"
-                    }
-                    {{end}}
-                    {{end}}
-                    {{if not $alert.Source.Cn -}}
-                    { 
-                      "name": "Location",
-                      "value": "Unknown :pirate_flag:"
-                    }
-                    {{end}}
-                    {{end -}}
-                    {{end -}}
-                    {{range . -}}
-                    {{$alert := . -}}
-                    {{range .Meta -}}
-                      ,{
-                      "name": "{{.Key}}",
-                      "value": "{{ (splitList "," (.Value | replace "\"" "`" | replace "[" "" |replace "]" "")) | join "\\n"}}"
-                    } 
-                    {{end -}}
-                    {{end -}}
-              ]
-            }
-          ]
-        }
-      '';
-      group_threshold = 5;
-      log_level = "info";
-      method = "POST";
-      headers = { Content-Type = "application/json"; };
-      url = "\${CROWDSEC_DISCORD_WEBHOOK_URL}";
+    "crowdsec/postoverflows/s01-whitelist/myfqdns-whitelist.yaml" = etcDefaults // {
+      source = writeYamlFile "crowdsec-parser-myfqdns-whitelist.yaml" {
+        description = "Whitelist my own IPs";
+        name = "myfqdns/whitelist";
+        whitelist = {
+          expression = [
+            ''evt.Overflow.Alert.Source.IP in LookupHost("gradient.moe")''
+            ''evt.Overflow.Alert.Source.IP in LookupHost("gradientvera.duckdns.org")''
+          ];
+        };
+      };
+    };
+
+    "crowdsec/parsers/s02-enrich/myips-whitelist.yaml" = etcDefaults // {
+      source = writeYamlFile "crowdsec-parser-myips-whitelist.yaml" {
+        description = "Whitelist my own IPs";
+        name = "myips/whitelist";
+        whitelist = {
+          ip = [
+            addresses.briah
+            addresses.briahv6
+          ];
+          cidr = [
+            "10.0.0.0/8"
+            "192.168.1.0/24"
+            addresses.briahv6-cidr
+            "${gradientnet.gradientnet}/24"
+            "${lilynet.lilynet}/24"
+          ];
+        };
+      };
+    };
+
+    "crowdsec/parsers/s02-enrich/path-whitelist.yaml" = etcDefaults // {
+      source = writeYamlFile "crowdsec-parser-path-whitelist.yaml" {
+        description = "Whitelist some reqiest paths";
+        name = "paths/whitelist";
+        filter = "evt.Meta.service == 'http' && evt.Meta.log_type in ['http_access-log', 'http_error-log']";
+        whitelist = {
+          reason = "Paths whitelist";
+          expression = [
+            # Mediarr
+            "evt.Meta.http_status in ['200', '304'] && evt.Meta.http_verb == 'GET' && evt.Meta.http_path matches '^/(QuickConnect|Branding|Persons|Artists|Items|JellyfinEnhanced|JavaScriptInjector|JellyTweaks|PluginPages|System|UserViews|HomeScreen|Playback|CustomTabs|DisplayPreferences|Users|web|ui/oauth2).*'"
+            "evt.Meta.http_status in ['200', '304'] && evt.Meta.http_verb == 'POST' && evt.Meta.http_path matches '^/(api/actions/runner.v1.RunnerService/FetchTask).*'"
+          ];
+        };
+      };
+    };
+
+    "crowdsec/notifications/http_discord.yaml" = etcDefaults // {
+      enable = isAsiyah;
+      source = writeYamlFile "crowdsec-notification-http-discord.yaml" {
+        type = "http";
+        name = "http_discord";
+        # Taken from https://gist.github.com/bpbradley/6628f7c7486b46dfeefaa95a83373f01
+        format = ''
+          {
+            "username": "Crowdsec",
+            "avatar_url": "https://avatars.githubusercontent.com/u/63284097",
+            "embeds": [
+              {
+                {{range . -}}
+                {{$alert := . -}}
+                {{range .Decisions -}}
+                {{- $cti := .Value | CrowdsecCTI  -}}
+                "timestamp": "{{$alert.StartAt}}",
+                "title": "Crowdsec Alert",
+                "color": 16711680,
+                "description": "Potential threat detected. View details in [Crowdsec Console](<https://app.crowdsec.net/cti/{{.Value}}>)",
+                "url": "https://app.crowdsec.net/cti/{{.Value}}",
+                {{if $alert.Source.Cn -}}
+                "image": {
+                  "url": "https://maps.geoapify.com/v1/staticmap?style=osm-bright-grey&width=600&height=400&center=lonlat:{{$alert.Source.Longitude}},{{$alert.Source.Latitude}}&zoom=8.1848&marker=lonlat:{{$alert.Source.Longitude}},{{$alert.Source.Latitude}};type:awesome;color:%23655e90;size:large;icon:industry|lonlat:{{$alert.Source.Longitude}},{{$alert.Source.Latitude}};type:material;color:%23ff3421;icontype:awesome&scaleFactor=2&apiKey={{env "GEOAPIFY_API_KEY"}}"
+                },
+                {{end}}
+                "fields": [
+                      {
+                        "name": "Scenario",
+                        "value": "`{{ .Scenario }}`",
+                        "inline": true
+                      },
+                      {
+                        "name": "IP",
+                        "value": "[{{.Value}}](<https://www.whois.com/whois/{{.Value}}>)",
+                        "inline": true
+                      },
+                      {
+                        "name": "Ban Duration",
+                        "value": "{{.Duration}}",
+                        "inline": true
+                      },
+                      {{if $alert.Source.Cn -}}
+                      { 
+                        "name": "Country",
+                        "value": "{{$alert.Source.Cn}} :flag_{{ $alert.Source.Cn | lower }}:",
+                        "inline": true
+                      }
+                      {{if $cti.Location.City -}}
+                      ,
+                      { 
+                        "name": "City",
+                        "value": "{{$cti.Location.City}}",
+                        "inline": true
+                      },
+                      { 
+                        "name": "Maliciousness",
+                        "value": "{{mulf $cti.GetMaliciousnessScore 100 | floor}} %",
+                        "inline": true
+                      }
+                      {{end}}
+                      {{end}}
+                      {{if not $alert.Source.Cn -}}
+                      { 
+                        "name": "Location",
+                        "value": "Unknown :pirate_flag:"
+                      }
+                      {{end}}
+                      {{end -}}
+                      {{end -}}
+                      {{range . -}}
+                      {{$alert := . -}}
+                      {{range .Meta -}}
+                        ,{
+                        "name": "{{.Key}}",
+                        "value": "{{ (splitList "," (.Value | replace "\"" "`" | replace "[" "" |replace "]" "")) | join "\\n"}}"
+                      } 
+                      {{end -}}
+                      {{end -}}
+                ]
+              }
+            ]
+          }
+        '';
+        group_wait = "30s";
+        group_threshold = 5;
+        max_retry = 5;
+        log_level = "info";
+        method = "POST";
+        headers = { Content-Type = "application/json"; };
+        url = "https://discord.com/api/webhooks/\${CROWDSEC_DISCORD_WEBHOOK_CODE}";
+      };
     };
   };
 
   systemd.services.crowdsec.serviceConfig = {
     # Load secrets
-    EnvironmentFile = config.sops.secrets.crowdsec-env.path;
-    /*CapabilityBoundingSet=lib.mkForce [""];
-    DevicePolicy=lib.mkForce [""];
-    LockPersonality=lib.mkForce [""];
-    NoNewPrivileges=lib.mkForce [""];
-    PrivateDevices=lib.mkForce [""];
-    PrivateTmp=lib.mkForce [""];
-    PrivateUsers=lib.mkForce [""];
-    ProtectClock=lib.mkForce [""];
-    ProtectControlGroups=lib.mkForce [""];
-    ProtectHome=lib.mkForce [""];
-    ProtectHostname=lib.mkForce [""];
-    ProtectKernelLogs=lib.mkForce [""];
-    ProtectKernelModules=lib.mkForce [""];
-    ProtectKernelTunables=lib.mkForce [""];
-    ProtectProc=lib.mkForce [""];
-    ProtectSystem=lib.mkForce [""];
-    ReadWritePaths=lib.mkForce [""];
-    RemoveIPC=lib.mkForce [""];
-    RestrictAddressFamilies=lib.mkForce [""];
-    RestrictNamespaces=lib.mkForce [""];
-    RestrictRealtime=lib.mkForce [""];
-    RestrictSUIDSGID=lib.mkForce [""];
-    SystemCallArchitectures=lib.mkForce [""];
-    SystemCallFilter=lib.mkForce [""];*/
-
+    EnvironmentFile = lib.mkAfter [ config.sops.secrets.crowdsec-env.path ];
+    ReadWritePaths = lib.mkAfter [ config.sops.secrets.crowdsec-env.path ];
+    # TODO: see what can we get away with rather than disabling everything 
+    CapabilityBoundingSet=lib.mkForce [];
+    DevicePolicy=lib.mkForce [];
+    LockPersonality=lib.mkForce [];
+    NoNewPrivileges=lib.mkForce [];
+    PrivateDevices=lib.mkForce [];
+    PrivateTmp=lib.mkForce [];
+    PrivateUsers=lib.mkForce [];
+    ProtectClock=lib.mkForce [];
+    ProtectControlGroups=lib.mkForce [];
+    ProtectHome=lib.mkForce [];
+    ProtectHostname=lib.mkForce [];
+    ProtectKernelLogs=lib.mkForce [];
+    ProtectKernelModules=lib.mkForce [];
+    ProtectKernelTunables=lib.mkForce [];
+    ProtectProc=lib.mkForce [];
+    ProtectSystem=lib.mkForce [];
+    RemoveIPC=lib.mkForce [];
+    RestrictAddressFamilies=lib.mkForce [];
+    RestrictNamespaces=lib.mkForce [];
+    RestrictRealtime=lib.mkForce [];
+    RestrictSUIDSGID=lib.mkForce [];
+    SystemCallArchitectures=lib.mkForce [];
+    SystemCallFilter=lib.mkForce [];
   };
 
   # Auto-register machines

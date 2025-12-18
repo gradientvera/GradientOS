@@ -40,12 +40,16 @@ in
         sopsFile = ./secrets.yml;
         restartUnits = [ "wgautomesh.service" ];
       };
-      crowdsec-env = {
+      crowdsec-env = lib.mkIf config.services.crowdsec.enable {
         sopsFile = ./secrets.yml;
+        owner = "crowdsec";
+        group = "crowdsec";
         restartUnits = [ "crowdsec.service" "crowdsec-firewall-bouncer.service" ];
       };
-      crowdsec-console-token = {
+      crowdsec-console-token = lib.mkIf config.services.crowdsec.enable {
         sopsFile = ./secrets.yml;
+        owner = "crowdsec";
+        group = "crowdsec";
         restartUnits = [ "crowdsec.service" ];
       };
     };
