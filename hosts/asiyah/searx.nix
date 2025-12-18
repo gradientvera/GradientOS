@@ -67,6 +67,8 @@ in
         request_timeout = 5.0;
         pool_connections = 200;
         pool_maxsize = 30;
+        retries = 5;
+        useragent_suffix = "gradient.moe";
         source_ips = [ "0.0.0.0" "::" ];
       };
 
