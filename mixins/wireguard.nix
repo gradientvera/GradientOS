@@ -130,7 +130,7 @@ in
         };
       };
 
-      services.mmproxy-rs.enable = true;
+      services.mmproxy-rs.enable = false;
       services.mmproxy-rs.reverseProxies.quic = {
         enable = true;
         listeners = 2;
@@ -159,7 +159,7 @@ in
         };
       };
 
-      services.mmproxy-rs.enable = true;
+      services.mmproxy-rs.enable = false;
       services.mmproxy-rs.mmproxies.quic = {
         openFirewall = true;
         # Use .2 instead of .1 to allow reverse proxying on nginx lmao
