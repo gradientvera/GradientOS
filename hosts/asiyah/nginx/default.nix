@@ -54,7 +54,18 @@ in {
 
     logError = "/var/log/nginx/error.log";
 
+    prependConfig = ''
+      error_log syslog:server=unix:/dev/log;
+    '';
+
     appendHttpConfig = ''
+      log_format combinedwithfqdn '$host:$server_port $remote_addr - $remote_user [$time_local] '
+                                  '"$request" $status $body_bytes_sent '
+                                  '"$http_referer" "$http_user_agent"';
+
+      access_log /var/log/nginx/access.log combinedwithfqdn;
+      access_log syslog:server=unix:/dev/log combinedwithfqdn;
+      
       set_real_ip_from ${config.gradient.const.wireguard.addresses.gradientnet.gradientnet}/24;
       real_ip_header proxy_protocol;
       real_ip_recursive on;

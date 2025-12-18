@@ -17,7 +17,7 @@
     loki.process "nginx_access_logs_process" {
 
       stage.regex {
-        expression = "^(?P<remote_ip>\\S+) - (?P<remote_user>\\S+) \\[(?P<time_local>[^\\]]+)\\] \"(?P<http_method>\\S+) (?P<http_request>[^\"]+) HTTP/(?P<http_version>\\S+)\" (?P<http_status>\\d+) (?P<http_body_bytes_sent>\\d+) \"(?P<http_referer>[^\"]*)\" \"(?P<http_user_agent>[^\"]*)\""
+        expression = "^(?P<http_host>\\S+) (?P<remote_ip>\\S+) - (?P<remote_user>\\S+) \\[(?P<time_local>[^\\]]+)\\] \"(?P<http_method>\\S+) (?P<http_request>[^\"]+) HTTP/(?P<http_version>\\S+)\" (?P<http_status>\\d+) (?P<http_body_bytes_sent>\\d+) \"(?P<http_referer>[^\"]*)\" \"(?P<http_user_agent>[^\"]*)\""
         labels_from_groups = true
       }
 
