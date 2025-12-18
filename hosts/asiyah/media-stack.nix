@@ -600,6 +600,7 @@ in {
       image = "docker.io/serjs/go-socks5-proxy:latest";
       pull = "newer";
       environment = {
+        REQUIRE_AUTH = "false";
         PROXY_PORT = toString ports.proxy-vpn;
       };
       extraOptions = [] ++ defaultOptions;
@@ -653,6 +654,7 @@ in {
       image = "docker.io/serjs/go-socks5-proxy:latest";
       pull = "newer";
       environment = {
+        REQUIRE_AUTH = "false";
         PROXY_PORT = toString ports.proxy-vpn-uk;
       };
       extraOptions = [ "--network=container:gluetun-uk" ];
