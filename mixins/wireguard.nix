@@ -133,6 +133,7 @@ in
       services.mmproxy-rs.enable = true;
       services.mmproxy-rs.reverseProxies.quic = {
         enable = true;
+        listeners = 2;
         openFirewall = true;
         protocol = "udp";
         listenAddress = "[::]:${toString briahPorts.https}";
