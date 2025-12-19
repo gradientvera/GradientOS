@@ -250,7 +250,7 @@
               };
             };
           }
-          {
+          /*{
             "Neko" = {
               description = "A self-hosted virtual browser.";
               href = "https://neko.constellation.moe/";
@@ -259,7 +259,7 @@
               container = "neko";
               showStats = true;
             };
-          }
+          }*/
         ];
       }
       {

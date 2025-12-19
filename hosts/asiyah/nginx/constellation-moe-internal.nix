@@ -104,7 +104,7 @@ in {
     "romm.constellation.moe" = mkReverseProxy { port = ports.romm; };
     "search.constellation.moe" = mkReverseProxy { port = ports.searx; };
     "files.constellation.moe" = mkReverseProxy { port = ports.mikochi; };
-    "neko.constellation.moe" = mkReverseProxy { port = ports.neko; };
+    # "neko.constellation.moe" = mkReverseProxy { port = ports.neko; };
     "calibre.constellation.moe" = mkReverseProxy {
       port = ports.calibre-web-automated;
       vhostExtraConfig = ''
@@ -133,7 +133,6 @@ in {
     "k1c.constellation.moe" = mkReverseProxy { address = "192.168.1.27"; port = 80; };
     "pinchflat.constellation.moe" = mkReverseProxy { port = ports.pinchflat; };
     "crafty.constellation.moe" = mkReverseProxy { port = ports.crafty; protocol = "https"; };
-    "craftydynmap.constellation.moe" = mkReverseProxy { port = ports.crafty-dynmap; protocol = "https"; vhostExtraConfig = "client_max_body_size 4G;"; };
   };
 
   # TODO: Figure out a way to automate the below list eugh
@@ -158,7 +157,7 @@ in {
     "romm.constellation.moe" = {};
     "search.constellation.moe" = {};
     "files.constellation.moe" = {};
-    "neko.constellation.moe" = {};
+    # "neko.constellation.moe" = {};
     "calibre.constellation.moe" = {};
     "calibredl.constellation.moe" = {};
     "radio.constellation.moe" = {};

@@ -73,7 +73,7 @@ in {
       "podman-profilarr.service"
       "podman-romm.service"
       "podman-mariadb.service"
-      "podman-neko.service"
+      # "podman-neko.service"
       "podman-calibre-downloader.service"
 
     ];
@@ -111,8 +111,6 @@ in {
         -p ${toString ports.cross-seed}:2468 \
         -p ${toString ports.sabnzbd}:${toString ports.sabnzbd} \
         -p ${toString ports.romm}:8080 \
-        -p ${toString ports.neko}:${toString ports.neko} \
-        -p ${toString ports.neko-epr-start}-${toString ports.neko-epr-end}:${toString ports.neko-epr-start}-${toString ports.neko-epr-end}/udp \
         -p ${toString ports.proxy-vpn}:${toString ports.proxy-vpn} \
         -p ${toString ports.calibre-downloader}:${toString ports.calibre-downloader} \
         -p ${toString ports.pinchflat}:8945 \
@@ -127,6 +125,8 @@ in {
         --replace \
         --name=${userName}
     '';
+    # -p ${toString ports.neko}:${toString ports.neko} \
+    # -p ${toString ports.neko-epr-start}-${toString ports.neko-epr-end}:${toString ports.neko-epr-start}-${toString ports.neko-epr-end}/udp \
     preStop = ''
       podman pod rm --force --ignore ${userName}
       podman network reload --all
@@ -835,6 +835,7 @@ in {
       dependsOn = [ ];
     };
 
+    /*
     neko = {
       image = "ghcr.io/m1k1o/neko/firefox:latest";
       pull = "newer";
@@ -864,6 +865,7 @@ in {
       };
       dependsOn = [ ];
     };
+    */
 
     calibre = {
       image = "docker.io/crocodilestick/calibre-web-automated:latest";
