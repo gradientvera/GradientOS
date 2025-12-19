@@ -13,6 +13,9 @@
 
   virtualisation.oci-containers.backend = "podman";
 
+  # Allow accesing published ports...
+  boot.kernel.sysctl."net.ipv4.conf.podman0.route_localnet" = 1;
+  
   systemd.timers.podman-auto-update = {
     enable = true;
     wantedBy = [ "timers.target" ];
