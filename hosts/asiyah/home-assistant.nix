@@ -139,7 +139,6 @@ in
 
     config = {
       # Imports/includes
-      telegram_bot = "!include telegram.yaml";
       automation = "!include automations.yaml";
       notify = "!include notifiers.yaml";
       script = "!include scripts.yaml";
