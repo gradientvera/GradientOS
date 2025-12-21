@@ -9,6 +9,12 @@ in
   boot.lanzaboote = {
     enable = true;
     pkiBundle = "/var/lib/sbctl";
+    autoGenerateKeys.enable = true;
+    autoEnrollKeys = {
+      enable = true;
+      # Automatically reboot to enroll the keys in the firmware
+      autoReboot = true;
+    };
   };
 
   boot.loader.efi.canTouchEfiVariables = true;
@@ -27,11 +33,6 @@ in
     device = "/dev/disk/by-uuid/${auroraUuid}";
     bypassWorkqueues = true;
   };
-
-  boot.initrd.availableKernelModules = [ "nvme" "xhci_pci" "thunderbolt" "usb_storage" "usbhid" "sd_mod" ];
-  boot.initrd.kernelModules = [ ];
-  boot.kernelModules = [ "kvm-amd" ];
-  boot.extraModulePackages = [ ];
 
   fileSystems."/" = {
     device = "/dev/disk/by-uuid/5931ef19-0224-4c5d-820b-269facdfa31b";

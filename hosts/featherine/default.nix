@@ -33,7 +33,7 @@
       MINSTOP=hwmon2/pwm1=20
     '';
   };
-
+  
   # Android app support with waydroid.
   virtualisation.waydroid.enable = true;
 
