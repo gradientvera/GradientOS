@@ -3,7 +3,7 @@
 {
 
   imports = [
-    self.inputs.nixos-hardware.nixosModules.common-cpu-amd-zenpower
+    # Borked: self.inputs.nixos-hardware.nixosModules.common-cpu-amd-zenpower
     self.inputs.nixos-hardware.nixosModules.common-cpu-amd-pstate
     self.inputs.nixos-hardware.nixosModules.common-cpu-amd
   ];
