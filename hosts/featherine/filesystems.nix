@@ -58,7 +58,6 @@ in
   ];
 
   environment.systemPackages = [
-    pkgs.sbctl # For Lanzaboote
     (pkgs.writeShellScriptBin "decrypt-aurora" ''
       sudo ${pkgs.cryptsetup}/bin/cryptsetup luksOpen /dev/disk/by-uuid/${auroraUuid} luks-${auroraUuid}
       sudo ${pkgs.util-linux}/bin/mount /data

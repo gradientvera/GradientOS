@@ -35,11 +35,6 @@ in
 
   gradient.presets.syncthing.enable = true;
 
-  # Enable automatic login for the user.
-  services.displayManager.autoLogin.enable = true;
-  services.displayManager.autoLogin.user = "vera";
-  services.displayManager.defaultSession = "plasma";
-
   services.hardware.openrgb = {
     enable = true;
     motherboard = "amd";

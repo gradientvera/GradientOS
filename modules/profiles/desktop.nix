@@ -65,6 +65,10 @@ in
       gradient.profiles.audio.enable = true;
       gradient.profiles.graphics.enable = true;
 
+      services.displayManager.enable = true;
+      services.displayManager.autoLogin.enable = cfg.profiles.desktop.wayland.autologin.enable;
+      services.displayManager.autoLogin.user = lib.mkIf cfg.profiles.desktop.wayland.autologin.enable "vera";
+
       # Enable portals.
       xdg.portal.enable = true;
       xdg.portal.xdgOpenUsePortal = true;
@@ -91,15 +95,6 @@ in
         wlr-randr
         waypipe
       ];
-    })
-
-    (lib.mkIf (cfg.profiles.desktop.enable && cfg.profiles.desktop.wayland.enable && cfg.profiles.desktop.wayland.autologin.enable) {
-      # Hack to get Wayland autologin to work.
-      # systemd.services."getty@tty1".enable = false;
-      # systemd.services."autovt@tty1".enable = false;
-      services.displayManager.enable = true;
-      services.displayManager.autoLogin.enable = true;
-      services.displayManager.autoLogin.user = "vera";
     })
 
     (lib.mkIf (cfg.profiles.desktop.enable && cfg.profiles.desktop.wayland.enable && cfg.profiles.desktop.wayland.environment.enable) {
@@ -170,10 +165,13 @@ in
 
     (lib.mkIf (cfg.profiles.desktop.enable && cfg.profiles.desktop.kde.enable) {
       # Enable the KDE Plasma Desktop Environment.
+      services.displayManager.enable = true;
       services.displayManager.sddm.enable = true;
       services.displayManager.sddm.wayland.enable = true;
       services.displayManager.sddm.wayland.compositor = "kwin";
       services.desktopManager.plasma6.enable = true;
+
+      security.pam.services.sddm.u2fAuth = lib.mkForce false;
 
       programs.kdeconnect.enable = true;
 

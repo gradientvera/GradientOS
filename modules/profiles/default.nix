@@ -64,6 +64,7 @@ in
       screen
       yt-dlp
       p7zip
+      sbctl # For Lanzaboote
       just
       sops
       gmic
