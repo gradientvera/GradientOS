@@ -323,6 +323,7 @@
           mixins.hardware-webcam
           mixins.hardware-bluetooth
           mixins.hardware-openrazer
+          mixins.hardware-gpd-win-mini
           mixins.hardware-home-dcp-l2530dw
           mixins.hardware-xbox-one-controller
         ];
