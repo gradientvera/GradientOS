@@ -66,15 +66,11 @@ in
 
   config = lib.mkMerge [
     (lib.mkIf cfg.kernel.hugepages.enable {
-      systemd.tmpfiles.settings."10-gradientos-hugepages.conf" = {
-        "/sys/kernel/mm/transparent_hugepage/enabled".w = {
-          argument = "always";
-        };
-        "/sys/kernel/mm/transparent_hugepage/khugepaged/defrag".w = {
-          argument = cfg.kernel.hugepages.defrag;
-        };
-        "/sys/kernel/mm/transparent_hugepage/shmem_enabled".w = {
-          argument = cfg.kernel.hugepages.sharedMemory;
+      boot.kernel.sysfs = {
+        kernel.mm.transparent_hugepage = {
+          enable = "always";
+          khugepaged.defrag = cfg.kernel.hugepages.defrag;
+          shmem_enabled = cfg.kernel.hugepages.sharedMemory;
         };
       };
     })

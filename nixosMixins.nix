@@ -35,6 +35,7 @@
   hardware-azure = ./mixins/hardware/azure.nix;
   hardware-bluetooth = ./mixins/hardware/bluetooth.nix;
   hardware-eaton-ups = ./mixins/hardware/eaton-ups.nix;
+  hardware-gpd-win-mini = ./mixins/hardware/gpd-win-mini.nix;
   hardware-home-dcp-l2530dw = ./mixins/hardware/home-dcp-l2530dw.nix;
   hardware-intelgpu-vaapi = ./mixins/hardware/intelgpu-vaapi.nix;
   hardware-logitech-driving-wheels = ./mixins/hardware/logitech-driving-wheels.nix;
