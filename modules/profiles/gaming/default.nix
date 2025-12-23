@@ -84,7 +84,7 @@ in
         # satisfactorymodmanager # TODO: Broken
         osu-lazer-bin
         prismlauncher
-        vintagestory
+        # vintagestory
         xivlauncher
         steam-run
         heroic
