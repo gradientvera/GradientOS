@@ -220,6 +220,10 @@ in
 
     (lib.mkIf (cfg.profiles.gaming.vr.enable && cfg.profiles.gaming.vr.installUtilities) {
 
+      nixpkgs.overlays = [
+        self.inputs.nixpkgs-xr.overlays.default
+      ];
+
       programs.steam.extraCompatPackages = [
         # Better for VRChat etc
         pkgs-xr.proton-ge-rtsp-bin
@@ -227,7 +231,7 @@ in
 
       programs.alvr = {
         enable = true;
-        package = pkgs.master.alvr;
+        package = pkgs.alvr;
         openFirewall = true;
       };
 
@@ -318,7 +322,7 @@ in
       # env PRESSURE_VESSEL_FILESYSTEMS_RW=$XDG_RUNTIME_DIR/wivrn/comp_ipc %command%
       services.wivrn = {
         enable = true;
-        package = pkgs.stable.wivrn;
+        package = pkgs.wivrn;
         openFirewall = true;
 
         # Write information to /etc/xdg/openxr/1/active_runtime.json, VR applications
