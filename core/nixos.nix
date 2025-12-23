@@ -138,6 +138,8 @@ in
       fish
     ];
 
+    hardware.firmware = [ pkgs.linux-firmware ];
+
     programs.fish = {
       enable = true;
       shellInit = ''
@@ -146,6 +148,7 @@ in
         end
       '';
     };
+
     programs.starship = {
       enable = true;
       settings = {
@@ -158,6 +161,7 @@ in
         "nerd-font-symbols"
       ];
     };
+
     programs.nix-index.enable = true;
     programs.nix-index.enableFishIntegration = true;
 
