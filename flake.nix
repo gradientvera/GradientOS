@@ -110,6 +110,8 @@
         name = "bernkastel";
 
         modules = [
+          lanzaboote.nixosModules.lanzaboote
+
           mixins.wine
           mixins.gnupg
           mixins.alloy

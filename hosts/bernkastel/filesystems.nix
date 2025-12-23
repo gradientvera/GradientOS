@@ -1,8 +1,19 @@
-{ ... }:
+{ pkgs, lib, ... }:
 
 {
   # Bootloader.
-  boot.loader.systemd-boot.enable = true;
+  boot.loader.systemd-boot.enable = lib.mkForce false;
+  boot.lanzaboote = {
+    enable = true;
+    pkiBundle = "/var/lib/sbctl";
+    autoGenerateKeys.enable = true;
+    autoEnrollKeys = {
+      enable = true;
+      # Automatically reboot to enroll the keys in the firmware
+      autoReboot = true;
+    };
+  };
+
   boot.loader.grub.enable = false;
   boot.loader.efi.canTouchEfiVariables = true;
   boot.loader.efi.efiSysMountPoint = "/boot/efi";
@@ -16,11 +27,13 @@
   boot.initrd.luks.devices."luks-723a41e3-725d-43ea-98f9-6e3be7908365" = {
     device = "/dev/disk/by-uuid/723a41e3-725d-43ea-98f9-6e3be7908365";
     bypassWorkqueues = true;
+    crypttabExtraOpts = [ "tpm2-device=auto" ];
   };
 
   boot.initrd.luks.devices."luks-1338fa28-7856-4a33-9e7a-0b0f08d7ee22" = {
     device = "/dev/disk/by-uuid/1338fa28-7856-4a33-9e7a-0b0f08d7ee22";
     bypassWorkqueues = true;
+    crypttabExtraOpts = [ "tpm2-device=auto" ];
   };
 
   fileSystems = {
