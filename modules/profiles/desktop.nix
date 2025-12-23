@@ -171,7 +171,11 @@ in
       services.displayManager.sddm.wayland.compositor = "kwin";
       services.desktopManager.plasma6.enable = true;
 
+      # Do not allow using passkey for login
+      security.pam.services.kde.u2fAuth = lib.mkForce false;
       security.pam.services.sddm.u2fAuth = lib.mkForce false;
+      security.pam.services.sddm-autologin.u2fAuth = lib.mkForce false;
+      security.pam.services.sddm-greeter.u2fAuth = lib.mkForce false;
 
       programs.kdeconnect.enable = true;
 

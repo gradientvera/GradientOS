@@ -171,6 +171,8 @@ in
       settings.cue = true;
     };
 
+    security.pam.services.login.u2fAuth = lib.mkForce false;
+
     # sudo but in rust?? hoooly hell
     security.sudo.enable = false;
     security.sudo-rs.enable = true;
