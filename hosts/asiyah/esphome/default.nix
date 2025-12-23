@@ -27,9 +27,6 @@ in
       DynamicUser = lib.mkForce false;
       User = lib.mkForce config.users.users.esphome.name;
       Group = lib.mkForce config.users.groups.esphome.name;
-      PrivateTmp = lib.mkForce true;
-      RemoveIPC = lib.mkForce true;
-      RestrictSUIDSGID = lib.mkForce true;
     };
   };
 
