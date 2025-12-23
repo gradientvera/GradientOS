@@ -138,7 +138,8 @@ in
       fish
     ];
 
-    hardware.firmware = [ pkgs.linux-firmware ];
+    # Bloats /boot significantly
+    # hardware.firmware = [ pkgs.linux-firmware ];
 
     programs.fish = {
       enable = true;
