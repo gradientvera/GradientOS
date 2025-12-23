@@ -37,8 +37,8 @@
   # Android app support with waydroid.
   virtualisation.waydroid.enable = true;
 
-  # Enable automatic login for the user.
-  services.displayManager.autoLogin.enable = true;
+  # Disable automatic login.
+  services.displayManager.autoLogin.enable = lib.mkForce false;
   services.displayManager.autoLogin.user = "vera";
   services.displayManager.defaultSession = lib.mkDefault "plasma";
 
