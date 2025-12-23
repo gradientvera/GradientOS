@@ -3,7 +3,9 @@
 {
 
   imports = [
+    self.inputs.nixos-hardware.nixosModules.common-cpu-amd-zenpower
     self.inputs.nixos-hardware.nixosModules.common-cpu-amd-pstate
+    self.inputs.nixos-hardware.nixosModules.common-cpu-amd
   ];
 
   hardware.cpu.amd.updateMicrocode = lib.mkDefault config.hardware.enableRedistributableFirmware;

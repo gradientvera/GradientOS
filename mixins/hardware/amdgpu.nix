@@ -6,11 +6,16 @@
     self.inputs.nixos-hardware.nixosModules.common-gpu-amd
   ];
 
-  environment.variables.AMD_VULKAN_ICD = "RADV";
+  hardware.amdgpu = {
+    opencl.enable = true;
+    initrd.enable = true;
+  };
 
-  systemd.packages = with pkgs; [
-    lact
-  ];
+  environment.variables.AMD_VULKAN_ICD = "RADV";
+  environment.variables.LIBVA_DRIVER_NAME = "radeonsi";
+  environment.variables.VDPAU_DRIVER = "radeonsi";
+
+  services.lact.enable = true;
 
   hardware.graphics.extraPackages = with pkgs; [
     lact
