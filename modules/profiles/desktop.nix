@@ -80,6 +80,8 @@ in
 
       programs.partition-manager.enable = true;
 
+      programs.thunderbird.enable = true;
+
       environment.systemPackages = with pkgs; [
         kdePackages.filelight
         moonlight-qt
