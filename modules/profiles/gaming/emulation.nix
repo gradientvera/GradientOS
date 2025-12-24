@@ -316,13 +316,7 @@ in
         stable.shadps4 # PS4
         ruffle # Flash
         # -- Utilities --
-        # TODO: https://github.com/NixOS/nixpkgs/issues/418681
-        /*(stable.emulationstation-de.overrideAttrs (prevAttrs: {
-          nativeBuildInputs = prevAttrs.nativeBuildInputs ++ [ makeWrapper ];
-          postInstall = ''
-            wrapProgram $out/bin/es-de --set ESDE_APPDATA_DIR ${ESDEDataPath}
-          '';
-        }))*/
+        emulationstation-de
       ];
     })
 

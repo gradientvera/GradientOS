@@ -5,6 +5,8 @@ final: prev:
 {
   beyond-all-reason-launcher = prev.callPackage ../pkgs/beyond-all-reason-launcher.nix { }; 
 
+  emulationstation-de = prev.callPackage ../pkgs/emulationstation-de.nix { };
+
   fbink = prev.callPackage ../pkgs/fbink.nix { device = "LINUX"; };
   fbink-static = prev.pkgsStatic.callPackage ../pkgs/fbink.nix { device = "LINUX"; };
   fbink-kobo = prev.pkgsCross.armv7l-hf-multiplatform.callPackage ../pkgs/fbink.nix { device = "KOBO"; }; 
