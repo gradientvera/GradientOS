@@ -6,9 +6,9 @@
   ];
 
   boot.kernelPackages = pkgs.linuxPackages_zen;
-  boot.initrd.availableKernelModules = [ "nvme" "xhci_pci" "ahci" "thunderbolt" "usbhid" "usb_storage" "sd_mod" "amdgpu" "xhci_hcd" ];
-  boot.initrd.kernelModules = [ "kvm-amd" "amdgpu" ];
-  boot.kernelModules = [ "kvm-amd" "i2c-dev" ];
+  boot.initrd.availableKernelModules = [ "nvme" "xhci_pci" "ahci" "thunderbolt" "usbhid" "usb_storage" "sd_mod" "amdgpu" "xhci_hcd" "tpm_crb" ];
+  boot.initrd.kernelModules = [ "kvm-amd" "amdgpu" "tpm_crb" ];
+  boot.kernelModules = [ "kvm-amd" "i2c-dev" "tpm_crb" ];
   boot.kernelParams = [
     "pci=nommconf"
     "rtc_cmos.use_acpi_alarm=1"

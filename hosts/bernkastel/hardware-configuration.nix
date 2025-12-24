@@ -7,9 +7,9 @@
   ];
 
   boot.kernelPackages = pkgs.linuxPackages_zen;
-  boot.initrd.availableKernelModules = [ "nvme" "xhci_pci" "ahci" "usbhid" "usb_storage" "sd_mod" "amdgpu" "xhci_hcd" ];
-  boot.initrd.kernelModules = [ "amdgpu" ];
-  boot.kernelModules = [ "amdgpu-i2c" "kvm-amd" "i2c-dev" "i2c-piix4" "it87" ];
+  boot.initrd.availableKernelModules = [ "nvme" "xhci_pci" "ahci" "usbhid" "usb_storage" "sd_mod" "amdgpu" "xhci_hcd" "tpm_crb" ];
+  boot.initrd.kernelModules = [ "amdgpu" "tpm_crb" ];
+  boot.kernelModules = [ "amdgpu-i2c" "kvm-amd" "i2c-dev" "i2c-piix4" "it87" "tpm_crb" ];
   boot.kernelParams = [
     # iommu stuff
     "amd_iommu=on"
@@ -19,9 +19,6 @@
 
     # needed for controlling RGB LEDs on RAM sticks
     "acpi_enforce_resources=lax"
-
-    # enable amdgpu overclocking, see https://wiki.archlinux.org/title/AMDGPU#Boot_parameter
-    # "amdgpu.ppfeaturemask=0xfff7ffff"
   ];
   boot.extraModulePackages = with config.boot.kernelPackages; [ amdgpu-i2c ];
   boot.extraModprobeConfig = ''
@@ -29,6 +26,5 @@
   '';
 
   nixpkgs.hostPlatform = "x86_64-linux";
-
 }
 
