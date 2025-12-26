@@ -64,6 +64,14 @@ in
       '';
     };
 
+    gradient.profiles.gaming.vr.envision.enable = lib.mkOption {
+      type = lib.types.bool;
+      default = false;
+      description = ''
+        Whether to set up Envision.
+      '';
+    };
+
     gradient.profiles.gaming.vr.wivrn.enable = lib.mkOption {
       type = lib.types.bool;
       default = false;
@@ -306,6 +314,14 @@ in
 
     })
 
+    (lib.mkIf (cfg.profiles.gaming.vr.enable && cfg.profiles.gaming.vr.envision.enable) {
+      programs.envision = {
+        enable = true;
+        openFirewall = true;
+        package = pkgs.envision;
+      };
+    })
+
     (lib.mkIf (cfg.profiles.gaming.vr.enable && cfg.profiles.gaming.vr.wivrn.enable) {
 
       environment.systemPackages = with pkgs; [
@@ -322,8 +338,11 @@ in
       # env PRESSURE_VESSEL_FILESYSTEMS_RW=$XDG_RUNTIME_DIR/wivrn/comp_ipc %command%
       services.wivrn = {
         enable = true;
-        package = pkgs.wivrn;
+        highPriority = true;
         openFirewall = true;
+        package = pkgs.wivrn;
+
+        steam.importOXRRuntimes = true;
 
         # Write information to /etc/xdg/openxr/1/active_runtime.json, VR applications
         # will automatically read this and work with WiVRn (Note: This does not currently
