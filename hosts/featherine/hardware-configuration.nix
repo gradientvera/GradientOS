@@ -10,6 +10,8 @@
   boot.initrd.kernelModules = [ "kvm-amd" "amdgpu" "tpm_crb" ];
   boot.kernelModules = [ "kvm-amd" "i2c-dev" "tpm_crb" ];
   boot.kernelParams = [
+    "amd_iommu=on"
+    "iommu=pt"
     "pci=nommconf"
     "rtc_cmos.use_acpi_alarm=1"
   ];
