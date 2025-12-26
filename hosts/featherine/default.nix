@@ -65,6 +65,11 @@
   services.handheld-daemon.enable = true;
   services.handheld-daemon.user = "vera";
 
+  # Dolphin Bluetooth passthrough
+  services.udev.extraRules = ''
+    SUBSYSTEM=="usb", ATTRS{idVendor}=="8087", ATTRS{idProduct}=="0032", TAG+="uaccess"
+  '';
+
   gradient.substituters = {
     asiyah = "ssh-ng://nix-ssh@asiyah.gradient?priority=40";
     beatrice = "ssh-ng://nix-ssh@beatrice.gradient?priority=45";

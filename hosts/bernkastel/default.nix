@@ -57,6 +57,7 @@ in
   # WOL support.
   networking.interfaces.enp16s0.wakeOnLan.enable = true;
 
+  # Dolphin Bluetooth passthrough
   services.udev.extraRules = ''
     SUBSYSTEM=="usb", ATTRS{idVendor}=="0489", ATTRS{idProduct}=="e10d", TAG+="uaccess"
   '';
