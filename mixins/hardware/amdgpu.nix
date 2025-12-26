@@ -1,4 +1,4 @@
-{ self, pkgs, ... }:
+{ self, pkgs, lib, ... }:
 
 {
 
@@ -10,6 +10,8 @@
     opencl.enable = true;
     initrd.enable = true;
   };
+
+  gradient.kernel.transparent_hugepages.policy = lib.mkForce "madvise";
 
   boot.kernelParams = [
     # Prolly defaults to 1 already but just in case.

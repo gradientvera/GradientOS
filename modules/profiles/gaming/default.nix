@@ -97,9 +97,9 @@ in
     (lib.mkIf (cfg.profiles.gaming.kernelTweaksEnabled) {
       # Performance tweaks based on CryoUtilities
       gradient.kernel = {
-        hugepages = {
+        transparent_hugepages = {
           enable = true;
-          defrag = "0";
+          khugepaged.defrag = "0";
           sharedMemory = "advise";
         };
         swappiness = 1;

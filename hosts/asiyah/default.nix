@@ -48,7 +48,7 @@
   gradient.profiles.catppuccin.enable = true;
   gradient.profiles.graphics.enable = true;
 
-  gradient.kernel.hugepages.enable = true;
+  gradient.kernel.transparent_hugepages.enable = true;
 
   virtualisation.podman.dockerSocket.enable = true;
 

@@ -7,31 +7,58 @@ in
 {
 
   options = {
-    gradient.kernel.hugepages.enable = lib.mkOption {
+    gradient.kernel.transparent_hugepages.enable = lib.mkOption {
       type = lib.types.bool;
       default = false;
       description = ''
-        Whether to enable hugepages. Sets the policy to "always".
+        Whether to enable transparent hugepages. Sets the policy to "always" by default.
         May require a reboot when disabling to restore the default values.
       '';
     };
 
-    gradient.kernel.hugepages.defrag = lib.mkOption {
-      type = lib.types.enum [ "0" "1" ];
-      default = "0";
+    gradient.kernel.transparent_hugepages.policy = lib.mkOption {
+      type = lib.types.enum [ "always" "madvise" "never" ];
+      default = "always";
       description = ''
-        Whether to enable khugepaged defragmentation. "0" to disable, "1" to enable.
-        Does nothing if hugepages is disabled.
+        The policy to use for transparent hugepages.
+        May require a reboot when disabling to restore the default values.
       '';
     };
 
-    gradient.kernel.hugepages.sharedMemory = lib.mkOption {
+    gradient.kernel.transparent_hugepages.defrag = lib.mkOption {
+      type = lib.types.enum [ "always" "defer" "defer+madvise" "madvise" "never" ];
+      default = "defer+madvise";
+      description = ''
+        Whether to enable defragmentation.
+        Does nothing if transparent hugepages is disabled.
+      '';
+    };
+
+    gradient.kernel.transparent_hugepages.khugepaged.defrag = lib.mkOption {
+      type = lib.types.enum [ "0" "1" ];
+      default = "0";
+      description = ''
+        Whether to enable khugepaged defragmentation.
+        Does nothing if transparent hugepages is disabled.
+      '';
+    };
+
+    gradient.kernel.transparent_hugepages.max_ptes_none = lib.mkOption {
+      type = lib.types.int;
+      default = 409;
+      description = ''
+        Specifies how many extra small pages (that are not already mapped)
+        can be allocated when collapsing a group of small pages into one large page
+      '';
+    };
+
+    gradient.kernel.transparent_hugepages.sharedMemory = lib.mkOption {
       type = lib.types.enum [ "always" "within_size" "advise" "never" "deny" "force" ];
       default = "advise";
       description = ''
-        Determines the hugepage allocation policy for the internal shmem mount.
+        Determines the transparent hugepage allocation policy for the internal shmem mount.
         Must be one of the following values: "always" "within_size" "advise" "never" "deny" "force"
-        Does nothing if hugepages is disabled.
+        Does nothing if transparent hugepages is disabled.
       '';
     };
 
@@ -65,12 +92,14 @@ in
   };
 
   config = lib.mkMerge [
-    (lib.mkIf cfg.kernel.hugepages.enable {
+    (lib.mkIf cfg.kernel.transparent_hugepages.enable {
       boot.kernel.sysfs = {
         kernel.mm.transparent_hugepage = {
-          enable = "always";
-          khugepaged.defrag = cfg.kernel.hugepages.defrag;
-          shmem_enabled = cfg.kernel.hugepages.sharedMemory;
+          enable = cfg.kernel.transparent_hugepages.policy;
+          defrag = cfg.kernel.transparent_hugepages.defrag;
+          khugepaged.defrag = cfg.kernel.transparent_hugepages.khugepaged.defrag;
+          khugepaged.max_ptes_none = cfg.kernel.transparent_hugepages.max_ptes_none;
+          shmem_enabled = cfg.kernel.transparent_hugepages.sharedMemory;
         };
       };
     })
