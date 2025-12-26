@@ -49,6 +49,8 @@ in
   config = lib.mkMerge [
     (lib.mkIf cfg.profiles.gaming.enable {
       gradient.profiles.desktop.enable = true;
+
+      boot.kernelModules = [ "ntsync" ];
     })
 
     (lib.mkIf (cfg.profiles.gaming.openFirewall) {
