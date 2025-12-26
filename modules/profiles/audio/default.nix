@@ -35,6 +35,10 @@ in
         wireplumber.enable = true;
       };
 
+      services.udev.extraRules = ''
+        DEVPATH=="/devices/virtual/misc/cpu_dma_latency", OWNER="root", GROUP="audio", MODE="0660"
+      '';
+
       security.pam.loginLimits =
         let
           mkLimit = item: value: {
@@ -48,6 +52,12 @@ in
         (mkLimit "rtprio" "95")
         (mkLimit "nice" "-19")
         (mkLimit "memlock" "4194304")
+        {
+          domain = "@audio";
+          type = "-";
+          item = "rtprio";
+          value = "99";
+        }
       ];
 
       environment.systemPackages = with pkgs; [
