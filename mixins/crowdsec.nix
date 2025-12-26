@@ -37,7 +37,7 @@ in
       "crowdsecurity/linux-lpe"
     ] 
     ++ (if config.services.openssh.enable then [ "crowdsecurity/sshd" ] else [])
-    ++ (if config.networking.wireguard.enable then [ "crowdsecurity/wireguard" ] else [])
+    # Needs spammy option so disable it: ++ (if config.networking.wireguard.enable then [ "crowdsecurity/wireguard" ] else [])
     ++ (if config.services.home-assistant.enable then [ "crowdsecurity/home-assistant" ] else [])
     ++ (if config.services.nginx.enable then [
       "crowdsecurity/nginx"
