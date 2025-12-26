@@ -25,6 +25,7 @@ in
   gradient.profiles.gaming.vr = {
     enable = true;
     patchAmdgpu = true;
+    envision.enable = true;
     wivrn.enable = true;
     wivrn.default = true;
     monado.enable = true;
