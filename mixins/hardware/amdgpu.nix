@@ -11,6 +11,19 @@
     initrd.enable = true;
   };
 
+  boot.kernelParams = [
+    # Prolly defaults to 1 already but just in case.
+    "amdgpu.gpu_recovery=1"
+    # Prevent some crashes
+    "amdgpu.sg_display=0"
+    "amdgpu.runpm=0"
+  ];
+
+  boot.extraModprobeConfig = ''
+    options amdgpu si_support=1 cik_support=1
+    options radeon si_support=0 cik_support=0
+  '';
+
   environment.variables.AMD_VULKAN_ICD = "RADV";
   environment.variables.LIBVA_DRIVER_NAME = "radeonsi";
   environment.variables.VDPAU_DRIVER = "radeonsi";
