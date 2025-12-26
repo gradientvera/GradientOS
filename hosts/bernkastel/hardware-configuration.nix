@@ -11,11 +11,9 @@
   boot.initrd.kernelModules = [ "amdgpu" "tpm_crb" ];
   boot.kernelModules = [ "amdgpu-i2c" "kvm-amd" "i2c-dev" "i2c-piix4" "it87" "tpm_crb" ];
   boot.kernelParams = [
-    # iommu stuff
     "amd_iommu=on"
     "iommu=pt"
-    "iommu=1"
-    "video=efifb:off"
+    "pcie_aspm=off"
 
     # needed for controlling RGB LEDs on RAM sticks
     "acpi_enforce_resources=lax"
