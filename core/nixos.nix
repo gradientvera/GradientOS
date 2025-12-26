@@ -6,6 +6,7 @@ in
 
   # TODO: Turn these into proper modules
   imports = [
+    ./udev.nix
     ./openssh.nix
     ./network.nix
     ./workarounds.nix
@@ -105,8 +106,9 @@ in
     # Increase number of files per process
     # prevents build failures sometimes
     systemd.settings.Manager = {
-      DefaultTimeoutStopSec = "30s";
-      DefaultLimitNOFILE = "32768:1048576";
+      DefaultTimeoutStartSec = "15s";
+      DefaultTimeoutStopSec = "10s";
+      DefaultLimitNOFILE = "32768:2097152";
 
       # Enable systemd watchdog.
       RuntimeWatchdogSec = "10s";
@@ -115,8 +117,9 @@ in
     };
 
     systemd.user.extraConfig = ''
-      DefaultTimeoutStopSec=30s
-      DefaultLimitNOFILE=32768:1048576
+      DefaultTimeoutStartSec=15s
+      DefaultTimeoutStopSec=10s
+      DefaultLimitNOFILE=32768:2097152
     '';
 
     security.pam.loginLimits = [
@@ -130,7 +133,7 @@ in
         domain = "*";
         type = "hard";
         item = "nofile";
-        value = "1048576";
+        value = "2097152";
       }
     ];
 
@@ -223,6 +226,25 @@ in
       "ntfs" = true;
       "nfs" = true;
       "nfs4" = true;
+    };
+
+    # Taken from https://github.com/CachyOS/CachyOS-Settings/blob/9c123e743a9b99b4ca1fcacc187ae0f223fcf098/usr/bin/pci-latency
+    systemd.services.pci-latency = {
+      wantedBy = [ "multi-user.target" ];
+      path = [ pkgs.pciutils ];
+      serviceConfig = {
+        Type = "oneshot";
+        User = "root";
+        Group = "root";
+      };
+      script = ''
+        # Reset the latency timer for all PCI devices
+        setpci -v -s '*:*' latency_timer=20
+        setpci -v -s '0:0' latency_timer=0
+
+        # Set latency timer for all sound cards
+        setpci -v -d "*:*:04xx" latency_timer=80
+      '';
     };
 
     # Slow to build, fails to build on containers too
