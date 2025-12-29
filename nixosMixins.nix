@@ -9,6 +9,7 @@
   neith-locale = ./mixins/neith-locale.nix;
   networkd = ./mixins/networkd.nix;
   nix-store-serve = ./mixins/nix-store-serve.nix;
+  only-suspend-then-hibernate = ./mixins/only-suspend-then-hibernate.nix;
   plymouth = ./mixins/plymouth.nix;
   podman = ./mixins/podman.nix;
   steamcmd = ./mixins/steamcmd.nix;
