@@ -186,7 +186,7 @@ in
 
       shell_command = {
         # Literally SSH into a host with the home assistant private SSH key and run a command
-        ssh = "${toString pkgs.openssh}/bin/ssh -i ${config.sops.secrets.hass-ssh-priv.path} {{ host }} {{ command }}";
+        ssh = "${toString pkgs.openssh}/bin/ssh -i ${config.sops.secrets.hass-ssh-priv.path} -o StrictHostKeyChecking=accept-new {{ host }} {{ command }}";
       };
 
       ingress = {
