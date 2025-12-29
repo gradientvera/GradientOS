@@ -50,6 +50,10 @@ in {
     recommendedBrotliSettings = true;
     proxyTimeout = "120s";
 
+    resolver.addresses = [
+      "127.0.0.1:53"
+    ];
+
     enableQuicBPF = true;
 
     logError = "/var/log/nginx/error.log";
