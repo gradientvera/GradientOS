@@ -137,6 +137,13 @@ in
       }
     ];
 
+    # Explicitly set suspend-then-hibernate delay, allow on AC power
+    systemd.sleep.extraConfig = ''
+      HibernateDelaySec=1h
+      SuspendEstimationSec=30m
+      HibernateOnACPower=yes
+    '';
+
     environment.shells = with pkgs; [
       fish
     ];
