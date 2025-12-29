@@ -126,7 +126,6 @@
           mixins.virtualisation
           mixins.nix-store-serve
           mixins.binfmt-emulation
-          mixins.system76-scheduler
 
           mixins.graphical-steam
           mixins.graphical-sunshine
@@ -175,7 +174,6 @@
           mixins.v4l2loopback
           mixins.neith-locale
           mixins.nix-store-serve
-          mixins.system76-scheduler
           
           mixins.graphical-steam
           
@@ -216,7 +214,6 @@
           mixins.virtualisation
           mixins.graphical-steam
           mixins.nix-store-serve
-          mixins.system76-scheduler
           
           mixins.hardware-qmk
           mixins.hardware-amdcpu
@@ -261,7 +258,6 @@
           mixins.v4l2loopback
           mixins.virtualisation
           mixins.nix-store-serve
-          mixins.system76-scheduler
           
           mixins.graphical-steam
           
@@ -313,7 +309,7 @@
           mixins.virtualisation
           #mixins.nix-store-serve
           mixins.jovian-decky-loader
-          mixins.system76-scheduler
+          mixins.only-suspend-then-hibernate
           
           mixins.graphical-steam
 
