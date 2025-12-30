@@ -62,6 +62,12 @@ in
     SUBSYSTEM=="usb", ATTRS{idVendor}=="0489", ATTRS{idProduct}=="e10d", TAG+="uaccess"
   '';
 
+  systemd.tmpfiles.settings."10-amdgpu-x3d.conf" = {
+    "/sys/bus/platform/drivers/amd_x3d_vcache/AMDI0101:00/amd_x3d_mode".w = {
+      argument = "cache";
+    };
+  };
+
   gradient.substituters = {
     asiyah = "ssh-ng://nix-ssh@asiyah.gradient?priority=40";
     beatrice = "ssh-ng://nix-ssh@beatrice.gradient?priority=45";
