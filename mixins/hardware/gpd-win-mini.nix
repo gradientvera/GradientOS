@@ -8,8 +8,9 @@
     serviceConfig.User = "root";
     path = [ pkgs.kmod ];
     script = ''
-      modprobe -r bmi260_i2c
-      modprobe -r bmi260_core
+      modprobe -r bmi160_i2c
+      modprobe -r bmi160_spi
+      modprobe -r bmi160_core
     ''; 
   };
 
@@ -19,8 +20,9 @@
     serviceConfig.User = "root";
     path = [ pkgs.kmod ];
     script = ''
-      modprobe bmi260_i2c
-      modprobe bmi260_core
+      modprobe bmi160_core
+      modprobe bmi160_spi
+      modprobe bmi160_i2c
     ''; 
   };
 

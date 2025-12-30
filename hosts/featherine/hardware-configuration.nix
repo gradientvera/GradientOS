@@ -14,6 +14,9 @@
     "iommu=pt"
     "pci=nommconf"
     "rtc_cmos.use_acpi_alarm=1"
+
+    "acpi_os_name=\"Microsoft Windows NT\""
+    "acpi_osi=\"Windows 2015\""
   ];
   boot.extraModulePackages = with config.boot.kernelPackages; [ ];
   boot.extraModprobeConfig = "";
