@@ -56,6 +56,15 @@
   calibre-downloader = 8077;
   pinchflat = 8945;
 
+  # Wolf
+  wolf-http = 47989;
+  wolf-https = 47984;
+  wolf-control = 47999;
+  wolf-rtsp = 48010;
+  wolf-video-ping = 48100;
+  wolf-audio-ping = 48200;
+
+
   # NFS
   nfsd = 2049;
   statd = 4000;
