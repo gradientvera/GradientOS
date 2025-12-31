@@ -1,11 +1,19 @@
-{ config, ports, ... }:
+{ config, ports, pkgs, ... }:
 let
   addresses = config.gradient.const.wireguard.addresses;
 in
 {
 
-  systemd.tmpfiles.settings."99-wolf.conf"."/var/lib/wolf".d = {
-    mode = "0775";
+  systemd.tmpfiles.settings."99-wolf.conf" = {
+    "/var/lib/wolf".d = {
+      mode = "0775";
+    };
+    "/var/lib/wolf-den".d = {
+      mode = "0775";
+    };
+    "/var/run/wolf".d = {
+      mode = "0775";
+    };
   };
 
   virtualisation.oci-containers.containers.wolf = {
@@ -30,6 +38,7 @@ in
       "/data/downloads/games:/games:ro"
       "/var/lib/wolf:/etc/wolf:rw"
       "/var/run/docker.sock:/var/run/docker.sock:rw"
+      "/var/run/wolf:/var/run/wolf:rw"
       "/dev/:/dev/:rw"
       "/run/udev:/run/udev:rw"
     ];
@@ -41,6 +50,7 @@ in
       WOLF_RTSP_SETUP_PORT = toString ports.wolf-rtsp;
       WOLF_VIDEO_PING_PORT = toString ports.wolf-video-ping;
       WOLF_AUDIO_PING_PORT = toString ports.wolf-audio-ping;
+      WOLF_SOCKET_PATH = "/var/run/wolf/wolf.sock";
     };
     extraOptions = [
       "--device=/dev/dri/:/dev/dri/"
@@ -55,6 +65,30 @@ in
     };
   };
   
+  virtualisation.oci-containers.containers.wolf-den = {
+    image = "ghcr.io/games-on-whales/wolf-den:stable";
+    pull = "newer";
+    ports = [
+      "127.0.0.1:${toString ports.wolf-den}:8080/tcp"
+    ];
+    volumes = [
+      "/var/run/wolf:/var/run/wolf:rw"
+      "/var/lib/wolf-den:/app/wolf-den:rw"
+    ];
+    environment = {
+      TZ = config.time.timeZone;
+      WOLF_SOCKET_PATH = "/var/run/wolf/wolf.sock";
+    };
+    extraOptions = [
+      "--ip" "10.88.0.13"
+    ];
+    labels = {
+      "io.containers.autoupdate" = "registry";
+      "PODMAN_SYSTEMD_UNIT" = "podman-wolf-den.service";
+    };
+  };
+  
+
   # As per https://games-on-whales.github.io/wolf/stable/user/quickstart.html#_virtual_devices_support
   services.udev.extraRules = ''
     # Allows Wolf to acces /dev/uinput (only needed for joypad support)
@@ -70,6 +104,12 @@ in
     SUBSYSTEMS=="input", ATTRS{name}=="Wolf gamepad (virtual) motion sensors", MODE="0660", ENV{ID_SEAT}="seat9"
     SUBSYSTEMS=="input", ATTRS{name}=="Wolf Nintendo (virtual) pad", MODE="0660", ENV{ID_SEAT}="seat9"
   '';
+
+  systemd.services.podman-wolf = {
+    preStart = ''
+      ${pkgs.podman}/bin/podman rm --force WolfPulseAudio
+    '';
+  };
 
   networking.firewall.interfaces.gradientnet = {
     allowedTCPPorts = [ ports.wolf-http ports.wolf-https ports.wolf-rtsp ];

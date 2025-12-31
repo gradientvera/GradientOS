@@ -441,12 +441,12 @@
             };
           }
           {
-            "Crafty Dynamic Map" = {
-              description = "A Minecraft Dynamic Map for servers managed by Crafty Controllers.";
-              href = "https://craftydynmap.constellation.moe/";
-              icon = "sh-minecraft.svg";
+            "Wolf Den" = {
+              description = "A web UI for managing Wolf.";
+              href = "https://wolf.constellation.moe/";
+              icon = "sh-games-on-whales.png";
               server = "asiyah";
-              container = "crafty";
+              container = "wolf-den";
               showStats = true;
             };
           }

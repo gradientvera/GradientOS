@@ -63,7 +63,7 @@
   wolf-rtsp = 48010;
   wolf-video-ping = 48100;
   wolf-audio-ping = 48200;
-
+  wolf-den = 47990;
 
   # NFS
   nfsd = 2049;
