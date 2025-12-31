@@ -5,6 +5,7 @@
     ./secrets
     ./backups.nix
     ./programs.nix
+    ./ppd-hooks.nix
     ./filesystems.nix
     ./hardware-configuration.nix
   ];
@@ -62,8 +63,13 @@
 
   services.openssh.openFirewall = true;
 
-  services.handheld-daemon.enable = true;
-  services.handheld-daemon.user = "vera";
+  services.handheld-daemon = {
+    user = "vera";
+    enable = true;
+    ui.enable = true;
+    adjustor.enable = true;
+    adjustor.loadAcpiCallModule = true;
+  };
 
   # Dolphin Bluetooth passthrough
   services.udev.extraRules = ''
