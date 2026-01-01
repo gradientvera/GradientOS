@@ -8,9 +8,6 @@ in
     "/var/lib/wolf".d = {
       mode = "0775";
     };
-    "/var/lib/wolf-den".d = {
-      mode = "0775";
-    };
     "/var/run/wolf".d = {
       mode = "0775";
     };
@@ -35,27 +32,34 @@ in
       "${addresses.lilynet.asiyah}:${toString ports.wolf-audio-ping}:${toString ports.wolf-audio-ping}/udp"
     ];
     volumes = [
-      "/data/downloads/games:/games:ro"
-      "/var/lib/wolf:/etc/wolf:rw"
-      "/var/run/docker.sock:/var/run/docker.sock:rw"
-      "/var/run/wolf:/var/run/wolf:rw"
       "/dev/:/dev/:rw"
       "/run/udev:/run/udev:rw"
+      "/var/lib/wolf:/etc/wolf:z"
+      "/data/downloads/games:/games:ro"
+      "/var/run/wolf:/run/user/wolf:rw"
+      "/var/run/podman/podman.sock:/var/run/docker.sock:ro"
+    ];
+    devices = [
+      "/dev/dri"
+      "/dev/uinput"
+      "/dev/uhid"
     ];
     environment = {
       TZ = config.time.timeZone;
+      LIBVA_DRIVER_NAME = "iHD";
+      GST_VAAPI_DRM_DEVICE = "/dev/dri/renderD128";
+      WOLF_RENDER_NODE = "/dev/dri/renderD128";
+      WOLF_STOP_CONTAINER_ON_EXIT = "TRUE";
       WOLF_HTTP_PORT = toString ports.wolf-http;
       WOLF_HTTPS_PORT = toString ports.wolf-https;
       WOLF_CONTROL_PORT = toString ports.wolf-control;
       WOLF_RTSP_SETUP_PORT = toString ports.wolf-rtsp;
       WOLF_VIDEO_PING_PORT = toString ports.wolf-video-ping;
       WOLF_AUDIO_PING_PORT = toString ports.wolf-audio-ping;
-      WOLF_SOCKET_PATH = "/var/run/wolf/wolf.sock";
     };
     extraOptions = [
-      "--device=/dev/dri/:/dev/dri/"
-      "--device=/dev/uinput:/dev/uinput"
-      "--device=/dev/uhid:/dev/uhid"
+      "--ipc=host"
+      "--security-opt" "label=disable"
       "--device-cgroup-rule" "c 13:* rmw"
       "--ip" "10.88.0.12"
     ];
@@ -65,30 +69,6 @@ in
     };
   };
   
-  virtualisation.oci-containers.containers.wolf-den = {
-    image = "ghcr.io/games-on-whales/wolf-den:stable";
-    pull = "newer";
-    ports = [
-      "127.0.0.1:${toString ports.wolf-den}:8080/tcp"
-    ];
-    volumes = [
-      "/var/run/wolf:/var/run/wolf:rw"
-      "/var/lib/wolf-den:/app/wolf-den:rw"
-    ];
-    environment = {
-      TZ = config.time.timeZone;
-      WOLF_SOCKET_PATH = "/var/run/wolf/wolf.sock";
-    };
-    extraOptions = [
-      "--ip" "10.88.0.13"
-    ];
-    labels = {
-      "io.containers.autoupdate" = "registry";
-      "PODMAN_SYSTEMD_UNIT" = "podman-wolf-den.service";
-    };
-  };
-  
-
   # As per https://games-on-whales.github.io/wolf/stable/user/quickstart.html#_virtual_devices_support
   services.udev.extraRules = ''
     # Allows Wolf to acces /dev/uinput (only needed for joypad support)
@@ -106,8 +86,13 @@ in
   '';
 
   systemd.services.podman-wolf = {
+    after = [ "podman.socket" ];
+    requires = [ "podman.socket" ];
+    # Remove dangling Wolf containers which might make it crash
     preStart = ''
-      ${pkgs.podman}/bin/podman rm --force WolfPulseAudio
+      ${pkgs.podman}/bin/podman ps --external --all --format '{{.ID}} {{.Names}}' \
+        | ${pkgs.gawk}/bin/awk 'BEGIN{IGNORECASE=1} $2 ~ /^wolf/ {print $1}' \
+        | ${pkgs.findutils}/bin/xargs -r ${pkgs.podman}/bin/podman rm --force
     '';
   };
 

@@ -440,16 +440,6 @@
               showStats = true;
             };
           }
-          {
-            "Wolf Den" = {
-              description = "A web UI for managing Wolf.";
-              href = "https://wolf.constellation.moe/";
-              icon = "sh-games-on-whales.png";
-              server = "asiyah";
-              container = "wolf-den";
-              showStats = true;
-            };
-          }
         ];
       }
     ];
