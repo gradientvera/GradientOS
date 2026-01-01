@@ -1,4 +1,4 @@
-{ config, ... }:
+{ config, lib, ... }:
 let
   secrets = config.sops.secrets;
   ports = config.gradient.currentHost.ports;
@@ -52,6 +52,10 @@ in {
   systemd.services.oauth2-proxy = {
     wants = [ "kanidm.service" "nginx.service" "network-online.target" ];
     after = [ "kanidm.service" "nginx.service" "network-online.target" ];
+    # Keep restarting OAuth2-Proxy no matter what
+    startLimitIntervalSec = lib.mkForce 0;
+    startLimitBurst = lib.mkForce 0;
+    serviceConfig.Restart = lib.mkForce "always";
   };
 
   networking.firewall.allowedTCPPorts = with ports; [ oauth2-proxy ];

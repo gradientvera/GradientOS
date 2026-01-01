@@ -1,4 +1,4 @@
-{ config, pkgs, ... }:
+{ config, pkgs, lib, ... }:
 let
   secrets = config.sops.secrets;
   ports = config.gradient.currentHost.ports;
@@ -153,6 +153,11 @@ in
     secrets.kanidm-admin-password.path
     secrets.kanidm-idm-admin-password.path
   ];
+
+  # Keep restarting kanidm no matter what
+  systemd.services.kanidm.startLimitIntervalSec = lib.mkForce 0;
+  systemd.services.kanidm.startLimitBurst = lib.mkForce 0;
+  systemd.services.kanidm.serviceConfig.Restart = lib.mkForce "always";
 
   # Allow Let's Encrypt certificate to be read by acme group
   security.acme.certs."identity.gradient.moe" = {
