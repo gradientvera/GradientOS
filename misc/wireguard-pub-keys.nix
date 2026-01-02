@@ -1,7 +1,6 @@
 {
 
   bernkastel = "pgPX/8I6p/6z19w4mP38VVNK9RQDXHI3rUdy9Zzv0gg=";
-  beatrice = "3iA3etOZC+5J3zKjcFvQVw5bhiKKC0XGUQap43yMB1o=";
   erika = "okNBZAPQiNALnW0Z6AXz+pXv1CJfo+YfCTtnx07fLEo=";
   neith-deck = "p4dmhuDzBmzHvudnT2nnSTrGQY047ubuCEjEk2U2zFw=";
   asiyah = "sZ7toLMyaiDj/r2Lz9n7UNMs1tXeQn+qAP1hHclKiQs=";

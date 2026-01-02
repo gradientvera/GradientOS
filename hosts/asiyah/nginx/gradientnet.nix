@@ -8,13 +8,11 @@ let
   dashboardReplaceConstants = html: builtins.replaceStrings 
     [
       "@ASIYAH@"
-      "@BEATRICE@"
       "@PORT-PROWLARR@"
       "@PORT-SEARX@"
     ]
     [
       "asiyah.gradient"
-      "beatrice.gradient"
       (toString ports.prowlarr)
       (toString ports.searx)
     ]

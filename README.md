@@ -39,7 +39,6 @@ GradientOS supports the [auxolotl](https://auxolotl.org/) and [Lix](https://lix.
 - **[bernkastel](hosts/bernkastel)**: Custom Gaming Desktop.
 - **[featherine](hosts/featherine)**: GPD Win Mini 2024.
 - **[erika](hosts/erika)**: Steam Deck OLED.
-- **[beatrice](hosts/beatrice)**: Steam Deck LCD used as a Server.
 - **[neith-deck](hosts/neith-deck)**: Steam Deck LCD.
 - **[asiyah](hosts/asiyah)**: Custom Home Server.
 - **[briah](hosts/briah)**: VPS for tunneling.

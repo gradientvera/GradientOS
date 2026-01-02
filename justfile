@@ -64,10 +64,6 @@ edit-secret-atziluth:
     just edit-secret atziluth
 
 [group('secrets')]
-edit-secret-beatrice:
-    just edit-secret beatrice
-
-[group('secrets')]
 edit-secret-bernkastel:
     just edit-secret bernkastel
 

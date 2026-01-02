@@ -9,7 +9,6 @@
       vera
       neith
       bernkastel
-      beatrice
       erika
       neith-deck
       asiyah

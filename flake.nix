@@ -197,50 +197,6 @@
       }
 
       {
-        name = "beatrice";
-        overlays = [ self.overlays.kernel-allow-missing ];
-
-        modules = [
-          jovian-nixos.nixosModules.default
-
-          mixins.wine
-          mixins.gnupg
-          mixins.wireguard
-          mixins.uwu-style
-          #mixins.tdarr-node
-          mixins.vera-locale
-          mixins.upgrade-diff
-          mixins.v4l2loopback
-          mixins.virtualisation
-          mixins.graphical-steam
-          mixins.nix-store-serve
-          
-          mixins.hardware-qmk
-          mixins.hardware-amdcpu
-          mixins.hardware-amdgpu
-          mixins.hardware-webcam
-          mixins.hardware-bluetooth
-          mixins.hardware-openrazer
-          mixins.hardware-steamdeck-minimal
-          mixins.hardware-home-dcp-l2530dw
-          mixins.hardware-xbox-one-controller
-          
-          mixins.restic-repository-hokma
-        ];
-
-        users.vera.modules = [
-          sops-nix.homeManagerModule
-          ./users/vera/graphical/default.nix
-        ];
-
-        deployment = {
-          targetHost = ips.gradientnet.beatrice;
-          tags = with colmena-tags; [ x86_64 steam-deck desktop vera ];
-          allowLocalDeployment = true;
-        };
-      }
-
-      {
         name = "erika";
         overlays = [ self.overlays.kernel-allow-missing ];
 

@@ -113,19 +113,19 @@ in
           id = "default";
           versioning.type = "trashcan";
           path = "~/Documents/Sync";
-          devices = [ "bernkastel" "beatrice" "erika" "asiyah" "vera-phone" "vera-phone-old" "work-laptop" "featherine" "ange" ];
+          devices = [ "bernkastel" "erika" "asiyah" "vera-phone" "vera-phone-old" "work-laptop" "featherine" "ange" ];
         };
         music = {
           id = "y0fft-chww4";
           versioning.type = "trashcan";
           path = "~/Music";
-          devices = [ "bernkastel" "beatrice" "erika" "asiyah" "vera-phone" "vera-phone-old" "work-laptop" "featherine" "ange" ];
+          devices = [ "bernkastel" "erika" "asiyah" "vera-phone" "vera-phone-old" "work-laptop" "featherine" "ange" ];
         };
         ffxiv-config = {
           id = "ujgmj-wkmsh";
           versioning.type = "trashcan";
           path = "~/.xlcore/ffxivConfig";
-          devices = [ "bernkastel" "asiyah" "beatrice" "erika" "featherine" ];
+          devices = [ "bernkastel" "asiyah" "erika" "featherine" ];
         };
         the-midnight-hall = {
           id = "ykset-ue2ke";

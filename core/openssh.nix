@@ -59,9 +59,6 @@ Host *
       "erika.gradient.moe" = {
         publicKey = ssh-pub-keys.erika;
       };
-      "beatrice.gradient.moe" = {
-        publicKey = ssh-pub-keys.erika;
-      };
     };
 
     hostKeys = [

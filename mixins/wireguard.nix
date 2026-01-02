@@ -37,7 +37,6 @@ let
   yetzirahHost = "yetzirah";
   bernkastelHost = "bernkastel";
   neithDeckHost = "neith-deck";
-  beatriceHost = "beatrice";
   erikaHost = "erika";
   featherineHost = "featherine";
 
@@ -172,7 +171,7 @@ in
       };
     })
 
-    (lib.mkIf (builtins.any (v: hostName == v) [ asiyahHost briahHost yetzirahHost bernkastelHost beatriceHost erikaHost featherineHost ]) {
+    (lib.mkIf (builtins.any (v: hostName == v) [ asiyahHost briahHost yetzirahHost bernkastelHost erikaHost featherineHost ]) {
       systemd.network.wait-online.ignoredInterfaces = [ "gradientnet" ];
 
       # Allow SSH over gradientnet
@@ -199,10 +198,6 @@ in
           {
             allowedIPs = [ "${bernkastel}/32" ];
             publicKey = keys.bernkastel;
-          }
-          {
-            allowedIPs = [ "${beatrice}/32" ];
-            publicKey = keys.beatrice;
           }
           {
             allowedIPs = [ "${vera-phone-old}/32" ];
@@ -273,7 +268,7 @@ in
       systemd.services.wgautomesh.wants = [ "wireguard-gradientnet.service" ];
     })
 
-    (lib.mkIf (builtins.any (v: hostName == v) [ asiyahHost yetzirahHost bernkastelHost neithDeckHost beatriceHost erikaHost featherineHost ]) {
+    (lib.mkIf (builtins.any (v: hostName == v) [ asiyahHost yetzirahHost bernkastelHost neithDeckHost erikaHost featherineHost ]) {
       systemd.network.wait-online.ignoredInterfaces = [ "lilynet" ];
 
       networking.hosts = generateHosts ".lily" addr.lilynet;
@@ -297,10 +292,6 @@ in
           {
             allowedIPs = [ "${neith-deck}/32" ];
             publicKey = keys.neith-deck;
-          }
-          {
-            allowedIPs = [ "${beatrice}/32" ];
-            publicKey = keys.beatrice;
           }
           {
             allowedIPs = [ "${erika}/32" ];
