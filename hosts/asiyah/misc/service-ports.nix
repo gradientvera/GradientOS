@@ -100,6 +100,7 @@
   crowdsec-lapi = 8076;
   crowdsec-metrics = 6060;
   microsocks = 1079;
+  olivetin = 8075;
   
   # Paperless-ngx
   paperless = 28981;

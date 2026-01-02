@@ -19,6 +19,7 @@
     ./grafana.nix
     ./forgejo.nix
     ./duckdns.nix
+    ./olivetin.nix
     ./postgres.nix
     ./scrutiny.nix
     ./paperless.nix

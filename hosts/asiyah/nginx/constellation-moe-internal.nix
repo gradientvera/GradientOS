@@ -133,6 +133,7 @@ in {
     "k1c.constellation.moe" = mkReverseProxy { address = "192.168.1.27"; port = 80; };
     "pinchflat.constellation.moe" = mkReverseProxy { port = ports.pinchflat; };
     "crafty.constellation.moe" = mkReverseProxy { port = ports.crafty; protocol = "https"; };
+    "olivetin.constellation.moe" = mkReverseProxy { port = ports.olivetin; };
   };
 
   # TODO: Figure out a way to automate the below list eugh
@@ -165,6 +166,7 @@ in {
     "pinchflat.constellation.moe" = {};
     "crafty.constellation.moe" = {};
     "craftydynmap.constellation.moe" = {};
+    "olivetin.constellation.moe" = {};
   };
   
 }

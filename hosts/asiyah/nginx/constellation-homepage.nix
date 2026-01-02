@@ -440,6 +440,13 @@
               showStats = true;
             };
           }
+          {
+            "OliveTin" = {
+              description = "OliveTin gives safe and simple access to predefined shell commands from a web interface.";
+              href = "https://olivetin.constellation.moe/";
+              icon = "sh-olivetin.svg";
+            };
+          }
         ];
       }
     ];

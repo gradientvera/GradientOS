@@ -512,10 +512,10 @@ in {
           "Not an upgrade for existing"
           ]
         '';
-        RADARR_URL = "http://127.0.0.1:7878";
-        SONARR_URL = "http://127.0.0.1:8989";
-        LIDARR_URL = "http://127.0.0.1:8686";
-        QBITTORRENT_URL = "http://127.0.0.1:${toString ports.qbittorrent-webui}";
+        RADARR_URL = "http://radarr:7878";
+        SONARR_URL = "http://sonarr:8989";
+        LIDARR_URL = "http://lidarr:8686";
+        QBITTORRENT_URL = "http://qbittorrent:${toString ports.qbittorrent-webui}";
       };
       environmentFiles = [ config.sops.secrets.mediarr-decluttarr-env.path ];
       extraOptions = [] ++ podOptions;
