@@ -99,6 +99,7 @@
   wgautomesh-external = 33723;
   crowdsec-lapi = 8076;
   crowdsec-metrics = 6060;
+  microsocks = 1079;
   
   # Paperless-ngx
   paperless = 28981;
