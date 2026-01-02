@@ -56,7 +56,6 @@ in
             asiyah
             bernkastel
             erika
-            neith-deck
           ];
           
           trusted-users = [

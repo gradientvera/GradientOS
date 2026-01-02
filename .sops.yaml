@@ -1,8 +1,6 @@
 keys:
   - &user_vera age1w7xthmy2u80yp9jx98dnmcek0xcdcfmjx5at823m3536rkp5q3xqkqfw2j
-  - &user_neith age10h2dan2d3jgy8tjq4djhu5lg4krx2m735nxcvg2schkpkvht0ynsmpdqne
   - &host_bernkastel age1hl9999dlv29qejtac0sdw7nnm9d06uh4nzmgc029ndg40vllavyq5u0pqu
-  - &host_neithdeck age1uj0nmmvdeajg0hqlahe839c5r4n6nz0r6ampcwa46yhetx32kgrqqky22x
   - &host_erika age1ttl5pp50xffh73y3ekutsret24gd3rn7w2yvvcrhu2ywkz867fes8ea2s7
   - &host_asiyah age1lkh89lus8pzd83m2gkvsmyr9uql6n6c0xgwtq69eh0wxeaynxa3qfyzps4
   - &host_briah age10z4hmqp35sut8v03edvrqwgmuqcwa8sd0fckp3yvcz3x9j3xr4zs4y40ef
@@ -16,9 +14,7 @@ creation_rules:
     key_groups:
     - age:
       - *user_vera
-      - *user_neith
       - *host_bernkastel
-      - *host_neithdeck
       - *host_erika
       - *host_asiyah
       - *host_briah
@@ -30,12 +26,6 @@ creation_rules:
   - path_regex: 'users/vera/secrets/*'
     key_groups:
     - age:
-      - *user_vera
-      
-  - path_regex: 'users/neith/secrets/*'
-    key_groups:
-    - age:
-      - *user_neith
       - *user_vera
 
   - path_regex: 'hosts/bernkastel/secrets/*'
@@ -49,13 +39,6 @@ creation_rules:
     - age:
       - *user_vera
       - *host_erika
-
-  - path_regex: 'hosts/neith-deck/secrets/*'
-    key_groups:
-    - age:
-      - *user_vera
-      - *user_neith
-      - *host_neithdeck
 
   - path_regex: 'hosts/asiyah/secrets/*'
     key_groups:

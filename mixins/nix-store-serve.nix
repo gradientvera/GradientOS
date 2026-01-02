@@ -7,10 +7,8 @@
     protocol = "ssh-ng";
     keys = with config.gradient.const.ssh.pubKeys; [
       vera
-      neith
       bernkastel
       erika
-      neith-deck
       asiyah
     ];
   };

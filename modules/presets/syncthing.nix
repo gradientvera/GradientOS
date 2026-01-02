@@ -131,13 +131,13 @@ in
           id = "ykset-ue2ke";
           versioning.type = "trashcan";
           path = "~/Documents/TheMidnightHall";
-          devices = [ "bernkastel" "asiyah" "featherine" "neith-deck" "hadal-rainbow" ];
+          devices = [ "bernkastel" "asiyah" "featherine" "hadal-rainbow" ];
         };
         constellation = {
           id = "constellation";
           versioning.type = "trashcan";
           path = "~/Documents/Constellation";
-          devices = [ "bernkastel" "asiyah" "featherine" "neith-deck" "hadal-rainbow" "remie" ];
+          devices = [ "bernkastel" "asiyah" "featherine" "hadal-rainbow" "remie" ];
         };
         important-documents = {
           id = "egytl-udh2q";

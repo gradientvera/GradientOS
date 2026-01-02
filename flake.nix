@@ -159,44 +159,6 @@
       }
 
       {
-        name = "neith-deck";
-        overlays = [ self.overlays.kernel-allow-missing ];
-
-        modules = [
-          jovian-nixos.nixosModules.default
-
-          mixins.wine
-          mixins.gnupg
-          mixins.plymouth
-          mixins.wireguard
-          mixins.uwu-style
-          mixins.upgrade-diff
-          mixins.v4l2loopback
-          mixins.neith-locale
-          mixins.nix-store-serve
-          
-          mixins.graphical-steam
-          
-          mixins.hardware-amdcpu
-          mixins.hardware-amdgpu
-          mixins.hardware-webcam
-          mixins.hardware-bluetooth
-          mixins.hardware-steamdeck
-        ];
-
-        users.neith.modules = [
-          sops-nix.homeManagerModule
-          ./users/neith/graphical/default.nix
-        ];
-
-        deployment = {
-          targetHost = ips.lilynet.neith-deck;
-          tags = with colmena-tags; [ x86_64 steam-deck desktop neith ];
-          allowLocalDeployment = true;
-        };
-      }
-
-      {
         name = "erika";
         overlays = [ self.overlays.kernel-allow-missing ];
 

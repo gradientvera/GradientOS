@@ -36,7 +36,6 @@ let
   briahHost = "briah";
   yetzirahHost = "yetzirah";
   bernkastelHost = "bernkastel";
-  neithDeckHost = "neith-deck";
   erikaHost = "erika";
   featherineHost = "featherine";
 
@@ -268,7 +267,7 @@ in
       systemd.services.wgautomesh.wants = [ "wireguard-gradientnet.service" ];
     })
 
-    (lib.mkIf (builtins.any (v: hostName == v) [ asiyahHost yetzirahHost bernkastelHost neithDeckHost erikaHost featherineHost ]) {
+    (lib.mkIf (builtins.any (v: hostName == v) [ asiyahHost yetzirahHost bernkastelHost erikaHost featherineHost ]) {
       systemd.network.wait-online.ignoredInterfaces = [ "lilynet" ];
 
       networking.hosts = generateHosts ".lily" addr.lilynet;
@@ -288,10 +287,6 @@ in
           {
             allowedIPs = [ "${bernkastel}/32" ];
             publicKey = keys.bernkastel;
-          }
-          {
-            allowedIPs = [ "${neith-deck}/32" ];
-            publicKey = keys.neith-deck;
           }
           {
             allowedIPs = [ "${erika}/32" ];
