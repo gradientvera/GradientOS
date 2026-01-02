@@ -259,6 +259,19 @@ in
 
     boot.loader.systemd-boot.netbootxyz.enable = true;
 
+    # Group that allows users to restart systemd units
+    users.groups.systemd-restart-units = {};
+    security.polkit.extraConfig = ''
+      polkit.addRule(function(action, subject) {
+          if (action.id == "org.freedesktop.systemd1.manage-units") {
+              var verb = action.lookup("verb");
+              if (verb == "restart" && subject.isInGroup("systemd-restart-units")) {
+                return polkit.Result.YES;
+              }
+          }
+      });
+    '';
+
     # Put jemalloc on a consistent folder, for use with LD_PRELOAD
     systemd.tmpfiles.settings."10-jemalloc"."/run/jemalloc"."L+".argument = toString pkgs.jemalloc;
 
