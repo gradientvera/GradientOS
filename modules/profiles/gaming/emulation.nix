@@ -317,6 +317,7 @@ in
         ruffle # Flash
         # -- Utilities --
         emulationstation-de
+        lutris
       ];
     })
 
