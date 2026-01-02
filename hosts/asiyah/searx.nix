@@ -1,4 +1,4 @@
-{ config, lib, pkgs, ... }:
+{ config, lib, pkgs, ports, ... }:
 let
   ports = config.gradient.currentHost.ports;
   faviconSettings = (pkgs.writeText "favicons.toml" ''
@@ -70,6 +70,15 @@ in
         retries = 5;
         useragent_suffix = "gradient.moe";
         source_ips = [ "0.0.0.0" "::" ];
+        # Uncomment when https://github.com/NixOS/nixpkgs/issues/476192 is fixed
+        /*proxies = {
+          "all://:" = [
+            "socks5://127.0.0.1:${toString ports.proxy-vpn}"
+            "socks5://127.0.0.1:${toString ports.proxy-vpn-uk}"
+            "socks5:://${config.gradient.const.wireguard.addresses.gradientnet.asiyah}:${toString ports.microsocks}"
+            "socks5:://${config.gradient.const.wireguard.addresses.gradientnet.briah}:${toString config.gradient.hosts.briah.ports.microsocks}"
+          ];
+        };*/
       };
 
       enabled_plugins = [
