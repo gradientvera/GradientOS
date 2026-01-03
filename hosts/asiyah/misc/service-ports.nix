@@ -102,6 +102,14 @@
   microsocks = 1079;
   olivetin = 8075;
   
+  # Frigate, cannot be changed because fuck you
+  frigate = 5000;
+  frigate-api = 5001;
+  frigate-mqtt-ws = 5002;
+  frigate-jsmpeg = 8082;
+  frigate-go2rtc = 1984;
+  frigate-rtmp = 1935;
+
   # Paperless-ngx
   paperless = 28981;
   tika = 9998;

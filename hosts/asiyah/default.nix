@@ -16,6 +16,7 @@
     ./clamav.nix
     ./kanidm.nix
     ./backups.nix
+    ./frigate.nix
     ./grafana.nix
     ./forgejo.nix
     ./duckdns.nix

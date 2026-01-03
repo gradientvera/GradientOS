@@ -109,6 +109,7 @@ in
       # feedparser # TODO: fix
       moonraker
       smartir
+      frigate
       bermuda
       edata
 
