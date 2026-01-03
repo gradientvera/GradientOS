@@ -49,6 +49,7 @@ in
       LIBVA_DRIVER_NAME = "iHD";
       GST_VAAPI_DRM_DEVICE = "/dev/dri/renderD128";
       WOLF_RENDER_NODE = "/dev/dri/renderD128";
+      WOLF_USE_ZERO_COPY = "FALSE"; # breaks multi-seat if enabled
       WOLF_STOP_CONTAINER_ON_EXIT = "TRUE";
       WOLF_HTTP_PORT = toString ports.wolf-http;
       WOLF_HTTPS_PORT = toString ports.wolf-https;
