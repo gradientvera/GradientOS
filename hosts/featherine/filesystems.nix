@@ -1,6 +1,6 @@
 { pkgs, lib, ... }:
 let
-  auroraUuid = "e98ab311-b656-4421-971c-cbfdd6560829";
+  auroraUuid = "20d3ee15-2596-4c2c-92b8-af5bd7c0b096";
 in
 {
 
@@ -48,8 +48,8 @@ in
   };
 
   fileSystems."/data" = {
-    device = "/dev/disk/by-uuid/dc6de339-85ff-477b-b0b3-4324110fec51";
-    fsType = "btrfs";
+    device = "/dev/disk/by-uuid/e44adef8-7bcf-42eb-ae52-25e69e6a27d8";
+    fsType = "ext4";
     options = [ "defaults" "rw" "nofail" "x-systemd.automount" "x-systemd.device-timeout=1ms" "comment=x-gvfs-show" ];
   };
 
