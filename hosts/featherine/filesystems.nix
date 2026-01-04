@@ -1,4 +1,4 @@
-{ pkgs, lib, ... }:
+{ pkgs, config, lib, ... }:
 let
   auroraUuid = "20d3ee15-2596-4c2c-92b8-af5bd7c0b096";
 in
@@ -33,7 +33,7 @@ in
   # SD Card
   boot.initrd.luks.devices."luks-${auroraUuid}" = {
     device = "/dev/disk/by-uuid/${auroraUuid}";
-    bypassWorkqueues = true;
+    bypassWorkqueues = false; # not an SSD
     crypttabExtraOpts = [ "tpm2-device=auto" ];
   };
 
@@ -50,7 +50,7 @@ in
   fileSystems."/data" = {
     device = "/dev/disk/by-uuid/e44adef8-7bcf-42eb-ae52-25e69e6a27d8";
     fsType = "ext4";
-    options = [ "defaults" "rw" "nofail" "x-systemd.automount" "x-systemd.device-timeout=1ms" "comment=x-gvfs-show" ];
+    options = [ "defaults" "rw" "nofail" "noatime" "x-systemd.automount" "x-systemd.device-timeout=1ms" "comment=x-gvfs-show" ];
   };
 
   swapDevices = [
@@ -59,7 +59,7 @@ in
 
   environment.systemPackages = [
     (pkgs.writeShellScriptBin "decrypt-aurora" ''
-      sudo ${pkgs.cryptsetup}/bin/cryptsetup luksOpen /dev/disk/by-uuid/${auroraUuid} luks-${auroraUuid}
+      sudo ${pkgs.cryptsetup}/bin/cryptsetup luksOpen /dev/disk/by-uuid/${auroraUuid} luks-${auroraUuid} --key-file=${config.sops.secrets.aurora-key-file.path}
       sudo ${pkgs.util-linux}/bin/mount /data
     '')
     (pkgs.writeShellScriptBin "encrypt-aurora" ''
@@ -67,5 +67,21 @@ in
       sudo ${pkgs.cryptsetup}/bin/cryptsetup luksClose luks-${auroraUuid}
     '')
   ];
+
+  systemd.services.aurora-sleep-fix = {
+    wantedBy = [ "sleep.target" ];
+    before = [ "sleep.target" ];
+    serviceConfig.User = "root";
+    serviceConfig.Type = "oneshot";
+    serviceConfig.RemainAfterExit = "yes";
+    unitConfig.StopWhenUnneeded = "yes";
+    path = [ pkgs.cryptsetup ];
+    script = ''
+      cryptsetup luksSuspend /dev/mapper/luks-${auroraUuid}
+    '';
+    postStop = ''
+      cryptsetup luksResume /dev/mapper/luks-${auroraUuid} --key-file=${config.sops.secrets.aurora-key-file.path}
+    '';
+  };
 
 }

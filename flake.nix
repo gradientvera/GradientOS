@@ -217,14 +217,14 @@
           mixins.wine
           mixins.alloy
           mixins.gnupg
-          mixins.plymouth
+          #mixins.plymouth
           mixins.wireguard
-          mixins.uwu-style
+          #mixins.uwu-style
           #mixins.tdarr-node
           mixins.vera-locale
           mixins.upgrade-diff
           mixins.v4l2loopback
-          mixins.virtualisation
+          #mixins.virtualisation
           #mixins.nix-store-serve
           mixins.jovian-decky-loader
           mixins.only-suspend-then-hibernate

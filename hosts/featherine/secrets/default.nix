@@ -21,6 +21,8 @@
         restartUnits = [ "syncthing.service" ];
       };
       
+      aurora-key-file = { };
+
     };
   };
 
