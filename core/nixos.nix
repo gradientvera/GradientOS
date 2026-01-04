@@ -103,12 +103,20 @@ in
 
     hardware.enableRedistributableFirmware = true;
 
-    # Increase number of files per process
-    # prevents build failures sometimes
     systemd.settings.Manager = {
       DefaultTimeoutStartSec = "15s";
       DefaultTimeoutStopSec = "10s";
+
+      # Increase number of files per process
+      # prevents build failures sometimes
       DefaultLimitNOFILE = "32768:2097152";
+
+      # Keep restarting services indefinitely by default
+      DefaultStartLimitIntervalSec = "0";
+      DefaultStartLimitBurst = "0";
+      DefaultRestartSec = "1s";
+      ReloadLimitIntervalSec = "0";
+      ReloadLimitBurst = "0";
 
       # Enable systemd watchdog.
       RuntimeWatchdogSec = "10s";
