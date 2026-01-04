@@ -262,6 +262,20 @@ in
       '';
     };
 
+    systemd.services.pci-latency-on-resume = {
+      wantedBy = [ "sleep.target" ];
+      before = [ "sleep.target" ];
+      serviceConfig.User = "root";
+      serviceConfig.Type = "oneshot";
+      serviceConfig.RemainAfterExit = "yes";
+      unitConfig.StopWhenUnneeded = "yes";
+      path = [ pkgs.coreutils pkgs.systemd ];
+      script = "exit 0";
+      postStop = ''
+        systemctl restart pci-latency
+      '';
+    };
+
     # Slow to build, fails to build on containers too
     documentation.man.generateCaches = lib.mkForce false;
 
