@@ -60,8 +60,10 @@
       inputs.flake-compat.follows = "flake-compat";
     };
 
-    gpd-fan-driver.url = "github:Cryolitia/gpd-fan-driver";
-    gpd-fan-driver.inputs.nixpkgs.follows = "nixpkgs";
+    cryolitia-nur = {
+      url = "github:Cryolitia/nur-packages/master";
+      inputs.nixpkgs.follows = "nixpkgs";
+    };
 
     catppuccin.url = "github:catppuccin/nix";
 
@@ -93,7 +95,7 @@
     };
   };
 
-  outputs = { self, nixpkgs, gradient-generator, jovian-nixos, sops-nix, nixos-hardware, gpd-fan-driver, lanzaboote, ... }:
+  outputs = { self, nixpkgs, gradient-generator, jovian-nixos, sops-nix, nixos-hardware, cryolitia-nur, lanzaboote, ... }:
   let
     addr = import ./misc/addresses.nix;
     ips = import ./misc/wireguard-addresses.nix;
@@ -208,12 +210,11 @@
         name = "featherine";
 
         modules = [
-          jovian-nixos.nixosModules.default
+          cryolitia-nur.nixosModules.bmi260
           lanzaboote.nixosModules.lanzaboote
-          gpd-fan-driver.nixosModules.default
           nixos-hardware.nixosModules.gpd-win-mini-2024
           
-          mixins.tor
+          #mixins.tor
           mixins.wine
           mixins.alloy
           mixins.gnupg
@@ -226,7 +227,6 @@
           mixins.v4l2loopback
           #mixins.virtualisation
           #mixins.nix-store-serve
-          mixins.jovian-decky-loader
           mixins.only-suspend-then-hibernate
           
           mixins.graphical-steam
@@ -239,7 +239,6 @@
           mixins.hardware-webcam
           mixins.hardware-bluetooth
           mixins.hardware-openrazer
-          mixins.hardware-gpd-win-mini
           mixins.hardware-home-dcp-l2530dw
           mixins.hardware-xbox-one-controller
         ];

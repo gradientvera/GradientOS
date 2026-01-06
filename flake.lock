@@ -109,6 +109,32 @@
         "url": "ssh://git@github.com/CRP3092/Portafolio.git"
       }
     },
+    "cryolitia-nur": {
+      "inputs": {
+        "gpd-fan-driver": "gpd-fan-driver",
+        "gpd-linuxcontrols": "gpd-linuxcontrols",
+        "nixpkgs": [
+          "nixpkgs"
+        ],
+        "pgp-sig2dot": "pgp-sig2dot",
+        "pgp-sig2dot-beta": "pgp-sig2dot-beta",
+        "rust-overlay": "rust-overlay_2"
+      },
+      "locked": {
+        "lastModified": 1767583500,
+        "narHash": "sha256-psotNb64m4LdXVxmOWHDcJbIzWWU2bitfCNWZfIQIYE=",
+        "owner": "Cryolitia",
+        "repo": "nur-packages",
+        "rev": "7ec82d76ff0183180cb0a3a8e949451730a7762a",
+        "type": "github"
+      },
+      "original": {
+        "owner": "Cryolitia",
+        "ref": "master",
+        "repo": "nur-packages",
+        "type": "github"
+      }
+    },
     "flake-compat": {
       "flake": false,
       "locked": {
@@ -266,6 +292,7 @@
     "gpd-fan-driver": {
       "inputs": {
         "nixpkgs": [
+          "cryolitia-nur",
           "nixpkgs"
         ]
       },
@@ -283,9 +310,28 @@
         "type": "github"
       }
     },
-    "gradient-generator": {
+    "gpd-linuxcontrols": {
       "inputs": {
         "nixpkgs": "nixpkgs_2",
+        "rust-overlay": "rust-overlay"
+      },
+      "locked": {
+        "lastModified": 1720926613,
+        "narHash": "sha256-k2fYcrHLDxkgi/R/hpkdXrzUJy54gBaakW+hSwPkFq8=",
+        "owner": "Cryolitia",
+        "repo": "GPD-LinuxControls",
+        "rev": "03776f22389dd1e257f1bc3d61f2e1e304f42ede",
+        "type": "github"
+      },
+      "original": {
+        "owner": "Cryolitia",
+        "repo": "GPD-LinuxControls",
+        "type": "github"
+      }
+    },
+    "gradient-generator": {
+      "inputs": {
+        "nixpkgs": "nixpkgs_4",
         "poetry2nix": "poetry2nix"
       },
       "locked": {
@@ -304,7 +350,7 @@
     },
     "gradient-moe": {
       "inputs": {
-        "nixpkgs": "nixpkgs_3"
+        "nixpkgs": "nixpkgs_5"
       },
       "locked": {
         "lastModified": 1762508630,
@@ -344,7 +390,7 @@
     "jovian-nixos": {
       "inputs": {
         "nix-github-actions": "nix-github-actions_3",
-        "nixpkgs": "nixpkgs_4"
+        "nixpkgs": "nixpkgs_6"
       },
       "locked": {
         "lastModified": 1766225187,
@@ -383,7 +429,7 @@
           "nixpkgs"
         ],
         "pre-commit": "pre-commit",
-        "rust-overlay": "rust-overlay"
+        "rust-overlay": "rust-overlay_3"
       },
       "locked": {
         "lastModified": 1765382359,
@@ -626,7 +672,7 @@
       "inputs": {
         "flake-compat": "flake-compat_4",
         "flake-utils": "flake-utils_3",
-        "nixpkgs": "nixpkgs_6",
+        "nixpkgs": "nixpkgs_8",
         "systems": "systems_3",
         "treefmt-nix": "treefmt-nix_2"
       },
@@ -646,6 +692,38 @@
     },
     "nixpkgs_2": {
       "locked": {
+        "lastModified": 1720781449,
+        "narHash": "sha256-po3TZO9kcZwzvkyMJKb0WCzzDtiHWD34XeRaX1lWXp0=",
+        "owner": "NixOS",
+        "repo": "nixpkgs",
+        "rev": "8b5a3d5a1d951344d683b442c0739010b80039db",
+        "type": "github"
+      },
+      "original": {
+        "owner": "NixOS",
+        "ref": "nixpkgs-unstable",
+        "repo": "nixpkgs",
+        "type": "github"
+      }
+    },
+    "nixpkgs_3": {
+      "locked": {
+        "lastModified": 1766840161,
+        "narHash": "sha256-Ss/LHpJJsng8vz1Pe33RSGIWUOcqM1fjrehjUkdrWio=",
+        "owner": "NixOS",
+        "repo": "nixpkgs",
+        "rev": "3edc4a30ed3903fdf6f90c837f961fa6b49582d1",
+        "type": "github"
+      },
+      "original": {
+        "owner": "NixOS",
+        "ref": "nixpkgs-unstable",
+        "repo": "nixpkgs",
+        "type": "github"
+      }
+    },
+    "nixpkgs_4": {
+      "locked": {
         "lastModified": 1710470187,
         "narHash": "sha256-l2R47RqhdEUYrMrQjdFKhxtqprkJjIE89qJx3iEVv+U=",
         "owner": "NixOS",
@@ -660,7 +738,7 @@
         "type": "github"
       }
     },
-    "nixpkgs_3": {
+    "nixpkgs_5": {
       "locked": {
         "lastModified": 1744463964,
         "narHash": "sha256-LWqduOgLHCFxiTNYi3Uj5Lgz0SR+Xhw3kr/3Xd0GPTM=",
@@ -676,7 +754,7 @@
         "type": "github"
       }
     },
-    "nixpkgs_4": {
+    "nixpkgs_6": {
       "locked": {
         "lastModified": 1766070988,
         "narHash": "sha256-G/WVghka6c4bAzMhTwT2vjLccg/awmHkdKSd2JrycLc=",
@@ -692,7 +770,7 @@
         "type": "github"
       }
     },
-    "nixpkgs_5": {
+    "nixpkgs_7": {
       "locked": {
         "lastModified": 1766309749,
         "narHash": "sha256-3xY8CZ4rSnQ0NqGhMKAy5vgC+2IVK0NoVEzDoOh4DA4=",
@@ -708,7 +786,7 @@
         "type": "github"
       }
     },
-    "nixpkgs_6": {
+    "nixpkgs_8": {
       "locked": {
         "lastModified": 1765779637,
         "narHash": "sha256-KJ2wa/BLSrTqDjbfyNx70ov/HdgNBCBBSQP3BIzKnv4=",
@@ -721,6 +799,53 @@
         "owner": "NixOS",
         "ref": "nixos-unstable",
         "repo": "nixpkgs",
+        "type": "github"
+      }
+    },
+    "pgp-sig2dot": {
+      "inputs": {
+        "nixpkgs": "nixpkgs_3",
+        "rust-overlay": [
+          "cryolitia-nur",
+          "rust-overlay"
+        ]
+      },
+      "locked": {
+        "lastModified": 1767195319,
+        "narHash": "sha256-U1SobUuJB6QsxeNKLAMoHbYItECfyY/pZfxvqaMUlU0=",
+        "owner": "Cryolitia",
+        "repo": "pgp-sig2dot",
+        "rev": "b55f8efc4cd360d925ce6c9cfd8c2d2b3ab675b6",
+        "type": "github"
+      },
+      "original": {
+        "owner": "Cryolitia",
+        "repo": "pgp-sig2dot",
+        "type": "github"
+      }
+    },
+    "pgp-sig2dot-beta": {
+      "inputs": {
+        "nixpkgs": [
+          "cryolitia-nur",
+          "nixpkgs"
+        ],
+        "rust-overlay": [
+          "cryolitia-nur",
+          "rust-overlay"
+        ]
+      },
+      "locked": {
+        "lastModified": 1767195319,
+        "narHash": "sha256-U1SobUuJB6QsxeNKLAMoHbYItECfyY/pZfxvqaMUlU0=",
+        "owner": "Cryolitia",
+        "repo": "pgp-sig2dot",
+        "rev": "b55f8efc4cd360d925ce6c9cfd8c2d2b3ab675b6",
+        "type": "github"
+      },
+      "original": {
+        "owner": "Cryolitia",
+        "repo": "pgp-sig2dot",
         "type": "github"
       }
     },
@@ -795,8 +920,8 @@
         "colmena": "colmena",
         "constellation-moe": "constellation-moe",
         "crp3092": "crp3092",
+        "cryolitia-nur": "cryolitia-nur",
         "flake-compat": "flake-compat",
-        "gpd-fan-driver": "gpd-fan-driver",
         "gradient-generator": "gradient-generator",
         "gradient-moe": "gradient-moe",
         "home-manager": "home-manager",
@@ -807,7 +932,7 @@
         "nix-gaming": "nix-gaming",
         "nixos-generators": "nixos-generators",
         "nixos-hardware": "nixos-hardware",
-        "nixpkgs": "nixpkgs_5",
+        "nixpkgs": "nixpkgs_7",
         "nixpkgs-master": "nixpkgs-master",
         "nixpkgs-stable": "nixpkgs-stable",
         "nixpkgs-xr": "nixpkgs-xr",
@@ -816,6 +941,49 @@
       }
     },
     "rust-overlay": {
+      "inputs": {
+        "nixpkgs": [
+          "cryolitia-nur",
+          "gpd-linuxcontrols",
+          "nixpkgs"
+        ]
+      },
+      "locked": {
+        "lastModified": 1720923816,
+        "narHash": "sha256-GrDL1nFYZrB/+Ah1hNoaNFfduB1agpfqL9QyEl12UOU=",
+        "owner": "oxalica",
+        "repo": "rust-overlay",
+        "rev": "fb8c8be0313f0e6385b3d70151a04ea1d71e4b68",
+        "type": "github"
+      },
+      "original": {
+        "owner": "oxalica",
+        "repo": "rust-overlay",
+        "type": "github"
+      }
+    },
+    "rust-overlay_2": {
+      "inputs": {
+        "nixpkgs": [
+          "cryolitia-nur",
+          "nixpkgs"
+        ]
+      },
+      "locked": {
+        "lastModified": 1767322002,
+        "narHash": "sha256-yHKXXw2OWfIFsyTjduB4EyFwR0SYYF0hK8xI9z4NIn0=",
+        "owner": "oxalica",
+        "repo": "rust-overlay",
+        "rev": "03c6e38661c02a27ca006a284813afdc461e9f7e",
+        "type": "github"
+      },
+      "original": {
+        "owner": "oxalica",
+        "repo": "rust-overlay",
+        "type": "github"
+      }
+    },
+    "rust-overlay_3": {
       "inputs": {
         "nixpkgs": [
           "lanzaboote",
