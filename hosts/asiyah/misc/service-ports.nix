@@ -109,6 +109,9 @@
   frigate-jsmpeg = 8082;
   frigate-go2rtc = 1984;
   frigate-rtmp = 1935;
+  go2rtc-rtsp = 8554;
+  go2rtc-srtp = 8442;
+  go2rtc-webrtc = 8555;
 
   # Paperless-ngx
   paperless = 28981;
