@@ -2,7 +2,7 @@
 {
 
   services.uptime-kuma = {
-    enable = true;
+    # borked: enable = true;
     appriseSupport = true;
     settings = {
       PORT = toString ports.uptime-kuma;
