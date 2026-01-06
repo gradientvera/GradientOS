@@ -26,6 +26,12 @@
     options radeon si_support=0 cik_support=0
   '';
 
+  # Brightness slider on Steam
+  # As per https://github.com/Jovian-Experiments/Jovian-NixOS/blob/efd4b22e6fdc6d7fb4e186ae333a4b74e03da440/modules/hardware/amd/default.nix
+  services.udev.extraRules = ''
+    ACTION=="add", SUBSYSTEM=="backlight", RUN+="${pkgs.coreutils}/bin/chmod a+w /sys/class/backlight/%k/brightness"
+  '';
+
   environment.variables.AMD_VULKAN_ICD = "RADV";
   environment.variables.LIBVA_DRIVER_NAME = "radeonsi";
   environment.variables.VDPAU_DRIVER = "radeonsi";
