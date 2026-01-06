@@ -4,7 +4,7 @@
   systemd.services.power-profiles-daemon-hooks = {
     wantedBy = [ "multi-user.target" ];
     wants = [ "power-profiles-daemon.service" "handheld-daemon.service" ];
-    after = [ "power-profiles-daemon.service" "handheld-daemon.service" ];
+    after = [ "power-profiles-daemon.service" "handheld-daemon.service" "multi-user.target" ];
     path = [ pkgs.power-profiles-daemon pkgs.curl ];
     script = ''
       sleepint=5
@@ -40,6 +40,11 @@
         curl -s --out-null -X POST --unix-socket /run/hhd/api --json "{\"tdp\":{\"smu\":{\"energy_policy\":\"$1\"}}}" http://127.0.0.1/api/v1/state
       }
 
+      setaspmpolicy() {
+        echo "Setting PCIe ASPM policy to $1"
+        echo $1 > /sys/module/pcie_aspm/parameters/policy
+      }
+
       while true
       do
         newstate=$(powerprofilesctl get)
@@ -58,6 +63,7 @@
           setcpupref balance_performance
           setgpuupper 2700
           setsmupolicy performance
+          setaspmpolicy performance
         fi;
 
         if [ "$newstate" == "balanced" ]; then
@@ -67,6 +73,7 @@
           setcpupref balance_power
           setgpuupper 1700
           setsmupolicy balanced
+          setaspmpolicy powersave
         fi;
 
         if [ "$newstate" == "power-saver" ]; then
@@ -76,6 +83,7 @@
           setcpupref power
           setgpuupper 800
           setsmupolicy power
+          setaspmpolicy powersupersave
         fi;
 
         oldstate="$newstate"
