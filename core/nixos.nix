@@ -103,6 +103,9 @@ in
 
     hardware.enableRedistributableFirmware = true;
 
+    hardware.i2c.enable = true;
+    hardware.uinput.enable = true;
+
     systemd.settings.Manager = {
       DefaultTimeoutStartSec = "15s";
       DefaultTimeoutStopSec = "10s";
@@ -253,12 +256,14 @@ in
         Group = "root";
       };
       script = ''
-        # Reset the latency timer for all PCI devices
+        echo "Resetting the latency timer for all PCI devices..."
         setpci -v -s '*:*' latency_timer=20
         setpci -v -s '0:0' latency_timer=0
 
-        # Set latency timer for all sound cards
+        echo "Setting latency timer for all sound cards..."
         setpci -v -d "*:*:04xx" latency_timer=80
+
+        echo "Done setting PCI latencies!"
       '';
     };
 
@@ -272,7 +277,9 @@ in
       path = [ pkgs.coreutils pkgs.systemd ];
       script = "exit 0";
       postStop = ''
+        echo "Restarting pci-latency service..."
         systemctl restart pci-latency
+        echo "Done restarting pci-latency service!"
       '';
     };
 
