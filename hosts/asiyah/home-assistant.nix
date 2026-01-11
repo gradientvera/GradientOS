@@ -105,9 +105,9 @@ in
       mqtt-vacuum-camera
       thermal-comfort
       anniversaries
-      hass-ingress
       # feedparser # TODO: fix
       moonraker
+      ingress
       smartir
       frigate
       bermuda
