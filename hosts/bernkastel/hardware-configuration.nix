@@ -15,6 +15,9 @@
     "iommu=pt"
     "pcie_aspm=off"
 
+    # Prevent amdgpu crash, see https://discuss.cachyos.org/t/tutorial-mitigate-gfx-crash-lockup-apparent-freeze-with-amdgpu/10842
+    "amdgpu.dcdebugmask=0x10"
+
     # needed for controlling RGB LEDs on RAM sticks
     "acpi_enforce_resources=lax"
   ];
