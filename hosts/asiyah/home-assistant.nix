@@ -53,6 +53,7 @@ in
       "zeroconf"
       "apple_tv"
       "logbook"
+      "picotts"
       "history"
       "workday"
       "whisper"
@@ -94,6 +95,7 @@ in
       "nut"
       "vlc"
       "mpd"
+      "tts"
       "my"
     ];
     customComponents = 
@@ -185,6 +187,8 @@ in
 
       ];
 
+      tts = [ { platform = "picotts"; language = "es-ES"; } ];
+
       shell_command = {
         # Literally SSH into a host with the home assistant private SSH key and run a command
         ssh = "${toString pkgs.openssh}/bin/ssh -i ${config.sops.secrets.hass-ssh-priv.path} -o StrictHostKeyChecking=accept-new {{ host }} {{ command }}";
@@ -242,6 +246,8 @@ in
   systemd.services.home-assistant = {
     wants = [ "postgresql.service" "influxdb2.service" ];
     after = [ "postgresql.service" "influxdb2.service" ];
+    # Needed for PicoTTS
+    path = [ pkgs.picotts ];
   };
 
   networking.firewall.allowedTCPPorts = [ ports.home-assistant ];
