@@ -29,6 +29,11 @@ in
       ffmpeg.path = pkgs.ffmpeg-full;
       ffmpeg.hwaccel_args = "preset-intel-qsv-h264";
 
+      /*detectors.coral = {
+        type = "edgetpu";
+        device = "pci";
+      };*/
+
       # Extremely important! Makes webrtc and two-way audio work
       go2rtc = config.services.go2rtc.settings;
 
@@ -81,7 +86,7 @@ in
     enable = true;
     settings = {
       api.listen = ":${toString ports.frigate-go2rtc}";
-      api.origin = "*.gradient.moe";
+      api.origin = "*";
       rtsp.listen = ":${toString ports.go2rtc-rtsp}";
       srtp.listen = ":${toString ports.go2rtc-srtp}";
       webrtc.listen = ":${toString ports.go2rtc-webrtc}";
