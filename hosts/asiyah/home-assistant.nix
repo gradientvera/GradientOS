@@ -32,6 +32,7 @@ in
       "history_stats"
       "shopping_list"
       "utility_meter"
+      "python_script"
       "telegram_bot"
       "geo_location"
       "conversation"
@@ -64,6 +65,7 @@ in
       "holiday"
       "webhook"
       "backup"
+      "go2rtc"
       "energy"
       "camera"
       "radarr"
@@ -76,6 +78,7 @@ in
       "piper"
       "cloud"
       "html5"
+      "onvif"
       "isal"
       "tile"
       "moon"
@@ -84,6 +87,7 @@ in
       "dhcp"
       "ssdp"
       "tuya"
+      "ping"
       "cast"
       "met"
       "ipp"
@@ -183,9 +187,11 @@ in
         max_retries = 3;
       };
 
-      sensor = [
+      sensor = [ ];    
 
-      ];
+      python_script = {};
+
+      media_player = [ ];
 
       tts = [ { platform = "picotts"; language = "es-ES"; } ];
 
@@ -193,6 +199,8 @@ in
         # Literally SSH into a host with the home assistant private SSH key and run a command
         ssh = "${toString pkgs.openssh}/bin/ssh -i ${config.sops.secrets.hass-ssh-priv.path} -o StrictHostKeyChecking=accept-new {{ host }} {{ command }}";
       };
+
+      go2rtc.url = "http://127.0.0.1:${toString ports.frigate-go2rtc}";
 
       ingress = {
         # Slugs need to use underscore, dashes are not allowed
@@ -215,6 +223,13 @@ in
           icon = "mdi:home-floor-0";
           work_mode = "ingress";
           url = localAddresses.vacuum-mute;
+        };
+        frigate = {
+          title = "Frigate NVR";
+          icon = "mdi:cctv";
+          work_mode = "ingress";
+          url = "https://${config.services.frigate.hostname}";
+          ui_mode = "toolbar";
         };
         printer_k1c = {
           title = "3D Printer K1C";
