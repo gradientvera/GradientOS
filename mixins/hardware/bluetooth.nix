@@ -11,6 +11,7 @@
         Class = "0x000100";
         ControllerMode = "dual";
         FastConnectable = true;
+        Experimental = true;
         JustWorksRepairing = "always";
         Privacy = "device";
       };
