@@ -23,6 +23,7 @@
   virtualisation = ./mixins/virtualisation.nix;
   wine = ./mixins/wine.nix;
   wireguard = ./mixins/wireguard.nix;
+  tailscale = ./mixins/tailscale.nix;
 
   graphical-steam = ./mixins/graphical/steam.nix;
   graphical-sunshine = ./mixins/graphical/sunshine.nix;

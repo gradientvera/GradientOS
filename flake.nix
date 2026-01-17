@@ -119,6 +119,7 @@
           mixins.alloy
           mixins.podman
           #mixins.plymouth
+          mixins.tailscale
           mixins.wireguard
           mixins.uwu-style
           #mixins.tdarr-node
@@ -171,6 +172,7 @@
           mixins.wine
           mixins.gnupg
           mixins.plymouth
+          mixins.tailscale
           mixins.wireguard
           mixins.uwu-style
           mixins.vera-locale
@@ -219,6 +221,7 @@
           mixins.alloy
           mixins.gnupg
           #mixins.plymouth
+          mixins.tailscale
           mixins.wireguard
           #mixins.uwu-style
           #mixins.tdarr-node
@@ -270,6 +273,7 @@
           mixins.podman
           mixins.crowdsec
           mixins.steamcmd
+          mixins.tailscale
           mixins.wireguard
           mixins.microsocks
           mixins.vera-locale
@@ -304,6 +308,7 @@
           mixins.alloy
           #mixins.podman
           mixins.crowdsec
+          mixins.tailscale
           mixins.wireguard
           mixins.microsocks
           #mixins.vera-locale
@@ -331,6 +336,7 @@
 
           mixins.alloy
           mixins.podman
+          mixins.tailscale
           mixins.wireguard
           mixins.vera-locale
           mixins.upgrade-diff

@@ -134,6 +134,7 @@ in {
     "pinchflat.constellation.moe" = mkReverseProxy { port = ports.pinchflat; };
     "crafty.constellation.moe" = mkReverseProxy { port = ports.crafty; protocol = "https"; };
     "olivetin.constellation.moe" = mkReverseProxy { port = ports.olivetin; };
+    "headscale.constellation.moe" = mkReverseProxy { port = ports.headscale; rootExtraConfig = ''proxy_buffering off; proxy_redirect http:// https://; add_header Strict-Transport-Security "max-age=15552000; includeSubDomains" always;''; };
   };
 
   # TODO: Figure out a way to automate the below list eugh

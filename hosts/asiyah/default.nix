@@ -24,6 +24,7 @@
     ./olivetin.nix
     ./postgres.nix
     ./scrutiny.nix
+    ./headscale.nix
     ./paperless.nix
     ./cloudflare.nix
     ./filesystem.nix

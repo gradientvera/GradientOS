@@ -143,6 +143,23 @@ in
           };
         };
 
+        headscale = {
+          public = true;
+          displayName = "Constellation Headscale";
+          originLanding = "https://headscale.constellation.moe";
+          originUrl = "https://headscale.constellation.moe/oidc/callback";
+          enableLocalhostRedirects = false;
+          preferShortUsername = false;
+          scopeMaps = {
+            "users" = [
+              "openid"
+              "email"
+              "profile"
+              "groups"
+            ];
+          };
+        };
+
       };
     };
   };
