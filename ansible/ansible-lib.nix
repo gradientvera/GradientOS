@@ -167,6 +167,38 @@ rec {
       "ansible.builtin.file" = attrs;
     };
 
+    # See https://docs.ansible.com/ansible/latest/collections/ansible/builtin/template_module.html#parameters
+    ansibleBuiltinTemplate = attrs@
+    { dest
+    , src
+    , attributes ? null
+    , backup ? null
+    , block_end_string ? null
+    , block_start_string ? null
+    , comment_end_string ? null
+    , comment_start_string ? null
+    , follow ? null
+    , force ? null
+    , group ? null
+    , lstrip_blocks ? null
+    , mode ? null
+    , newline_sequence ? null
+    , output_encoding ? null
+    , owner ? null
+    , selevel ? null
+    , serole ? null
+    , setype ? null
+    , seuser ? null
+    , trim_blocks ? null
+    , unsafe_writes ? null
+    , validate ? null
+    , variable_end_string ? null
+    , variable_start_string ? null
+    , ... }:
+    {
+      "ansible.builtin.template" = attrs;
+    };
+
     ansibleBuiltinCommand = command:
     {
       "ansible.builtin.command" = command;
@@ -234,6 +266,11 @@ rec {
     ansibleBuiltinFile = taskArgs@{ ... }: moduleArgs@{ path, ... }: mkAnsibleTask {
       task = taskArgs;
       module = modules.ansibleBuiltinFile moduleArgs;
+    };
+
+    ansibleBuiltinTemplate = taskArgs@{ ... }: moduleArgs@{ path, ... }: mkAnsibleTask {
+      task = taskArgs;
+      module = modules.ansibleBuiltinTemplate moduleArgs;
     };
 
     ansibleBuiltinCommand = taskArgs@{ ... }: command: mkAnsibleTask {
@@ -309,11 +346,35 @@ rec {
       } // moduleArgs);
     };
 
+    nixMakeSymlinkCustomGlibc = { pkg, glibc, srcPath, destPath, taskArgs ? {}, moduleArgs ? {} }: let
+      filePath = "${pkg}${srcPath}";
+    in mkAnsibleTask {
+      task = {
+        name = "Create glibc wrapper at ${destPath} to ${filePath}";
+      } // taskArgs;
+      module = modules.ansibleBuiltinCopy {
+        dest = toString destPath;
+        content = ''
+          #!/bin/sh
+          LD_LIBRARY_PATH="${toString glibc}/lib" ${filePath} "$@"
+        '';
+        owner = "root";
+        group = "root";
+        mode = "0554";
+      };
+    };
+
     nixMakeSymlinkToMainExe = { pkg, destPath, taskArgs ? {}, moduleArgs ? {} }: let
       pkgExe = lib.getExe pkg;
       pkgExeName = baseNameOf pkgExe;
     in
       tasks.nixMakeSymlinkCustom { inherit pkg taskArgs moduleArgs; srcPath = builtins.replaceStrings [ (toString pkg) ] [ "" ] pkgExe; destPath = "${destPath}/${baseNameOf pkgExeName}"; };
+
+    nixMakeSymlinkToMainExeGlibc = { pkg, glibc, destPath, taskArgs ? {}, moduleArgs ? {} }: let
+      pkgExe = lib.getExe pkg;
+      pkgExeName = baseNameOf pkgExe;
+    in
+      tasks.nixMakeSymlinkCustomGlibc { inherit pkg glibc taskArgs moduleArgs; srcPath = builtins.replaceStrings [ (toString pkg) ] [ "" ] pkgExe; destPath = "${destPath}/${baseNameOf pkgExeName}"; };
 
     opkg = taskArgs@{ ... }: moduleArgs@{ name, ... }:
     let

@@ -8,17 +8,31 @@ let
   pkgsAarch64Glibc = pkgsCross.aarch64-multiplatform;
   lixPkg = pkgsAarch64Musl.pkgsStatic.lixPackageSets.latest.lix;
   sshPubKeys = import ../misc/ssh-pub-keys.nix;
-  installNixPackage = pkg: alib.tasks.block { name = "Installing Nix package ${lib.getName pkg}"; } [
+
+  installNixPackageStatic = pkg: alib.tasks.block { name = "Installing Nix static package ${lib.getName pkg}"; } [
     (alib.tasks.nixCopyClosureWithRoot { inherit pkg; rootDest = "/data/nix-roots"; remoteProgram = "/opt/bin/nix-store"; })
     (alib.tasks.ansibleBuiltinFile { name = "Ensure existing ${lib.getName pkg} binary does not exist"; } { path = "/opt/bin/${baseNameOf (lib.getExe pkg)}"; state = "absent"; })
     (alib.tasks.nixMakeSymlinkToMainExe { inherit pkg; destPath = "/opt/bin"; })
   ];
-  installNixPackages = pkgList: alib.tasks.block { name = "Installing Nix packages"; } (map (p: installNixPackage p) pkgList);
-  installNixPackageCustom = pkg: binPath: destName: alib.tasks.block { name = "Installing Nix package ${lib.getName pkg} as ${destName}"; } [
+  installNixPackagesStatic = pkgList: alib.tasks.block { name = "Installing Nix static packages"; } (map (p: installNixPackageStatic p) pkgList);
+  installNixPackageCustomStatic = pkg: binPath: destName: alib.tasks.block { name = "Installing Nix static package ${lib.getName pkg} as ${destName}"; } [
     (alib.tasks.nixCopyClosureWithRoot { inherit pkg; rootDest = "/data/nix-roots"; remoteProgram = "/opt/bin/nix-store"; })
     (alib.tasks.ansibleBuiltinFile { name = "Ensure existing ${baseNameOf destName} binary does not exist"; } { path = "/opt/bin/${destName}"; state = "absent"; })
     (alib.tasks.nixMakeSymlinkCustom { inherit pkg; srcPath = binPath; destPath = "/opt/bin/${destName}"; })
   ];
+
+  installNixPackageGlibc = pkg: alib.tasks.block { name = "Installing Nix package ${lib.getName pkg}"; } [
+    (alib.tasks.nixCopyClosureWithRoot { inherit pkg; rootDest = "/data/nix-roots"; remoteProgram = "/opt/bin/nix-store"; })
+    (alib.tasks.ansibleBuiltinFile { name = "Ensure existing ${lib.getName pkg} binary does not exist"; } { path = "/opt/bin/${baseNameOf (lib.getExe pkg)}"; state = "absent"; })
+    (alib.tasks.nixMakeSymlinkToMainExeGlibc { inherit pkg; glibc = pkgsAarch64Glibc.glibc; destPath = "/opt/bin"; })
+  ];
+  installNixPackagesGlibc = pkgList: alib.tasks.block { name = "Installing Nix packages"; } (map (p: installNixPackageGlibc p) pkgList);
+  installNixPackageCustomGlibc = pkg: binPath: destName: alib.tasks.block { name = "Installing Nix package ${lib.getName pkg} as ${destName}"; } [
+    (alib.tasks.nixCopyClosureWithRoot { inherit pkg; rootDest = "/data/nix-roots"; remoteProgram = "/opt/bin/nix-store"; })
+    (alib.tasks.ansibleBuiltinFile { name = "Ensure existing ${baseNameOf destName} binary does not exist"; } { path = "/opt/bin/${destName}"; state = "absent"; })
+    (alib.tasks.nixMakeSymlinkCustomGlibc { inherit pkg; glibc = pkgsAarch64Glibc.glibc; srcPath = binPath; destPath = "/opt/bin/${destName}"; })
+  ];
+
   makeNixSymlink = name: alib.tasks.ansibleBuiltinFile { name = "Adding ${name} symlink"; } {
     path = "/opt/bin/${name}";
     src = "nix";
@@ -134,12 +148,19 @@ in with alib.tasks;
       (ansibleBuiltinFile { name = "Create GC roots folder"; } { path = "/data/nix-roots"; state = "directory"; owner = "root"; group = "root"; mode = "0777"; })
 
       # Install Nix packages with GC roots and symlinks to /opt/bin
-      (installNixPackages 
+      (installNixPackagesStatic 
       (with pkgsAarch64Musl; [
         lixPkg
         sops
         ssh-to-age
       ]))
+      (installNixPackagesGlibc (with pkgsAarch64Glibc; [
+        # Faster compiles
+        (ffmpeg-headless.overrideAttrs (_: { doCheck = false; }))
+      ]))
+
+      (installNixPackageCustomGlibc pkgsAarch64Glibc.v4l-utils "/bin/v4l2-ctl" "v4l2-ctl")
+      (installNixPackageCustomGlibc pkgsAarch64Glibc.v4l-utils "/bin/media-ctl" "media-ctl")
 
       # And now we GC any old Nix paths >:)
       (ansibleBuiltinCommand { name = "Run Nix garbage collector"; } "nix-collect-garbage")
