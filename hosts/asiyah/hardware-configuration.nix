@@ -17,8 +17,6 @@
     "intel_iommu=on"
   ];
 
-  hardware.coral.pcie.enable = true;
-
   # We've got enough RAM to do this LET'S GOOO
   boot.tmp.useTmpfs = true;
   boot.tmp.tmpfsSize = "75%"; 

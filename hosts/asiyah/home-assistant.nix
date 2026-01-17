@@ -159,6 +159,15 @@ in
           youtube = "/data/downloads/youtube";
           adverts = "/data/downloads/adverts";
         };
+        allowlist_external_dirs = [
+          "/var/lib/hass"
+        ];
+        allowlist_external_urls = [
+          "https://hass.gradient.moe/"
+        ];
+        external_url = "https://hass.gradient.moe";
+        webrtc.ice_servers = (builtins.map (x: { url = x.urls; }) config.services.go2rtc.settings.webrtc.ice_servers)
+          ++ [];
       };
 
       zha.zigpy_config.ota.z2m_remote_index = "https://raw.githubusercontent.com/Koenkk/zigbee-OTA/master/index.json";
@@ -223,13 +232,6 @@ in
           icon = "mdi:home-floor-0";
           work_mode = "ingress";
           url = localAddresses.vacuum-mute;
-        };
-        frigate = {
-          title = "Frigate NVR";
-          icon = "mdi:cctv";
-          work_mode = "ingress";
-          url = "https://${config.services.frigate.hostname}";
-          ui_mode = "toolbar";
         };
         printer_k1c = {
           title = "3D Printer K1C";
