@@ -140,5 +140,6 @@
   crafty-server-start = 25500;
   minecraft = 25565;
   crafty-server-end = 25600;
+  hytale = 5520;
 
 }

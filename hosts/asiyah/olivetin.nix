@@ -4,10 +4,13 @@
   services.olivetin = {
     enable = true;
     path = [
+      pkgs.jq
       pkgs.systemd
+      pkgs.coreutils
     ];
     settings = {
       ListenAddressSingleHTTPFrontend = "127.0.0.1:${toString ports.olivetin}";
+
       actions = [
         {
           title = "Restart Media Stack";
@@ -24,10 +27,25 @@
           maxConcurrent = 1;
           timeout = 300; # 5 mins
         }
+        {
+          title = "Start Hytale Server";
+          shell = "systemctl start hytale-server.service";
+          icon = ''<iconify-icon icon="ic:round-directions-run"></iconify-icon>'';
+        }
+        {
+          title = "Restart Hytale Server";
+          shell = "systemctl restart hytale-server.service";
+          icon = ''<iconify-icon icon="material-symbols:restart-alt"></iconify-icon>'';
+        }
+        {
+          title = "Stop Hytale Server";
+          shell = "systemctl stop hytale-server.service";
+          icon = ''<iconify-icon icon="zondicons:hand-stop"></iconify-icon>'';
+        }
       ];
     };
   };
 
-  users.users.olivetin.extraGroups = [ "systemd-restart-units" ];
+  users.users.olivetin.extraGroups = [ "systemd-restart-units" "systemd-start-units" "systemd-stop-units" ];
 
 }
