@@ -75,9 +75,7 @@ let
   asiyahForwardedPorts = with asiyahPorts; [
     #nginx
     #nginx-ssl
-
-    lilynet
-
+    
     forgejo-ssh
 
     minecraft
@@ -176,8 +174,6 @@ in
       # Allow SSH over gradientnet
       networking.firewall.interfaces.gradientnet.allowedTCPPorts = config.services.openssh.ports;
 
-      networking.hosts = generateHosts ".gradient" addr.gradientnet;
- 
       networking.wireguard.interfaces.gradientnet = with addr.gradientnet; {
         ips = ["${addr.gradientnet.${hostName}}/${if isBriah then "24" else "32"}"];
         listenPort = if isBriah then briahPorts.gradientnet else config.gradient.currentHost.ports.wgautomesh-external;
@@ -269,8 +265,6 @@ in
 
     (lib.mkIf (builtins.any (v: hostName == v) [ asiyahHost yetzirahHost bernkastelHost erikaHost featherineHost ]) {
       systemd.network.wait-online.ignoredInterfaces = [ "lilynet" ];
-
-      networking.hosts = generateHosts ".lily" addr.lilynet;
 
       networking.wireguard.interfaces.lilynet = with addr.lilynet; {
         ips = ["${addr.lilynet.${hostName}}/${if isAsiyah then "24" else "32"}"];

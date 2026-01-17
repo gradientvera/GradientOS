@@ -6,8 +6,8 @@
 in
  {
 
-  networking.firewall.allowedTCPPorts = [ ports.http ports.https ];
-  # networking.firewall.allowedUDPPorts = [ ports.http ports.https ];
+  networking.firewall.allowedTCPPorts = [ ports.http ports.https asiyahPorts.lilynet ];
+  networking.firewall.allowedUDPPorts = [ ports.http ports.https asiyahPorts.lilynet ];
 
   services.nginx = {
     enable = true;
@@ -35,6 +35,14 @@ in
           # listen [::]:${toString ports.https} udp reuseport;
           proxy_pass ${gradientnet.asiyah}:${toString asiyahPorts.nginx-ssl-proxy};
           proxy_protocol on;
+        }
+
+        server {
+          listen ${toString asiyahPorts.lilynet} reuseport;
+          listen ${toString asiyahPorts.lilynet} udp reuseport;
+          listen [::]:${toString asiyahPorts.lilynet} reuseport;
+          listen [::]:${toString asiyahPorts.lilynet} udp reuseport;
+          proxy_pass ${gradientnet.asiyah}:${toString asiyahPorts.lilynet};
         }
       }
     '';
