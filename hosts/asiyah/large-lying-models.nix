@@ -4,35 +4,16 @@ let
 in
 {
 
-  systemd.tmpfiles.settings."99-large-lying-models.conf" = {
-    "/var/lib/ollama-vulkan".d = {
-      mode = "0775";
-    };
-  };
-
-  virtualisation.oci-containers.containers.ollama-vulkan = {
-    image = "ghcr.io/wilgnne/ollama-vulkan:latest";
-    pull = "newer";
-    volumes = [ "/var/lib/ollama-vulkan:/root/.ollama" ];
-    privileged = true;
-    ports = [
-      "127.0.0.1:${toString ports.ollama}:11434"
+  services.ollama = {
+    enable = true;
+    package = pkgs.ollama-vulkan;
+    port = ports.ollama;
+    syncModels = true;
+    loadModels = [
+      config.services.frigate.settings.genai.model
     ];
-    environment = {
-      TZ = config.time.timeZone;
-      no_proxy = "localhost,127.0.0.1,10.88.0.1";
-      OLLAMA_HOST = "0.0.0.0";
-    };
-    extraOptions = [
-      "--device=/dev/dri:/dev/dri"
-      "--shm-size=32g"
-      "--memory=32g"
-      "--cap-add=PERFMON"
-      "--ip=10.88.0.10"
-    ];
-    labels = {
-      "io.containers.autoupdate" = "registry";
-      "PODMAN_SYSTEMD_UNIT" = "podman-ollama-vulkan.service";
+    environmentVariables = {
+      OLLAMA_VULKAN = "1";
     };
   };
 
@@ -69,8 +50,8 @@ in
   };
 
   systemd.services.open-webui = {
-    wants = [ "redis-open-webui.service" "searx.service" "podman-ollama-vulkan.service" ];
-    after = [ "redis-open-webui.service" "searx.service" "podman-ollama-vulkan.service" ];
+    wants = [ "redis-open-webui.service" "searx.service" "ollama.service" ];
+    after = [ "redis-open-webui.service" "searx.service" "ollama.service" ];
   };
 
   networking.firewall.interfaces.gradientnet.allowedTCPPorts = [

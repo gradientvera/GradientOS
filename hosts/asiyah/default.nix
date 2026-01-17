@@ -15,6 +15,7 @@
     ./zigbee.nix
     ./clamav.nix
     ./kanidm.nix
+    ./hytale.nix
     ./backups.nix
     ./frigate.nix
     ./grafana.nix
@@ -36,9 +37,9 @@
     ./victoriametrics.nix
     ./palworld-server.nix
     ./secrets/default.nix
-    ./libvirtd/default.nix
+    #./libvirtd/default.nix # Unused, removed SSD for now
     ./redbot-stardream.nix
-    # ./large-lying-models.nix # Borked
+    ./large-lying-models.nix
     ./gradient-generator.nix
     # ./project-zomboid-server.nix
     ./hardware-configuration.nix
