@@ -63,6 +63,7 @@ in
       "brother"
       "ibeacon"
       "holiday"
+      "openrgb"
       "webhook"
       "backup"
       "go2rtc"
