@@ -25,7 +25,7 @@
         exit 1
       fi
 
-      java -jar HytaleServer.jar --allow-op --backup --backup-dir $HOME/backups --assets $HOME/Assets.zip --bind 0.0.0.0:${toString ports.hytale}
+      java -XX:AOTCache=HytaleServer.aot -jar HytaleServer.jar --allow-op --backup --backup-dir $HOME/backups --assets $HOME/Assets.zip --bind 0.0.0.0:${toString ports.hytale}
     '';
   };
 
