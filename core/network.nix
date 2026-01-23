@@ -1,8 +1,6 @@
 { lib, ... }:
 
 {
-  networking.wireless.enable = lib.mkForce false;
-
   networking.interfaces.lo.ipv6.addresses = [
     {
       address = "::2";
@@ -14,6 +12,7 @@
   networking.networkmanager = {
     enable = lib.mkDefault true;
     dns = "dnsmasq";
+    wifi.backend = "iwd";
   };
 
   environment.etc."NetworkManager/dnsmasq.d/nameservers.conf".text = ''
