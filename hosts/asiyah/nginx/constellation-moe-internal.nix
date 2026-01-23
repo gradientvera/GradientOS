@@ -15,7 +15,14 @@ let
     locations.${reverseProxyLocation} = {
       proxyPass = "${protocol}://${address}:${toString port}${reverseProxySubdomain}";
       proxyWebsockets = true;
-      extraConfig = rootExtraConfig;
+      extraConfig = ''
+        auth_request_set $preferredusername $upstream_http_x_auth_request_preferred_username;
+        proxy_set_header X-Preferred-Username $preferredusername;
+
+        auth_request_set $groups $upstream_http_x_auth_request_groups;
+        proxy_set_header X-Groups $groups;
+        ${rootExtraConfig}
+      '';
     };
   } extraConfig);
 in {
