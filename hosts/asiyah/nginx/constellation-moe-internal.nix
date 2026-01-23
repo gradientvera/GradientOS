@@ -100,6 +100,8 @@ in {
     "jellyseerr.constellation.moe" = mkReverseProxy { port = ports.jellyseerr; };
     "radarr.constellation.moe" = mkReverseProxy { port = ports.radarr; };
     "sonarr.constellation.moe" = mkReverseProxy { port = ports.sonarr; };
+    "radarr-es.constellation.moe" = mkReverseProxy { port = ports.radarr-es; };
+    "sonarr-es.constellation.moe" = mkReverseProxy { port = ports.sonarr-es; };
     "lidarr.constellation.moe" = mkReverseProxy { port = ports.lidarr; };
     "slskd.constellation.moe" = mkReverseProxy { port = ports.slskd; };
     "bazarr.constellation.moe" = mkReverseProxy { port = ports.bazarr; };
@@ -155,6 +157,8 @@ in {
     # "jellyseerr.constellation.moe" = {}; # Use built-in auth
     "radarr.constellation.moe" = {};
     "sonarr.constellation.moe" = {};
+    "radarr-es.constellation.moe" = {};
+    "sonarr-es.constellation.moe" = {};
     "lidarr.constellation.moe" = {};
     "slskd.constellation.moe" = {};
     "bazarr.constellation.moe" = {};

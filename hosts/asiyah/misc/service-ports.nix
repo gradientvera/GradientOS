@@ -27,7 +27,9 @@
   jellyfin-service-discovery = 1901;
   jellyfin-client-discovery = 7359;
   radarr = 7878;
+  radarr-es = 7879;
   sonarr = 8989;
+  sonarr-es = 8990;
   lidarr = 8686;
   prowlarr = 9696;
   profilarr = 6868;

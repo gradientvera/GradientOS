@@ -311,6 +311,36 @@
               };
             };
           }
+          { 
+            "Sonarr (ES)" = {
+              description = "A PVR for Usenet and BitTorrent users. For shows in Spanish.";
+              href = "https://sonarr.constellation.moe/";
+              icon = "sh-sonarr.svg";
+              server = "asiyah";
+              container = "sonarr-es";
+              widget = {
+                type = "sonarr";
+                url = "http://127.0.0.1:${toString ports.sonarr-es}";
+                key = "{{HOMEPAGE_VAR_SONARR_ES_API_KEY}}";
+                enableQueue = true;
+              };
+            };
+          }
+          {
+            "Radarr (ES)" = {
+              description = "A movie organizer/manager for usenet and torrent users. For movies in Spanish.";
+              href = "https://radarr.constellation.moe/";
+              icon = "sh-radarr.svg";
+              server = "asiyah";
+              container = "radarr-es";
+              widget = {
+                type = "radarr";
+                url = "http://127.0.0.1:${toString ports.radarr-es}";
+                key = "{{HOMEPAGE_VAR_RADARR_ES_API_KEY}}";
+                enableQueue = true;
+              };
+            };
+          }
           {
             "Sonarr" = {
               description = "A PVR for Usenet and BitTorrent users.";

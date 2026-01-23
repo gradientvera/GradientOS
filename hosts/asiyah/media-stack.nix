@@ -21,7 +21,9 @@ let
     jellyfin-service-discovery
     jellyfin-client-discovery
     radarr
+    radarr-es
     sonarr
+    sonarr-es
     lidarr
     prowlarr
     bazarr
@@ -55,6 +57,8 @@ in {
       "podman-ersatztv.service"
       "podman-radarr.service"
       "podman-sonarr.service"
+      "podman-radarr-es.service"
+      "podman-sonarr-es.service"
       "podman-lidarr.service"
       "podman-slskd.service"
       "podman-soularr.service"
@@ -91,8 +95,10 @@ in {
         -p ${toString ports.jellyfin-service-discovery}:1900/udp \
         -p ${toString ports.flaresolverr}:8191 \
         -p ${toString ports.ersatztv}:8409 \
-        -p ${toString ports.radarr}:7878 \
-        -p ${toString ports.sonarr}:8989 \
+        -p ${toString ports.radarr}:${toString ports.radarr} \
+        -p ${toString ports.sonarr}:${toString ports.sonarr} \
+        -p ${toString ports.radarr-es}:${toString ports.radarr-es} \
+        -p ${toString ports.sonarr-es}:${toString ports.sonarr-es} \
         -p ${toString ports.lidarr}:8686 \
         -p ${toString ports.slskd}:5030 \
         -p ${toString ports.slskd-peer}:26156 \
@@ -165,6 +171,8 @@ in {
     "/data/downloads".d = rule;
     "/data/downloads/tv".d = rule;
     "/data/downloads/movies".d = rule;
+    "/data/downloads/tv-es".d = rule;
+    "/data/downloads/movies-es".d = rule;
     "/data/downloads/adverts".d = rule;
     "/data/downloads/youtube".d = rule;
     "/data/downloads/music".d = rule;
@@ -178,7 +186,9 @@ in {
     "/data/downloads/cross-seeds/links".d = rule;
     "/var/lib/${userName}".d = rule;
     "/var/lib/${userName}/radarr".d = rule;
+    "/var/lib/${userName}/radarr-es".d = rule;
     "/var/lib/${userName}/sonarr".d = rule;
+    "/var/lib/${userName}/sonarr-es".d = rule;
     "/var/lib/${userName}/lidarr".d = rule;
     "/var/lib/${userName}/slskd".d = rule;
     "/var/lib/${userName}/soularr".d = rule;
@@ -306,6 +316,7 @@ in {
         TZ = config.time.timeZone;
         PUID = toString userUid;
         PGID = toString groupGid;
+        RADARR__SERVER__PORT = toString ports.radarr;
       };
       extraOptions = [] ++ defaultOptions;
       labels = {
@@ -326,11 +337,54 @@ in {
         TZ = config.time.timeZone;
         PUID = toString userUid;
         PGID = toString groupGid;
+        SONARR__SERVER__PORT = toString ports.sonarr;
       };
       extraOptions = [] ++ defaultOptions;
       labels = {
         "io.containers.autoupdate" = "registry";
         "PODMAN_SYSTEMD_UNIT" = "podman-sonarr.service";
+      };
+      dependsOn = [ "gluetun" ];
+    };
+
+    radarr-es = {
+      image = "lscr.io/linuxserver/radarr:latest";
+      pull = "newer";
+      volumes = [
+        "/var/lib/${userName}/radarr-es:/config"
+        "/data/downloads:/downloads"
+      ];
+      environment = {
+        TZ = config.time.timeZone;
+        PUID = toString userUid;
+        PGID = toString groupGid;
+        RADARR__SERVER__PORT = toString ports.radarr-es;
+      };
+      extraOptions = [] ++ defaultOptions;
+      labels = {
+        "io.containers.autoupdate" = "registry";
+        "PODMAN_SYSTEMD_UNIT" = "podman-radarr-es.service";
+      };
+      dependsOn = [ "gluetun" ];
+    };
+
+    sonarr-es = {
+      image = "lscr.io/linuxserver/sonarr:latest";
+      pull = "newer";
+      volumes = [
+        "/var/lib/${userName}/sonarr-es:/config"
+        "/data/downloads:/downloads"
+      ];
+      environment = {
+        TZ = config.time.timeZone;
+        PUID = toString userUid;
+        PGID = toString groupGid;
+        SONARR__SERVER__PORT = toString ports.sonarr-es;
+      };
+      extraOptions = [] ++ defaultOptions;
+      labels = {
+        "io.containers.autoupdate" = "registry";
+        "PODMAN_SYSTEMD_UNIT" = "podman-sonarr-es.service";
       };
       dependsOn = [ "gluetun" ];
     };
