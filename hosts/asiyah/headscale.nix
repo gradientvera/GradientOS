@@ -1,4 +1,4 @@
-{ config, ... }:
+{ config, pkgs, ... }:
 let
   ports = config.gradient.currentHost.ports;
 in
@@ -38,10 +38,6 @@ in
         "8.8.4.4"
       ];
     };
-  };
-
-  systemd.services.headscale = {
-
   };
 
 }
