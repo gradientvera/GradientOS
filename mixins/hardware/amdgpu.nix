@@ -16,9 +16,6 @@
   boot.kernelParams = [
     # Prolly defaults to 1 already but just in case.
     "amdgpu.gpu_recovery=1"
-    # Prevent some crashes
-    "amdgpu.sg_display=0"
-    "amdgpu.runpm=0"
   ];
 
   boot.extraModprobeConfig = ''
