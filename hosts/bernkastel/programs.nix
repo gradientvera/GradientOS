@@ -7,7 +7,7 @@
     prusa-slicer
     orca-slicer
     openscad
-    freecad
+    # freecad # TODO: borked
   ];
 
 }

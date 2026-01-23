@@ -28,7 +28,6 @@ in
         ansible
         blender
         rustfmt
-        poetry
         clippy
         rustup
         rustc

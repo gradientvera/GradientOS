@@ -7,7 +7,7 @@ let
   # As per https://github.com/olekolek1000/wayvr-dashboard#assigning-wayvr-dashboard-to-the-wayvr-config-in-wlx-overlay-s
   wayvr-dashboard-yaml = pkgs.writeText "wayvr-dashboard.yaml" ''
     dashboard:
-      exec: "${pkgs-xr.wayvr-dashboard}/bin/wayvr-dashboard"
+      exec: "${pkgs-xr.wayvr}/bin/wayvr-dashboard"
       args: ""
       env: []
   '';
@@ -256,9 +256,8 @@ in
           ${adb} forward tcp:9943 tcp:9943
           ${adb} forward tcp:9944 tcp:9944
         '')
-        pkgs-xr.wayvr-dashboard
+        pkgs-xr.wayvr
         install-wayvr-dashboard
-        wlx-overlay-s
         android-tools # adb for standalone headsets
         bs-manager
         # immersed

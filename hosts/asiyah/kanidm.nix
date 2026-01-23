@@ -20,8 +20,9 @@ in
       origin = "https://identity.gradient.moe";
       bindaddress = "127.0.0.1:${toString ports.kanidm}";
       ldapbindaddress = "127.0.0.1:${toString ports.kanidm-ldap}";
-      trust_x_forward_for = true;
 
+      http_client_address_info.x-forward-for = [ "127.0.0.1" ];
+      
       online_backup.versions = 7;
 
       # Use auto-generated let's encrypt certificate
