@@ -55,7 +55,7 @@ in
   # hardware.amdgpu.overdrive.enable = true;
 
   # WOL support.
-  networking.interfaces.enp16s0.wakeOnLan.enable = true;
+  networking.interfaces.enp14s0.wakeOnLan.enable = true;
 
   # Dolphin Bluetooth passthrough
   services.udev.extraRules = ''
