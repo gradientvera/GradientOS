@@ -7,24 +7,31 @@
   ];
 
   boot.kernelPackages = pkgs.linuxPackages_zen;
-  boot.initrd.availableKernelModules = [ "nvme" "xhci_pci" "ahci" "usbhid" "usb_storage" "sd_mod" "amdgpu" "xhci_hcd" "tpm_crb" ];
-  boot.initrd.kernelModules = [ "amdgpu" "tpm_crb" ];
-  boot.kernelModules = [ "amdgpu-i2c" "kvm-amd" "i2c-dev" "i2c-piix4" "it87" "tpm_crb" ];
+  boot.initrd.availableKernelModules = [ "nvme" "xhci_pci" "ahci" "usbhid" "usb_storage" "sd_mod" "amdgpu" "xhci_hcd" "tpm_crb" "tpm_tis" "tpm" ];
+  boot.initrd.kernelModules = [ "amdgpu" "tpm_crb" "tpm_tis" "tpm" ];
+  boot.kernelModules = [ "amdgpu-i2c" "kvm-amd" "i2c-dev" "i2c-piix4" "it87" "tpm_crb" "tpm_tis" "tpm" ];
   boot.kernelParams = [
     "amd_iommu=on"
     "iommu=pt"
-    "pcie_aspm=off"
 
-    # Prevent amdgpu crash, see https://discuss.cachyos.org/t/tutorial-mitigate-gfx-crash-lockup-apparent-freeze-with-amdgpu/10842
-    "amdgpu.dcdebugmask=0x10"
+    # See https://wiki.archlinux.org/title/Power_management/Wakeup_triggers#ACPI_OSI_string
+    ''acpi_osi="!Windows 2015"''
 
-    # needed for controlling RGB LEDs on RAM sticks
-    "acpi_enforce_resources=lax"
+    # needed for controlling RGB LEDs on RAM sticks, also fixes some ACPI errors
+    "acpi_enforce_resources=no"
   ];
   boot.extraModulePackages = with config.boot.kernelPackages; [ amdgpu-i2c ];
   boot.extraModprobeConfig = ''
     options it87 ignore_resource_conflict=1 force_id=0x8622
   '';
+
+  systemd.services.fix-suspend-wakeup = {
+    wantedBy = [ "multi-user.target" ];
+    serviceConfig.User = "root";
+    serviceConfig.Type = "oneshot";
+    serviceConfig.RemainAfterExit = "yes";
+    script = "echo GPP0 > /proc/acpi/wakeup";
+  };
 
   nixpkgs.hostPlatform = "x86_64-linux";
 }
