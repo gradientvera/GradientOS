@@ -7,7 +7,8 @@
 pkgs.stdenv.mkDerivation {
   pname = "amdgpu-kernel-module";
   inherit (kernel) src version postPatch nativeBuildInputs;
-  inherit patches;
+  
+  patches = kernel.patches ++ patches;
 
   kernel_dev = kernel.dev;
   kernelVersion = kernel.modDirVersion;
