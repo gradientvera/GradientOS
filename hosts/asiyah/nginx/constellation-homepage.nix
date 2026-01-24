@@ -314,7 +314,7 @@
           { 
             "Sonarr (ES)" = {
               description = "A PVR for Usenet and BitTorrent users. For shows in Spanish.";
-              href = "https://sonarr.constellation.moe/";
+              href = "https://sonarr-es.constellation.moe/";
               icon = "sh-sonarr.svg";
               server = "asiyah";
               container = "sonarr-es";
@@ -329,7 +329,7 @@
           {
             "Radarr (ES)" = {
               description = "A movie organizer/manager for usenet and torrent users. For movies in Spanish.";
-              href = "https://radarr.constellation.moe/";
+              href = "https://radarr-es.constellation.moe/";
               icon = "sh-radarr.svg";
               server = "asiyah";
               container = "radarr-es";
