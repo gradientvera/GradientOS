@@ -138,6 +138,7 @@ in
       mini-graph-card
       # custom-sidebar
       # auto-entities
+      # google-find-my
       sankey-chart
       vacuum-card
       bubble-card

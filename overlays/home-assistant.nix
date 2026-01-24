@@ -4,6 +4,7 @@ final: prev: {
     sonarr-upcoming-media = prev.callPackage ../pkgs/hass/sonarr-upcoming-media.nix { };
     mqtt-vacuum-camera = prev.callPackage ../pkgs/hass/mqtt-vacuum-camera.nix { };
     thermal-comfort = prev.callPackage ../pkgs/hass/thermal-comfort.nix { };
+    google-find-my = prev.callPackage ../pkgs/hass/google-find-my.nix { };
     anniversaries = prev.callPackage ../pkgs/hass/anniversaries.nix { };
     feedparser = prev.callPackage ../pkgs/hass/feedparser.nix { };
     bermuda = prev.callPackage ../pkgs/hass/bermuda.nix { };
