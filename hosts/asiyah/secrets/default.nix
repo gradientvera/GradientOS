@@ -111,6 +111,13 @@
         group = config.users.users.mediarr.group;
         restartUnits = [ "podman-neko.service" ];
       };
+
+      mediarr-amule-env = {
+        mode = "0440";
+        owner = config.users.users.mediarr.name;
+        group = config.users.users.mediarr.group;
+        restartUnits = [ "podman-amule.service" ];
+      };
       
       cfdyndns-token = {
         restartUnits = [ "ddclient.service" ];

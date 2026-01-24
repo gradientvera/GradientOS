@@ -24,6 +24,12 @@ let
     radarr-es
     sonarr
     sonarr-es
+    amule-webui
+    amule-remote
+    amule-ed2k
+    amule-ed2k-global
+    amule-ed2k-udp
+    amule-web-controller
     lidarr
     prowlarr
     bazarr
@@ -59,6 +65,8 @@ in {
       "podman-sonarr.service"
       "podman-radarr-es.service"
       "podman-sonarr-es.service"
+      "podman-amule.service"
+      "podman-amule-web-controller.service"
       "podman-lidarr.service"
       "podman-slskd.service"
       "podman-soularr.service"
@@ -99,6 +107,12 @@ in {
         -p ${toString ports.sonarr}:${toString ports.sonarr} \
         -p ${toString ports.radarr-es}:${toString ports.radarr-es} \
         -p ${toString ports.sonarr-es}:${toString ports.sonarr-es} \
+        -p ${toString ports.amule-webui}:4711 \
+        -p ${toString ports.amule-remote}:4712 \
+        -p ${toString ports.amule-ed2k}:${toString ports.amule-ed2k} \
+        -p ${toString ports.amule-ed2k-global}:${toString ports.amule-ed2k-global}/udp \
+        -p ${toString ports.amule-ed2k-udp}:${toString ports.amule-ed2k-udp}/udp \
+        -p ${toString ports.amule-web-controller}:${toString ports.amule-web-controller} \
         -p ${toString ports.lidarr}:8686 \
         -p ${toString ports.slskd}:5030 \
         -p ${toString ports.slskd-peer}:26156 \
@@ -182,6 +196,7 @@ in {
     "/data/downloads/game-assets".d = rule;
     "/data/downloads/torrents".d = rule;
     "/data/downloads/slskd".d = rule;
+    "/data/downloads/amule-incoming".d = rule;
     "/data/downloads/cross-seeds".d = rule;
     "/data/downloads/cross-seeds/links".d = rule;
     "/var/lib/${userName}".d = rule;
@@ -189,6 +204,11 @@ in {
     "/var/lib/${userName}/radarr-es".d = rule;
     "/var/lib/${userName}/sonarr".d = rule;
     "/var/lib/${userName}/sonarr-es".d = rule;
+    "/var/lib/${userName}/amule".d = rule;
+    "/var/lib/${userName}/amule/temp".d = rule;
+    "/var/lib/${userName}/amule-web-controller".d = rule;
+    "/var/lib/${userName}/amule-web-controller/data".d = rule;
+    "/var/lib/${userName}/amule-web-controller/logs".d = rule;
     "/var/lib/${userName}/lidarr".d = rule;
     "/var/lib/${userName}/slskd".d = rule;
     "/var/lib/${userName}/soularr".d = rule;
@@ -387,6 +407,54 @@ in {
         "PODMAN_SYSTEMD_UNIT" = "podman-sonarr-es.service";
       };
       dependsOn = [ "gluetun" ];
+    };
+
+    amule = {
+      image = "ghcr.io/ngosang/amule:latest";
+      pull = "newer";
+      volumes = [
+        "/data/downloads/amule-incoming:/incoming"
+        "/var/lib/${userName}/amule:/home/amule/.aMule"
+        "/var/lib/${userName}/amule/temp:/temp"
+      ];
+      environmentFiles = [ config.sops.secrets.mediarr-amule-env.path ];
+      environment = {
+        TZ = config.time.timeZone;
+        PUID = toString userUid;
+        PGID = toString groupGid;
+        MOD_AUTO_RESTART_ENABLED = "true";
+        MOD_AUTO_RESTART_CRON = "0 6 * * *";
+        MOD_AUTO_SHARE_ENABLED = "true";
+        MOD_AUTO_SHARE_DIRECTORIES = "/incoming";
+        MOD_FIX_KAD_GRAPH_ENABLED = "true";
+        MOD_FIX_KAD_BOOTSTRAP_ENABLED = "true";
+      };
+      extraOptions = [] ++ defaultOptions;
+      labels = {
+        "io.containers.autoupdate" = "registry";
+        "PODMAN_SYSTEMD_UNIT" = "podman-amule.service";
+      };
+      dependsOn = [ "gluetun" ];
+    };
+
+    amule-web-controller = {
+      image = "docker.io/g0t3nks/amule-web-controller:latest";
+      pull = "newer";
+      volumes = [
+        "/var/lib/${userName}/amule-web-controller/data:/usr/src/app/server/data"
+        "/var/lib/${userName}/amule-web-controller/logs:/usr/src/app/server/logs"
+      ];
+      environment = {
+        TZ = config.time.timeZone;
+        NODE_ENV = "production";
+        PORT = toString ports.amule-web-controller;
+      };
+      extraOptions = [] ++ podOptions;
+      labels = {
+        "io.containers.autoupdate" = "registry";
+        "PODMAN_SYSTEMD_UNIT" = "podman-amule-web-controller.service";
+      };
+      dependsOn = [ "amule" ];
     };
 
     lidarr = {
@@ -590,7 +658,9 @@ in {
         "/var/lib/${userName}/tdarr/logs:/app/logs"
         "/var/lib/${userName}/tdarr/temp:/temp"
         "/data/downloads/tv:/media/tv"
+        "/data/downloads/tv-es:/media/tv-es"
         "/data/downloads/movies:/media/movies"
+        "/data/downloads/movies-es:/media/movies-es"
         "/data/downloads/adverts:/media/adverts"
         "/data/downloads/youtube:/media/youtube"
       ];
@@ -630,7 +700,7 @@ in {
         VPN_SERVICE_PROVIDER = "airvpn";
         VPN_TYPE = "wireguard";
         FIREWALL_INPUT_PORTS = builtins.concatStringsSep "," (builtins.map (p: toString p) allowedPorts);
-        FIREWALL_VPN_INPUT_PORTS = "${toString ports.qbittorrent-peer},${toString ports.slskd-peer}";
+        FIREWALL_VPN_INPUT_PORTS = "${toString ports.qbittorrent-peer},${toString ports.slskd-peer},${toString ports.amule-ed2k},${toString ports.amule-ed2k-global},${toString ports.amule-ed2k-udp}";
         FIREWALL_OUTBOUND_SUBNETS="10.88.0.0/24";
         WIREGUARD_MTU = "1320";
         WIREGUARD_PERSISTENT_KEEPALIVE_INTERVAL = "15s";

@@ -102,6 +102,8 @@ in {
     "sonarr.constellation.moe" = mkReverseProxy { port = ports.sonarr; };
     "radarr-es.constellation.moe" = mkReverseProxy { port = ports.radarr-es; };
     "sonarr-es.constellation.moe" = mkReverseProxy { port = ports.sonarr-es; };
+    "amule.constellation.moe" = mkReverseProxy { port = ports.amule-web-controller; };
+    "amuleui.constellation.moe" = mkReverseProxy { port = ports.amule-webui; };
     "lidarr.constellation.moe" = mkReverseProxy { port = ports.lidarr; };
     "slskd.constellation.moe" = mkReverseProxy { port = ports.slskd; };
     "bazarr.constellation.moe" = mkReverseProxy { port = ports.bazarr; };
@@ -159,6 +161,8 @@ in {
     "sonarr.constellation.moe" = {};
     "radarr-es.constellation.moe" = {};
     "sonarr-es.constellation.moe" = {};
+    "amule.constellation.moe" = {};
+    "amuleui.constellation.moe" = {};
     "lidarr.constellation.moe" = {};
     "slskd.constellation.moe" = {};
     "bazarr.constellation.moe" = {};

@@ -30,6 +30,13 @@
   radarr-es = 7879;
   sonarr = 8989;
   sonarr-es = 8990;
+  amule-webui = 4711;
+  amule-remote = 4712;
+  # Manual step required! The three ports below need to be set in the Amule WebUI
+  amule-ed2k = 34705;
+  amule-ed2k-global = 34708; # (ed2k port + 3)
+  amule-ed2k-udp = 34706;
+  amule-web-controller = 4004;
   lidarr = 8686;
   prowlarr = 9696;
   profilarr = 6868;

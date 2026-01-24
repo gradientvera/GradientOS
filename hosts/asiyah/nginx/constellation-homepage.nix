@@ -297,6 +297,21 @@
             };
           }
           {
+            "Sonarr" = {
+              description = "A PVR for Usenet and BitTorrent users.";
+              href = "https://sonarr.constellation.moe/";
+              icon = "sh-sonarr.svg";
+              server = "asiyah";
+              container = "sonarr";
+              widget = {
+                type = "sonarr";
+                url = "http://127.0.0.1:${toString ports.sonarr}";
+                key = "{{HOMEPAGE_VAR_SONARR_API_KEY}}";
+                enableQueue = true;
+              };
+            };
+          }
+          {
             "Radarr" = {
               description = "A movie organizer/manager for usenet and torrent users.";
               href = "https://radarr.constellation.moe/";
@@ -342,21 +357,6 @@
             };
           }
           {
-            "Sonarr" = {
-              description = "A PVR for Usenet and BitTorrent users.";
-              href = "https://sonarr.constellation.moe/";
-              icon = "sh-sonarr.svg";
-              server = "asiyah";
-              container = "sonarr";
-              widget = {
-                type = "sonarr";
-                url = "http://127.0.0.1:${toString ports.sonarr}";
-                key = "{{HOMEPAGE_VAR_SONARR_API_KEY}}";
-                enableQueue = true;
-              };
-            };
-          }
-          {
             "Bazarr" = {
               description = "A companion app that helps you find and download subtitles for your media files";
               href = "https://bazarr.constellation.moe/";
@@ -368,6 +368,15 @@
                 url = "http://127.0.0.1:${toString ports.bazarr}";
                 key = "{{HOMEPAGE_VAR_BAZARR_API_KEY}}";
               };
+            };
+          }
+          {
+            "Amule" = {
+              description = "aMule is a multi-platform client for the ED2K file sharing network";
+              href = "https://amule.constellation.moe/";
+              icon = "sh-amule.svg";
+              server = "asiyah";
+              container = "amule";
             };
           }
           {
