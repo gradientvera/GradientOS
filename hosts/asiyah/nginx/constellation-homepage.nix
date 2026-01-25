@@ -279,6 +279,8 @@
               description = "A self-hosted app for downloading YouTube content built using yt-dlp.";
               href = "https://pinchflat.constellation.moe/";
               icon = "sh-pinchflat.png";
+              server = "pinchflat";
+              container = "pinchflat";
               siteMonitor = "http://127.0.0.1:${toString ports.pinchflat}";
             };
           }
@@ -374,7 +376,7 @@
             "Amule" = {
               description = "aMule is a multi-platform client for the ED2K file sharing network";
               href = "https://amule.constellation.moe/";
-              icon = "sh-amule.svg";
+              icon = "https://amule.constellation.moe/static/logo-brax.png";
               server = "asiyah";
               container = "amule";
             };
@@ -408,9 +410,9 @@
             };
           }
           {
-            "Calibre Downloader" = {
-              description = "An intuitive web interface for searching and requesting book downloads, designed to work seamlessly with Calibre-Web-Automated.";
-              href = "https://calibredl.constellation.moe/";
+            "shelfmark" = {
+              description = "An intuitive web interface for searching and requesting book downloads, designed to work seamlessly with Calibre.";
+              href = "https://shelfmark.constellation.moe/";
               icon = "sh-calibre.svg";
               server = "asiyah";
               container = "calibre";

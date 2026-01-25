@@ -49,7 +49,7 @@ let
     proxy-vpn-uk
     profilarr
     calibre-web-automated
-    calibre-downloader
+    shelfmark
   ];
 in {
 
@@ -86,7 +86,7 @@ in {
       "podman-romm.service"
       "podman-mariadb.service"
       # "podman-neko.service"
-      "podman-calibre-downloader.service"
+      "podman-shelfmark.service"
 
     ];
     before = requiredBy;
@@ -132,7 +132,7 @@ in {
         -p ${toString ports.sabnzbd}:${toString ports.sabnzbd} \
         -p ${toString ports.romm}:8080 \
         -p ${toString ports.proxy-vpn}:${toString ports.proxy-vpn} \
-        -p ${toString ports.calibre-downloader}:${toString ports.calibre-downloader} \
+        -p ${toString ports.shelfmark}:${toString ports.shelfmark} \
         -p ${toString ports.pinchflat}:8945 \
         --ip "10.88.0.2" \
         --sysctl="net.ipv4.ip_forward=1" \
@@ -238,6 +238,7 @@ in {
     "/var/lib/${userName}/romm/resources".d = rule;
     "/var/lib/${userName}/mariadb".d = rule;
     "/var/lib/${userName}/calibre-web-automated".d = rule;
+    "/var/lib/${userName}/shelfmark".d = rule;
     "/var/lib/${userName}/pinchflat".d = rule;
     "/var/lib/${userName}/.mozilla".d = rule;
     "/var/lib/${userName}/.mozilla/firefox".d = rule;
@@ -1015,25 +1016,40 @@ in {
       };
     };
 
-    calibre-downloader = {
-      image = "ghcr.io/calibrain/calibre-web-automated-book-downloader:latest";
+    shelfmark = {
+      image = "ghcr.io/calibrain/shelfmark:latest";
       pull = "newer";
       volumes = [
+        "/var/lib/${userName}/shelfmark:/config"
         "/data/downloads/books-ingest:/ingest"
+        "/data/downloads:/downloads"
       ];
+      environmentFiles = [ config.sops.secrets.mediarr-shelfmark-env.path ];
       environment = {
-        FLASK_PORT = toString ports.calibre-downloader;
-        FLASK_DEBUG = "false";
-        BOOK_LANGUAGE = "en";
-        INGEST_DIR = "/ingest";
         TZ = config.time.timeZone;
-        UID = toString userUid;
-        GID = toString groupGid;
+        PUID = toString userUid;
+        PGID = toString groupGid;
+        FLASK_PORT = toString ports.shelfmark;
+        DOCKERMODE = "true";
+        FLASK_DEBUG = "false";
+        INGEST_DIR = "/ingest";
+        SEARCH_MODE = "universal";
+        CALIBRE_WEB_URL = "https://calibre.constellation.moe";
+        PROWLARR_ENABLED = "true";
+        PROWLARR_URL = "http://prowlarr:${toString ports.prowlarr}";
+        SABNZBD_URL = "http://sabnzbd:${toString ports.sabnzbd}";
+        QBITTORRENT_URL = "http://qbittorrent:${toString ports.qbittorrent-webui}";
+        USE_CF_BYPASS = "true";
+        USING_EXTERNAL_BYPASSER = "true";
+        EXT_BYPASSER_URL = "http://flaresolverr:${toString ports.flaresolverr}";
+        METADATA_PROVIDER = "hardcover";
+        HARDCOVER_ENABLED = "true";
+        OPENLIBRARY_ENABLED = "true";
       };
       extraOptions = [] ++ defaultOptions;
       labels = {
         "io.containers.autoupdate" = "registry";
-        "PODMAN_SYSTEMD_UNIT" = "podman-calibre-downloader.service";
+        "PODMAN_SYSTEMD_UNIT" = "podman-shelfmark.service";
       };
       dependsOn = [ "gluetun" ];
     };

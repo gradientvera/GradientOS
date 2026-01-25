@@ -119,6 +119,13 @@
         restartUnits = [ "podman-amule.service" ];
       };
       
+      mediarr-shelfmark-env = {
+        mode = "0440";
+        owner = config.users.users.mediarr.name;
+        group = config.users.users.mediarr.group;
+        restartUnits = [ "podman-shelfmark.service" ];
+      };
+      
       cfdyndns-token = {
         restartUnits = [ "ddclient.service" ];
       };
