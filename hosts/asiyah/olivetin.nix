@@ -22,7 +22,7 @@ in
     settings = {
       ListenAddressSingleHTTPFrontend = "127.0.0.1:${toString ports.olivetin}";
 
-      authHttpHeaderUsername = "X-Preferred-Username";
+      authHttpHeaderUsername = "X-Username";
       authHttpHeaderUsergroup = "X-Groups";
       authHttpHeaderUsergroupSep = ",";
 

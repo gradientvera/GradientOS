@@ -11,13 +11,15 @@ let
     enableACME = generateOwnCert;
     quic = true;
     forceSSL = true;
-    extraConfig = vhostExtraConfig;
+    extraConfig = ''
+      ${vhostExtraConfig}
+    '';
     locations.${reverseProxyLocation} = {
       proxyPass = "${protocol}://${address}:${toString port}${reverseProxySubdomain}";
       proxyWebsockets = true;
       extraConfig = ''
         auth_request_set $preferredusername $upstream_http_x_auth_request_preferred_username;
-        proxy_set_header X-Preferred-Username $preferredusername;
+        proxy_set_header X-Username $xusername;
 
         auth_request_set $groups $upstream_http_x_auth_request_groups;
         proxy_set_header X-Groups $groups;
@@ -123,11 +125,6 @@ in {
         proxy_buffer_size 128k;
         proxy_buffers 4 256k;
         proxy_busy_buffers_size 256k;
-        auth_request_set $username $upstream_http_x_auth_request_preferred_username;
-      '';
-      rootExtraConfig = ''
-        proxy_set_header X-Forwarded-Preferred-Username $xusername;
-        proxy_pass_header X-Forwarded-Preferred-Username;
       '';
       extraConfig.locations."/kobo".extraConfig = ''
         auth_request off;
@@ -139,7 +136,7 @@ in {
         proxy_pass http://127.0.0.1:${toString ports.calibre-web-automated};
       '';
     };
-    "calibredl.constellation.moe" = mkReverseProxy { port = ports.calibre-downloader; };
+    "shelfmark.constellation.moe" = mkReverseProxy { port = ports.shelfmark; };
     "radio.constellation.moe" = mkReverseProxy { port = ports.openwebrx; };
     "k1c.constellation.moe" = mkReverseProxy { address = "192.168.1.27"; port = 80; };
     "pinchflat.constellation.moe" = mkReverseProxy { port = ports.pinchflat; };
@@ -176,7 +173,7 @@ in {
     "files.constellation.moe" = {};
     # "neko.constellation.moe" = {};
     "calibre.constellation.moe" = {};
-    "calibredl.constellation.moe" = {};
+    "shelfmark.constellation.moe" = {};
     "radio.constellation.moe" = {};
     "k1c.constellation.moe" = {};
     "pinchflat.constellation.moe" = {};

@@ -74,9 +74,9 @@ in {
       real_ip_header proxy_protocol;
       real_ip_recursive on;
 
-      map $username $xusername {
+      map $preferredusername $xusername {
         ~^(\w+)@identity.gradient.moe $1;
-        default "";
+        default $preferredusername;
       } 
     '';
   };

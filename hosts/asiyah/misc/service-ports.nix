@@ -62,7 +62,7 @@
   proxy-vpn = 1080;
   proxy-vpn-uk = 1081;
   calibre-web-automated = 8078;
-  calibre-downloader = 8077;
+  shelfmark = 8077;
   pinchflat = 8945;
 
   # Wolf

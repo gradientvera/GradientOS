@@ -11,11 +11,20 @@ let
     enableACME = generateOwnCert;
     quic = true;
     forceSSL = true;
-    extraConfig = vhostExtraConfig;
+    extraConfig = ''
+      ${vhostExtraConfig}
+    '';
     locations."/" = {
       proxyPass = "${protocol}://${address}:${toString port}";
       proxyWebsockets = true;
-      extraConfig = rootExtraConfig;
+      extraConfig = ''
+        auth_request_set $preferredusername $upstream_http_x_auth_request_preferred_username;
+        proxy_set_header X-Username $xusername;
+
+        auth_request_set $groups $upstream_http_x_forwarded_groups;
+        proxy_set_header X-Groups $groups;
+        ${rootExtraConfig}
+      '';
     };
   } // extraConfig;
 in
