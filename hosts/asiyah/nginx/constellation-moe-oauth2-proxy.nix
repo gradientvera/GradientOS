@@ -25,7 +25,6 @@ in {
 
     # -- kanidm config --
     provider = "oidc";
-    scope = "openid email profile groups";
     clientID = "constellation-oauth2-proxy";
     redirectURL = "https://polycule.constellation.moe/oauth2/callback";
     oidcIssuerUrl = "https://identity.gradient.moe/oauth2/openid/constellation-oauth2-proxy";
