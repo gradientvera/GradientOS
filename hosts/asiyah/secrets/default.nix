@@ -126,6 +126,13 @@
         restartUnits = [ "podman-shelfmark.service" ];
       };
       
+      mediarr-calibre-env = {
+        mode = "0440";
+        owner = config.users.users.mediarr.name;
+        group = config.users.users.mediarr.group;
+        restartUnits = [ "podman-calibre.service" ];
+      };
+      
       cfdyndns-token = {
         restartUnits = [ "ddclient.service" ];
       };

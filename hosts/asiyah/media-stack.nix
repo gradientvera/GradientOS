@@ -1002,6 +1002,7 @@ in {
         "/data/downloads/books-ingest:/cwa-book-ingest"
         "${(toString (pkgs.writeText "convert_library.py" (builtins.readFile ./cwa-convert_library-fixed.py)))}:/app/calibre-web-automated/scripts/convert_library.py"
       ];
+      environmentFiles = [ config.sops.secrets.mediarr-calibre-env.path ];
       environment = {
         TZ = config.time.timeZone;
         PUID = toString userUid;
