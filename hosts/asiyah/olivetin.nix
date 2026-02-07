@@ -42,6 +42,13 @@ in
           maxConcurrent = 1;
           timeout = 300; # 5 mins
         }
+        {
+          title = "Restart Discord Bot";
+          shell = "systemctl restart podman-stardream.service";
+          icon = ''<iconify-icon icon="bxs:bot" width="24" height="24"></iconify-icon>'';
+          maxConcurrent = 1;
+          timeout = 300; # 5 mins
+        }
 
         # Systemd Unit Actions
         {
@@ -105,6 +112,7 @@ in
               contents = [
                 { title = "Restart Media Stack"; }
                 { title = "Restart Auth Services"; }
+                { title = "Restart Discord Bot"; }
               ];
             }
             # Generic Actions
