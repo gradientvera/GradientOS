@@ -15,6 +15,13 @@
     wifi.backend = "iwd";
   };
 
+  environment.etc."NetworkManager/dnsmasq.d/default.conf".text = ''
+listen-address=::1,127.0.0.1
+domain-needed
+bogus-priv
+no-resolv
+'';
+
   environment.etc."NetworkManager/dnsmasq.d/nameservers.conf".text = ''
 local=/local/
 domain=local
@@ -26,6 +33,11 @@ server=8.8.4.4
 server=2606:4700:4700::1111
 server=2606:4700:4700::1001
   '';
+
+  networking.resolvconf = {
+    enable = true;
+    useLocalResolver = true;
+  };
 
   # Ignore loopback/virtual interfaces.
   systemd.network.wait-online.ignoredInterfaces = ["lo" "virbr0"];

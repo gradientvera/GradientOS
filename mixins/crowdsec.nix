@@ -162,7 +162,7 @@ in
           enabled = true;
           token = "\${CROWDSEC_AUTO_REGISTRATION_TOKEN}";
           allowed_ranges = [
-            "127.0.0.0/24"
+            "127.0.0.0/8"
             "${gradientnet.gradientnet}/24"
           ];
         };

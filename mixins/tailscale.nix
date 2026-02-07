@@ -12,4 +12,8 @@
       "--advertise-exit-node"
     ];
   };
+
+  environment.etc."NetworkManager/dnsmasq.d/tailscale.conf".text = ''
+server=/tailnet.constellation.moe/100.100.100.100
+'';
 }

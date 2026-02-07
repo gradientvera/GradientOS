@@ -170,7 +170,7 @@ in
     quic = true;
     addSSL = true;
     extraConfig = ''
-      allow 127.0.0.1/8;
+      allow 127.0.0.0/8;
       allow ${config.gradient.const.wireguard.addresses.gradientnet.gradientnet}/24;
       deny all;
     '';

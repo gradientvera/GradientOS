@@ -15,6 +15,12 @@
 
   # Allow accesing published ports...
   boot.kernel.sysctl."net.ipv4.conf.podman0.route_localnet" = 1;
+
+  environment.etc."NetworkManager/dnsmasq.d/podman.conf".text = ''
+except-interface=podman0
+'';
+
+  systemd.network.wait-online.ignoredInterfaces = ["podman0"];
   
   systemd.timers.podman-auto-update = {
     enable = true;
