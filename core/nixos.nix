@@ -285,7 +285,7 @@ in
     };
 
     # Slow to build, fails to build on containers too
-    documentation.man.generateCaches = lib.mkForce false;
+    documentation.man.cache.enable = lib.mkForce false;
 
     boot.loader.systemd-boot.netbootxyz.enable = true;
 

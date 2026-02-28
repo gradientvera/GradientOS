@@ -6,6 +6,7 @@ in
 
   services.mosquitto = {
     enable = true;
+    includeDirs = [ "/etc/mosquitto.d" ];
     listeners = [
       # Listener for internal gradientnet purposes only. Do NOT expose to the internet.
       {

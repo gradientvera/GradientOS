@@ -5,6 +5,8 @@
     (modulesPath + "/installer/scan/not-detected.nix")
   ];
 
+  hardware.facter.reportPath = ./facter.json;
+
   boot.kernelPackages = pkgs.linuxPackages_zen;
   boot.initrd.availableKernelModules = [ "nvme" "xhci_pci" "ahci" "thunderbolt" "usbhid" "usb_storage" "sd_mod" "amdgpu" "xhci_hcd" "tpm_crb" ];
   boot.initrd.kernelModules = [ "kvm-amd" "amdgpu" "tpm_crb" "gpd-fan" ];

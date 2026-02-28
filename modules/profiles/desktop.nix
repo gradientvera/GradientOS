@@ -168,16 +168,12 @@ in
     (lib.mkIf (cfg.profiles.desktop.enable && cfg.profiles.desktop.kde.enable) {
       # Enable the KDE Plasma Desktop Environment.
       services.displayManager.enable = true;
-      services.displayManager.sddm.enable = true;
-      services.displayManager.sddm.wayland.enable = true;
-      services.displayManager.sddm.wayland.compositor = "kwin";
       services.desktopManager.plasma6.enable = true;
+      services.displayManager.plasma-login-manager.enable = true;
 
       # Do not allow using passkey for login
       security.pam.services.kde.u2fAuth = lib.mkForce false;
-      security.pam.services.sddm.u2fAuth = lib.mkForce false;
-      security.pam.services.sddm-autologin.u2fAuth = lib.mkForce false;
-      security.pam.services.sddm-greeter.u2fAuth = lib.mkForce false;
+      security.pam.services.plasmalogin.u2fAuth = lib.mkForce false;
 
       programs.kdeconnect.enable = true;
 
@@ -187,7 +183,6 @@ in
         kdePackages.powerdevil
         kdePackages.kio-admin
         kdePackages.discover
-        kdePackages.sddm-kcm
         pinentry-qt
       ];
     })

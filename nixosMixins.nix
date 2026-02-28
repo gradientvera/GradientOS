@@ -26,7 +26,6 @@
   tailscale = ./mixins/tailscale.nix;
 
   graphical-steam = ./mixins/graphical/steam.nix;
-  graphical-sunshine = ./mixins/graphical/sunshine.nix;
   
   home-zsh = ./mixins/home/zsh.nix;
 

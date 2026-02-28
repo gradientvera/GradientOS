@@ -10,12 +10,10 @@ in
   # https://kanidm.github.io/kanidm/stable/
 
   services.kanidm = {
-    package = pkgs.kanidmWithSecretProvisioning_1_8;
+    package = pkgs.kanidmWithSecretProvisioning_1_9;
 
-    enableServer = true;
-    enableClient = true;
-
-    serverSettings = {
+    server.enable = true;
+    server.settings = {
       domain = "identity.gradient.moe";
       origin = "https://identity.gradient.moe";
       bindaddress = "127.0.0.1:${toString ports.kanidm}";
@@ -30,7 +28,8 @@ in
       tls_chain = "/var/lib/acme/identity.gradient.moe/fullchain.pem";
     };
 
-    clientSettings = {
+    client.enable = true;
+    client.settings = {
       uri = "https://identity.gradient.moe";
       verify_ca = true;
       verify_hostnames = true;

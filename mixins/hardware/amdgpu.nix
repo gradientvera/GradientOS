@@ -29,10 +29,12 @@
     ACTION=="add", SUBSYSTEM=="backlight", RUN+="${pkgs.coreutils}/bin/chmod a+w /sys/class/backlight/%k/brightness"
   '';
 
-  environment.variables.AMD_VULKAN_ICD = "RADV";
-  environment.variables.LIBVA_DRIVER_NAME = "radeonsi";
-  environment.variables.VDPAU_DRIVER = "radeonsi";
-  environment.variables.MESA_SHADER_CACHE_MAX_SIZE = "12G";
+  environment.variables = {
+    AMD_VULKAN_ICD = "RADV";
+    LIBVA_DRIVER_NAME = "radeonsi";
+    VDPAU_DRIVER = "radeonsi";
+    MESA_SHADER_CACHE_MAX_SIZE = "12G";
+  };
 
   services.lact.enable = true;
 

@@ -5,6 +5,8 @@
     [ (modulesPath + "/installer/scan/not-detected.nix")
     ];
 
+  hardware.facter.reportPath = ./facter.json;
+
   # Stable for ZFS
   boot.kernelPackages = pkgs.linuxPackages_xanmod;
   boot.initrd.availableKernelModules = [ "xhci_pci" "ehci_pci" "ahci" "nvme" "usbhid" "usb_storage" "sd_mod" "xhci_hcd" ];

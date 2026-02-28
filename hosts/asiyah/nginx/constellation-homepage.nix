@@ -6,7 +6,7 @@
     listenPort = ports.constellation-homepage;
     # Not needed, we secure this with the firewall, OAuth2 Proxy and Nginx reverse proxy.
     allowedHosts = "*";
-    environmentFile = config.sops.secrets.constellation-homepage.path;
+    environmentFiles = [ config.sops.secrets.constellation-homepage.path ];
     settings = {
       title = "Constellation Homepage";
       favicon = "https://constellation.moe/images/favicon.svg";

@@ -1,4 +1,7 @@
-{ ports, pkgs, ... }:
+{ config, ports, pkgs, ... }:
+let
+  secrets = config.sops.secrets;
+in
 {
 
   services.grafana = {
@@ -20,6 +23,8 @@
         http_port = ports.grafana;
         http_addr = "127.0.0.1";
       };
+
+      security.secret_key = "$__file{${secrets.grafana-secret-key.path}}";
 
       database = {
         type = "postgres";

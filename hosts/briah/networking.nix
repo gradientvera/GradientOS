@@ -34,4 +34,5 @@
     
   '';
   networking.networkmanager.enable = lib.mkForce false;
+  networking.resolvconf.enable = lib.mkForce false;
 }

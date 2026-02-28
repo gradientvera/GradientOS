@@ -18,13 +18,13 @@
     element-desktop
     master.tenacity # unstable was broken
     master.discord
+    stable.krita
     qbittorrent
     glabels-qt
     chromium
     inkscape
     firefox
     vesktop
-    krita
     vmpk
     peek
     vlc

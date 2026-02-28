@@ -15,10 +15,10 @@ let
       gamemode
 
       # See: https://wiki.nixos.org/wiki/Steam#Gamescope_fails_to_launch_when_used_within_Steam
-      xorg.libXcursor
-      xorg.libXi
-      xorg.libXinerama
-      xorg.libXScrnSaver
+      libxcursor
+      libxi
+      libxinerama
+      libxscrnsaver
       libpng
       libpulseaudio
       libvorbis
@@ -44,6 +44,18 @@ let
       libkrb5
     ];
   };
+  discord-override = pkg: (pkg.override {
+    withOpenASAR = true;
+    withVencord = true;
+    withTTS = true;
+  }).overrideAttrs (prevAttrs: {
+    desktopItem = prevAttrs.desktopItem.override (prevDesktopAttrs: {
+      # Force wayland, enable middle click, use pipewire for screenshare
+      exec = "env NIXOS_OZONE_WL=1 ELECTRON_OZONE_PLATFORM_HINT=wayland ${prevDesktopAttrs.exec} " 
+        + "--enable-blink-features=MiddleClickAutoscroll --enable-features=UseOzonePlatform,WebRTCPipeWireCapturer "
+        + "--enable-gpu-rasterization --ignore-gpu-blocklist --enable-zero-copy ";
+    });
+  });
 in {
   crowdsec = prev.crowdsec.overrideAttrs (prevAttrs: {
     nativeBuildInputs = prevAttrs.nativeBuildInputs ++ [ prev.patchelf ];
@@ -54,39 +66,8 @@ in {
     '';
   });
 
-  discord = (prev.discord.override {
-    withOpenASAR = true;
-    withVencord = true;
-    withTTS = true;
-  }).overrideAttrs (prevAttrs: {
-    desktopItem = prevAttrs.desktopItem.override (prevDesktopAttrs: {
-      # Force wayland, enable middle click, use pipewire for screenshare
-      exec = "env NIXOS_OZONE_WL=1 ELECTRON_OZONE_PLATFORM_HINT=wayland ${prevDesktopAttrs.exec} --enable-blink-features=MiddleClickAutoscroll --enable-features=WebRTCPipeWireCapturer";
-    });
-  });
-
-  pythonPackagesExtensions = prev.pythonPackagesExtensions ++ [
-    (
-      python-final: python-prev: {
-        # See https://github.com/NixOS/nixpkgs/pull/413385
-        # Needed for pinchflat and yt-dlp to be able to impersonate again
-        curl-cffi = (python-prev.buildPythonPackage rec {
-        pname = "curl-cffi";
-        version = "0.12.1b2";
-        src = prev.fetchurl {
-          url = "https://github.com/lexiforest/curl_cffi/releases/download/v${version}/curl_cffi-${version}-cp39-abi3-manylinux_2_17_x86_64.manylinux2014_x86_64.whl";
-          hash = "sha256-J4TZkJbluJ1fg4cXrMmBsjnEL8INoRof37txBgx0T4E=";
-        };
-        format = "wheel";
-        buildInputs = [ prev.stdenv.cc.cc.lib ];
-        nativeBuildInputs = [
-          prev.stdenv.cc.cc.lib
-          prev.autoPatchelfHook
-        ];
-      });
-      }
-    )
-  ];
+  discord = discord-override prev.discord;
+  discord-canary = discord-override prev.discord-canary;
 
   # gotenberg = prev.gotenberg.override { pdfcpu = final.stable.pdfcpu; };
 
@@ -130,18 +111,22 @@ in {
     };
   };
   
-  gradient-generator = flake.inputs.gradient-generator.packages.${prev.system}.default;
+  gradient-generator = flake.inputs.gradient-generator.packages.${prev.stdenv.hostPlatform.system}.default;
 
-  nix-gaming = flake.inputs.nix-gaming.packages.${prev.system};
+  nix-gaming = flake.inputs.nix-gaming.packages.${prev.stdenv.hostPlatform.system};
 
   # Unmodified unstable nixpkgs overlay.
   unstable = import flake.inputs.nixpkgs {
-    inherit (prev) system config;
+    inherit (prev) config;
+    localSystem.system = prev.stdenv.hostPlatform.system;
   };
 
   # Stable nixpkgs overlay.
   stable = import flake.inputs.nixpkgs-stable {
-    inherit (prev) system config;
+    # For some reason we need to define replaceStdenv here?
+    # TODO: Check after the next stable version upgrade
+    config = prev.config // { replaceStdenv = { pkgs }: pkgs.stdenv; };
+    localSystem.system = prev.stdenv.hostPlatform.system;
     overlays = [
       (import ./gradientos.nix flake)
       (import ./gradientpkgs.nix)
@@ -151,7 +136,8 @@ in {
 
   # Master branch nixpkgs overlay.
   master = import flake.inputs.nixpkgs-master {
-    inherit (prev) system config;
+    inherit (prev) config;
+    localSystem.system = prev.stdenv.hostPlatform.system;
     overlays = [
       (import ./gradientos.nix flake)
       (import ./gradientpkgs.nix)

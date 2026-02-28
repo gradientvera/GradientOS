@@ -1,6 +1,9 @@
 { modulesPath, ... }:
 {
   imports = [ (modulesPath + "/profiles/qemu-guest.nix") ];
+  
+  hardware.facter.reportPath = ./facter.json;
+  
   boot.loader.grub = {
     efiSupport = true;
     efiInstallAsRemovable = true;

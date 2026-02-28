@@ -77,6 +77,7 @@ in
         capSysAdmin = true;
         openFirewall = true;
         autoStart = lib.mkDefault false;
+        package = pkgs.stable.sunshine;
       };
 
       services.joycond.enable = true;

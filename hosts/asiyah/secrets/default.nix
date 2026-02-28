@@ -228,6 +228,18 @@
         group = "nginx";
       };
 
+      grafana-secret-key = {
+        restartUnits = [ "grafana.service" ];
+        owner = "grafana";
+      };
+
+      the-things-network-mosquitto = {
+        restartUnits = [ "mosquitto.service" ];
+        owner = config.users.users.mosquitto.name;
+        group = config.users.users.mosquitto.group;
+        path = "/etc/mosquitto.d/the-things-network-bridge.conf";
+      };
+
     };
   };
 

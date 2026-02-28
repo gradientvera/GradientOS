@@ -4,7 +4,7 @@
   inputs = {
     nixpkgs.url = "github:NixOS/nixpkgs/nixos-unstable";
     nixpkgs-master.url = "github:NixOS/nixpkgs/master";
-    nixpkgs-stable.url = "github:NixOS/nixpkgs/nixos-25.05";
+    nixpkgs-stable.url = "github:NixOS/nixpkgs/nixos-25.11";
 
     nixos-hardware.url = "github:NixOS/nixos-hardware/master";
 
@@ -131,7 +131,6 @@
           mixins.binfmt-emulation
 
           mixins.graphical-steam
-          mixins.graphical-sunshine
 
           mixins.restic-repository-hokma
 
