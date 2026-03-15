@@ -32,6 +32,14 @@ in
     "/var/lib/esphome/gas-canister-scale.yaml".C = mkDevice "gas-canister-scale.yaml";
   };
 
+  # If you remove the below sops nixos eats your face
+  users.users.esphome = {
+    isSystemUser = true;
+    group = "esphome";
+  };
+
+  users.groups.esphome = {};
+
   networking.firewall.interfaces.gradientnet.allowedTCPPorts = [ ports.esphome ];
   networking.firewall.interfaces.gradientnet.allowedUDPPorts = [ ports.esphome ];
 

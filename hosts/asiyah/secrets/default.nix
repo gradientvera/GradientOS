@@ -192,7 +192,7 @@
         mode = "0440";
         owner = "esphome";
         group = "esphome";
-        path = "/var/lib/esphome/secrets.yaml";
+        path = "/var/lib/private/esphome/secrets.yaml";
         restartUnits = [ "esphome.service" ];
       };
 

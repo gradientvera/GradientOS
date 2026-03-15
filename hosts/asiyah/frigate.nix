@@ -125,7 +125,6 @@ in
           };
           genai = {
             enabled = false; # borked
-            use_snapshots = true;
             objects = [ "person" ];
             required_zones = [ "main" ];
           };

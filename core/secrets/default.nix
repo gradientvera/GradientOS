@@ -17,46 +17,54 @@ in
     };
   };
 
-  config = lib.mkIf cfg.core.secrets.enable ({
-    sops.secrets = {
-      hokma-password = {
-         sopsFile = ./secrets.yml;
+  config = lib.mkMerge[
+
+    {
+      # breaks a lot of shit otherwise agh
+      sops.useSystemdActivation = true;
+    }
+
+    (lib.mkIf cfg.core.secrets.enable ({
+      sops.secrets = {
+        hokma-password = {
+          sopsFile = ./secrets.yml;
+        };
+        hokma-environment = {
+          sopsFile = ./secrets.yml;
+        };
+        upsmon-password = {
+          sopsFile = ./secrets.yml;
+        };
+        rathole-credentials-server = {
+          sopsFile = ./secrets.yml;
+          restartUnits = [ "rathole.service" ];
+        };
+        rathole-credentials-client = {
+          sopsFile = ./secrets.yml;
+          restartUnits = [ "rathole.service" ];
+        };
+        wgautomesh-gossip-secret = {
+          sopsFile = ./secrets.yml;
+          restartUnits = [ "wgautomesh.service" ];
+        };
+        crowdsec-env = lib.mkIf config.services.crowdsec.enable {
+          sopsFile = ./secrets.yml;
+          owner = "crowdsec";
+          group = "crowdsec";
+          restartUnits = [ "crowdsec.service" "crowdsec-firewall-bouncer.service" ];
+        };
+        crowdsec-console-token = lib.mkIf config.services.crowdsec.enable {
+          sopsFile = ./secrets.yml;
+          owner = "crowdsec";
+          group = "crowdsec";
+          restartUnits = [ "crowdsec.service" ];
+        };
+        tailscale-auth-key = {
+          sopsFile = ./secrets.yml;
+          restartUnits = [ "tailscaled.service" "tailscaled-autoconnect.service" ];
+        };
       };
-      hokma-environment = {
-        sopsFile = ./secrets.yml;
-      };
-      upsmon-password = {
-        sopsFile = ./secrets.yml;
-      };
-      rathole-credentials-server = {
-        sopsFile = ./secrets.yml;
-        restartUnits = [ "rathole.service" ];
-      };
-      rathole-credentials-client = {
-        sopsFile = ./secrets.yml;
-        restartUnits = [ "rathole.service" ];
-      };
-      wgautomesh-gossip-secret = {
-        sopsFile = ./secrets.yml;
-        restartUnits = [ "wgautomesh.service" ];
-      };
-      crowdsec-env = lib.mkIf config.services.crowdsec.enable {
-        sopsFile = ./secrets.yml;
-        owner = "crowdsec";
-        group = "crowdsec";
-        restartUnits = [ "crowdsec.service" "crowdsec-firewall-bouncer.service" ];
-      };
-      crowdsec-console-token = lib.mkIf config.services.crowdsec.enable {
-        sopsFile = ./secrets.yml;
-        owner = "crowdsec";
-        group = "crowdsec";
-        restartUnits = [ "crowdsec.service" ];
-      };
-      tailscale-auth-key = {
-        sopsFile = ./secrets.yml;
-        restartUnits = [ "tailscaled.service" "tailscaled-autoconnect.service" ];
-      };
-    };
-  });
+    }))
+  ];
 
 }

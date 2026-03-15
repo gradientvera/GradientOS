@@ -7,6 +7,7 @@ in
   # TODO: Turn these into proper modules
   imports = [
     ./udev.nix
+    #./rescue.nix
     ./openssh.nix
     ./network.nix
     ./workarounds.nix
@@ -116,14 +117,14 @@ in
       DefaultLimitNOFILE = "32768:2097152";
 
       # Keep restarting services indefinitely by default
-      DefaultStartLimitIntervalSec = "0";
+      DefaultStartLimitIntervalSec = "5s";
       DefaultStartLimitBurst = "0";
       DefaultRestartSec = "1s";
       ReloadLimitIntervalSec = "0";
       ReloadLimitBurst = "0";
 
       # Enable systemd watchdog.
-      RuntimeWatchdogSec = "60s";
+      RuntimeWatchdogSec = "10s";
       RebootWatchdogSec = "45s";
       KExecWatchdogSec = "45s";
     };
