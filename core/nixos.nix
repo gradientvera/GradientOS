@@ -123,7 +123,7 @@ in
       ReloadLimitBurst = "0";
 
       # Enable systemd watchdog.
-      RuntimeWatchdogSec = "10s";
+      RuntimeWatchdogSec = "60s";
       RebootWatchdogSec = "45s";
       KExecWatchdogSec = "45s";
     };
@@ -150,19 +150,16 @@ in
     ];
 
     # Explicitly set suspend-then-hibernate delay, allow on AC power
-    systemd.sleep.extraConfig = ''
-      HibernateDelaySec=1h
-      SuspendEstimationSec=30m
-      HibernateOnACPower=yes
-    '';
+    systemd.sleep.settings.Sleep = {
+      HibernateDelaySec = "1h";
+      SuspendEstimationSec = "30m";
+      HibernateOnACPower = "yes";
+    };
 
     environment.shells = with pkgs; [
       fish
     ];
-
-    # Bloats /boot significantly
-    # hardware.firmware = [ pkgs.linux-firmware ];
-
+    
     programs.fish = {
       enable = true;
       shellInit = ''

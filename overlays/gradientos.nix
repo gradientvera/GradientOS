@@ -5,7 +5,7 @@
 flake: final: prev:
 let
   steam-override = {
-    extraArgs = "-console -pipewire";
+    extraArgs = "-console";
     extraPkgs = pkgs: with pkgs; [
       ffmpeg-full
       cups # Needed by Cookie Clicker because electron lol

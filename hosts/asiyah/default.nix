@@ -21,7 +21,7 @@
     ./grafana.nix
     ./forgejo.nix
     ./duckdns.nix
-    ./olivetin.nix
+    # ./olivetin.nix # TODO: Re-enable and re-do config after https://github.com/NixOS/nixpkgs/pull/498611 
     ./postgres.nix
     ./scrutiny.nix
     ./headscale.nix
