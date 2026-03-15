@@ -39,6 +39,8 @@ server=2606:4700:4700::1001
     useLocalResolver = true;
   };
 
+  networking.dhcpcd.enable = false;
+
   # Ignore loopback/virtual interfaces.
   systemd.network.wait-online.ignoredInterfaces = ["lo" "virbr0"];
 }
