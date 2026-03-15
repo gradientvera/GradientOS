@@ -48,6 +48,7 @@ in
     "/var/lib/esphome/sonoff-rf-bridge-r2.yaml".C = mkDevice "sonoff-rf-bridge-r2.yaml";
     "/var/lib/esphome/smart-air-freshener.yaml".C = mkDevice "smart-air-freshener.yaml";
     "/var/lib/esphome/espbell-lite.yaml".C = mkDevice "espbell-lite.yaml";
+    "/var/lib/esphome/gas-canister-scale.yaml".C = mkDevice "gas-canister-scale.yaml";
   };
 
   networking.firewall.interfaces.gradientnet.allowedTCPPorts = [ ports.esphome ];
