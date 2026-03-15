@@ -10,10 +10,13 @@ external_components:
 esp32:
   board: nodemcu-32s
   framework:
-    type: arduino
+    type: esp-idf
     version: recommended
 
 logger:
+
+mdns:
+  disabled: false
 
 ota:
   - platform: esphome
@@ -54,38 +57,15 @@ text_sensor:
       name: "Connected SSID"
       icon: mdi:wifi-strength-2
 
-# Taken from https://smarthomescene.com/guides/how-to-integrate-switchbot-meter-pro-and-meter-pro-co2-in-esphome/
-esp32_ble_tracker:
-  on_ble_advertise:
-    - mac_address:
-        - "B0:E9:FE:9C:A8:AC"
-      then:
-        - lambda: |-
-            for (auto data : x.get_manufacturer_datas()) {
-                if (data.data.size() >= 15) { // Ensure sufficient length for CO2 version
-                    // Parse temperature from Bytes 8-9
-                    float temperature = (float(data.data[8] & 0x0F) * 0.1) + float(data.data[9] & 0x7F);
-                    if (!(data.data[9] & 0x80)) {
-                        temperature = -temperature;
-                    }
-                    id(meter_pro_co2_temperature).publish_state(temperature);
+#esp32_ble_tracker:
+#  scan_parameters:
+#    active: True # Whether to send scan-request packets to devices to gather more info (like devicename)
+#    interval: 320ms # suggested 211ms # default 320ms
+#    window:   30ms # suggested 120ms # default 30ms
 
-                    // Parse humidity from Byte 10
-                    uint8_t humidity = data.data[10] & 0x7F;
-                    id(meter_pro_co2_humidity).publish_state(humidity);
-
-                    // Parse CO2 from Bytes 13-14
-                    uint16_t co2 = (data.data[13] << 8) | data.data[14];
-                    id(meter_pro_co2).publish_state(co2);
-                }
-            }
-            for (auto data : x.get_service_datas()) {
-                if (data.data.size() == 3) {
-                    // Parse battery percentage from Byte 2
-                    int8_t battery_pct = data.data[2] & 0x7F;
-                    id(meter_pro_co2_battery).publish_state(battery_pct);
-                }
-            }
+#bluetooth_proxy:
+#  id: ble_proxy
+#  active: true  # allows outbound connections from HA to devices.
 
 sensor:
   - platform: wifi_signal
@@ -96,33 +76,6 @@ sensor:
     name: Uptime Sensor
   - platform: internal_temperature
     name: "ESP32 Internal Temperature"
-  - platform: template
-    name: "Meter Pro Temperature"
-    id: meter_pro_co2_temperature
-    unit_of_measurement: "°C"
-    accuracy_decimals: 1
-    icon: "mdi:thermometer"
-  - platform: template
-    name: "Meter Pro Humidity"
-    id: meter_pro_co2_humidity
-    unit_of_measurement: "%"
-    accuracy_decimals: 0
-    icon: "mdi:water-percent"
-  - platform: template
-    name: "Meter Pro CO2"
-    id: meter_pro_co2
-    unit_of_measurement: "ppm"
-    accuracy_decimals: 0
-    icon: "mdi:molecule-co2"
-  - platform: template
-    name: "Meter Pro Battery"
-    id: meter_pro_co2_battery
-    unit_of_measurement: "%"
-    accuracy_decimals: 0
-    icon: "mdi:battery"
-  - platform: ble_rssi
-    mac_address: "B0:E9:FE:9C:A8:AC"
-    name: "BLE Meter Pro RSSI value"
 
 spi:
   clk_pin: GPIO17
@@ -171,6 +124,7 @@ number:
   - platform: cc1101
     output_power:
       name: output_power
+      id: cc1101_output_power
     tuner:
       frequency:
         name: Tuner frequency
@@ -192,6 +146,15 @@ number:
     agc:
       carrier_sense_abs_thr:
         name: AGC carrier_sense_abs_thr
+  - platform: template
+    id: ceiling_fan_signal_repeat
+    name: Ceiling Fan Signal Repeat Times
+    internal: true
+    optimistic: True
+    min_value: 1
+    max_value: 40
+    step: 1
+    initial_value: 4
 
 select:
   - platform: cc1101
@@ -234,15 +197,21 @@ remote_transmitter:
   carrier_duty_percent: 100%
   on_transmit:
     then:
+      #- esp32_ble_tracker.stop_scan:
+      #- lambda: |- 
+      #     id(ble_proxy)->set_active(false);
       - cc1101.begin_tx: transceiver
   on_complete:
     then:
       - cc1101.end_tx: transceiver
-
+      #- lambda: |- 
+      #     id(ble_proxy)->set_active(true);
+      #- esp32_ble_tracker.start_scan:
+      #      continuous: true
 remote_receiver:
   pin: GPIO14  # GDO2
-  dump:
-    - rc_switch
+  # dump:
+    # - rc_switch
     # - raw
   tolerance: 50%
   filter: 250us
@@ -272,10 +241,15 @@ script:
       code: string
       repeat: int
     then:
-      - lambda: id(cc1101_freq).publish_state(434110);
+      - number.set:
+          id: cc1101_freq
+          value: 434110
+      - number.set:
+          id: cc1101_output_power
+          value: 7
       - remote_transmitter.transmit_raw:
           code: !lambda |-
-            std::vector<int> vec;
+            std::vector<long int> vec;
             for (int i = 0; i < code.length(); i++) {
               if (code[i] == '0') {
                 vec.push_back(740);
@@ -287,7 +261,6 @@ script:
             }
             vec.push_back(256);
             vec.push_back(-8864);
-
             return vec;
           repeat: 
             times: !lambda 'return repeat;'
@@ -311,6 +284,13 @@ button:
           id: dac_output
           level: 0%
       - delay: 0.5s
+      - output.set_level:
+          id: dac_output_inv
+          level: 0%
+      - output.set_level:
+          id: dac_output
+          level: 25%
+      - delay: 0.25s
       - output.turn_off: dac_output
       - output.turn_off: dac_output_inv
       - logger.log: "Sprayed!"
@@ -318,87 +298,87 @@ button:
     name: Ceiling Fan Light Toggle
     icon: "mdi:ceiling-fan-light"
     on_press:
-      - lambda: id(cc1101_transmit_ceiling_fan_code)->execute("11111101001111001001110011111101", 4);
+      - lambda: id(cc1101_transmit_ceiling_fan_code)->execute("11111101001111001001110011111101", id(ceiling_fan_signal_repeat).state);
   - platform: template
     name: Ceiling Fan Toggle
     icon: "mdi:ceiling-fan"
     on_press:
-      - lambda: id(cc1101_transmit_ceiling_fan_code)->execute("11111101001111001001110110101001", 4);
+      - lambda: id(cc1101_transmit_ceiling_fan_code)->execute("11111101001111001001110110101001", id(ceiling_fan_signal_repeat).state);
   - platform: template
     name: Ceiling Fan Speed 1
     icon: "mdi:fan-chevron-down"
     on_press:
-      - lambda: id(cc1101_transmit_ceiling_fan_code)->execute("11111101001111001001011110000001", 4);
+      - lambda: id(cc1101_transmit_ceiling_fan_code)->execute("11111101001111001001011110000001", id(ceiling_fan_signal_repeat).state);
   - platform: template
     name: Ceiling Fan Speed 2
     icon: "mdi:fan-chevron-down"
     on_press:
-      - lambda: id(cc1101_transmit_ceiling_fan_code)->execute("11111101001111001001011011010101", 4);
+      - lambda: id(cc1101_transmit_ceiling_fan_code)->execute("11111101001111001001011011010101", id(ceiling_fan_signal_repeat).state);
   - platform: template
     name: Ceiling Fan Speed 3
     icon: "mdi:fan-chevron-down"
     on_press:
-      - lambda: id(cc1101_transmit_ceiling_fan_code)->execute("11111101001111001001000110110100", 4);
+      - lambda: id(cc1101_transmit_ceiling_fan_code)->execute("11111101001111001001000110110100", id(ceiling_fan_signal_repeat).state);
   - platform: template
     name: Ceiling Fan Speed 4
     icon: "mdi:fan-chevron-up"
     on_press:
-      - lambda: id(cc1101_transmit_ceiling_fan_code)->execute("11111101001111001001101010101110", 4);
+      - lambda: id(cc1101_transmit_ceiling_fan_code)->execute("11111101001111001001101010101110", id(ceiling_fan_signal_repeat).state);
   - platform: template
     name: Ceiling Fan Speed 5
     icon: "mdi:fan-chevron-up"
     on_press:
-      - lambda: id(cc1101_transmit_ceiling_fan_code)->execute("11111101001111001001100000010111", 4);
+      - lambda: id(cc1101_transmit_ceiling_fan_code)->execute("11111101001111001001100000010111", id(ceiling_fan_signal_repeat).state);
   - platform: template
     name: Ceiling Fan Speed 6
     icon: "mdi:fan-chevron-up"
     on_press:
-      - lambda: id(cc1101_transmit_ceiling_fan_code)->execute("11111101001111001001100110001111", 4);
+      - lambda: id(cc1101_transmit_ceiling_fan_code)->execute("11111101001111001001100110001111", id(ceiling_fan_signal_repeat).state);
   - platform: template
     name: Ceiling Fan Direction Toggle
     icon: "mdi:arrow-left-right"
     on_press:
-      - lambda: id(cc1101_transmit_ceiling_fan_code)->execute("11111101001111001001111011111111", 4);
+      - lambda: id(cc1101_transmit_ceiling_fan_code)->execute("11111101001111001001111011111111", id(ceiling_fan_signal_repeat).state);
   - platform: template
     name: Ceiling Fan Dim Light
     icon: "mdi:lightbulb-on-20"
     on_press:
-      - lambda: id(cc1101_transmit_ceiling_fan_code)->execute("11111101001111001001011100101011", 4); 
+      - lambda: id(cc1101_transmit_ceiling_fan_code)->execute("11111101001111001001011100101011", id(ceiling_fan_signal_repeat).state); 
   - platform: template
     name: Ceiling Fan Brighten Light
     icon: "mdi:lightbulb-on-80"
     on_press:
-      - lambda: id(cc1101_transmit_ceiling_fan_code)->execute("11111101001111001001101111001001", 4); 
+      - lambda: id(cc1101_transmit_ceiling_fan_code)->execute("11111101001111001001101111001001", id(ceiling_fan_signal_repeat).state); 
   - platform: template
     name: Ceiling Fan Warm Light Color
     icon: "mdi:heat-wave"
     on_press:
-      - lambda: id(cc1101_transmit_ceiling_fan_code)->execute("11111101001111001001100100110100", 4); 
+      - lambda: id(cc1101_transmit_ceiling_fan_code)->execute("11111101001111001001100100110100", id(ceiling_fan_signal_repeat).state); 
   - platform: template
     name: Ceiling Fan Neutral Light Color
     icon: "mdi:emoticon-neutral-outline"
     on_press:
-      - lambda: id(cc1101_transmit_ceiling_fan_code)->execute("11111101001111001001100011111001", 4); 
+      - lambda: id(cc1101_transmit_ceiling_fan_code)->execute("11111101001111001001100011111001", id(ceiling_fan_signal_repeat).state); 
   - platform: template
     name: Ceiling Fan Cold Light Color
     icon: "mdi:snowflake"
     on_press:
-      - lambda: id(cc1101_transmit_ceiling_fan_code)->execute("11111101001111001001011001011101", 4);
+      - lambda: id(cc1101_transmit_ceiling_fan_code)->execute("11111101001111001001011001011101", id(ceiling_fan_signal_repeat).state);
   - platform: template
     name: Ceiling Fan Natural Wind
     icon: "mdi:weather-windy"
     on_press:
-      - lambda: id(cc1101_transmit_ceiling_fan_code)->execute("11111101001111001001010100111000", 4); 
+      - lambda: id(cc1101_transmit_ceiling_fan_code)->execute("11111101001111001001010100111000", id(ceiling_fan_signal_repeat).state); 
   - platform: template
     name: Ceiling Fan 30 Minutes Timer
     icon: "mdi:fan-clock"
     on_press:
-      - lambda: id(cc1101_transmit_ceiling_fan_code)->execute("11111101001111001001101100010100", 4); 
+      - lambda: id(cc1101_transmit_ceiling_fan_code)->execute("11111101001111001001101100010100", id(ceiling_fan_signal_repeat).state); 
   - platform: template
     name: Ceiling Fan 2 Hours Timer
     icon: "mdi:fan-clock"
     on_press:
-      - lambda: id(cc1101_transmit_ceiling_fan_code)->execute("11111101001111001001001100001101", 4); 
+      - lambda: id(cc1101_transmit_ceiling_fan_code)->execute("11111101001111001001001100001101", id(ceiling_fan_signal_repeat).state); 
 
 binary_sensor:
   - platform: status

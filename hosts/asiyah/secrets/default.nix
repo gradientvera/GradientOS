@@ -189,9 +189,10 @@
       };
 
       esphome-secrets = {
-        owner = config.users.users.esphome.name;
-        group = config.users.users.esphome.group;
-        path = "${config.users.users.esphome.home}/secrets.yaml";
+        mode = "0440";
+        owner = "esphome";
+        group = "esphome";
+        path = "/var/lib/esphome/secrets.yaml";
         restartUnits = [ "esphome.service" ];
       };
 

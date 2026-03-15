@@ -11,33 +11,14 @@ in
     port = ports.esphome;
   };
 
-  users.users.esphome = {
-    isSystemUser = true;
-    home = "/var/lib/esphome";
-    createHome = true;
-    homeMode = "750";
-    group = config.users.groups.esphome.name;
-  };
-
-  users.groups.esphome = {};
-
-  systemd.services.esphome = {
-    serviceConfig = {
-      # Needed to fix compilation
-      DynamicUser = lib.mkForce false;
-      User = lib.mkForce config.users.users.esphome.name;
-      Group = lib.mkForce config.users.groups.esphome.name;
-    };
-  };
-
   systemd.tmpfiles.settings."10-esphome" = 
   let
     mkDevice = file: {
       argument = toString ./${file};
       repoPath = "/etc/nixos/hosts/asiyah/esphome/${file}";
       doCheck = true;
-      user = config.systemd.services.esphome.serviceConfig.User;
-      group = config.systemd.services.esphome.serviceConfig.Group;
+      user = "esphome";
+      group = "esphome";
       mode = "0755";
     };
   in
