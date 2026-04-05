@@ -9,6 +9,7 @@
   aarch64 = "aarch64";
 
   vera = "vera";
+  neith = "neith";
 
   nightly = "nightly";
 }
