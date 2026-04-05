@@ -3,9 +3,7 @@
 {
   imports = [
     ./ssh.nix
-    # ./nushell.nix
     ./programs.nix
-    #./zsh/default.nix
     ./secrets/default.nix
   ];
 
