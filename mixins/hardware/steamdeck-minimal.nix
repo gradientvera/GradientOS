@@ -1,10 +1,12 @@
-{ pkgs, ... }:
+{ lib, pkgs, ... }:
 {
 
   # Enable hardware and Steam support.
   jovian.devices.steamdeck.enable = true;
   jovian.devices.steamdeck.autoUpdate = true;
   jovian.devices.steamdeck.enableXorgRotation = false;
+
+  jovian.steamos.useSteamOSConfig = true;
 
   environment.systemPackages = with pkgs; [
     galileo-mura
