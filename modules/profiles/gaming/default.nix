@@ -87,6 +87,7 @@ in
         # satisfactorymodmanager # TODO: Broken
         osu-lazer-bin
         prismlauncher
+        cataclysm-dda
         # vintagestory
         xivlauncher
         steam-run
