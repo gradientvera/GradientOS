@@ -67,7 +67,7 @@ in
 
       services.displayManager.enable = true;
       services.displayManager.autoLogin.enable = cfg.profiles.desktop.wayland.autologin.enable;
-      services.displayManager.autoLogin.user = lib.mkIf cfg.profiles.desktop.wayland.autologin.enable "vera";
+      services.displayManager.autoLogin.user = lib.mkIf cfg.profiles.desktop.wayland.autologin.enable (lib.mkDefault "vera");
 
       # Enable portals.
       xdg.portal.enable = true;

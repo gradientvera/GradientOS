@@ -21,7 +21,7 @@
   gradient.presets.syncthing.user = "neith";
 
   # Use Jovian's steam deck UI autostart.
-  services.displayManager.sddm.enable = lib.mkForce false;
+  services.displayManager.plasma-login-manager.enable = lib.mkForce false;
   jovian.steam.autoStart = true;
   jovian.steam.user = "neith";
   jovian.decky-loader.user = "neith";
