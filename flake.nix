@@ -203,6 +203,7 @@
         overlays = [ self.overlays.kernel-allow-missing ];
 
         modules = [
+          lanzaboote.nixosModules.lanzaboote
           jovian-nixos.nixosModules.default
 
           mixins.tor

@@ -1,8 +1,18 @@
-{ ... }:
+{ lib, ... }:
 {
 
   # Bootloader.
-  boot.loader.systemd-boot.enable = true;
+  boot.loader.systemd-boot.enable = lib.mkForce false;
+  boot.lanzaboote = {
+    enable = true;
+    pkiBundle = "/var/lib/sbctl";
+    autoGenerateKeys.enable = true;
+    autoEnrollKeys = {
+      enable = true;
+      # Automatically reboot to enroll the keys in the firmware
+      autoReboot = true;
+    };
+  };
   boot.loader.efi.canTouchEfiVariables = true;
 
   boot.initrd.luks.devices."luks-c3cd1e3f-45ef-4009-bdf4-73dfab099aaa".device = "/dev/disk/by-uuid/c3cd1e3f-45ef-4009-bdf4-73dfab099aaa";
