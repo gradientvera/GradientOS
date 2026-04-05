@@ -12,7 +12,10 @@
   networking.hostName = "neith-deck";
 
   gradient.profiles.gaming.enable = true;
-  gradient.profiles.gaming.emulation.enable = false;
+  gradient.profiles.gaming.emulation.enable = true;
+  gradient.profiles.gaming.emulation.romPath = "/run/media/deck/mmcblk0p1/roms";
+  gradient.profiles.gaming.emulation.sync.devices = [];
+  
   gradient.profiles.gaming.emulation.user = "neith";
   gradient.profiles.desktop.enable = true;
   gradient.profiles.catppuccin.enable = false;
@@ -28,7 +31,7 @@
   jovian.steam.desktopSession = "plasma";
 
   services.handheld-daemon.enable = true;
-  services.handheld-daemon.user = "vera";
+  services.handheld-daemon.user = "neith";
 
   gradient.substituters = {
     asiyah = "ssh-ng://nix-ssh@asiyah.lily?priority=50";
