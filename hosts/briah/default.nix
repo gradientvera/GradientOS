@@ -3,6 +3,7 @@
   imports = [
     ./nginx.nix
     ./networking.nix
+    ./filesystems.nix
     ./secrets/default.nix
     ./hardware-configuration.nix
   ];

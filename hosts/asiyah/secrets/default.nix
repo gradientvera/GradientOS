@@ -1,5 +1,10 @@
 { config, ... }:
 
+# When modifying this keep in mind that
+# it is also going to be loaded by the
+# rescue specialisation which does not
+# have any of the usual services enabled.
+
 {
 
   sops = {
@@ -23,8 +28,8 @@
 
       searx = {
         mode = "0440";
-        owner = config.users.users.searx.name;
-        group = config.users.users.searx.group;
+        owner = config.users.users.searx.name or null;
+        group = config.users.users.searx.group or null;
         restartUnits = [ "searx.service" "searx-init.service" ];
       };
 
@@ -42,43 +47,43 @@
 
       mediarr-gluetun-env = {
         mode = "0440";
-        owner = config.users.users.mediarr.name;
-        group = config.users.users.mediarr.group;
+        owner = config.users.users.mediarr.name or null;
+        group = config.users.users.mediarr.group or null;
         restartUnits = [ "podman-gluetun.service" ];
       };
 
       mediarr-gluetun-uk-env = {
         mode = "0440";
-        owner = config.users.users.mediarr.name;
-        group = config.users.users.mediarr.group;
+        owner = config.users.users.mediarr.name or null;
+        group = config.users.users.mediarr.group or null;
         restartUnits = [ "podman-gluetun.service" ];
       };
 
       mediarr-iptv-env = {
         mode = "0440";
-        owner = config.users.users.mediarr.name;
-        group = config.users.users.mediarr.group;
+        owner = config.users.users.mediarr.name or null;
+        group = config.users.users.mediarr.group or null;
         restartUnits = [ "podman-ersatztv.service" ];
       };
 
       mediarr-unpackerr-env = {
         mode = "0440";
-        owner = config.users.users.mediarr.name;
-        group = config.users.users.mediarr.group;
+        owner = config.users.users.mediarr.name or null;
+        group = config.users.users.mediarr.group or null;
         restartUnits = [ "podman-unpackerr.service" ];
       };
 
       mediarr-qbittorrent-script = {
         mode = "0550";
-        owner = config.users.users.mediarr.name;
-        group = config.users.users.mediarr.group;
+        owner = config.users.users.mediarr.name or null;
+        group = config.users.users.mediarr.group or null;
         restartUnits = [ "podman-qbittorrent.service" ];
       };
 
       mediarr-decluttarr-env = {
         mode = "0440";
-        owner = config.users.users.mediarr.name;
-        group = config.users.users.mediarr.group;
+        owner = config.users.users.mediarr.name or null;
+        group = config.users.users.mediarr.group or null;
         restartUnits = [ "podman-decluttarr.service" ];
       };
 
@@ -86,50 +91,50 @@
         mode = "0440";
         format = "binary";
         sopsFile = ./Axios.js;
-        owner = config.users.users.mediarr.name;
-        group = config.users.users.mediarr.group;
+        owner = config.users.users.mediarr.name or null;
+        group = config.users.users.mediarr.group or null;
         restartUnits = [ "podman-tdarr.service" ];
       };
 
       mediarr-romm-env = {
         mode = "0440";
-        owner = config.users.users.mediarr.name;
-        group = config.users.users.mediarr.group;
+        owner = config.users.users.mediarr.name or null;
+        group = config.users.users.mediarr.group or null;
         restartUnits = [ "podman-romm.service" ];
       };
 
       mediarr-mariadb-env = {
         mode = "0440";
-        owner = config.users.users.mediarr.name;
-        group = config.users.users.mediarr.group;
+        owner = config.users.users.mediarr.name or null;
+        group = config.users.users.mediarr.group or null;
         restartUnits = [ "podman-mariadb.service" ];
       };
 
       mediarr-neko-env = {
         mode = "0440";
-        owner = config.users.users.mediarr.name;
-        group = config.users.users.mediarr.group;
+        owner = config.users.users.mediarr.name or null;
+        group = config.users.users.mediarr.group or null;
         restartUnits = [ "podman-neko.service" ];
       };
 
       mediarr-amule-env = {
         mode = "0440";
-        owner = config.users.users.mediarr.name;
-        group = config.users.users.mediarr.group;
+        owner = config.users.users.mediarr.name or null;
+        group = config.users.users.mediarr.group or null;
         restartUnits = [ "podman-amule.service" ];
       };
       
       mediarr-shelfmark-env = {
         mode = "0440";
-        owner = config.users.users.mediarr.name;
-        group = config.users.users.mediarr.group;
+        owner = config.users.users.mediarr.name or null;
+        group = config.users.users.mediarr.group or null;
         restartUnits = [ "podman-shelfmark.service" ];
       };
       
       mediarr-calibre-env = {
         mode = "0440";
-        owner = config.users.users.mediarr.name;
-        group = config.users.users.mediarr.group;
+        owner = config.users.users.mediarr.name or null;
+        group = config.users.users.mediarr.group or null;
         restartUnits = [ "podman-calibre.service" ];
       };
       
@@ -149,43 +154,43 @@
         mode = "0550";
         format = "binary";
         sopsFile = ./kanidm-provisioning.encjson;
-        owner = config.users.users.kanidm.name;
-        group = config.users.users.kanidm.group;
+        owner = config.users.users.kanidm.name or null;
+        group = config.users.users.kanidm.group or null;
         restartUnits = [ "kanidm.service" ];
       };
 
       kanidm-admin-password = {
         restartUnits = [ "kanidm.service" ];
-        owner = config.users.users.kanidm.name;
-        group = config.users.users.kanidm.group;
+        owner = config.users.users.kanidm.name or null;
+        group = config.users.users.kanidm.group or null;
       };
 
       kanidm-idm-admin-password = {
         restartUnits = [ "kanidm.service" ];
-        owner = config.users.users.kanidm.name;
-        group = config.users.users.kanidm.group;
+        owner = config.users.users.kanidm.name or null;
+        group = config.users.users.kanidm.group or null;
       };
 
       forgejo-ssh-priv = {
         restartUnits = [ "forgejo.service" ];
-        owner = config.services.forgejo.user;
-        group = config.services.forgejo.group;
+        owner = config.services.forgejo.user or null;
+        group = config.services.forgejo.group or null;
       };
 
       forgejo-runner-token = {
         restartUnits = [ "forgejo.service" "gitea-runner-asiyah.service" ];
-        owner = config.services.forgejo.user;
-        group = config.services.forgejo.group;
+        owner = config.services.forgejo.user or null;
+        group = config.services.forgejo.group or null;
       };
 
       paperless-env = {
         restartUnits = [ "paperless.service" ];
-        owner = config.services.paperless.user;
+        owner = if config.services.paperless.enable then config.services.paperless.user else null;
       };
 
       paperless-admin-password = {
         restartUnits = [ "paperless.service" ];
-        owner = config.services.paperless.user;
+        owner = if config.services.paperless.enable then config.services.paperless.user else null;
       };
 
       esphome-secrets = {
@@ -197,21 +202,21 @@
       };
 
       hass-secrets = {
-        owner = config.users.users.hass.name;
-        group = config.users.users.hass.group;
-        path = "${config.users.users.hass.home}/secrets.yaml";
+        owner = config.users.users.hass.name or null;
+        group = config.users.users.hass.group or null;
+        path = "/var/lib/hass/secrets.yaml";
         restartUnits = [ "home-assistant.service" ];
       };
 
       hass-ssh-priv = {
-        owner = config.users.users.hass.name;
-        group = config.users.users.hass.group;
+        owner = config.users.users.hass.name or null;
+        group = config.users.users.hass.group or null;
         restartUnits = [ "home-assistant.service" ];
       };
 
       pinchflat = {
-        owner = config.users.users.mediarr.name;
-        group = config.users.users.mediarr.group;
+        owner = config.users.users.mediarr.name or null;
+        group = config.users.users.mediarr.group or null;
         restartUnits = [ "pinchflat.service" ];
       };
 
@@ -225,19 +230,20 @@
 
       calibre-opds-credentials = {
         restartUnits = [ "nginx.service" ];
-        owner = "nginx";
-        group = "nginx";
+        owner = if config.services.nginx.enable then config.services.nginx.user else null;
+        group = if config.services.nginx.enable then config.services.nginx.group else null;
       };
 
       grafana-secret-key = {
         restartUnits = [ "grafana.service" ];
-        owner = "grafana";
+        owner = config.users.users.grafana.name or null;
+        group = config.users.users.grafana.group or null;
       };
 
       the-things-network-mosquitto = {
         restartUnits = [ "mosquitto.service" ];
-        owner = config.users.users.mosquitto.name;
-        group = config.users.users.mosquitto.group;
+        owner = config.users.users.mosquitto.name or null;
+        group = config.users.users.mosquitto.group or null;
         path = "/etc/mosquitto.d/the-things-network-bridge.conf";
       };
 

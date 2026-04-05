@@ -2,7 +2,7 @@
 {
  
   imports = [
-    ./filesystem.nix
+    ./filesystems.nix
     ./secrets/default.nix
     ./hardware-configuration.nix
   ];  

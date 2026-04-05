@@ -40,7 +40,7 @@ in buildHomeAssistantComponent {
         pythonPkgs.setuptools
       ];
 
-      dependencies = with pkgs.python313Packages; [
+      dependencies = with pythonPkgs; [
         aiohttp
         async-timeout
         backoff

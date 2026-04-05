@@ -7,7 +7,7 @@ in
   # TODO: Turn these into proper modules
   imports = [
     ./udev.nix
-    #./rescue.nix
+    ./rescue.nix
     ./openssh.nix
     ./network.nix
     ./workarounds.nix

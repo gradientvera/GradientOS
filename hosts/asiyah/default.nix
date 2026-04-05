@@ -27,7 +27,7 @@
     ./headscale.nix
     ./paperless.nix
     ./cloudflare.nix
-    ./filesystem.nix
+    ./filesystems.nix
     ./vaultwarden.nix
     ./media-stack.nix
     ./uptime-kuma.nix
