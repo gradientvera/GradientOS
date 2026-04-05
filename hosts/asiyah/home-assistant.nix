@@ -9,6 +9,7 @@ in
 
   services.home-assistant = {
     enable = true;
+    package = pkgs.master.home-assistant;
     lovelaceConfigWritable = true;
     extraComponents = [
       "homeassistant_alerts"
@@ -27,7 +28,6 @@ in
       "haveibeenpwned"
       "seventeentrack"
       "device_tracker"
-      "python_script"
       "shell_command"
       "history_stats"
       "shopping_list"
@@ -209,6 +209,8 @@ in
       shell_command = {
         # Literally SSH into a host with the home assistant private SSH key and run a command
         ssh = "${toString pkgs.openssh}/bin/ssh -i ${config.sops.secrets.hass-ssh-priv.path} -o StrictHostKeyChecking=accept-new {{ host }} {{ command }}";
+        # Workaround for a stupid DNS issue I cannot find a proper solution for lol
+        dig = "${toString pkgs.dig}/bin/dig {{ host }}";
       };
 
       go2rtc.url = "http://127.0.0.1:${toString ports.frigate-go2rtc}";
