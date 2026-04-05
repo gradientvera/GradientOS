@@ -233,9 +233,6 @@ in
       "fs.inotify.max_user_watches" =  "524288"; 
     };
 
-    # For handhelds etc
-    boot.initrd.unl0kr.settings.general.backend = "drm";
-    
     # Automatically restart 30 seconds after a kernel panic
     boot.kernelParams = [ "panic=30" ];
 
