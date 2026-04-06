@@ -111,6 +111,7 @@ in
       sonarr-upcoming-media
       mqtt-vacuum-camera
       thermal-comfort
+      google-find-my
       anniversaries
       # feedparser # TODO: fix
       moonraker
@@ -138,7 +139,6 @@ in
       mini-graph-card
       # custom-sidebar
       # auto-entities
-      # google-find-my
       sankey-chart
       vacuum-card
       bubble-card
@@ -211,6 +211,7 @@ in
         ssh = "${toString pkgs.openssh}/bin/ssh -i ${config.sops.secrets.hass-ssh-priv.path} -o StrictHostKeyChecking=accept-new {{ host }} {{ command }}";
         # Workaround for a stupid DNS issue I cannot find a proper solution for lol
         dig = "${toString pkgs.dig}/bin/dig {{ host }}";
+        curl = "${toString pkgs.curl}/bin/curl {{ args }}";
       };
 
       go2rtc.url = "http://127.0.0.1:${toString ports.frigate-go2rtc}";
