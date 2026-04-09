@@ -35,6 +35,29 @@ in
         wireplumber.enable = true;
       };
 
+      services.pipewire.extraConfig.pipewire-pulse = {
+        # Prevent Discord from loosing audio under high CPU load
+        "force-discord-latency" = {
+          "pulse.rules" = [
+            {
+              matches = [
+                { "application.process.binary" = "Discord"; }
+                { "application.process.binary" = ".Discord-wrapped"; }
+                { "application.process.binary" = "DiscordCanary"; }
+                { "application.process.binary" = ".DiscordCanary-wrapped"; }
+              ];
+              actions = {
+                update-props = {
+                  "pulse.min.req" = "1024/48000";
+                  "pulse.min.quantum" = "1024/48000";
+                  "default.clock.min-quantum" = "1024";
+                };
+              };
+            }
+          ];
+        };
+      };
+
       services.udev.extraRules = ''
         DEVPATH=="/devices/virtual/misc/cpu_dma_latency", OWNER="root", GROUP="audio", MODE="0660"
       '';
