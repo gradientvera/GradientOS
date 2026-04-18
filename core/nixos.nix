@@ -24,6 +24,14 @@ in
         Enables some extra services by default, and also enables systemd-based initrd.
       '';
     };
+
+    gradient.core.nixos.installer = lib.mkOption {
+      type = lib.types.bool;
+      default = false;
+      description = ''
+        Whether this system is actually an installer.
+      '';
+    };
   };
 
   config = lib.mkIf cfg.core.nixos.enable {

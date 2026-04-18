@@ -122,7 +122,6 @@
           mixins.tailscale
           mixins.wireguard
           mixins.uwu-style
-          #mixins.tdarr-node
           mixins.upgrade-diff
           mixins.v4l2loopback
           mixins.vera-locale
@@ -262,7 +261,6 @@
           mixins.tailscale
           mixins.wireguard
           #mixins.uwu-style
-          #mixins.tdarr-node
           mixins.vera-locale
           mixins.upgrade-diff
           mixins.v4l2loopback
@@ -403,6 +401,8 @@
           ({ modulesPath, lib, ... }:
           {
             imports = [ (modulesPath + "/installer/cd-dvd/installation-cd-graphical-calamares-plasma6.nix") ];
+            
+            gradient.core.nixos.installer = true;
             boot.initrd.systemd.enable = lib.mkForce false;
           })
         ];
@@ -423,6 +423,8 @@
           ({ modulesPath, lib, ... }:
           {
             imports = [ (modulesPath + "/installer/cd-dvd/installation-cd-graphical-calamares-plasma6.nix") ];
+            
+            gradient.core.nixos.installer = true;
             jovian.devices.steamdeck.enable = true;
             jovian.devices.steamdeck.enableXorgRotation = false;
             services.pulseaudio.enable = lib.mkForce false;
