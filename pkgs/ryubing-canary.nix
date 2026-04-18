@@ -43,12 +43,12 @@
 
 buildDotnetModule rec {
   pname = "ryubing";
-  version = "1.3.271";
+  version = "1.3.272";
 
   src = fetchgit {
     url = "https://git.ryujinx.app/projects/Ryubing.git";
-    tag = "Canary-1.3.271";
-    hash = "sha256-klmhC75a21/wlaZEU0ZRV59+Bxw5zVp7fJbHRP2seZk=";
+    tag = "Canary-1.3.272";
+    hash = "sha256-ZFseJ91leZOjs2G3HLKw1e2NAWmeOhAj8oB72rmzTCY=";
   };
 
   nativeBuildInputs =
