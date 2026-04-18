@@ -309,7 +309,7 @@ in
         # -- Standalone emulators --
         azahar # 3DS
         dolphin-emu # Wii / GC
-        cemu # WiiU
+        stable.cemu # WiiU
         ryubing-canary # Switch
         pcsx2 # PS2
         stable.rpcs3 # PS3
