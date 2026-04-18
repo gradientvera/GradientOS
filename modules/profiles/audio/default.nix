@@ -36,15 +36,18 @@ in
       };
 
       services.pipewire.extraConfig.pipewire-pulse = {
-        # Prevent Discord from loosing audio under high CPU load
-        "force-discord-latency" = {
+        "force-latency" = {
           "pulse.rules" = [
             {
               matches = [
+                # Prevent Discord from loosing audio under high CPU load
                 { "application.process.binary" = "Discord"; }
                 { "application.process.binary" = ".Discord-wrapped"; }
                 { "application.process.binary" = "DiscordCanary"; }
                 { "application.process.binary" = ".DiscordCanary-wrapped"; }
+                # Prevent bad audio delays on some games
+                { "application.process.binary" = "Ryujinx"; }
+                { "application.process.binary" = "ryujinx"; }
               ];
               actions = {
                 update-props = {
