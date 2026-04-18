@@ -26,6 +26,8 @@ final: prev:
 
   moonraker-timelapse = prev.callPackage ../pkgs/moonraker-timelapse.nix { };
 
+  ryubing-canary = prev.callPackage ../pkgs/ryubing-canary.nix { };
+
   starsector-gamescope-wrap = prev.callPackage ../pkgs/starsector-gamescope-wrap.nix { }; 
 
   # Klipper with accelerometer support. See: https://www.klipper3d.org/Measuring_Resonances.html#software-installation

@@ -95,9 +95,6 @@ in {
     doCheck = false;
   });
 
-  # Ryubing canary/nightly version
-  ryubing-canary = prev.callPackage ../pkgs/ryubing-canary.nix { };
-
   moonraker = prev.moonraker.overrideAttrs (final.moonraker-timelapse.moonrakerOverrideAttrs);
 
   steam = prev.steam.override steam-override;
