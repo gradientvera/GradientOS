@@ -8,7 +8,10 @@
       "1.1.1.1"
       "1.0.0.1"
     ];
-    defaultGateway = "172.31.1.1";
+    defaultGateway = {
+      address = "172.31.1.1";
+      interface = "eth0";
+    };
     defaultGateway6 = {
       address = "fe80::1";
       interface = "eth0";
@@ -31,7 +34,6 @@
   };
   services.udev.extraRules = ''
     ATTR{address}=="92:00:06:b3:e1:f0", NAME="eth0"
-    
   '';
   networking.networkmanager.enable = lib.mkForce false;
   networking.resolvconf.enable = lib.mkForce false;
