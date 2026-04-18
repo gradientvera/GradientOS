@@ -1,4 +1,4 @@
-{ config, lib, ... }:
+{ config, pkgs, lib, ... }:
 let
   cfg = config.gradient.presets.syncthing;
   secrets = config.sops.secrets;
@@ -98,9 +98,8 @@ in
         };
       };
 
-      networking.firewall.interfaces.gradientnet.allowedTCPPorts = [ 22000 21027 8384 ];
-      networking.firewall.interfaces.gradientnet.allowedUDPPorts = [ 22000 21027 8384 ];
-
+      environment.systemPackages = [ pkgs.syncthingtray ];
+      
       systemd.services.syncthing.serviceConfig = {
         SupplementaryGroups = lib.concatStringsSep " " cfg.extraGroups;
         AmbientCapabilities = ["CAP_CHOWN" "CAP_FOWNER"];
