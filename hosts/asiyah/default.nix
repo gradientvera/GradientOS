@@ -2,7 +2,6 @@
 {
 
   imports = [
-    ./nfs.nix
     ./mqtt.nix
     ./wolf.nix
     ./searx.nix
@@ -54,6 +53,19 @@
   gradient.profiles.graphics.enable = true;
 
   gradient.kernel.transparent_hugepages.enable = true;
+
+  # -- ROM sync --
+  gradient.profiles.gaming.emulation = {
+    enable = true;
+    installEmulators = false;
+    user = "vera";
+    group = "mediarr";
+    sync.enable = true;
+    romPath = "/data/downloads/games/roms";
+  };
+
+  gradient.presets.syncthing.extraGroups = [ "mediarr" "users" ];
+
 
   virtualisation.podman.dockerSocket.enable = true;
 
