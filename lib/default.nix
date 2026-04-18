@@ -1,6 +1,12 @@
 self:
 rec {
 
+  patchNixpkgs = nixpkgs: system: (import nixpkgs { inherit system; }).applyPatches {
+    name = "nixpkgs-patched";
+    src = nixpkgs;
+    patches = import ../misc/nixpkgsPatches.nix;
+  };
+
   gradientosSystem =
     { name
     , nixpkgs ? self.inputs.nixpkgs
@@ -54,24 +60,19 @@ rec {
         ports = mkPorts name;
       } // specialArgs;
 
-      pkgs = import nixpkgs {
+      pkgs = (import (patchNixpkgs nixpkgs system) {
         inherit system;
         config = {
           allowUnfree = true;
           allowBroken = true;
-          permittedInsecurePackages = [
-            "dotnet-runtime-7.0.20" # TODO: Remove when not needed anymore
-            "freeimage-3.18.0-unstable-2024-04-18" # TODO: Remove when not needed anymore
-            "libsoup-2.74.3" # TODO: Remove when not needed anymore
-            "python3.13-ecdsa-0.19.1" # fucken...
-          ];
+          permittedInsecurePackages = import ../misc/permittedInsecurePackages.nix;
         };
         overlays = [
           (import ../overlays/gradientos.nix self)
           (import ../overlays/gradientpkgs.nix)
           (import ../overlays/home-assistant.nix)
         ] ++ overlays;
-      };
+      });
 
       modules = [
         (mkHostNameModule name)
@@ -117,7 +118,7 @@ rec {
   forAllSystemsWithOverlays = overlays: function: forAllSystemsCustom { inherit overlays; config.allowUnfree = true; } function;
   forAllSystemsCustom = nixpkgsCfg: function:
     self.inputs.nixpkgs.lib.genAttrs [ "x86_64-linux" "aarch64-linux" ]
-      (system: function (import self.inputs.nixpkgs (nixpkgsCfg // { inherit system; })));
+      (system: function (import (patchNixpkgs self.inputs.nixpkgs system) (nixpkgsCfg // { inherit system; })));
 
   hasPortsFile = name: (builtins.pathExists ../hosts/${name}/misc/service-ports.nix);
   mkPorts = name: if (hasPortsFile name) then (builtins.import ../hosts/${name}/misc/service-ports.nix) else {};
