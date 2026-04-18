@@ -91,6 +91,8 @@ fi
 # Oucher script
 if [[ -x "/data/oucher/oucher.sh" ]]; then
   echo "Initializing Oucher daemon..."
+  echo "Installing dependencies for oucher..."
+  apk add strace
 	nohup /data/oucher/oucher.sh > /dev/null 2>&1 &
 fi
 
