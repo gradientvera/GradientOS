@@ -17,7 +17,7 @@ playbook *args:
 [group('deployment')]
 update-inputs:
     nix flake update
-    nix flake check --keep-going --show-trace
+    just check
 
 [group('deployment')]
 switch HOST:
