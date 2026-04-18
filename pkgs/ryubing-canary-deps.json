@@ -566,8 +566,8 @@
   },
   {
     "pname": "ppy.SDL3-CS",
-    "version": "2025.920.0",
-    "hash": "sha256-gNy0f95tR3hXkagzLH/mngGSsDA7UqIMKYyTf00nsCI="
+    "version": "2026.320.0",
+    "hash": "sha256-dK58LuY8DQgw3Wfnj/HPup7Hxa9r2QvT/GBJbpUQ874="
   },
   {
     "pname": "Projektanker.Icons.Avalonia",
@@ -603,7 +603,7 @@
     "pname": "Ryujinx.LibHac",
     "version": "0.21.0-alpha.129",
     "hash": "sha256-vwpjCsMZayUAzaydzcO9ktEzNIYEmDpQbhswGx8O7no=",
-    "url": "https://legacy.git.ryujinx.app/api/v4/projects/17/packages/nuget/download/ryujinx.libhac/0.21.0-alpha.129/ryujinx.libhac.0.21.0-alpha.129.nupkg"
+    "url": "https://git.ryujinx.app/api/packages/projects/nuget/package/ryujinx.libhac/0.21.0-alpha.129/ryujinx.libhac.0.21.0-alpha.129.nupkg"
   },
   {
     "pname": "Ryujinx.Systems.Update.Common",

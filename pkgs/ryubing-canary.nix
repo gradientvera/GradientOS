@@ -1,5 +1,12 @@
 # Taken and modified from https://github.com/NixOS/nixpkgs/blob/nixos-25.11/pkgs/by-name/ry/ryubing/package.nix at cca3b04b44a5c57502fe2440cc3d2114779cc40c
 # nixpkgs is licensed under the MIT license, see here: https://github.com/NixOS/nixpkgs/blob/master/COPYING
+# ---
+# Update instructions:
+# 1. Change version and src.tag to latest canary
+# 2. Set src.hash to an empty string
+# 3. Run `nix build <self>#ryubing-canary`, replace empty src.hash by correct hash
+# 4. Run `nix run <self>#ryubing-canary.fetch-deps -- ./pkgs/ryubing-canary-deps.json`
+# 5. Confirm `nix run <self>#ryubing-canary` works and you're done!
 {
   lib,
   ryubing,
@@ -36,12 +43,12 @@
 
 buildDotnetModule rec {
   pname = "ryubing";
-  version = "1.3.268";
+  version = "1.3.271";
 
   src = fetchgit {
     url = "https://git.ryujinx.app/projects/Ryubing.git";
-    tag = "Canary-1.3.268";
-    hash = "sha256-d9LituF6fKxX6q0Gbzslaze3x5ExcmiPgh5SNECEpLo=";
+    tag = "Canary-1.3.271";
+    hash = "sha256-klmhC75a21/wlaZEU0ZRV59+Bxw5zVp7fJbHRP2seZk=";
   };
 
   nativeBuildInputs =
