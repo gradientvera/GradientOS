@@ -64,8 +64,7 @@
     romPath = "/data/downloads/games/roms";
   };
 
-  gradient.presets.syncthing.extraGroups = [ "mediarr" "users" ];
-
+  gradient.presets.syncthing.extraGroups = [ "syncthing" "mediarr" "users" ];
 
   virtualisation.podman.dockerSocket.enable = true;
 
