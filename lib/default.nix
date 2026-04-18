@@ -1,11 +1,19 @@
 self:
 rec {
 
-  patchNixpkgs = nixpkgs: system: (import nixpkgs { inherit system; }).applyPatches {
-    name = "nixpkgs-patched";
-    src = nixpkgs;
-    patches = import ../misc/nixpkgsPatches.nix;
-  };
+  patchNixpkgs = nixpkgs: system:
+    let
+      pkgs = import nixpkgs { inherit system; };
+      patches = import ../misc/nixpkgsPatches.nix;
+    in 
+      (if (builtins.length patches == 0)
+        then nixpkgs
+        else pkgs.applyPatches {
+          inherit patches;
+          name = "nixpkgs-patched";
+          src = nixpkgs;
+        }
+      );
 
   gradientosSystem =
     { name

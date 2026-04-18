@@ -9,7 +9,6 @@ in
 
   services.home-assistant = {
     enable = true;
-    package = pkgs.master.home-assistant;
     lovelaceConfigWritable = true;
     extraComponents = [
       "homeassistant_alerts"
