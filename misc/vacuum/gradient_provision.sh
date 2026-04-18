@@ -3,7 +3,7 @@
 set -eu
 set -o pipefail
 
-exec >> /dev/kmsg
+exec >> /tmp/gradient.log
 exec 2>&1
 
 echo "Initializing gradient_provision..."
@@ -28,50 +28,63 @@ done
 
 echo "Current date time: $(date)"
 
-echo "Downloading latest aarch64 entware installer..."
+echo "Downloading Alpine mini root filesystem..."
 
-wget https://bin.entware.net/aarch64-k3.10/installer/generic.sh
+rm -rf /tmp/alpine
+mkdir /tmp/alpine
+wget https://dl-cdn.alpinelinux.org/alpine/v3.23/releases/aarch64/alpine-minirootfs-3.23.4-aarch64.tar.gz -O alpine.tar.gz
+tar -xvzf ./alpine.tar.gz -C /tmp/alpine
 
-echo "Installing entware..."
+cp -a /tmp/alpine/lib/. /lib/
+cp -a /tmp/alpine/sbin/apk /sbin/
+cp -a /tmp/alpine/usr/lib/. /usr/lib/
+cp -a /tmp/alpine/usr/share/apk /usr/share
+cp -a /tmp/alpine/etc/apk /etc/
+cp -a /tmp/alpine/etc/ssl /etc/
+cp -a /tmp/alpine/etc/ssl1.1 /etc/
+cp -a /tmp/alpine/var/cache/apk /var/cache/
+rm -rf /tmp/alpine
 
-sh ./generic.sh
-rm ./generic.sh
+echo "Alpine installed on overlay!"
 
-echo "Entware installed!"
+apk update
 
-export PATH="$PATH:/opt/bin:/opt/usr/bin:/opt/libexec:/opt/sbin"
+echo "Fixing busybox and ca-certificates..."
+apk fix --reinstall busybox
+apk fix --reinstall ca-certificates
 
-echo "Running entware startup script..."
+echo "Installing system utilities..."
+apk add gcompat curl wget busybox nano espeak-ng
 
-/opt/etc/init.d/rc.unslung start &
+echo "Installing Ansible requirements through apk..."
+apk add python3 openssh-sftp-server
 
-echo "Installing Ansible requirements through opkg..."
-
-# Needed for Ansible
-opkg install python3
-opkg install openssh-sftp-server
-
-rm -f /usr/libexec/sftp-server
-ln -s /opt/libexec/sftp-server /usr/libexec/sftp-server
-
-echo "Fixing curl..."
-opkg install curl
-rm /usr/bin/curl
-ln -s /opt/bin/curl /usr/bin/curl
-
-echo "Fixing wget..."
-opkg install wget-ssl
-rm /usr/bin/wget
-ln -s /opt/bin/wget /usr/bin/wget
+ln -sf /usr/lib/ssh/sftp-server /usr/libexec/sftp-server
 
 echo "Initializing dropbear daemon on chroot with SFTP support at port 222."
 
 # SSH server with SFTP support
 /usr/local/sbin/dropbear -s -p 222 &
 
+echo "Installing sops and age..."
+apk add sops age
+
+mkdir -p /etc/age
+
+if ! [ -f "/etc/age/keys.txt" ]; then
+    echo "Generating age keys..."
+    age-keygen -o /etc/age/keys.txt
+    age-keygen -y /etc/age/keys.txt > /etc/age/pub-keys.txt
+fi
+
+export SOPS_AGE_KEY_FILE="/etc/age/keys.txt"
+export SOPS_SECRETS_FILE="/etc/secrets.yml"
+
 # Publish camera photos to MQTT
 if [[ -x "/data/gradient_publish_photo.sh" ]]; then
   echo "Initializing gradient_publish_photo daemon..."
+  echo "Installing dependencies for gradient_publish_photo..."
+  apk add mosquitto-clients imagemagick curl jq
   /data/gradient_publish_photo.sh &
 fi
 
@@ -81,13 +94,4 @@ if [[ -x "/data/oucher/oucher.sh" ]]; then
 	nohup /data/oucher/oucher.sh > /dev/null 2>&1 &
 fi
 
-if [ -f "/opt/bin/sops" ] && [ -f "/opt/bin/ssh-to-age" ] && [ -f "/data/gradient_sops_setup.sh" ]; then
-  # Set up sops for secrets
-  echo "Initializing SOPS setup..."
-  /data/gradient_sops_setup.sh
-fi
-
-if [ -f "/opt/secrets.yml" ]; then
-  # Initialize services which require secrets here
-  echo "Initializing services with secrets..."
-fi
+echo "Gradient provision complete!"

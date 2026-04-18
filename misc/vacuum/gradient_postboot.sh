@@ -3,7 +3,8 @@
 set -eu
 set -o pipefail
 
-exec >> /dev/kmsg
+rm -rf /tmp/gradient.log
+exec >> /tmp/gradient.log
 exec 2>&1
 
 echo "Initializing gradient_postboot..." 

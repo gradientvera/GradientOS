@@ -1,6 +1,6 @@
 #!/bin/sh
 
-# Needs valetudo, "camerademo" binary, imagemagick, jq, mosquitto-client-nossl...
+# Needs valetudo, "camerademo" binary, imagemagick, curl, jq, mosquitto-clients...
 # Very naive implementation not intended to be "good", just quick and simple.
 
 set -eu
