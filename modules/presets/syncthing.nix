@@ -98,6 +98,8 @@ in
         };
       };
 
+      networking.firewall.interfaces.gradientnet.allowedTCPPorts = [ 8384 ];
+
       environment.systemPackages = [ pkgs.syncthingtray ];
       
       systemd.services.syncthing.serviceConfig = {
