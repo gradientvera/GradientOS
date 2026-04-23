@@ -54,6 +54,7 @@ in
       "apple_tv"
       "logbook"
       "picotts"
+      "opensky"
       "history"
       "workday"
       "whisper"
