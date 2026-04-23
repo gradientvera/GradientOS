@@ -21,6 +21,10 @@
 
     # needed for controlling RGB LEDs on RAM sticks, also fixes some ACPI errors
     "acpi_enforce_resources=no"
+
+    # Fix bluetooth? See https://discuss.cachyos.org/t/bluetooth-connection-disconnection-cycling/20027/32
+    "usbcore.autosuspend=-1"
+    "btusb.enable_autosuspend=n"
   ];
   boot.extraModulePackages = with config.boot.kernelPackages; [ amdgpu-i2c ];
   boot.extraModprobeConfig = ''
