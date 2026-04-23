@@ -24,9 +24,9 @@
   
     # -- Power --
     # Disable autosuspend for input USB devices
-    ACTION=="add", SUBSYSTEM=="input", TEST=="power/control", ATTR{power/control}="on"
-    ACTION=="add", SUBSYSTEM=="input", TEST=="power/autosuspend", ATTR{power/autosuspend}="-1"
-    ACTION=="add", SUBSYSTEM=="input", TEST=="power/autosuspend_delay_ms", ATTR{power/autosuspend_delay_ms}="-1"
+    ACTION=="add|change", SUBSYSTEM=="input", TEST=="power/control", ATTR{power/control}="on"
+    ACTION=="add|change", SUBSYSTEM=="input", TEST=="power/autosuspend", ATTR{power/autosuspend}="-1"
+    ACTION=="add|change", SUBSYSTEM=="input", TEST=="power/autosuspend_delay_ms", ATTR{power/autosuspend_delay_ms}="-1"
   '';
 
 }
