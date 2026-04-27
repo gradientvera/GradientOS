@@ -24,6 +24,7 @@ in
       "speedtestdotnet"
       "remote_calendar"
       "default_config"
+      "folder_watcher"
       "haveibeenpwned"
       "seventeentrack"
       "device_tracker"
@@ -70,6 +71,7 @@ in
       "energy"
       "camera"
       "radarr"
+      "folder"
       "sonarr"
       "ollama"
       "stream"
@@ -198,7 +200,12 @@ in
         max_retries = 3;
       };
 
-      sensor = [ ];    
+      sensor = [
+        {
+          platform = "folder";
+          folder = "/var/lib/hass/www/sounds/oucher/";
+        }
+      ];    
 
       python_script = {};
 
