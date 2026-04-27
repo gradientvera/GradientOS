@@ -8,8 +8,8 @@ keys:
   - &host_briah age10z4hmqp35sut8v03edvrqwgmuqcwa8sd0fckp3yvcz3x9j3xr4zs4y40ef
   - &host_featherine age1ejpz2fma32t2ek20t3v2x6cyjrzm50lhd9gwqsqhvhnr9nkc0gpscgndk2
   - &host_yetzirah age1ca2ptgj50tdc9lf20mlsq64efqkczd7zlvt49fdnk0z8u7qy7v8sha9tsy
-  - &host_angela age1nzmuy9l4r02mmsc9g82u9dk63dn8x9508xs4m2jjpgujvnuer56q3pqh2v
-  - &host_mute age1xnd9swcqfs6vaaxapuynk9ynd0t98536pf2e4qkghppeft43gyysfh5m7g
+  - &host_angela age1sp0etyr2va65h9q2dan86nh4f5evr38pwlujnkxhegrnpvdn0ahsfjma3d
+  - &host_mute age14znxadz5sxdc4xg7ds660hv8qg0t7nx0cus3t96y23npez8t6uzqx0ak4m
 creation_rules:
 
   - path_regex: 'core/secrets/*'
@@ -91,4 +91,11 @@ creation_rules:
     key_groups:
     - age:
       - *user_vera
+      - *host_mute
+
+  - path_regex: 'misc/vacuum/secrets/*'
+    key_groups:
+    - age:
+      - *user_vera
+      - *host_angela
       - *host_mute
