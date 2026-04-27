@@ -92,8 +92,9 @@ fi
 if [[ -x "/data/oucher/oucher.sh" ]]; then
   echo "Initializing Oucher daemon..."
   echo "Installing dependencies for oucher..."
-  apk add strace
+  apk add strace ffmpeg vorbis-tools libao # + curl + jq
 	nohup /data/oucher/oucher.sh > /dev/null 2>&1 &
 fi
 
+speak "Gradient provision complete!" -v en --stdout | /bin/aplay
 echo "Gradient provision complete!"

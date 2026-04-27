@@ -2,7 +2,7 @@
 
 # Taken from https://gist.github.com/t-animal/dfc962d92d898fc55d15b97252f34ff8
 # Big thanks to t-animal for coding this!
-# Modified slightly to use strace from $PATH (literally a one-character change but oh well)
+# Modified to download a random audio from a local Home Assistant instance to memory.
 
 # Installation:
 # Requires `strace`, best installed as statically built binary using soar https://soar.qaidvoid.dev/
@@ -17,6 +17,9 @@
 
 set -e
 
+exec >> /tmp/gradient.log
+exec 2>&1
+
 cd $(dirname $0)
 
 PID=`lsof | grep /dev/ttyS4 | cut -f1`
@@ -24,6 +27,11 @@ while [[ "$PID" == "" ]]; do
 	sleep 5
 	PID=`lsof | grep /dev/ttyS4 | cut -f1`
 done
+
+echo "MCU PID is $PID"
+
+FILE_TEMP=/tmp/oucher_tmp.ogg
+FILE=/tmp/oucher.ogg
 
 while true; do
 	# For protocol see https://github.com/alufers/dreame_mcu_protocol/tree/master
@@ -33,12 +41,26 @@ while true; do
 	# \x00 is message type (x00 is the "Triggers" type)
 	# \x10 \x20 and \x30 represent a bitmap where \b00110000 the 1 indicate left, right or both bumpers bumped
 
-	NEXT_FILE=ogg/$(ls ogg | shuf | head -n1)
+	VALETUDO_CONFIG="/data/valetudo_config.json"
+	HOST=$(cat $VALETUDO_CONFIG | jq .mqtt.connection.host -r)
+
+	TOKEN=$(sops decrypt --extract '["home-assistant-token"]' $SOPS_SECRETS_FILE)
+	NEXT_FILE=$(curl -s -X GET -H "Authorization: Bearer $TOKEN" -H "Content-Type: application/json" http://$HOST:8123/api/states/sensor.oucher_next_sound | jq .state -r)
+
+	echo "Next oucher sound is $NEXT_FILE, downloading..."
+
+	rm -f $FILE_TEMP
+	curl -s -o $FILE_TEMP http://$HOST:8123/local/sounds/oucher/$NEXT_FILE
+	ffmpeg -v quiet -i $FILE_TEMP -b:a 80k -ar 22050 -f ogg $FILE
+	rm -f $FILE_TEMP
+
+	echo "Downloaded, waiting for next bump..."
 
 	strace -x -p $PID -P /dev/ttyS4 2>&1 \
 		| grep read \
 		| grep -E '\\x3c\\x07\\x00\\x[123]0' -m 1 \
 		> /dev/null
-	ogg123 $NEXT_FILE
+	ogg123 -q $FILE || echo "Failed to play file..."
+	rm -f $FILE
 	sleep 30
 done
