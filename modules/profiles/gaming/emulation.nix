@@ -318,7 +318,6 @@ in
         # -- Utilities --
         emulationstation-de
         wheelwizard
-        lutris
       ];
     })
 

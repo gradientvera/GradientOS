@@ -185,7 +185,7 @@ in
 
         '')
         (let
-          monadoXr = "${pkgs.monado}/share/openxr/1/openxr_monado.json";
+          monadoXr = "${pkgs.stable.monado}/share/openxr/1/openxr_monado.json";
           monadoUnstableXr = "${pkgs-xr.monado}/share/openxr/1/openxr_monado.json";
           wivrnXr = "${config.services.wivrn.package}/share/openxr/1/openxr_wivrn.json";
           steamXr = "~/.local/share/Steam/steamapps/common/SteamVR/steamxr_linux64.json";
@@ -294,6 +294,7 @@ in
       services.monado = {
         enable = true;
         highPriority = true;
+        package = pkgs.stable.monado;
         defaultRuntime = cfg.profiles.gaming.vr.monado.default;
       };
 

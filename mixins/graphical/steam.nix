@@ -36,7 +36,6 @@
     protontricks
     protonup-qt
     steam-run
-    lutris
   ];
 
 }

@@ -92,7 +92,7 @@ in
         xivlauncher
         steam-run
         heroic
-        lutris
+        stable.lutris
       ];
     })
 
