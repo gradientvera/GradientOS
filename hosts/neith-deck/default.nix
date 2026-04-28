@@ -23,15 +23,19 @@
   gradient.presets.syncthing.enable = true;
   gradient.presets.syncthing.user = "neith";
 
-  # Use Jovian's steam deck UI autostart.
-  services.displayManager.plasma-login-manager.enable = lib.mkForce false;
-  jovian.steam.autoStart = true;
-  jovian.steam.user = "neith";
-  jovian.decky-loader.user = "neith";
-  jovian.steam.desktopSession = "plasma";
-
   services.handheld-daemon.enable = true;
   services.handheld-daemon.user = "neith";
+
+  specialisation.deck-mode.configuration = {
+    # Use Jovian's steam deck UI autostart.
+    services.displayManager.plasma-login-manager.enable = lib.mkForce false;
+    jovian.steam.autoStart = lib.mkForce true;
+  };
+
+  jovian.steam.user = "neith";
+  jovian.steam.autoStart = false;
+  jovian.decky-loader.user = "neith";
+  jovian.steam.desktopSession = "plasma";
 
   gradient.substituters = {
     asiyah = "ssh-ng://nix-ssh@asiyah.lily?priority=50";
