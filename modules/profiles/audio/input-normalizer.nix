@@ -16,6 +16,7 @@ in
 
   config = lib.mkMerge [
     (lib.mkIf (cfg.profiles.audio.enable && cfg.profiles.audio.input-normalizer.enable) {
+      services.pipewire.extraLadspaPackages = [ pkgs.ladspaPlugins ];
       services.pipewire.extraConfig.pipewire."00-normalizer.conf" = {
         "context.modules" = [
         {   "name" = "libpipewire-module-filter-chain";
@@ -27,7 +28,9 @@ in
                         {
                             "type" = "ladspa";
                             "name" = "compressor";
-                            "plugin" = "${pkgs.ladspaPlugins}/lib/ladspa/sc4_1882.so";
+                            # No ".so" at the end!! Pipewire will not load it!!
+                            # also FUCK YOU PIPEWIRE
+                            "plugin" = "sc4_1882";
                             "label" = "sc4";
                             "control" = {
                                 "RMS/peak" = 0.0;
@@ -42,7 +45,7 @@ in
                         {
                             "type" = "ladspa";
                             "name" = "limiter";
-                            "plugin" = "${pkgs.ladspaPlugins}/lib/ladspa/fast_lookahead_limiter_1913.so";
+                            "plugin" = "fast_lookahead_limiter_1913";
                             "label" = "fastLookaheadLimiter";
                             "control" = {
                                 "Input gain (dB)" = 0;

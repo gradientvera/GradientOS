@@ -239,7 +239,7 @@ in
 
       programs.alvr = {
         enable = true;
-        package = pkgs.alvr;
+        package = pkgs.stable.alvr;
         openFirewall = true;
       };
 

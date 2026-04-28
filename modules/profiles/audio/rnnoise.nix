@@ -16,6 +16,7 @@ in
 
   config = lib.mkMerge [
     (lib.mkIf (cfg.profiles.audio.enable && cfg.profiles.audio.rnnoise.enable) {
+      services.pipewire.extraLadspaPackages = [ pkgs.rnnoise-plugin ];
       services.pipewire.extraConfig.pipewire."00-rnnoise.conf" = {
         "context.modules" = [
         {   "name" = "libpipewire-module-filter-chain";
@@ -27,7 +28,7 @@ in
                         {
                             "type" = "ladspa";
                             "name" = "rnnoise";
-                            "plugin" = "${pkgs.rnnoise-plugin}/lib/ladspa/librnnoise_ladspa.so";
+                            "plugin" = "librnnoise_ladspa";
                             "label" = "noise_suppressor_stereo";
                             "control" = {
                                 "VAD Threshold (%)" = 50.0;
