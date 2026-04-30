@@ -6,95 +6,109 @@ set -o pipefail
 exec >> /tmp/gradient.log
 exec 2>&1
 
-echo "Initializing gradient_provision..."
+provision() {
+  set -eu
+  set -o pipefail
 
-cd /tmp
+  echo "Initializing gradient_provision..."
 
-mkdir -p /opt
+  cd /tmp
 
-echo "Waiting for network..."
+  mkdir -p /opt
 
-# This script usually launches before the internet connection is established, so we wait
-while ! ping -c 4 google.com > /dev/null; do
-    sleep 1 
-done
+  echo "Waiting for network..."
 
-echo "Waiting for correct date and time..."
+  # This script usually launches before the internet connection is established, so we wait
+  while ! ping -c 4 google.com > /dev/null; do
+      sleep 1 
+  done
 
-# Ensure date is set, wait as long as needed
-while [ "$(date +%Y)" = "1970" ]; do
-  sleep 1
-done
+  echo "Waiting for correct date and time..."
 
-echo "Current date time: $(date)"
+  # Ensure date is set, wait as long as needed
+  while [ "$(date +%Y)" = "1970" ]; do
+    sleep 1
+  done
 
-echo "Downloading Alpine mini root filesystem..."
+  echo "Current date time: $(date)"
 
-rm -rf /tmp/alpine
-mkdir /tmp/alpine
-wget https://dl-cdn.alpinelinux.org/alpine/v3.23/releases/aarch64/alpine-minirootfs-3.23.4-aarch64.tar.gz -O alpine.tar.gz
-tar -xvzf ./alpine.tar.gz -C /tmp/alpine
+  echo "Downloading Alpine mini root filesystem..."
 
-cp -a /tmp/alpine/lib/. /lib/
-cp -a /tmp/alpine/sbin/apk /sbin/
-cp -a /tmp/alpine/usr/lib/. /usr/lib/
-cp -a /tmp/alpine/usr/share/apk /usr/share
-cp -a /tmp/alpine/etc/apk /etc/
-cp -a /tmp/alpine/etc/ssl /etc/
-cp -a /tmp/alpine/etc/ssl1.1 /etc/
-cp -a /tmp/alpine/var/cache/apk /var/cache/
-rm -rf /tmp/alpine
+  rm -rf /tmp/alpine
+  mkdir /tmp/alpine
+  wget https://dl-cdn.alpinelinux.org/alpine/v3.23/releases/aarch64/alpine-minirootfs-3.23.4-aarch64.tar.gz -O alpine.tar.gz
+  tar -xvzf ./alpine.tar.gz -C /tmp/alpine
 
-echo "Alpine installed on overlay!"
+  cp -a /tmp/alpine/lib/. /lib/
+  cp -a /tmp/alpine/sbin/apk /sbin/
+  cp -a /tmp/alpine/usr/lib/. /usr/lib/
+  cp -a /tmp/alpine/usr/share/apk /usr/share
+  cp -a /tmp/alpine/etc/apk /etc/
+  cp -a /tmp/alpine/etc/ssl /etc/
+  cp -a /tmp/alpine/etc/ssl1.1 /etc/
+  cp -a /tmp/alpine/var/cache/apk /var/cache/
+  rm -rf /tmp/alpine
+  rm -f /tmp/alpine.tar.gz
 
-apk update
+  echo "Alpine installed on overlay!"
 
-echo "Fixing busybox and ca-certificates..."
-apk fix --reinstall busybox
-apk fix --reinstall ca-certificates
+  apk update
 
-echo "Installing system utilities..."
-apk add gcompat curl wget busybox nano espeak-ng
+  echo "Fixing busybox and ca-certificates..."
+  apk fix --reinstall busybox
+  apk fix --reinstall ca-certificates
 
-echo "Installing Ansible requirements through apk..."
-apk add python3 openssh-sftp-server
+  echo "Installing system utilities..."
+  apk add gcompat curl wget busybox nano espeak-ng
 
-ln -sf /usr/lib/ssh/sftp-server /usr/libexec/sftp-server
+  echo "Installing Ansible requirements through apk..."
+  apk add python3 openssh-sftp-server
 
-echo "Initializing dropbear daemon on chroot with SFTP support at port 222."
+  ln -sf /usr/lib/ssh/sftp-server /usr/libexec/sftp-server
 
-# SSH server with SFTP support
-/usr/local/sbin/dropbear -s -p 222 &
+  echo "Initializing dropbear daemon on chroot with SFTP support at port 222."
 
-echo "Installing sops and age..."
-apk add sops age
+  # SSH server with SFTP support
+  pkill -f "dropbear -s -p 222" || true
+  /usr/local/sbin/dropbear -s -p 222 &
 
-mkdir -p /etc/age
+  echo "Installing sops and age..."
+  apk add sops age
 
-if ! [ -f "/etc/age/keys.txt" ]; then
-    echo "Generating age keys..."
-    age-keygen -o /etc/age/keys.txt
-    age-keygen -y /etc/age/keys.txt > /etc/age/pub-keys.txt
-fi
+  mkdir -p /etc/age
 
-export SOPS_AGE_KEY_FILE="/etc/age/keys.txt"
-export SOPS_SECRETS_FILE="/etc/secrets.yml"
+  if ! [ -f "/etc/age/keys.txt" ]; then
+      echo "Generating age keys..."
+      age-keygen -o /etc/age/keys.txt
+      age-keygen -y /etc/age/keys.txt > /etc/age/pub-keys.txt
+  fi
 
-# Publish camera photos to MQTT
-if [[ -x "/data/gradient_publish_photo.sh" ]]; then
-  echo "Initializing gradient_publish_photo daemon..."
-  echo "Installing dependencies for gradient_publish_photo..."
-  apk add mosquitto-clients imagemagick curl jq
-  /data/gradient_publish_photo.sh &
-fi
+  export SOPS_AGE_KEY_FILE="/etc/age/keys.txt"
+  export SOPS_SECRETS_FILE="/etc/secrets.yml"
 
-# Oucher script
-if [[ -x "/data/oucher/oucher.sh" ]]; then
-  echo "Initializing Oucher daemon..."
-  echo "Installing dependencies for oucher..."
-  apk add strace ffmpeg vorbis-tools libao # + curl + jq
-	nohup /data/oucher/oucher.sh > /dev/null 2>&1 &
-fi
+  # Publish camera photos to MQTT
+  if [[ -x "/data/gradient_publish_photo.sh" ]]; then
+    echo "Initializing gradient_publish_photo daemon..."
+    echo "Installing dependencies for gradient_publish_photo..."
+    apk add mosquitto-clients imagemagick curl jq
+    pkill gradient_publish_photo.sh || true
+    /data/gradient_publish_photo.sh &
+  fi
 
-speak "Gradient provision complete!" -v en --stdout | /bin/aplay
-echo "Gradient provision complete!"
+  # Oucher script
+  if [[ -x "/data/oucher/oucher.sh" ]]; then
+    echo "Initializing Oucher daemon..."
+    echo "Installing dependencies for oucher..."
+    apk add strace ffmpeg vorbis-tools libao # + curl + jq
+    pkill oucher.sh || true
+    /data/oucher/oucher.sh &
+  fi
+
+  # Just in case?
+  apk fix
+
+  /usr/bin/speak "Gradient provision complete!" -v en --stdout | /bin/aplay
+  echo "Gradient provision complete!"
+}
+
+until provision; do echo "Retrying provision in 5 seconds..."; sleep 5; done
