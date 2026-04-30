@@ -34,6 +34,7 @@ mount --bind /tmp /data/overlay/root/tmp
 mount --bind /data /data/overlay/root/data
 mount --bind /proc /data/overlay/root/proc
 mount --bind /sys /data/overlay/root/sys
+mount devpts /data/overlay/root/dev/pts -t devpts
 
 echo "Other mounts bound to gradient overlay folders, running gradient provisioning script..."
 
