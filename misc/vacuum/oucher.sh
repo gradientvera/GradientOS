@@ -51,7 +51,8 @@ while true; do
 
 	rm -f $FILE_TEMP
 	curl -s -o $FILE_TEMP http://$HOST:8123/local/sounds/oucher/$NEXT_FILE
-	ffmpeg -v quiet -i $FILE_TEMP -b:a 80k -ar 22050 -f ogg $FILE
+	rm -f $FILE
+	ffmpeg -y -v quiet -i $FILE_TEMP -b:a 80k -ar 22050 -f ogg $FILE
 	rm -f $FILE_TEMP
 
 	echo "Downloaded, waiting for next bump..."
