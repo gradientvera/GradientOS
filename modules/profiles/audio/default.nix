@@ -5,6 +5,7 @@ in
 {
   imports = [
     ./um2.nix
+    ./umc202hd.nix
     ./rnnoise.nix
     ./virtual-sink.nix
     ./input-normalizer.nix

@@ -32,7 +32,7 @@ in
     monado.default = false;
   };
 
-  gradient.profiles.audio.um2.enable = true;
+  gradient.profiles.audio.umc202hd.enable = true;
 
   gradient.presets.syncthing.enable = true;
 
