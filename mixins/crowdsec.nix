@@ -234,6 +234,7 @@ in
           expression = [
             # Mediarr
             "evt.Meta.http_status in ['200', '304'] && evt.Meta.http_verb == 'GET' && evt.Meta.http_path matches '^/(QuickConnect|Branding|Persons|Artists|Items|JellyfinEnhanced|JavaScriptInjector|JellyTweaks|PluginPages|System|UserViews|HomeScreen|Playback|CustomTabs|DisplayPreferences|Users|web|ui/oauth2|api/services|api/docker|api/widget|api/siteMonitor|api/v1/request|api/frigate).*'"
+            "evt.Meta.http_status in ['404'] && evt.Meta.http_verb == 'GET' && evt.Meta.http_path matches '^(/api/docker/status).*'" # Homepage API
             "evt.Meta.http_status in ['200', '304'] && evt.Meta.http_verb == 'POST' && evt.Meta.http_path matches '^/(api/actions/runner.v1.RunnerService/FetchTask).*'"
           ];
         };
