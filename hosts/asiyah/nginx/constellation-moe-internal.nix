@@ -40,6 +40,7 @@ in {
   services.nginx.virtualHosts."jellyfin.constellation.moe" = {
     useACMEHost = "constellation.moe";
     addSSL = true;
+    quic = lib.mkForce false;
     
     extraConfig = ''
       # # https://jellyfin.org/docs/general/post-install/networking/reverse-proxy/nginx/

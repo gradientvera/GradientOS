@@ -74,14 +74,4 @@ in
     "cache.gradient.moe" = mkReverseProxy { port = ports.attic; vhostExtraConfig = "client_max_body_size 32G; proxy_buffering off; proxy_cache off;"; };
    };
 
-  # Redirect to main site for all incorrect subdomains
-  services.nginx.virtualHosts."_" = {
-    default = true;
-    addSSL = true;
-    enableACME = false;
-    useACMEHost = "gradient.moe";
-    serverName = ''""'';
-    globalRedirect = "gradient.moe";
-  };
-
 }

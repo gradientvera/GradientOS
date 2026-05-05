@@ -14,78 +14,42 @@ in {
     ./constellation-moe-oauth2-proxy.nix
   ];
 
-  gradient.nginx.enableQuic = true;
-  gradient.nginx.enableBlockAIBots = true;
-
   services.nginx = {
     enable = true;
-    package = pkgs.nginx.override {
-      withSlice = true;
-    };
     defaultListen = [
       # HTTP
-      { addr = "0.0.0.0"; port = ports.nginx; ssl = false; proxyProtocol = false; }
-      { addr = "[::]"; port = ports.nginx; ssl = false; proxyProtocol = false; }
-
-      # Proxy Protocol HTTP
-      { addr = "0.0.0.0"; port = ports.nginx-proxy; ssl = false; proxyProtocol = true; }
-      { addr = "[::]"; port = ports.nginx-proxy; ssl = false; proxyProtocol = true; }
+      { addr = "0.0.0.0"; port = ports.nginx; ssl = false; }
+      { addr = "[::]"; port = ports.nginx; ssl = false; }
 
       # HTTPS
-      { addr = "0.0.0.0"; port = ports.nginx-ssl; ssl = true; proxyProtocol = false; }
-      { addr = "[::]"; port = ports.nginx-ssl; ssl = true; proxyProtocol = false; }
-
-      # HTTPS but for mmproxy-rs
-      { addr = "127.0.0.2"; port = ports.nginx-ssl; ssl = true; proxyProtocol = false; }
-      { addr = "[::2]"; port = ports.nginx-ssl; ssl = true; proxyProtocol = false; }
-    
-      # Proxy Protocol HTTPS
-      { addr = "0.0.0.0"; port = ports.nginx-ssl-proxy; ssl = true; proxyProtocol = true; }
-      { addr = "[::]"; port = ports.nginx-ssl-proxy; ssl = true; proxyProtocol = true; }
+      { addr = "0.0.0.0"; port = ports.nginx-ssl; ssl = true; }
+      { addr = "[::]"; port = ports.nginx-ssl; ssl = true; }
     ];
-
-    recommendedGzipSettings = true;
-    recommendedOptimisation = true;
-    recommendedProxySettings = true;
-    recommendedTlsSettings = true;
-    recommendedBrotliSettings = true;
-    proxyTimeout = "120s";
-
-    resolver.addresses = [
-      "127.0.0.1:53"
-    ];
-
-    enableQuicBPF = true;
-
-    logError = "/var/log/nginx/error.log";
-
-    prependConfig = ''
-      error_log syslog:server=unix:/dev/log;
-    '';
 
     appendHttpConfig = ''
-      log_format combinedwithfqdn '$host:$server_port $remote_addr - $remote_user [$time_local] '
-                                  '"$request" $status $body_bytes_sent '
-                                  '"$http_referer" "$http_user_agent"';
-
-      access_log /var/log/nginx/access.log combinedwithfqdn;
-      access_log syslog:server=unix:/dev/log combinedwithfqdn;
-      
       set_real_ip_from ${config.gradient.const.wireguard.addresses.gradientnet.gradientnet}/24;
-      real_ip_header proxy_protocol;
+      set_real_ip_from ${addresses.briah};
+      set_real_ip_from ${addresses.briahv6};
+      set_real_ip_from ${addresses.briahv6-cidr};
+      real_ip_header X-Real-IP;
       real_ip_recursive on;
 
       map $preferredusername $xusername {
         ~^(\w+)@identity.gradient.moe $1;
         default $preferredusername;
-      } 
+      }
     '';
-  };
 
-  # Keep restarting nginx no matter what
-  systemd.services.nginx.startLimitIntervalSec = lib.mkForce 0;
-  systemd.services.nginx.startLimitBurst = lib.mkForce 0;
-  systemd.services.nginx.serviceConfig.Restart = lib.mkForce "always";
+    # Redirect to main site for all incorrect subdomains
+    virtualHosts."_" = {
+      default = true;
+      addSSL = true;
+      enableACME = false;
+      useACMEHost = "gradient.moe";
+      serverName = ''""'';
+      globalRedirect = "gradient.moe";
+    };
+  };
 
   security.acme = {
     acceptTerms = true;
@@ -129,10 +93,10 @@ in {
 
 
   networking.firewall.allowedTCPPorts = with ports; [
-    nginx nginx-ssl nginx-proxy nginx-ssl-proxy
+    nginx nginx-ssl
   ];
   networking.firewall.allowedUDPPorts = with ports; [
-    nginx nginx-ssl nginx-proxy nginx-ssl-proxy
+    nginx nginx-ssl 
   ];
 
 }

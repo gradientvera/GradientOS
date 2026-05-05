@@ -9,6 +9,7 @@
   microsocks = ./mixins/microsocks.nix;
   neith-locale = ./mixins/neith-locale.nix;
   networkd = ./mixins/networkd.nix;
+  nginx = ./mixins/nginx.nix;
   nix-store-serve = ./mixins/nix-store-serve.nix;
   only-suspend-then-hibernate = ./mixins/only-suspend-then-hibernate.nix;
   plymouth = ./mixins/plymouth.nix;

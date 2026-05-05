@@ -181,7 +181,7 @@
           mixins.hardware-amdcpu
           mixins.hardware-amdgpu
           mixins.hardware-webcam
-          mixins.hardware-bluetooth
+          mixins.hardware-bluetooth 
           mixins.hardware-steamdeck
         ];
 
@@ -305,6 +305,7 @@
           mixins.tor
           mixins.wine
           mixins.alloy
+          mixins.nginx
           mixins.gnupg
           mixins.podman
           mixins.crowdsec
@@ -342,6 +343,7 @@
           nixos-hardware.nixosModules.common-cpu-amd
 
           mixins.alloy
+          mixins.nginx
           #mixins.podman
           mixins.crowdsec
           mixins.tailscale

@@ -11,41 +11,69 @@ in
 
   services.nginx = {
     enable = true;
-    config = ''
-      worker_processes auto;
 
-      error_log /var/log/nginx/error.log crit;
+    defaultListen = [
+      # HTTP
+      { addr = "0.0.0.0"; port = ports.http; ssl = false; }
+      { addr = "[::]"; port = ports.http; ssl = false; }
 
-      events {}
-      
-      stream {
-        server {
-          listen ${toString ports.http} reuseport;
-          # listen ${toString ports.http} udp reuseport;
-          listen [::]:${toString ports.http} reuseport;
-          # listen [::]:${toString ports.http} udp reuseport;
-          proxy_pass ${gradientnet.asiyah}:${toString asiyahPorts.nginx-proxy};
-          proxy_protocol on;
-        }
+      # HTTPS
+      { addr = "0.0.0.0"; port = ports.https; ssl = true; }
+      { addr = "[::]"; port = ports.https; ssl = true; }
+    ];
 
-        server {
-          listen ${toString ports.https} reuseport;
-          # listen ${toString ports.https} udp reuseport;
-          listen [::]:${toString ports.https} reuseport;
-          # listen [::]:${toString ports.https} udp reuseport;
-          proxy_pass ${gradientnet.asiyah}:${toString asiyahPorts.nginx-ssl-proxy};
-          proxy_protocol on;
-        }
+    virtualHosts."gradient.moe" = {
+      # Only specify ONCE!
+      reuseport = true;
+      forceSSL = true;
+      sslCertificate = "/var/lib/acme/gradient.moe/fullchain.pem";
+      sslCertificateKey = "/var/lib/acme/gradient.moe/key.pem";
+      sslTrustedCertificate = "/var/lib/acme/gradient.moe/chain.pem";
+      serverAliases = [ "*.gradient.moe" ];
+      locations."/" = {
+        proxyPass = "https://${gradientnet.asiyah}:${toString asiyahPorts.nginx-ssl}";
+        proxyWebsockets = true;
+        extraConfig = ''
+          proxy_buffering off;
+          proxy_cache off;
+        '';
+      };
+    };
 
-        server {
-          listen ${toString asiyahPorts.lilynet} reuseport;
-          listen ${toString asiyahPorts.lilynet} udp reuseport;
-          listen [::]:${toString asiyahPorts.lilynet} reuseport;
-          listen [::]:${toString asiyahPorts.lilynet} udp reuseport;
-          proxy_pass ${gradientnet.asiyah}:${toString asiyahPorts.lilynet};
-        }
-      }
-    '';
+    virtualHosts."constellation.moe" = {
+      forceSSL = true;
+      sslCertificate = "/var/lib/acme/constellation.moe/fullchain.pem";
+      sslCertificateKey = "/var/lib/acme/constellation.moe/key.pem";
+      sslTrustedCertificate = "/var/lib/acme/constellation.moe/chain.pem";
+      serverAliases = [ "*.constellation.moe" ];
+      locations."/" = {
+        proxyPass = "https://${gradientnet.asiyah}:${toString asiyahPorts.nginx-ssl}";
+        proxyWebsockets = true;
+        extraConfig = ''
+          proxy_buffering off;
+          proxy_cache off;
+        '';
+      };
+    };
+
+    # Redirect to main site for all incorrect subdomains
+    virtualHosts."_" = {
+      default = true;
+      forceSSL = true;
+      sslCertificate = "/var/lib/acme/gradient.moe/fullchain.pem";
+      sslCertificateKey = "/var/lib/acme/gradient.moe/key.pem";
+      sslTrustedCertificate = "/var/lib/acme/gradient.moe/chain.pem";
+      serverName = ''""'';
+      locations."/" = {
+        proxyPass = "https://${gradientnet.asiyah}:${toString asiyahPorts.nginx-ssl}";
+        proxyWebsockets = true;
+        extraConfig = ''
+          proxy_buffering off;
+          proxy_cache off;
+        '';
+      };
+    };
+
   };
 
  }
