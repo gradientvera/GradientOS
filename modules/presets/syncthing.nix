@@ -122,6 +122,12 @@ in
           path = "~/Music";
           devices = [ "bernkastel" "erika" "asiyah" "vera-phone" "vera-phone-old" "work-laptop" "featherine" "ange" ];
         };
+        neith-music = {
+          id = "neith-music";
+          versioning.type = "trashcan";
+          path = "~/Music";
+          devices = [ "neith-deck" "neith-phone" "hadal-rainbow" ];
+        };
         ffxiv-config = {
           id = "ujgmj-wkmsh";
           versioning.type = "trashcan";
