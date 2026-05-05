@@ -5,6 +5,7 @@
 */
 { self, pkgs, lib, config, ... }:
 let
+  addresses = config.gradient.const.addresses;
   ports = config.gradient.currentHost.ports;
   mkReverseProxy = { port, address ? "127.0.0.1", protocol ? "http", generateOwnCert ? false, rootExtraConfig ? "", vhostExtraConfig ? "", useACMEHost ? "gradient.moe", extraConfig ? {} }: {
     useACMEHost = if (!generateOwnCert) then useACMEHost else null;
@@ -38,6 +39,11 @@ in
       "zumorica.es"
       "*.zumorica.es"
     ];
+    # Keep service name in sync with rsync job
+    reloadServices = [ "rsync-job-briah-acme.service" ];
+    postRun = ''
+      ${lib.getExe pkgs.openssh} -i /home/vera/.ssh/id_ed25519 -o StrictHostKeyChecking=accept-new -t root@${addresses.briah} 'systemctl --no-block try-reload-or-restart nginx.service'
+    '';
   };
 
   services.nginx.virtualHosts."gradient.moe" = {

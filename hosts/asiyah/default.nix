@@ -68,6 +68,8 @@
 
   virtualisation.podman.dockerSocket.enable = true;
 
+  services.rsync.enable = true;
+
   environment.systemPackages = with pkgs; [
     numactl
     numatop

@@ -1,5 +1,6 @@
 { pkgs, lib, config, ... }:
 let
+  addresses = config.gradient.const.addresses;
   ports = config.gradient.currentHost.ports;
 in {
 
@@ -95,6 +96,37 @@ in {
       credentialFiles."CF_DNS_API_TOKEN_FILE" = config.sops.secrets.acme-cf-token.path;
     };
   };
+
+  services.rsync.jobs.briah-acme = {
+    sources = [
+      config.security.acme.certs."gradient.moe".directory
+      config.security.acme.certs."constellation.moe".directory
+    ];
+    destination = "root@${addresses.briah}:${config.users.users.acme.home}";
+    # vera user for SSH to briah, nginx group to access certs
+    user = "vera";
+    group = "nginx";
+    timerConfig = {
+      # Every five minutes. A bit overkill but eh.
+      OnCalendar = "*:0/5";
+      Persistent = true;
+    };
+    settings = {
+      # Syncs recursively, copy permissions and modification times
+      archive = true;
+      # Create destination folder if needed
+      mkpath = true;
+      # Delete files on destination that don't exist on the source anymore
+      delete = true;
+      # Compress data before transfer
+      compress = true;
+      # Change owner/group on destination (ACME user not available there)
+      chown = "nginx:nginx";
+      # Set SSH command, fix rsync being unable to find it otherwise
+      rsh = "${lib.getExe pkgs.openssh}";
+    };
+  };
+
 
   networking.firewall.allowedTCPPorts = with ports; [
     nginx nginx-ssl nginx-proxy nginx-ssl-proxy

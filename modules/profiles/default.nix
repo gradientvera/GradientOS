@@ -63,6 +63,7 @@ in
       python3
       screen
       yt-dlp
+      rsync
       p7zip
       sbctl # For Lanzaboote
       just

@@ -1,7 +1,10 @@
 /*
   Public constellation.moe website.
 */
-{ self, lib, ports, ... }:
+{ self, config, pkgs, lib, ports, ... }:
+let
+  addresses = config.gradient.const.addresses;
+in
 {
 
   security.acme.certs."constellation.moe" = {
@@ -10,6 +13,11 @@
       "*.constellation.moe"
       "*.asiyah.constellation.moe"
     ];
+    # Keep service name in sync with rsync job
+    reloadServices = [ "rsync-job-briah-acme.service" ];
+    postRun = ''
+      ${lib.getExe pkgs.openssh} -i /home/vera/.ssh/id_ed25519 -o StrictHostKeyChecking=accept-new -t root@${addresses.briah} 'systemctl --no-block try-reload-or-restart nginx.service'
+    '';
   };
 
   services.nginx.virtualHosts = {
