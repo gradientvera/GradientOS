@@ -1,4 +1,4 @@
-{ config, lib, ... }:
+{ pkgs, config, lib, ... }:
 
 {
 
@@ -42,5 +42,34 @@
     bernkastel = "ssh-ng://nix-ssh@bernkastel.lily?priority=50";
     erika = "ssh-ng://nix-ssh@erika.lily?priority=50";
   };
+
+  users.users.constellation = {
+    isNormalUser = true;
+    linger = true;
+    description = "For the alt steam account";
+    shell = pkgs.fish;
+    extraGroups = [ "networkmanager" "audio" "video" "pipewire" "scanner" "lp" ];
+    hashedPassword = "$6$7mwTIbQIbSE9s6h5$J1Z5xG3V5kY65pgSQKulKg5UpVUnKuHnZoXmZ98IMCRNXhLHWgEAbizz8g4d1IJvDMp/pLBl4EKK.0fzcyb6N0";
+  };
+
+  security.polkit.extraConfig = ''
+    polkit.addRule(function(action, subject) {
+        if (action.id == "org.freedesktop.machine1.host-shell" &&
+            action.lookup("user") == "constellation" &&
+            subject.user == "neith") {
+                return polkit.Result.YES;
+        }
+    });
+  '';
+
+  environment.systemPackages = [
+    (pkgs.runCommand "steam-alt-constellation" { } ''
+      mkdir -p $out/share/applications
+      cp ${pkgs.steam}/share/applications/steam.desktop $out/share/applications/steam-alt-constellation.desktop
+      substituteInPlace $out/share/applications/steam-alt-constellation.desktop \
+        --replace "Name=Steam" "Name=Steam (Constellation Alt)" \
+        --replace "Exec=steam" "Exec=ego --user=constellation steam"
+    '')
+  ];
 
 }
