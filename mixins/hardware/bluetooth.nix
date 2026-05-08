@@ -9,6 +9,7 @@
     settings = {
       General = {
         Class = "0x000100";
+        Enable = "Control,Gateway,Headset,Media,Sink,Socket,Source";
         ControllerMode = "dual";
         FastConnectable = true;
         Experimental = true;
@@ -26,5 +27,10 @@
       };
     };
   };
+
+  boot.extraModprobeConfig = ''
+    # See https://gitlab.archlinux.org/archlinux/packaging/packages/bluez/-/blob/main/bluetooth.modprobe
+    options btusb reset=1
+  '';
 
 }
