@@ -64,6 +64,8 @@ in
 
       services.udev.extraRules = ''
         DEVPATH=="/devices/virtual/misc/cpu_dma_latency", OWNER="root", GROUP="audio", MODE="0660"
+        KERNEL=="rtc0", GROUP="audio"
+        KERNEL=="hpet", GROUP="audio"
       '';
 
       security.pam.loginLimits =

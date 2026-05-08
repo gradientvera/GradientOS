@@ -4,6 +4,13 @@
   powerManagement.scsiLinkPolicy = "max_performance";
 
   services.udev.extraRules = ''
+    # Most of these taken from: https://github.com/CachyOS/CachyOS-Settings/tree/a4695168e264868a3cfa2b813d99f32db46e9734/usr/lib/udev/rules.d 
+    # SATA Active Link Power Management
+    ACTION=="add", SUBSYSTEM=="scsi_host", KERNEL=="host*", \
+        ATTR{link_power_management_supported}=="1", \
+        ATTR{link_power_management_policy}=="*", \
+        ATTR{link_power_management_policy}="max_performance"
+
     # -- I/O schedulers --
     # HDD
     ACTION=="add|change", KERNEL=="sd[a-z]*", ATTR{queue/rotational}=="1", \

@@ -238,7 +238,24 @@ in
 
       # Increase inotify watches
       "fs.inotify.max_user_instances" = "524288";
-      "fs.inotify.max_user_watches" =  "524288"; 
+      "fs.inotify.max_user_watches" =  "524288";
+
+      # -- Taken from https://github.com/CachyOS/CachyOS-Settings/blob/a4695168e264868a3cfa2b813d99f32db46e9734/usr/lib/sysctl.d/70-cachyos-settings.conf --
+      
+      # Restricting access to kernel pointers in the proc filesystem
+      "kernel.kptr_restrict" = "2";
+
+      # Enable the sysctl setting kernel.unprivileged_userns_clone to allow normal users to run unprivileged containers.
+      "kernel.unprivileged_userns_clone" = "1";
+
+      # Increase netdev receive queue
+      # May help prevent losing packets
+      "net.core.netdev_max_backlog" = "4096";
+
+      # Set size of file handles and inode cache
+      "fs.file-max" = "2097152";
+
+      # ---- #
     };
 
     # Automatically restart 30 seconds after a kernel panic
