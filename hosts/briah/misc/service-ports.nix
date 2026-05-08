@@ -14,4 +14,6 @@
   microsocks = 1080;
 
   crowdsec-metrics = 6060;
+
+  headscale = 8074;
 }

@@ -59,10 +59,6 @@ in
           group = "crowdsec";
           restartUnits = [ "crowdsec.service" ];
         };
-        tailscale-auth-key = {
-          sopsFile = ./secrets.yml;
-          restartUnits = [ "tailscaled.service" "tailscaled-autoconnect.service" ];
-        };
       };
     }))
   ];

@@ -108,7 +108,6 @@
   crowdsec-metrics = 6060;
   microsocks = 1079;
   olivetin = 8075;
-  headscale = 8074;
   
   # Frigate, cannot be changed because fuck you
   frigate = 5000;

@@ -2,6 +2,7 @@
 {
   imports = [
     ./nginx.nix
+    ./headscale.nix
     ./networking.nix
     ./filesystems.nix
     ./secrets/default.nix
@@ -11,7 +12,6 @@
   gradient.core.enable = true;
 
   boot.tmp.cleanOnBoot = true;
-  zramSwap.enable = true;
   services.swapspace.enable = true;
   networking.hostName = "briah";
   networking.domain = "";

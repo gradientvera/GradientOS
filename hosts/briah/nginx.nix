@@ -56,6 +56,23 @@ in
       };
     };
 
+    virtualHosts."headscale.constellation.moe" = {
+      forceSSL = true;
+      sslCertificate = "/var/lib/acme/constellation.moe/fullchain.pem";
+      sslCertificateKey = "/var/lib/acme/constellation.moe/key.pem";
+      sslTrustedCertificate = "/var/lib/acme/constellation.moe/chain.pem";
+      locations."/" = {
+        proxyPass = "http://127.0.0.1:${toString ports.headscale}";
+        proxyWebsockets = true;
+        extraConfig = ''
+          proxy_buffering off;
+          proxy_cache off;
+          proxy_redirect http:// https://;
+          add_header Strict-Transport-Security "max-age=15552000; includeSubDomains" always;
+        '';
+      };
+    };
+
     # Redirect to main site for all incorrect subdomains
     virtualHosts."_" = {
       default = true;
@@ -73,6 +90,16 @@ in
         '';
       };
     };
+
+    streamConfig = ''
+      server {
+        listen ${toString asiyahPorts.lilynet} reuseport;
+        listen ${toString asiyahPorts.lilynet} udp reuseport;
+        listen [::]:${toString asiyahPorts.lilynet} reuseport;
+        listen [::]:${toString asiyahPorts.lilynet} udp reuseport;
+        proxy_pass ${gradientnet.asiyah}:${toString asiyahPorts.lilynet};
+      }
+    '';
 
   };
 
