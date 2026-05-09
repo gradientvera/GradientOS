@@ -11,6 +11,7 @@ in
     port = ports.headscale;
 
     settings.oidc = {
+      expiry = 0;
       pkce.enabled = true;
       client_id = "headscale";
       issuer = "https://identity.gradient.moe/oauth2/openid/headscale";
@@ -29,7 +30,7 @@ in
     };
 
     settings = {
-      server_url = "https://headscale.constellation.moe";
+      server_url = "https://headscale.constellation.moe:${toString ports.https}";
       noise.private_key_path = config.sops.secrets.headscale-noise-key.path;
       database.type = "sqlite";
       dns.base_domain = "tailnet.constellation.moe";
@@ -78,6 +79,5 @@ in
   systemd.services.headscale.startLimitIntervalSec = lib.mkForce 0;
   systemd.services.headscale.startLimitBurst = lib.mkForce 0;
   systemd.services.headscale.serviceConfig.Restart = lib.mkForce "always";
-
 
 }
