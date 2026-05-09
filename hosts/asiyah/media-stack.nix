@@ -476,8 +476,6 @@ in {
       ];
       environment = {
         TZ = config.time.timeZone;
-        PUID = toString userUid;
-        PGID = toString groupGid;
         SLSKD_REMOTE_CONFIGURATION = "true";
       };  
       extraOptions = [] ++ defaultOptions ++ userOptions;

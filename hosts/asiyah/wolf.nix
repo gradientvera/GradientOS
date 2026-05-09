@@ -1,7 +1,4 @@
 { config, ports, pkgs, ... }:
-let
-  addresses = config.gradient.const.wireguard.addresses;
-in
 {
 
   systemd.tmpfiles.settings."99-wolf.conf" = {
@@ -17,14 +14,12 @@ in
     image = "ghcr.io/games-on-whales/wolf:stable";
     pull = "newer";
     ports = [
-      "${addresses.gradientnet.asiyah}:${toString ports.wolf-http}:${toString ports.wolf-http}/tcp"
-      "${addresses.gradientnet.asiyah}:${toString ports.wolf-https}:${toString ports.wolf-https}/tcp"
-      "${addresses.gradientnet.asiyah}:${toString ports.wolf-control}:${toString ports.wolf-control}/udp"
-      "${addresses.gradientnet.asiyah}:${toString ports.wolf-rtsp}:${toString ports.wolf-rtsp}/tcp"
-      "${addresses.gradientnet.asiyah}:${toString ports.wolf-video-ping}:${toString ports.wolf-video-ping}/udp"
-      "${addresses.gradientnet.asiyah}:${toString ports.wolf-audio-ping}:${toString ports.wolf-audio-ping}/udp"
-
-      # TODO: Tailscale?
+      "${toString ports.wolf-http}:${toString ports.wolf-http}/tcp"
+      "${toString ports.wolf-https}:${toString ports.wolf-https}/tcp"
+      "${toString ports.wolf-control}:${toString ports.wolf-control}/udp"
+      "${toString ports.wolf-rtsp}:${toString ports.wolf-rtsp}/tcp"
+      "${toString ports.wolf-video-ping}:${toString ports.wolf-video-ping}/udp"
+      "${toString ports.wolf-audio-ping}:${toString ports.wolf-audio-ping}/udp"
     ];
     volumes = [
       "/dev/:/dev/:rw"

@@ -216,8 +216,8 @@ in
             "10.0.0.0/8"
             "192.168.1.0/24"
             addresses.briahv6-cidr
-            addresses.tailscale-ipv4
-            addresses.tailscale-ipv6
+            addresses.tailscale-ipv4-cidr
+            addresses.tailscale-ipv6-cidr
             "${gradientnet.gradientnet}/24"
           ];
         };
