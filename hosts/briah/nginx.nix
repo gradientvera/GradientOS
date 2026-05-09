@@ -6,7 +6,7 @@
 in
  {
 
-  networking.firewall.allowedTCPPorts = [ ports.http ports.https ];
+  networking.firewall.allowedTCPPorts = [ ports.http ports.https asiyahPorts.forgejo-ssh ];
   networking.firewall.allowedUDPPorts = [ ports.http ports.https ];
 
   services.nginx = {
