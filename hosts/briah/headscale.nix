@@ -37,6 +37,10 @@ in
         "8.8.8.8"
         "8.8.4.4"
       ];
+      policy = {
+        mode = "file";
+        path = pkgs.writeText "policy.json" (builtins.toJSON (import ../../misc/headscale-acl.nix));
+      };
     };
   };
 
@@ -63,8 +67,7 @@ in
         sleep 5
       done
 
-      sqlite3 $DB_PATH "insert or replace into users (id, name, display_name, email, created_at, updated_at, provider, provider_identifier) values (1, 'vera@identity.gradient.moe', 'Vera', 'gradientvera@outlook.com', datetime('now'), datetime('now'), 'oidc', 'https://identity.gradient.moe/oauth2/openid/headscale/ba86215f-acb9-49bc-a476-340e0b5f215d');"
-      sqlite3 $DB_PATH "insert or replace into pre_auth_keys (id, user_id, reusable, expiration, created_at, tags, prefix, hash) values (1, 1, 1, datetime('now', '+999 years'), datetime('now'), '[]', '$(cat ${config.sops.secrets.tailscale-auth-prefix.path})', '$(cat ${config.sops.secrets.tailscale-auth-hash.path})');"
+      sqlite3 $DB_PATH < ${config.sops.secrets.headscale.path}
     '';
 
   # Keep restarting Headscale no matter what

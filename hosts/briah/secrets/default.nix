@@ -10,13 +10,10 @@
 
       wireguard-private-key = { restartUnits = [ "wireguard-*" ]; };
 
-      tailscale-auth-prefix = {
-        owner = config.services.headscale.user;
-        group = config.services.headscale.group;
-        restartUnits = [ "headscale.service" ];
-      };
-
-      tailscale-auth-hash = {
+      # Headscale database provisioning
+      headscale = {
+        format = "binary";
+        sopsFile = ./headscale.encsql;
         owner = config.services.headscale.user;
         group = config.services.headscale.group;
         restartUnits = [ "headscale.service" ];

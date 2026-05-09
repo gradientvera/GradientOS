@@ -171,6 +171,7 @@
           mixins.plymouth
           mixins.wireguard
           mixins.uwu-style
+          mixins.tailscale
           mixins.upgrade-diff
           mixins.v4l2loopback
           mixins.neith-locale

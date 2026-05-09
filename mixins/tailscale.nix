@@ -1,15 +1,25 @@
 { config, pkgs, lib, ... }:
+let
+  isNeith = config.networking.hostName == "neith-deck";
+in
 {
 
   sops.secrets.tailscale-auth-key = {
     sopsFile = ../core/secrets/secrets.yml;
-    restartUnits = [ "tailscaled.service" "tailscaled-autoconnect.service" ];
+    restartUnits = if !isNeith then [ "tailscaled.service" "tailscaled-autoconnect.service" ] else [];
+  };
+
+  sops.secrets.tailscale-auth-key-neith = {
+    sopsFile = ../core/secrets/secrets.yml;
+    restartUnits = if isNeith then [ "tailscaled.service" "tailscaled-autoconnect.service" ] else [];
   };
 
   services.tailscale = {
     enable = true;
     openFirewall = true;
-    authKeyFile = config.sops.secrets.tailscale-auth-key.path;
+    authKeyFile = if !isNeith 
+      then config.sops.secrets.tailscale-auth-key.path 
+      else config.sops.secrets.tailscale-auth-key-neith.path;
     useRoutingFeatures = "both";
     extraUpFlags = [
       "--login-server=https://headscale.constellation.moe"
