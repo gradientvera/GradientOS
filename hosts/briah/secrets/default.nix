@@ -19,6 +19,12 @@
         restartUnits = [ "headscale.service" ];
       };
 
+      headscale-noise-key = {
+        owner = config.services.headscale.user;
+        group = config.services.headscale.group;
+        restartUnits = [ "headscale.service" ];
+      };
+
     };
   };
 

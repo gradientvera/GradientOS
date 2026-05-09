@@ -30,6 +30,7 @@ in
 
     settings = {
       server_url = "https://headscale.constellation.moe";
+      noise.private_key_path = config.sops.secrets.headscale-noise-key.path;
       database.type = "sqlite";
       dns.base_domain = "tailnet.constellation.moe";
       dns.nameservers.global = [
