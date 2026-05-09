@@ -52,8 +52,8 @@ edit-secret-headscale $EDITOR="code --wait":
     sops --input-type=binary ./hosts/briah/secrets/headscale.encsql
 
 [group('secrets')]
-edit-secret-angela:
-    just edit-secret angela
+edit-secret-vacuum $EDITOR="code --wait":
+    sops ./misc/vacuum/secrets/secrets.yml
 
 [group('secrets')]
 edit-secret-asiyah:

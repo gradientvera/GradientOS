@@ -104,6 +104,18 @@ provision() {
     /data/oucher/oucher.sh &
   fi
 
+  # Tailscale
+  apk add tailscale
+  pkill tailscaled || true
+  /usr/sbin/tailscaled &
+  sleep 1
+  tailscale_state=$(tailscale status --json --peers=false | jq -r '.BackendState')
+
+  if [[ "$tailscale_state" != "Running" ]]; then
+    echo "Starting Tailscale..."
+    tailscale up --auth-key "$(sops decrypt --extract '["tailscale-auth-key"]' $SOPS_SECRETS_FILE)" '--login-server=https://headscale.constellation.moe' --hostname "$(cat /etc/hostname)"
+  fi
+
   # Just in case?
   apk fix
 
