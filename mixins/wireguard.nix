@@ -36,51 +36,12 @@ let
   briahHost = "briah";
   yetzirahHost = "yetzirah";
   bernkastelHost = "bernkastel";
-  neithDeckHost = "neith-deck";
   erikaHost = "erika";
   featherineHost = "featherine";
 
   hostName = config.networking.hostName;
   isAsiyah = hostName == asiyahHost;
   isBriah = hostName == briahHost;
-
-  mkRatholeServices = servicePrefix: mode: ports:
-    builtins.listToAttrs
-      (builtins.concatLists
-        (builtins.map (port:
-          [
-            {
-              name = "${servicePrefix}-${toString port}-tcp";
-              value = if mode == "server" then {
-                bind_addr = "0.0.0.0:${toString port}";
-                type = "tcp";
-              } else if mode == "client" then {
-                local_addr = "127.0.0.1:${toString port}";
-                type = "tcp";
-              } else throw "Expected mode to be either 'server' or 'client'";
-            }
-            {
-              name = "${servicePrefix}-${toString port}-udp";
-              value = if mode == "server" then {
-                bind_addr = "0.0.0.0:${toString port}";
-                type = "udp";
-              } else if mode == "client" then {
-                local_addr = "127.0.0.1:${toString port}";
-                type = "udp";
-              } else throw "Expected mode to be either 'server' or 'client'";
-            }
-          ]
-        ) ports)
-      );
-
-  asiyahForwardedPorts = with asiyahPorts; [
-    #nginx
-    #nginx-ssl
-    
-    forgejo-ssh
-
-    minecraft
-  ];
 
 in
 {
@@ -101,71 +62,6 @@ in
         "net.ipv4.conf.default.forwarding" = lib.mkOverride 98 true;
         "net.ipv6.conf.all.forwarding" = lib.mkOverride 98 true;
         "net.ipv6.conf.default.forwarding" = lib.mkOverride 98 true;
-      };
-    })
-
-    (lib.mkIf isBriah {
-      networking.firewall = {
-        allowedTCPPorts = with briahPorts; [ gradientnet ] ++ asiyahForwardedPorts;
-        allowedUDPPorts = with briahPorts; [ gradientnet ] ++ asiyahForwardedPorts;
-      };
-
-      networking.firewall.interfaces.gradientnet = {
-        allowedTCPPorts = with briahPorts; [ rathole ];
-        allowedUDPPorts = with briahPorts; [ rathole ];
-      };
-
-      services.rathole = {
-        enable = true;
-        role = "server";
-        credentialsFile = config.sops.secrets.rathole-credentials-server.path;
-        settings = {
-          server = {
-            bind_addr = "${addr.gradientnet.briah}:${toString briahPorts.rathole}";
-            services = (mkRatholeServices "asiyah" "server" asiyahForwardedPorts);
-          };
-        };
-      };
-
-      services.mmproxy-rs.enable = false;
-      services.mmproxy-rs.reverseProxies.quic = {
-        enable = true;
-        listeners = 2;
-        openFirewall = true;
-        protocol = "udp";
-        listenAddress = "[::]:${toString briahPorts.https}";
-        forwardAddress = "${addr.gradientnet.asiyah}:${toString asiyahPorts.mmproxy-quic}";
-      };
-    })
-
-    (lib.mkIf isAsiyah {
-      networking.firewall = {
-        allowedTCPPorts = with asiyahPorts; [ lilynet ] ++ asiyahForwardedPorts;
-        allowedUDPPorts = with asiyahPorts; [ lilynet ] ++ asiyahForwardedPorts;
-      };
-
-      services.rathole = {
-        enable = true;
-        role = "client";
-        credentialsFile = config.sops.secrets.rathole-credentials-client.path;
-        settings = {
-          client = {
-            remote_addr = "${addr.gradientnet.briah}:${toString briahPorts.rathole}";
-            services = (mkRatholeServices "asiyah" "client" asiyahForwardedPorts);
-          };
-        };
-      };
-
-      services.mmproxy-rs.enable = false;
-      services.mmproxy-rs.mmproxies.quic = {
-        openFirewall = true;
-        # Use .2 instead of .1 to allow reverse proxying on nginx lmao
-        ipv4 = "127.0.0.2:${toString asiyahPorts.nginx-ssl}";
-        ipv6 = "[::2]:${toString asiyahPorts.nginx-ssl}";
-        allowedSubnets = [ "${addr.gradientnet.gradientnet}/24" ];
-        protocol = "udp";
-        mark = 123;
-        listenAddress = "${addr.gradientnet.asiyah}:${toString asiyahPorts.mmproxy-quic}";
       };
     })
 
@@ -263,59 +159,6 @@ in
       systemd.services.wgautomesh.after = [ "wireguard-gradientnet.service" ];
       systemd.services.wgautomesh.wants = [ "wireguard-gradientnet.service" ];
     })
-
-    (lib.mkIf (builtins.any (v: hostName == v) [ asiyahHost yetzirahHost bernkastelHost neithDeckHost erikaHost featherineHost ]) {
-      systemd.network.wait-online.ignoredInterfaces = [ "lilynet" ];
-
-      networking.wireguard.interfaces.lilynet = with addr.lilynet; {
-        ips = ["${addr.lilynet.${hostName}}/${if isAsiyah then "24" else "32"}"];
-        listenPort = lib.mkIf isAsiyah asiyahPorts.lilynet;
-        postSetup = lib.mkIf isAsiyah (gen-post-setup "lilynet" "eno1");
-        postShutdown = lib.mkIf isAsiyah (gen-post-shutdown "lilynet" "eno1");
-        privateKeyFile = private-key;
-        dynamicEndpointRefreshSeconds = if isAsiyah then 0 else 25;
-        peers = (if isAsiyah then [
-          {
-            allowedIPs = [ "${yetzirah}/32" ];
-            publicKey = keys.yetzirah;
-          }
-          {
-            allowedIPs = [ "${bernkastel}/32" ];
-            publicKey = keys.bernkastel;
-          }
-          {
-            allowedIPs = [ "${neith-deck}/32" ];
-            publicKey = keys.neith-deck;
-          }
-          {
-            allowedIPs = [ "${erika}/32" ];
-            publicKey = keys.erika;
-          }
-          {
-            allowedIPs = [ "${featherine}/32" ];
-            publicKey = keys.featherine;
-          }
-          {
-            allowedIPs = [ "${neith}/32" ];
-            publicKey = keys.neith;
-          }
-          {
-            allowedIPs = [ "${remie}/32" ];
-            publicKey = keys.remie;
-          }
-        ] else [
-          {
-            allowedIPs = [ "${lilynet}/24" ];
-            endpoint = "vpn.gradient.moe:${toString asiyahPorts.lilynet}";
-            publicKey = keys.asiyah;
-            persistentKeepalive = 25;
-            dynamicEndpointRefreshSeconds = 25;
-            dynamicEndpointRefreshRestartSeconds = 10;
-          }
-        ]);
-      };
-    })
-
   ];
 
 }

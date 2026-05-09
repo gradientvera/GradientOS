@@ -192,7 +192,7 @@
         ];
 
         deployment = {
-          targetHost = "neith-deck.local";#ips.lilynet.neith-deck;
+          targetHost = "neith-deck.tailnet.constellation.moe";
           tags = with colmena-tags; [ x86_64 steam-deck desktop neith ];
           allowLocalDeployment = true;
         };

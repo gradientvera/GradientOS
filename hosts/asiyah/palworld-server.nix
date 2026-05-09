@@ -50,11 +50,11 @@ in {
     };
   };
 
-  networking.firewall.interfaces.lilynet.allowedTCPPorts = with ports; [
+  networking.firewall.interfaces.tailscale0.allowedTCPPorts = with ports; [
     palworld
   ];
 
-  networking.firewall.interfaces.lilynet.allowedUDPPorts = with ports; [
+  networking.firewall.interfaces.tailscale0.allowedUDPPorts = with ports; [
     palworld
   ];
 }

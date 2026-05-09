@@ -1,5 +1,6 @@
 { config, pkgs, lib, ... }:
 let
+  addresses = config.gradient.const.addresses;
   ports = config.gradient.currentHost.ports;
 in
 {
@@ -41,6 +42,8 @@ in
         mode = "file";
         path = pkgs.writeText "policy.json" (builtins.toJSON (import ../../misc/headscale-acl.nix));
       };
+      prefixes.v4 = addresses.tailscale-ipv4;
+      prefixes.v6 = addresses.tailscale-ipv6;
     };
   };
 

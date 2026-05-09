@@ -2,7 +2,6 @@
 let
   addresses = config.gradient.const.addresses;
   gradientnet = config.gradient.const.wireguard.addresses.gradientnet;
-  lilynet = config.gradient.const.wireguard.addresses.lilynet;
   asiyahPorts = config.gradient.hosts.asiyah.ports;
   ports = config.gradient.currentHost.ports;
   hostName = config.networking.hostName;
@@ -217,8 +216,9 @@ in
             "10.0.0.0/8"
             "192.168.1.0/24"
             addresses.briahv6-cidr
+            addresses.tailscale-ipv4
+            addresses.tailscale-ipv6
             "${gradientnet.gradientnet}/24"
-            "${lilynet.lilynet}/24"
           ];
         };
       };

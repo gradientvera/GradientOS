@@ -24,12 +24,7 @@ in
       "${addresses.gradientnet.asiyah}:${toString ports.wolf-video-ping}:${toString ports.wolf-video-ping}/udp"
       "${addresses.gradientnet.asiyah}:${toString ports.wolf-audio-ping}:${toString ports.wolf-audio-ping}/udp"
 
-      "${addresses.lilynet.asiyah}:${toString ports.wolf-http}:${toString ports.wolf-http}/tcp"
-      "${addresses.lilynet.asiyah}:${toString ports.wolf-https}:${toString ports.wolf-https}/tcp"
-      "${addresses.lilynet.asiyah}:${toString ports.wolf-control}:${toString ports.wolf-control}/udp"
-      "${addresses.lilynet.asiyah}:${toString ports.wolf-rtsp}:${toString ports.wolf-rtsp}/tcp"
-      "${addresses.lilynet.asiyah}:${toString ports.wolf-video-ping}:${toString ports.wolf-video-ping}/udp"
-      "${addresses.lilynet.asiyah}:${toString ports.wolf-audio-ping}:${toString ports.wolf-audio-ping}/udp"
+      # TODO: Tailscale?
     ];
     volumes = [
       "/dev/:/dev/:rw"
@@ -102,7 +97,7 @@ in
     allowedUDPPorts = [ ports.wolf-control ports.wolf-video-ping ports.wolf-audio-ping ];
   };
 
-  networking.firewall.interfaces.lilynet = {
+  networking.firewall.interfaces.tailscale0 = {
     allowedTCPPorts = [ ports.wolf-http ports.wolf-https ports.wolf-rtsp ];
     allowedUDPPorts = [ ports.wolf-control ports.wolf-video-ping ports.wolf-audio-ping ];
   };

@@ -13,7 +13,6 @@
 
   # wireguard
   gradientnet = 1194;
-  lilynet = 1195;
 
   # kanidm
   kanidm = 8443;

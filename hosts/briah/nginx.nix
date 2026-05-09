@@ -6,8 +6,8 @@
 in
  {
 
-  networking.firewall.allowedTCPPorts = [ ports.http ports.https asiyahPorts.lilynet ];
-  networking.firewall.allowedUDPPorts = [ ports.http ports.https asiyahPorts.lilynet ];
+  networking.firewall.allowedTCPPorts = [ ports.http ports.https ];
+  networking.firewall.allowedUDPPorts = [ ports.http ports.https ];
 
   services.nginx = {
     enable = true;
@@ -93,11 +93,9 @@ in
 
     streamConfig = ''
       server {
-        listen ${toString asiyahPorts.lilynet} reuseport;
-        listen ${toString asiyahPorts.lilynet} udp reuseport;
-        listen [::]:${toString asiyahPorts.lilynet} reuseport;
-        listen [::]:${toString asiyahPorts.lilynet} udp reuseport;
-        proxy_pass ${gradientnet.asiyah}:${toString asiyahPorts.lilynet};
+        listen ${toString asiyahPorts.forgejo-ssh} reuseport;
+        listen [::]:${toString asiyahPorts.forgejo-ssh} reuseport;
+        proxy_pass ${gradientnet.asiyah}:${toString asiyahPorts.forgejo-ssh};
       }
     '';
 
