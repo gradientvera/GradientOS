@@ -16,6 +16,13 @@ provision() {
 
   mkdir -p /opt
 
+  echo "Fixing DNS config..."
+
+  # Tailscale breaks resolv.conf unless tailscaled is running, so we fix this...
+  echo "nameserver 1.1.1.1" > /etc/resolv.conf
+  echo "nameserver 1.0.0.1" >> /etc/resolv.conf
+  sleep 1
+
   echo "Waiting for network..."
 
   # This script usually launches before the internet connection is established, so we wait
@@ -105,9 +112,12 @@ provision() {
   fi
 
   # Tailscale
+  mkdir -p /data/tailscale-state
+
   apk add tailscale
   pkill tailscaled || true
-  /usr/sbin/tailscaled &
+  rm -f /var/run/tailscale/tailscaled.sock || true
+  /usr/sbin/tailscaled --no-logs-no-support --statedir=/data/tailscale-state > /dev/null 2>&1 &
   sleep 1
   tailscale_state=$(tailscale status --json --peers=false | jq -r '.BackendState')
 
@@ -115,6 +125,10 @@ provision() {
     echo "Starting Tailscale..."
     tailscale up --auth-key "$(sops decrypt --extract '["tailscale-auth-key"]' $SOPS_SECRETS_FILE)" '--login-server=https://headscale.constellation.moe' --hostname "$(cat /etc/hostname)"
   fi
+
+  echo "Fixing Tailscale MagicDNS..."
+  tailscale set --accept-dns=false > /dev/null 2>&1
+  tailscale set --accept-dns=true > /dev/null 2>&1
 
   # Just in case?
   apk fix
