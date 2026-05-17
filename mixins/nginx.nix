@@ -6,7 +6,8 @@
   gradient.nginx.enableBlockAIBots = true;
 
   services.nginx = {
-    package = pkgs.nginx.override {
+    # Master nixpkgs branch for quicker CVE fixes
+    package = pkgs.master.nginx.override {
       withSlice = true;
     };
 
