@@ -127,7 +127,8 @@ in {
         proxy_buffers 4 256k;
         proxy_busy_buffers_size 256k;
       '';
-      extraConfig.locations."/kobo".extraConfig = ''
+      # Yes the ending / is there on purpose
+      extraConfig.locations."/kobo/".extraConfig = ''
         auth_request off;
         proxy_pass http://127.0.0.1:${toString ports.calibre-web-automated};
       '';
