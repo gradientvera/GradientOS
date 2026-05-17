@@ -42,7 +42,7 @@ in
       ];
       policy = {
         mode = "file";
-        path = pkgs.writeText "policy.json" (builtins.toJSON (import ../../misc/headscale-acl.nix));
+        path = pkgs.writeText "policy.json" (builtins.toJSON (import ../../misc/headscale-acl.nix { hosts = config.gradient.hosts; const = config.gradient.const; } ));
       };
       prefixes.v4 = addresses.tailscale-ipv4-cidr;
       prefixes.v6 = addresses.tailscale-ipv6-cidr;
