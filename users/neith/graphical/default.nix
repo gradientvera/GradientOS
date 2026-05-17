@@ -18,6 +18,7 @@
     firefox
     discord
     spotify
+    anki
     vlc
     mpv
   ];
