@@ -41,7 +41,10 @@
       flake = false;
     };
 
-    jovian-nixos.url = "github:Jovian-Experiments/Jovian-NixOS";
+    jovian-nixos = {
+      url = "github:Jovian-Experiments/Jovian-NixOS";
+      inputs.nixpkgs.follows = "nixpkgs";
+    };
 
     sops-nix = {
       url = "github:Mic92/sops-nix";
@@ -65,9 +68,15 @@
       inputs.nixpkgs.follows = "nixpkgs";
     };
 
-    catppuccin.url = "github:catppuccin/nix";
+    catppuccin = {
+      url = "github:catppuccin/nix";
+      inputs.nixpkgs.follows = "nixpkgs";
+    };
 
-    nixpkgs-xr.url = "github:nix-community/nixpkgs-xr";
+    nixpkgs-xr = {
+      url = "github:nix-community/nixpkgs-xr";
+      inputs.nixpkgs.follows = "nixpkgs";
+    };
 
     lanzaboote = {
       url = "github:nix-community/lanzaboote/v1.0.0";
@@ -152,7 +161,6 @@
         ];
 
         deployment = {
-          targetHost = ips.gradientnet.bernkastel;
           tags = with colmena-tags; [ x86_64 desktop vera nightly ];
           allowLocalDeployment = true;
           buildOnTarget = true;
@@ -192,7 +200,6 @@
         ];
 
         deployment = {
-          targetHost = "neith-deck.tailnet.constellation.moe";
           tags = with colmena-tags; [ x86_64 steam-deck desktop neith ];
           allowLocalDeployment = true;
         };
@@ -240,7 +247,6 @@
         ];
 
         deployment = {
-          targetHost = ips.gradientnet.erika;
           tags = with colmena-tags; [ x86_64 steam-deck desktop vera ];
           allowLocalDeployment = true;
         };
@@ -289,7 +295,6 @@
         ];
 
         deployment = {
-          targetHost = ips.gradientnet.featherine;
           tags = with colmena-tags; [ x86_64 desktop vera nightly ];
           allowLocalDeployment = true;
         };
@@ -331,7 +336,6 @@
         ];
 
         deployment = {
-          targetHost = ips.gradientnet.asiyah;
           tags = with colmena-tags; [ x86_64 server vera nightly ];
           allowLocalDeployment = true;
         };
@@ -390,7 +394,6 @@
         ];
 
         deployment = {
-          targetHost = ips.gradientnet.yetzirah;
           tags = with colmena-tags; [ x86_64 server vera nightly ];
           allowLocalDeployment = true;
         };
