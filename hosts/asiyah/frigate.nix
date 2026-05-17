@@ -112,7 +112,7 @@ in
             user = "thingino";
             password = "thingino";
             autotracking = {
-              enabled = true;
+              enabled = false;
               calibrate_on_startup = false;
               required_zones = [ "main" ];
               movement_weights = "0.0, 1.0, 0.08133125305175781, 0.10055391865391887, 0.21469116134028282, 0";
