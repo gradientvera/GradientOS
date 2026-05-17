@@ -1,6 +1,9 @@
 { config, pkgs, lib, ... }:
 let
-  isNeith = config.networking.hostName == "neith-deck";
+  hostName = config.networking.hostName;
+  isBriah = hostName == "briah";
+  isAsiyah = hostName == "asiyah";
+  isNeith = hostName == "neith-deck";
 in
 {
 
@@ -23,11 +26,10 @@ in
     useRoutingFeatures = "both";
     extraUpFlags = [
       "--login-server=https://headscale.constellation.moe"
-      "--advertise-exit-node"
     ];
-    extraSetFlags = [
+    extraSetFlags = [] ++ (if (isAsiyah || isBriah) then [
       "--advertise-exit-node"
-    ];
+    ] else []);
   };
 
   environment.systemPackages = if config.gradient.profiles.desktop.enable then [ pkgs.tail-tray ] else [];
