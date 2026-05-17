@@ -979,7 +979,7 @@ in {
     */
 
     calibre = {
-      image = "docker.io/crocodilestick/calibre-web-automated:latest";
+      image = "ghcr.io/new-usemame/calibre-web-nextgen:latest";
       pull = "newer";
       ports = [ "${toString ports.calibre-web-automated}:8083" ];
       volumes = [
@@ -993,6 +993,7 @@ in {
         TZ = config.time.timeZone;
         PUID = toString userUid;
         PGID = toString groupGid;
+        TRUSTED_PROXY_COUNT = "3";
       };
       extraOptions = [
         "--ip=10.88.0.7"
