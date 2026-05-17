@@ -66,7 +66,9 @@ in
       }
       else {
         enable = true;
-        capSysNice = true;
+        # Set to false because ananicy handles it anyhow plus
+        # if you set this to true you can't use it with steam lol
+        capSysNice = false;
       };
 
       programs.gamemode.enable = true;
