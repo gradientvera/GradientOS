@@ -16,6 +16,7 @@ in {
     enable = true;
     httpAddress = "http://127.0.0.1:${toString ports.oauth2-proxy}";
     upstream = [ "http://127.0.0.1:${toString ports.nginx}" ];
+    trustedProxyIP = [ "127.0.0.0/8" ];
 
     # -- github config --
     #redirectURL = "https://polycule.constellation.moe/oauth2/callback";
