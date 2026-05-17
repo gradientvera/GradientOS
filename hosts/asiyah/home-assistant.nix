@@ -53,6 +53,7 @@ in
       "recorder"
       "zeroconf"
       "apple_tv"
+      "influxdb"
       "logbook"
       "picotts"
       "opensky"
@@ -191,13 +192,6 @@ in
       recorder = {
         purge_keep_days = 10;
         db_url = "postgresql://@/hass";
-      };
-
-      influxdb = {
-        api_version = "1";
-        host = "127.0.0.1";
-        port = toString ports.victoriametrics;
-        max_retries = 3;
       };
 
       sensor = [
