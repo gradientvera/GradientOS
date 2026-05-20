@@ -9,12 +9,15 @@ esp32:
     type: arduino
     version: recommended
 
+mdns:
+  disabled: false
+
 logger:
   baud_rate: 0
 
 api:
-  actions:
-    - action: follow_me
+  services:
+    - service: follow_me
       variables:
         temperature: float
       then:
@@ -107,9 +110,7 @@ button:
     icon: mdi:tailwind
     on_press:
       midea_ac.swing_step:
-
-esp32_ble_tracker:
-
+        
 text_sensor:
   - platform: version
     hide_timestamp: true
@@ -132,7 +133,7 @@ sensor:
   - platform: internal_temperature
     name: "ESP32 Internal Temperature"
   - platform: homeassistant
-    entity_id: sensor.vera_bedroom_thermometer_temperature
+    entity_id: sensor.vera_bedroom_meter_pro_temperature
     id: follow_me_sensor
     filters:
       - throttle: 10s
@@ -145,7 +146,7 @@ sensor:
   - platform: homeassistant
     name: "Kaysun IR Follow Me"
     id: "AC_Follow_Me"
-    entity_id: sensor.vera_bedroom_thermometer_temperature
+    entity_id: sensor.vera_bedroom_meter_pro_temperature
     internal: true
     filters:
       - throttle: 10s
@@ -155,18 +156,6 @@ sensor:
     - remote_transmitter.transmit_midea:
         code: !lambda |-
           return {0xA4, 0x82, 0x48, 0x7F, (uint8_t)(x)};
-  - platform: xiaomi_hhccjcy01
-    mac_address: '5C:85:7E:12:DD:4B'
-    temperature:
-      name: "Plant Temperature"
-    moisture:
-      name: "Plant Moisture"
-    illuminance:
-      name: "Plant Illuminance"
-    conductivity:
-      name: "Plant Soil Conductivity"
-    battery_level:
-      name: "Plant Sensor Battery Level"
 
 binary_sensor:
   - platform: status

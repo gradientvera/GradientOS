@@ -9,6 +9,9 @@ esp32:
     type: arduino
     version: recommended
 
+mdns:
+  disabled: false
+
 logger:
   baud_rate: 0
 
@@ -42,6 +45,7 @@ wifi:
 captive_portal:
 
 uart:
+  id: uart_tx_rx
   tx_pin: GPIO17
   rx_pin: GPIO16
   baud_rate: 9600
@@ -50,6 +54,7 @@ climate:
   - platform: midea
     id: climate_control
     name: Air Conditioner
+    uart_id: uart_tx_rx
     autoconf: true
     supported_modes:
       - FAN_ONLY
