@@ -3,10 +3,6 @@ esphome:
   friendly_name: Air Freshener Vera Bedroom
   name_add_mac_suffix: false
 
-external_components:
-  - source: "github://gabest11/esphome@0d73a86e1b4ac0920110c484993e8c998d2880b9"
-    components: [ cc1101 ]
-
 esp32:
   board: nodemcu-32s
   framework:
@@ -85,67 +81,10 @@ spi:
 cc1101:
   id: transceiver
   cs_pin: GPIO19
-  output_power: 0
-  tuner:
-    frequency: 434110
-    # if_frequency: 153
-    # bandwidth: 325
-    # channel: 0
-    # channel_spacing: 200
-    # fsk_deviation: 47.607
-    # msk_deviation: 0
-    # symbol_rate: 5000
-    # sync_mode: None
-    # carrier_sense_above_threshold: true
-    # modulation: ASK/OOK
-  # agc:    
-    # magn_target:
-    # max_lna_gain:
-    # max_dva_gain:
-    # carrier_sense_abs_thr:
-    # carrier_sense_rel_thr:
-    # lna_priority:
-    # filter_length_fsk_msk:
-    # filter_length_ask_ook:
-    # freeze:
-    # wait_time:
-    # hyst_level:
-  sensor:
-    chip_id:
-      name: Chip Id
-    rssi:
-      name: RSSI
-    lqi:
-      name: LQI
-    temperature:
-      name: Temperature
+  output_power: 7
+  frequency: 434.110MHz
 
 number:
-  - platform: cc1101
-    output_power:
-      name: output_power
-      id: cc1101_output_power
-    tuner:
-      frequency:
-        name: Tuner frequency
-        id: cc1101_freq
-      if_frequency:
-        name: Tuner if_frequency
-      bandwidth:
-        name: Tuner bandwidth
-      channel:
-        name: Tuner channel
-      channel_spacing:
-        name: Tuner channel_spacing
-      fsk_deviation:
-        name: Tuner fsk_deviation
-      msk_deviation:
-        name: Tuner msk_deviation
-      symbol_rate:
-        name: Tuner symbol_rate
-    agc:
-      carrier_sense_abs_thr:
-        name: AGC carrier_sense_abs_thr
   - platform: template
     id: ceiling_fan_signal_repeat
     name: Ceiling Fan Signal Repeat Times
@@ -155,42 +94,6 @@ number:
     max_value: 40
     step: 1
     initial_value: 4
-
-select:
-  - platform: cc1101
-    tuner:
-      sync_mode:
-        name: Tuner Sync Mode
-      modulation:
-        name: Tuner Modulation
-    agc:
-      magn_target:
-        name: AGC magn_target
-      max_lna_gain:
-        name: AGC max_lna_gain
-      max_dvga_gain:
-        name: AGC max_dva_gain
-      carrier_sense_rel_thr:
-        name: AGC carrier_sense_rel_thr
-      filter_length_fsk_msk:
-        name: AGC filter_length_fsk_msk
-      filter_length_ask_ook:
-        name: AGC filter_length_ask_ook
-      freeze:
-        name: AGC freeze
-      wait_time:
-        name: AGC wait_time
-      hyst_level:
-        name: AGC hyst_level
-
-switch:
-  - platform: cc1101
-    tuner:
-      carrier_sense_above_threshold:
-        name: Tuner carrier_sense_above_threshold
-    agc:
-      lna_priority:
-        name: AGC lna_priority
 
 remote_transmitter:
   pin: GPIO18  # GDO0
@@ -203,7 +106,7 @@ remote_transmitter:
       - cc1101.begin_tx: transceiver
   on_complete:
     then:
-      - cc1101.end_tx: transceiver
+      - cc1101.set_idle: transceiver
       #- lambda: |- 
       #     id(ble_proxy)->set_active(true);
       #- esp32_ble_tracker.start_scan:
@@ -241,12 +144,6 @@ script:
       code: string
       repeat: int
     then:
-      - number.set:
-          id: cc1101_freq
-          value: 434110
-      - number.set:
-          id: cc1101_output_power
-          value: 7
       - remote_transmitter.transmit_raw:
           code: !lambda |-
             std::vector<long int> vec;
