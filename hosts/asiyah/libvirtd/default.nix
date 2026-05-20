@@ -6,7 +6,7 @@
   ];
 
   virtualisation.libvirtd = {
-    enable = true;
+    enable = false; # not used right now
     onBoot = "ignore";
     onShutdown = "suspend";
     qemu = {

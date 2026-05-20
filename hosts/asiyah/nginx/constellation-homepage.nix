@@ -1,4 +1,7 @@
 { config, pkgs, ports, ... }:
+let
+  addresses = config.gradient.const.addresses;
+in
 {
 
   services.homepage-dashboard = {
@@ -200,7 +203,7 @@
               container = "jellyfin";
               widget = {
                 type = "jellyfin";
-                url = "http://127.0.0.1:${toString ports.jellyfin-http}";
+                url = "http://${addresses.podman-gateway}:${toString ports.jellyfin-http}";
                 key = "{{HOMEPAGE_VAR_JELLYFIN_API_KEY}}";
                 enableBlocks = true;
                 enableNowPlaying = false;
@@ -217,7 +220,7 @@
               container = "jellyseerr";
               widget = {
                 type = "jellyseerr";
-                url = "http://127.0.0.1:${toString ports.jellyseerr}";
+                url = "http://${addresses.podman-gateway}:${toString ports.jellyseerr}";
                 key = "{{HOMEPAGE_VAR_JELLYSEERR_API_KEY}}";
               };
             };
@@ -231,7 +234,7 @@
               container = "calibre";
               widget = {
                 type = "calibreweb";
-                url = "http://127.0.0.1:${toString ports.calibre-web-automated}";
+                url = "http://${addresses.podman-gateway}:${toString ports.calibre-web-automated}";
                 username = "{{HOMEPAGE_VAR_CALIBRE_USERNAME}}";
                 password = "{{HOMEPAGE_VAR_CALIBRE_PASSWORD}}";
               };
@@ -246,7 +249,7 @@
               container = "romm";
               widget = {
                 type = "romm";
-                url = "http://127.0.0.1:${toString ports.romm}";
+                url = "http://${addresses.podman-gateway}:${toString ports.romm}";
               };
             };
           }
@@ -281,7 +284,7 @@
               icon = "sh-pinchflat.png";
               server = "pinchflat";
               container = "pinchflat";
-              siteMonitor = "http://127.0.0.1:${toString ports.pinchflat}";
+              siteMonitor = "http://${addresses.podman-gateway}:${toString ports.pinchflat}";
             };
           }
           {
@@ -293,7 +296,7 @@
               container = "prowlarr";
               widget = {
                 type = "prowlarr";
-                url = "http://127.0.0.1:${toString ports.prowlarr}";
+                url = "http://${addresses.podman-gateway}:${toString ports.prowlarr}";
                 key = "{{HOMEPAGE_VAR_PROWLARR_API_KEY}}";
               };
             };
@@ -307,7 +310,7 @@
               container = "sonarr";
               widget = {
                 type = "sonarr";
-                url = "http://127.0.0.1:${toString ports.sonarr}";
+                url = "http://${addresses.podman-gateway}:${toString ports.sonarr}";
                 key = "{{HOMEPAGE_VAR_SONARR_API_KEY}}";
                 enableQueue = true;
               };
@@ -322,7 +325,7 @@
               container = "radarr";
               widget = {
                 type = "radarr";
-                url = "http://127.0.0.1:${toString ports.radarr}";
+                url = "http://${addresses.podman-gateway}:${toString ports.radarr}";
                 key = "{{HOMEPAGE_VAR_RADARR_API_KEY}}";
                 enableQueue = true;
               };
@@ -337,7 +340,7 @@
               container = "sonarr-es";
               widget = {
                 type = "sonarr";
-                url = "http://127.0.0.1:${toString ports.sonarr-es}";
+                url = "http://${addresses.podman-gateway}:${toString ports.sonarr-es}";
                 key = "{{HOMEPAGE_VAR_SONARR_ES_API_KEY}}";
                 enableQueue = true;
               };
@@ -352,7 +355,7 @@
               container = "radarr-es";
               widget = {
                 type = "radarr";
-                url = "http://127.0.0.1:${toString ports.radarr-es}";
+                url = "http://${addresses.podman-gateway}:${toString ports.radarr-es}";
                 key = "{{HOMEPAGE_VAR_RADARR_ES_API_KEY}}";
                 enableQueue = true;
               };
@@ -367,7 +370,7 @@
               container = "bazarr";
               widget = {
                 type = "bazarr";
-                url = "http://127.0.0.1:${toString ports.bazarr}";
+                url = "http://${addresses.podman-gateway}:${toString ports.bazarr}";
                 key = "{{HOMEPAGE_VAR_BAZARR_API_KEY}}";
               };
             };
@@ -390,7 +393,7 @@
               container = "lidarr";
               widget = {
                 type = "lidarr";
-                url = "http://127.0.0.1:${toString ports.lidarr}";
+                url = "http://${addresses.podman-gateway}:${toString ports.lidarr}";
                 key = "{{HOMEPAGE_VAR_LIDARR_API_KEY}}";
               };
             };
@@ -404,7 +407,7 @@
               container = "slskd";
               widget = {
                 type = "slskd";
-                url = "http://127.0.0.1:${toString ports.slskd}";
+                url = "http://${addresses.podman-gateway}:${toString ports.slskd}";
                 key = "{{HOMEPAGE_VAR_SLSKD_API_KEY}}";
               };
             };
@@ -428,7 +431,7 @@
               container = "tdarr";
               widget = {
                 type = "tdarr";
-                url = "http://127.0.0.1:${toString ports.tdarr-webui}";
+                url = "http://${addresses.podman-gateway}:${toString ports.tdarr-webui}";
               };
             };
           }
@@ -441,7 +444,7 @@
               container = "qbittorrent";
               widget = {
                 type = "qbittorrent";
-                url = "http://127.0.0.1:${toString ports.qbittorrent-webui}";
+                url = "http://${addresses.podman-gateway}:${toString ports.qbittorrent-webui}";
                 username = "{{HOMEPAGE_VAR_QBITTORRENT_USERNAME}}";
                 password = "{{HOMEPAGE_VAR_QBITTORRENT_PASSWORD}}";
               };
@@ -456,7 +459,7 @@
               container = "sabnzbd";
               widget = {
                 type = "sabnzbd";
-                url = "http://127.0.0.1:${toString ports.sabnzbd}";
+                url = "http://${addresses.podman-gateway}:${toString ports.sabnzbd}";
                 key = "{{HOMEPAGE_VAR_SABNZBD_API_KEY}}";
               };
             };

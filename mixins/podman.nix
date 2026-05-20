@@ -11,6 +11,8 @@
     defaultNetwork.settings.dns_enabled = true;
   };
 
+  gradient.containers.autoUpdate = true;
+
   virtualisation.oci-containers.backend = "podman";
 
   # Allow accesing published ports...

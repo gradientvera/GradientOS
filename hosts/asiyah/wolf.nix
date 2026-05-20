@@ -52,12 +52,7 @@
       "--ipc=host"
       "--security-opt" "label=disable"
       "--device-cgroup-rule" "c 13:* rmw"
-      "--ip" "10.88.0.12"
     ];
-    labels = {
-      "io.containers.autoupdate" = "registry";
-      "PODMAN_SYSTEMD_UNIT" = "podman-wolf.service";
-    };
   };
   
   # As per https://games-on-whales.github.io/wolf/stable/user/quickstart.html#_virtual_devices_support

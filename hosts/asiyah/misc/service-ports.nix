@@ -21,7 +21,7 @@
   # mediarr stack
   jellyfin-http = 8096;
   jellyfin-https = 8920;
-  jellyfin-service-discovery = 1901;
+  jellyfin-service-discovery = 1901; # ?
   jellyfin-client-discovery = 7359;
   radarr = 7878;
   radarr-es = 7879;
@@ -52,13 +52,11 @@
   mediarr-openssh = 2222;
   slskd = 5030;
   slskd-peer = 26156;
-  romm = 8095;
+  romm = 8095; # ?
   neko = 8097;
   neko-epr-start = 52000;
   neko-epr-end = 52100;
-  proxy-vpn = 1080;
-  proxy-vpn-uk = 1081;
-  calibre-web-automated = 8078;
+  calibre-web-automated = 8078; # ?
   shelfmark = 8077;
   pinchflat = 8945;
 

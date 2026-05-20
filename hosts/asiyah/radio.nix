@@ -6,7 +6,7 @@
   virtualisation.oci-containers.containers.openwebrxplus = {
     image = "docker.io/slechev/openwebrxplus-softmbe:latest";
     pull = "newer";
-    ports = [ "127.0.0.1:${toString config.gradient.currentHost.ports.openwebrx}:8073" ];
+    ports = [ "${config.gradient.const.addresses.podman-gateway}:${toString config.gradient.currentHost.ports.openwebrx}:8073" ];
     volumes = [
       "/var/lib/openwebrx:/var/lib/openwebrx"
       "/var/lib/openwebrx/etc:/etc/openwebrx"
@@ -18,13 +18,8 @@
       OPENWEBRX_ADMIN_PASSWORD = "password";
     };
     extraOptions = [
-      "--ip" "10.88.0.8"
       "--device" "/dev/bus/usb"
     ];
-    labels = {
-      "io.containers.autoupdate" = "registry";
-      "PODMAN_SYSTEMD_UNIT" = "podman-openwebrxplus.service";
-    };
   };
 
   /*systemd.services.openwebrx.serviceConfig = {

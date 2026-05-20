@@ -11,6 +11,7 @@
 
     ./nginx-extras.nix
     ./tmpfiles-check.nix
+    ./containers-extras.nix
     ./substituter-switcher.nix
   ];
 

@@ -1,5 +1,6 @@
 { config, self, lib, ... }:
 let
+  addresses = config.gradient.const.addresses;
   ports = config.gradient.currentHost.ports;
   # TODO: This is copy-pasted... Make this a common lib or something?
   #       or even better, make a NixOS module for it hoooly shit
@@ -66,7 +67,7 @@ in {
     locations."/".extraConfig = ''
       # https://jellyfin.org/docs/general/post-install/networking/reverse-proxy/nginx/
       # Proxy main Jellyfin traffic
-      proxy_pass http://127.0.0.1:${toString ports.jellyfin-http};
+      proxy_pass http://${addresses.podman-gateway}:${toString ports.jellyfin-http};
       proxy_set_header Host $host;
       proxy_set_header X-Real-IP $remote_addr;
       proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;
@@ -82,7 +83,7 @@ in {
     locations."/socket".extraConfig = ''
       # https://jellyfin.org/docs/general/post-install/networking/reverse-proxy/nginx/
       # Proxy Jellyfin Websockets traffic
-      proxy_pass http://127.0.0.1:${toString ports.jellyfin-http};
+      proxy_pass http://${addresses.podman-gateway}:${toString ports.jellyfin-http};
       proxy_http_version 1.1;
       proxy_set_header Upgrade $http_upgrade;
       proxy_set_header Connection "upgrade";
@@ -98,29 +99,31 @@ in {
   services.nginx.virtualHosts = {
     "homepage.constellation.moe" = mkReverseProxy { port = ports.constellation-homepage; };
     "status.constellation.moe" = mkReverseProxy { port = ports.uptime-kuma; };
-    "ersatztv.constellation.moe" = mkReverseProxy { port = ports.ersatztv; rootExtraConfig = "proxy_cache off; proxy_buffering off;"; extraConfig = { quic = lib.mkForce false; http3_hq = lib.mkForce false; }; };
-    "iptv.constellation.moe" = mkReverseProxy { port = ports.ersatztv; reverseProxyLocation = "/iptv"; reverseProxySubdomain = "/iptv"; rootExtraConfig = "proxy_buffering off; proxy_cache off; add_header 'Cache-Control' 'no-store, no-cache, must-revalidate, proxy-revalidate, max-age=0'; add_header Pragma 'no-cache'; add_header Expires 0;"; };
-    "jellyseerr.constellation.moe" = mkReverseProxy { port = ports.jellyseerr; };
-    "radarr.constellation.moe" = mkReverseProxy { port = ports.radarr; };
-    "sonarr.constellation.moe" = mkReverseProxy { port = ports.sonarr; };
-    "radarr-es.constellation.moe" = mkReverseProxy { port = ports.radarr-es; };
-    "sonarr-es.constellation.moe" = mkReverseProxy { port = ports.sonarr-es; };
-    "amule.constellation.moe" = mkReverseProxy { port = ports.amule-web-controller; };
-    "amuleui.constellation.moe" = mkReverseProxy { port = ports.amule-webui; };
-    "lidarr.constellation.moe" = mkReverseProxy { port = ports.lidarr; };
-    "slskd.constellation.moe" = mkReverseProxy { port = ports.slskd; };
-    "bazarr.constellation.moe" = mkReverseProxy { port = ports.bazarr; };
-    "prowlarr.constellation.moe" = mkReverseProxy { port = ports.prowlarr; };
-    "profilarr.constellation.moe" = mkReverseProxy { port = ports.profilarr; };
-    "tdarr.constellation.moe" = mkReverseProxy { port = ports.tdarr-webui; };
-    "torrent.constellation.moe" = mkReverseProxy { port = ports.qbittorrent-webui; };
-    "sabnzbd.constellation.moe" = mkReverseProxy { port = ports.sabnzbd; };
-    "romm.constellation.moe" = mkReverseProxy { port = ports.romm; };
+    "ersatztv.constellation.moe" = mkReverseProxy { port = ports.ersatztv; address = addresses.podman-gateway; rootExtraConfig = "proxy_cache off; proxy_buffering off;"; extraConfig = { quic = lib.mkForce false; http3_hq = lib.mkForce false; }; };
+    "iptv.constellation.moe" = mkReverseProxy { port = ports.ersatztv; address = addresses.podman-gateway; reverseProxyLocation = "/iptv"; reverseProxySubdomain = "/iptv"; rootExtraConfig = "proxy_buffering off; proxy_cache off; add_header 'Cache-Control' 'no-store, no-cache, must-revalidate, proxy-revalidate, max-age=0'; add_header Pragma 'no-cache'; add_header Expires 0;"; };
+    "jellyseerr.constellation.moe" = mkReverseProxy { port = ports.jellyseerr; address = addresses.podman-gateway; };
+    "radarr.constellation.moe" = mkReverseProxy { port = ports.radarr; address = addresses.podman-gateway; };
+    "sonarr.constellation.moe" = mkReverseProxy { port = ports.sonarr; address = addresses.podman-gateway; };
+    "radarr-es.constellation.moe" = mkReverseProxy { port = ports.radarr-es; address = addresses.podman-gateway; };
+    "sonarr-es.constellation.moe" = mkReverseProxy { port = ports.sonarr-es; address = addresses.podman-gateway; };
+    "amule.constellation.moe" = mkReverseProxy { port = ports.amule-web-controller; address = addresses.podman-gateway; };
+    "amuleui.constellation.moe" = mkReverseProxy { port = ports.amule-webui; address = addresses.podman-gateway; };
+    "lidarr.constellation.moe" = mkReverseProxy { port = ports.lidarr; address = addresses.podman-gateway; };
+    "slskd.constellation.moe" = mkReverseProxy { port = ports.slskd; address = addresses.podman-gateway; };
+    "bazarr.constellation.moe" = mkReverseProxy { port = ports.bazarr; address = addresses.podman-gateway; };
+    "prowlarr.constellation.moe" = mkReverseProxy { port = ports.prowlarr; address = addresses.podman-gateway; };
+    "profilarr.constellation.moe" = mkReverseProxy { port = ports.profilarr; address = addresses.podman-gateway; };
+    "tdarr.constellation.moe" = mkReverseProxy { port = ports.tdarr-webui; address = addresses.podman-gateway; };
+    "torrent.constellation.moe" = mkReverseProxy { port = ports.qbittorrent-webui; address = addresses.podman-gateway; };
+    "sabnzbd.constellation.moe" = mkReverseProxy { port = ports.sabnzbd; address = addresses.podman-gateway; };
+    "romm.constellation.moe" = mkReverseProxy { port = ports.romm; address = addresses.podman-gateway; };
     "search.constellation.moe" = mkReverseProxy { port = ports.searx; };
-    "files.constellation.moe" = mkReverseProxy { port = ports.mikochi; };
-    # "neko.constellation.moe" = mkReverseProxy { port = ports.neko; };
+    "files.constellation.moe" = mkReverseProxy { port = ports.mikochi; address = addresses.podman-gateway; };
+    # "neko.constellation.moe" = mkReverseProxy { port = ports.neko; address = addresses.podman-gateway; };
     "calibre.constellation.moe" = mkReverseProxy {
       port = ports.calibre-web-automated;
+      address = addresses.podman-gateway;
+      
       vhostExtraConfig = ''
         client_max_body_size 4G;
         proxy_buffer_size 128k;
@@ -130,19 +133,19 @@ in {
       # Yes the ending / is there on purpose
       extraConfig.locations."/kobo/".extraConfig = ''
         auth_request off;
-        proxy_pass http://127.0.0.1:${toString ports.calibre-web-automated};
+        proxy_pass http://${addresses.podman-gateway}:${toString ports.calibre-web-automated};
       '';
       extraConfig.locations."/opds".extraConfig = ''
         auth_request off;
         auth_basic_user_file ${config.sops.secrets.calibre-opds-credentials.path};
-        proxy_pass http://127.0.0.1:${toString ports.calibre-web-automated};
+        proxy_pass http://${addresses.podman-gateway}:${toString ports.calibre-web-automated};
       '';
     };
-    "shelfmark.constellation.moe" = mkReverseProxy { port = ports.shelfmark; };
-    "radio.constellation.moe" = mkReverseProxy { port = ports.openwebrx; };
+    "shelfmark.constellation.moe" = mkReverseProxy { port = ports.shelfmark; address = addresses.podman-gateway; };
+    "radio.constellation.moe" = mkReverseProxy { port = ports.openwebrx; address = addresses.podman-gateway; };
     "k1c.constellation.moe" = mkReverseProxy { address = "192.168.1.27"; port = 80; };
-    "pinchflat.constellation.moe" = mkReverseProxy { port = ports.pinchflat; };
-    "crafty.constellation.moe" = mkReverseProxy { port = ports.crafty; protocol = "https"; };
+    "pinchflat.constellation.moe" = mkReverseProxy { port = ports.pinchflat; address = addresses.podman-gateway; };
+    "crafty.constellation.moe" = mkReverseProxy { port = ports.crafty; address = addresses.podman-gateway;  protocol = "https"; };
     "olivetin.constellation.moe" = mkReverseProxy { port = ports.olivetin; };
   };
 

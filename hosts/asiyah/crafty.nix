@@ -1,4 +1,7 @@
 { config, ports, ... }:
+let
+  addresses = config.gradient.const.addresses;
+in
 {
 
   systemd.tmpfiles.settings."99-crafty.conf" = 
@@ -19,8 +22,8 @@
     image = "registry.gitlab.com/crafty-controller/crafty-4:latest";
     pull = "newer";
     ports = [
-      "127.0.0.1:${toString ports.crafty}:8443"
-      "127.0.0.1:${toString ports.crafty-dynmap}:8123"
+      "${addresses.podman-gateway}:${toString ports.crafty}:8443"
+      "${addresses.podman-gateway}:${toString ports.crafty-dynmap}:8123"
       "${toString ports.crafty-server-start}-${toString ports.crafty-server-end}:${toString ports.crafty-server-start}-${toString ports.crafty-server-end}"
     ];
     volumes = [
@@ -32,13 +35,6 @@
     ];
     environment = {
       TZ = config.time.timeZone;
-    };
-    extraOptions = [
-      "--ip" "10.88.0.11"
-    ];
-    labels = {
-      "io.containers.autoupdate" = "registry";
-      "PODMAN_SYSTEMD_UNIT" = "podman-crafty.service";
     };
   };
 

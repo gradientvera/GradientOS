@@ -1,17 +1,11 @@
 { pkgs, config, lib, ... }:
 let
+  addresses = config.gradient.const.addresses;
   ports = config.gradient.currentHost.ports;
   userName = "mediarr";
   userUid = 976;
   groupName = "mediarr";
   groupGid = 972;
-  podOptions = [
-    "--pod=${userName}"
-  ];
-  gluetunOptions = [
-    "--network=container:gluetun"
-  ];
-  defaultOptions = podOptions ++ gluetunOptions;
   userOptions = [
     "--user=${toString userUid}:${toString groupGid}"
   ];
@@ -45,115 +39,16 @@ let
     cross-seed
     sabnzbd
     neko
-    proxy-vpn
-    proxy-vpn-uk
     profilarr
     calibre-web-automated
     shelfmark
   ];
 in {
 
-  # -- Pod Creation --
-  systemd.services.podman-create-mediarr-pod = rec
-  {
-    wantedBy = [ "multi-user.target" ];
-    requiredBy = [
-      "podman-jellyfin.service"
-      "podman-flaresolverr.service"
-      "podman-ersatztv.service"
-      "podman-radarr.service"
-      "podman-sonarr.service"
-      "podman-radarr-es.service"
-      "podman-sonarr-es.service"
-      "podman-amule.service"
-      "podman-amule-web-controller.service"
-      "podman-lidarr.service"
-      "podman-slskd.service"
-      "podman-soularr.service"
-      "podman-prowlarr.service"
-      "podman-bazarr.service"
-      "podman-jellyseerr.service"
-      "podman-qbittorrent.service"
-      "podman-decluttarr.service"
-      "podman-tdarr.service"
-      "podman-gluetun.service"
-      "podman-proxy-vpn-socks5.service"
-      "podman-mikochi.service"
-      "podman-unpackerr.service"
-      # "podman-cross-seed.service"
-      "podman-sabnzbd.service"
-      "podman-profilarr.service"
-      "podman-romm.service"
-      "podman-mariadb.service"
-      # "podman-neko.service"
-      "podman-shelfmark.service"
-
-    ];
-    before = requiredBy;
-    wants = [ "postgresql.service" "network-online.target" ];
-    after = [ "postgresql.service" "network-online.target" ];
-    path = [ pkgs.podman ];
-    # Static IP is needed because changing published ports and recreating the pod
-    # will NOT clear the old NAT rules, because podman fucking sucks.
-    script = ''
-      podman pod create \
-        -p ${toString ports.jellyfin-http}:8096 \
-        -p ${toString ports.jellyfin-https}:8920 \
-        -p ${toString ports.jellyfin-client-discovery}:7359/udp \
-        -p ${toString ports.jellyfin-service-discovery}:1900/udp \
-        -p ${toString ports.flaresolverr}:8191 \
-        -p ${toString ports.ersatztv}:8409 \
-        -p ${toString ports.radarr}:${toString ports.radarr} \
-        -p ${toString ports.sonarr}:${toString ports.sonarr} \
-        -p ${toString ports.radarr-es}:${toString ports.radarr-es} \
-        -p ${toString ports.sonarr-es}:${toString ports.sonarr-es} \
-        -p ${toString ports.amule-webui}:4711 \
-        -p ${toString ports.amule-remote}:4712 \
-        -p ${toString ports.amule-ed2k}:${toString ports.amule-ed2k} \
-        -p ${toString ports.amule-ed2k-global}:${toString ports.amule-ed2k-global}/udp \
-        -p ${toString ports.amule-ed2k-udp}:${toString ports.amule-ed2k-udp}/udp \
-        -p ${toString ports.amule-web-controller}:${toString ports.amule-web-controller} \
-        -p ${toString ports.lidarr}:8686 \
-        -p ${toString ports.slskd}:5030 \
-        -p ${toString ports.slskd-peer}:26156 \
-        -p ${toString ports.slskd-peer}:26156/udp \
-        -p ${toString ports.prowlarr}:9696 \
-        -p ${toString ports.profilarr}:6868 \
-        -p ${toString ports.bazarr}:6767 \
-        -p ${toString ports.jellyseerr}:5055 \
-        -p ${toString ports.unpackerr}:${toString ports.unpackerr} \
-        -p ${toString ports.qbittorrent-peer}:36494 \
-        -p ${toString ports.qbittorrent-peer}:36494/udp \
-        -p ${toString ports.qbittorrent-webui}:${toString ports.qbittorrent-webui} \
-        -p ${toString ports.tdarr-webui}:8265 \
-        -p ${toString ports.tdarr-server}:8266 \
-        -p ${toString ports.mikochi}:${toString ports.mikochi} \
-        -p ${toString ports.cross-seed}:2468 \
-        -p ${toString ports.sabnzbd}:${toString ports.sabnzbd} \
-        -p ${toString ports.romm}:8080 \
-        -p ${toString ports.proxy-vpn}:${toString ports.proxy-vpn} \
-        -p ${toString ports.shelfmark}:${toString ports.shelfmark} \
-        -p ${toString ports.pinchflat}:8945 \
-        --ip "10.88.0.2" \
-        --sysctl="net.ipv4.ip_forward=1" \
-        --sysctl="net.ipv4.conf.all.src_valid_mark=1" \
-        --sysctl="net.ipv4.ping_group_range=0 2000000" \
-        --label io.containers.autoupdate=registry \
-        --label PODMAN_SYSTEMD_UNIT=podman-create-mediarr-pod.service \
-        --userns=keep-id \
-        --shm-size=2g \
-        --replace \
-        --name=${userName}
-    '';
-    # -p ${toString ports.neko}:${toString ports.neko} \
-    # -p ${toString ports.neko-epr-start}-${toString ports.neko-epr-end}:${toString ports.neko-epr-start}-${toString ports.neko-epr-end}/udp \
-    preStop = ''
-      podman pod rm --force --ignore ${userName}
-      podman network reload --all
-    '';
-    serviceConfig.Environment = "PODMAN_SYSTEMD_UNIT=podman-create-mediarr-pod.service";
-    serviceConfig.Type = "oneshot";
-    serviceConfig.RemainAfterExit = "yes";
+  boot.kernel.sysctl = {
+    "net.ipv4.ip_forward" = "1";
+    "net.ipv4.conf.all.src_valid_mark" = "1";
+    "net.ipv4.ping_group_range" = "0 2000000";
   };
 
   networking.firewall.logRefusedPackets = true;
@@ -253,6 +148,12 @@ in {
     jellyfin = {
       image = "lscr.io/linuxserver/jellyfin:latest";
       pull = "newer";
+      parentPorts = [
+        "${addresses.podman-gateway}:${toString ports.jellyfin-http}:8096"
+        "${addresses.podman-gateway}:${toString ports.jellyfin-https}:8920"
+        "${addresses.podman-gateway}:${toString ports.jellyfin-client-discovery}:7359/udp"
+        "${addresses.podman-gateway}:${toString ports.jellyfin-service-discovery}:1900/udp"
+      ];
       volumes = [
         "/var/lib/${userName}/jellyfin/config:/config"
         "/var/lib/${userName}/jellyfin/cache:/cache"
@@ -264,35 +165,28 @@ in {
         PGID = toString groupGid;
         DOCKER_MODS="linuxserver/mods:jellyfin-opencl-intel";
       };
+      networks = [ "container:gluetun" ];
       extraOptions = [
         "--mount" "type=bind,source=/data/downloads,target=/media"
         "--device=/dev/dri/:/dev/dri/"
-      ] ++ podOptions;
-      labels = {
-        "io.containers.autoupdate" = "registry";
-        "PODMAN_SYSTEMD_UNIT" = "podman-jellyfin.service";
-      };
-      dependsOn = [ ];
+      ];
     };
 
     flaresolverr = {
       image = "ghcr.io/flaresolverr/flaresolverr:latest";
       pull = "newer";
+      parentPorts = [ "${addresses.podman-gateway}:${toString ports.flaresolverr}:8191" ];
       environment = {
         TZ = config.time.timeZone;
         LOG_LEVEL="info";
       };
-      extraOptions = [] ++ defaultOptions;
-      labels = {
-        "io.containers.autoupdate" = "registry";
-        "PODMAN_SYSTEMD_UNIT" = "podman-flaresolverr.service";
-      };
-      dependsOn = [ "gluetun" ];
+      networks = [ "container:gluetun" ];
     };
 
     ersatztv = {
       image = "ghcr.io/ersatztv/ersatztv:latest";
       pull = "newer";
+      ports = [ "${addresses.podman-gateway}:${toString ports.ersatztv}:8409" ];
       volumes = [
         "/var/lib/${userName}/ersatztv:/root/.local/share/ersatztv"
       ];
@@ -306,17 +200,13 @@ in {
         "--mount" "type=bind,source=/data/downloads,target=/media"
         "--mount" "type=tmpfs,destination=/transcode"
         "--device=/dev/dri/:/dev/dri/"
-      ] ++ podOptions;
-      labels = {
-        "io.containers.autoupdate" = "registry";
-        "PODMAN_SYSTEMD_UNIT" = "podman-ersatztv.service";
-      };
-      dependsOn = [ ];
+      ];
     };
 
     radarr = {
       image = "lscr.io/linuxserver/radarr:latest";
       pull = "newer";
+      parentPorts = [ "${addresses.podman-gateway}:${toString ports.radarr}:${toString ports.radarr}" ];
       volumes = [
         "/var/lib/${userName}/radarr:/config"
         "/data/downloads:/downloads"
@@ -327,17 +217,13 @@ in {
         PGID = toString groupGid;
         RADARR__SERVER__PORT = toString ports.radarr;
       };
-      extraOptions = [] ++ defaultOptions;
-      labels = {
-        "io.containers.autoupdate" = "registry";
-        "PODMAN_SYSTEMD_UNIT" = "podman-radarr.service";
-      };
-      dependsOn = [ "gluetun" ];
+      networks = [ "container:gluetun" ];
     };
 
     sonarr = {
       image = "lscr.io/linuxserver/sonarr:latest";
       pull = "newer";
+      parentPorts = [ "${addresses.podman-gateway}:${toString ports.sonarr}:${toString ports.sonarr}" ];
       volumes = [
         "/var/lib/${userName}/sonarr:/config"
         "/data/downloads:/downloads"
@@ -348,17 +234,13 @@ in {
         PGID = toString groupGid;
         SONARR__SERVER__PORT = toString ports.sonarr;
       };
-      extraOptions = [] ++ defaultOptions;
-      labels = {
-        "io.containers.autoupdate" = "registry";
-        "PODMAN_SYSTEMD_UNIT" = "podman-sonarr.service";
-      };
-      dependsOn = [ "gluetun" ];
+      networks = [ "container:gluetun" ];
     };
 
     radarr-es = {
       image = "lscr.io/linuxserver/radarr:latest";
       pull = "newer";
+      parentPorts = [ "${addresses.podman-gateway}:${toString ports.radarr-es}:${toString ports.radarr-es}" ];
       volumes = [
         "/var/lib/${userName}/radarr-es:/config"
         "/data/downloads:/downloads"
@@ -369,17 +251,13 @@ in {
         PGID = toString groupGid;
         RADARR__SERVER__PORT = toString ports.radarr-es;
       };
-      extraOptions = [] ++ defaultOptions;
-      labels = {
-        "io.containers.autoupdate" = "registry";
-        "PODMAN_SYSTEMD_UNIT" = "podman-radarr-es.service";
-      };
-      dependsOn = [ "gluetun" ];
+      networks = [ "container:gluetun" ];
     };
 
     sonarr-es = {
       image = "lscr.io/linuxserver/sonarr:latest";
       pull = "newer";
+      parentPorts = [ "${addresses.podman-gateway}:${toString ports.sonarr-es}:${toString ports.sonarr-es}" ];
       volumes = [
         "/var/lib/${userName}/sonarr-es:/config"
         "/data/downloads:/downloads"
@@ -390,17 +268,19 @@ in {
         PGID = toString groupGid;
         SONARR__SERVER__PORT = toString ports.sonarr-es;
       };
-      extraOptions = [] ++ defaultOptions;
-      labels = {
-        "io.containers.autoupdate" = "registry";
-        "PODMAN_SYSTEMD_UNIT" = "podman-sonarr-es.service";
-      };
-      dependsOn = [ "gluetun" ];
+      networks = [ "container:gluetun" ];
     };
 
     amule = {
       image = "ghcr.io/ngosang/amule:latest";
       pull = "newer";
+      parentPorts = [
+        "${addresses.podman-gateway}:${toString ports.amule-webui}:4711"
+        "${addresses.podman-gateway}:${toString ports.amule-remote}:4712"
+        "${addresses.podman-gateway}:${toString ports.amule-ed2k}:${toString ports.amule-ed2k}"
+        "${addresses.podman-gateway}:${toString ports.amule-ed2k-global}:${toString ports.amule-ed2k-global}/udp"
+        "${addresses.podman-gateway}:${toString ports.amule-ed2k-udp}:${toString ports.amule-ed2k-udp}/udp"
+      ];
       volumes = [
         "/data/downloads/amule-incoming:/incoming"
         "/var/lib/${userName}/amule:/home/amule/.aMule"
@@ -418,17 +298,13 @@ in {
         MOD_FIX_KAD_GRAPH_ENABLED = "true";
         MOD_FIX_KAD_BOOTSTRAP_ENABLED = "true";
       };
-      extraOptions = [] ++ defaultOptions;
-      labels = {
-        "io.containers.autoupdate" = "registry";
-        "PODMAN_SYSTEMD_UNIT" = "podman-amule.service";
-      };
-      dependsOn = [ "gluetun" ];
+      networks = [ "container:gluetun" ];
     };
 
     amule-web-controller = {
       image = "docker.io/g0t3nks/amule-web-controller:latest";
       pull = "newer";
+      parentPorts = [ "${addresses.podman-gateway}:${toString ports.amule-web-controller}:${toString ports.amule-web-controller}" ];
       volumes = [
         "/var/lib/${userName}/amule-web-controller/data:/usr/src/app/server/data"
         "/var/lib/${userName}/amule-web-controller/logs:/usr/src/app/server/logs"
@@ -438,17 +314,13 @@ in {
         NODE_ENV = "production";
         PORT = toString ports.amule-web-controller;
       };
-      extraOptions = [] ++ podOptions;
-      labels = {
-        "io.containers.autoupdate" = "registry";
-        "PODMAN_SYSTEMD_UNIT" = "podman-amule-web-controller.service";
-      };
-      dependsOn = [ "amule" ];
+      networks = [ "container:gluetun" ];
     };
 
     lidarr = {
       image = "lscr.io/linuxserver/lidarr:latest";
       pull = "newer";
+      parentPorts = [ "${addresses.podman-gateway}:${toString ports.lidarr}:8686" ];
       volumes = [
         "/var/lib/${userName}/lidarr:/config"
         "/data/downloads/music:/music"
@@ -459,17 +331,17 @@ in {
         PUID = toString userUid;
         PGID = toString groupGid;
       };
-      extraOptions = [] ++ defaultOptions;
-      labels = {
-        "io.containers.autoupdate" = "registry";
-        "PODMAN_SYSTEMD_UNIT" = "podman-lidarr.service";
-      };
-      dependsOn = [ "gluetun" ];
+      networks = [ "container:gluetun" ];
     };
 
     slskd = {
       image = "docker.io/slskd/slskd:latest";
       pull = "newer";
+      parentPorts = [
+        "${addresses.podman-gateway}:${toString ports.slskd}:5030"
+        "${addresses.podman-gateway}:${toString ports.slskd-peer}:26156"
+        "${addresses.podman-gateway}:${toString ports.slskd-peer}:26156/udp"
+      ];
       volumes = [
         "/var/lib/${userName}/slskd:/app"
         "/data/downloads:/downloads"
@@ -478,12 +350,7 @@ in {
         TZ = config.time.timeZone;
         SLSKD_REMOTE_CONFIGURATION = "true";
       };  
-      extraOptions = [] ++ defaultOptions ++ userOptions;
-      labels = {
-        "io.containers.autoupdate" = "registry";
-        "PODMAN_SYSTEMD_UNIT" = "podman-slskd.service";
-      };
-      dependsOn = [ "gluetun" ];
+      networks = [ "container:gluetun" ];
     };
 
     soularr = {
@@ -499,17 +366,16 @@ in {
         PGID = toString groupGid;
         SCRIPT_INTERVAL = "300";
       };  
-      extraOptions = [] ++ defaultOptions ++ userOptions;
-      labels = {
-        "io.containers.autoupdate" = "registry";
-        "PODMAN_SYSTEMD_UNIT" = "podman-soularr.service";
-      };
-      dependsOn = [ "gluetun" "lidarr" "slskd" ];
+      networks = [ "container:gluetun" ];
+      dependsOn = [ "lidarr" "slskd" ];
     };
 
     prowlarr = {
       image = "lscr.io/linuxserver/prowlarr:latest";
       pull = "newer";
+      parentPorts = [
+        "${addresses.podman-gateway}:${toString ports.prowlarr}:9696"
+      ];
       volumes = [
         "/var/lib/${userName}/prowlarr:/config"
       ];
@@ -518,17 +384,15 @@ in {
         PUID = toString userUid;
         PGID = toString groupGid;
       };
-      extraOptions = [] ++ defaultOptions;
-      labels = {
-        "io.containers.autoupdate" = "registry";
-        "PODMAN_SYSTEMD_UNIT" = "podman-prowlarr.service";
-      };
-      dependsOn = [ "gluetun" ];
+      networks = [ "container:gluetun" ];
     };
 
     bazarr = {
       image = "lscr.io/linuxserver/bazarr:latest";
       pull = "newer";
+      parentPorts = [
+        "${addresses.podman-gateway}:${toString ports.bazarr}:6767"
+      ];
       volumes = [
         "/var/lib/${userName}/bazarr:/config"
         "/data/downloads/movies:/movies"
@@ -539,17 +403,13 @@ in {
         PUID = toString userUid;
         PGID = toString groupGid;
       };
-      extraOptions = [] ++ defaultOptions;
-      labels = {
-        "io.containers.autoupdate" = "registry";
-        "PODMAN_SYSTEMD_UNIT" = "podman-bazarr.service";
-      };
-      dependsOn = [ "gluetun" ];
+      networks = [ "container:gluetun" ];
     };
 
     jellyseerr = {
       image = "docker.io/fallenbagel/jellyseerr:latest";
       pull = "newer";
+      parentPorts = [ "${addresses.podman-gateway}:${toString ports.jellyseerr}:5055" ];
       volumes = [
         "/var/lib/${userName}/jellyseerr:/app/config"
       ];
@@ -558,17 +418,17 @@ in {
         PUID = toString userUid;
         PGID = toString groupGid;
       };
-      extraOptions = [] ++ podOptions;
-      labels = {
-        "io.containers.autoupdate" = "registry";
-        "PODMAN_SYSTEMD_UNIT" = "podman-jellyseerr.service";
-      };
-      dependsOn = [ ];
+      networks = [ "container:gluetun" ];
     };
 
     qbittorrent = {
       image = "lscr.io/linuxserver/qbittorrent:latest";
       pull = "newer";
+      parentPorts = [
+        "${addresses.podman-gateway}:${toString ports.qbittorrent-webui}:${toString ports.qbittorrent-webui}"
+        "${addresses.podman-gateway}:${toString ports.qbittorrent-peer}:36494"
+        "${addresses.podman-gateway}:${toString ports.qbittorrent-peer}:36494/udp"
+      ];
       volumes = [
         "${config.sops.secrets.mediarr-qbittorrent-script.path}:/notify.sh"
         "/var/lib/${userName}/qbittorrent:/config"
@@ -580,12 +440,7 @@ in {
         PGID = toString groupGid;
         WEBUI_PORT = toString ports.qbittorrent-webui;
       };
-      extraOptions = [] ++ defaultOptions;
-      labels = {
-        "io.containers.autoupdate" = "registry";
-        "PODMAN_SYSTEMD_UNIT" = "podman-qbittorrent.service";
-      };
-      dependsOn = [ "gluetun" ];
+      networks = [ "container:gluetun" ];
     };
 
     decluttarr = {
@@ -627,17 +482,16 @@ in {
         QBITTORRENT_URL = "http://qbittorrent:${toString ports.qbittorrent-webui}";
       };
       environmentFiles = [ config.sops.secrets.mediarr-decluttarr-env.path ];
-      extraOptions = [] ++ podOptions;
-      labels = {
-        "io.containers.autoupdate" = "registry";
-        "PODMAN_SYSTEMD_UNIT" = "podman-decluttarr.service";
-      };
       dependsOn = [ "radarr" "sonarr" "lidarr" "qbittorrent" ];
     };
 
     tdarr = {
       image = "ghcr.io/haveagitgat/tdarr:latest";
       pull = "newer";
+      ports = [
+        "${addresses.podman-gateway}:${toString ports.tdarr-webui}:8265"
+        "${addresses.podman-gateway}:${toString ports.tdarr-server}:8266"
+      ];
       volumes = [
         "${config.sops.secrets.mediarr-custom-axios.path}:/app/Tdarr_Server/node_modules/axios/lib/core/Axios.js:ro"
         "/var/lib/${userName}/tdarr/server:/app/server"
@@ -666,12 +520,7 @@ in {
       };
       extraOptions = [
         "--device=/dev/dri/:/dev/dri/"
-      ] ++ podOptions;
-      labels = {
-        "io.containers.autoupdate" = "registry";
-        "PODMAN_SYSTEMD_UNIT" = "podman-tdarr.service";
-      };
-      dependsOn = [ ];
+      ];
     };
 
     gluetun = {
@@ -694,32 +543,12 @@ in {
       };
       environmentFiles = [ config.sops.secrets.mediarr-gluetun-env.path ];
       extraOptions = [
+        "--network-alias=mediarr"
         "--privileged"
         "--cap-add=NET_ADMIN"
         "--dns=1.1.1.1"
         "--dns=1.0.0.1"
-      ] ++ (builtins.filter (e: e != "--network=container:gluetun") defaultOptions);
-      labels = {
-        "io.containers.autoupdate" = "registry";
-        "PODMAN_SYSTEMD_UNIT" = "podman-gluetun.service";
-      };
-      dependsOn = [ ];
-    };
-
-    # TODO: Replace with https://github.com/ynuwenhof/koblas
-    proxy-vpn-socks5 = {
-      image = "docker.io/serjs/go-socks5-proxy:latest";
-      pull = "newer";
-      environment = {
-        REQUIRE_AUTH = "false";
-        PROXY_PORT = toString ports.proxy-vpn;
-      };
-      extraOptions = [] ++ defaultOptions;
-      labels = {
-        "io.containers.autoupdate" = "registry";
-        "PODMAN_SYSTEMD_UNIT" = "podman-proxy-vpn-socks5.service";
-      };
-      dependsOn = [ "gluetun" ];
+      ];
     };
 
     gluetun-uk = {
@@ -729,8 +558,6 @@ in {
         "/var/lib/${userName}/gluetun-uk:/gluetun"
       ];
       ports = [
-        # Ports for things connected to this VPN go here
-        "${toString ports.proxy-vpn-uk}:${toString ports.proxy-vpn-uk}"
       ];
       environment = {
         TZ = config.time.timeZone;
@@ -748,37 +575,17 @@ in {
       };
       environmentFiles = [ config.sops.secrets.mediarr-gluetun-uk-env.path ];
       extraOptions = [
-        "--ip" "10.88.0.5"
         "--privileged"
         "--cap-add=NET_ADMIN"
         "--dns=1.1.1.1"
         "--dns=1.0.0.1"
       ];
-      labels = {
-        "io.containers.autoupdate" = "registry";
-        "PODMAN_SYSTEMD_UNIT" = "podman-gluetun-uk.service";
-      };
-      dependsOn = [ ];
-    };
-
-    proxy-vpn-uk-socks5 = {
-      image = "docker.io/serjs/go-socks5-proxy:latest";
-      pull = "newer";
-      environment = {
-        REQUIRE_AUTH = "false";
-        PROXY_PORT = toString ports.proxy-vpn-uk;
-      };
-      extraOptions = [ "--network=container:gluetun-uk" ];
-      labels = {
-        "io.containers.autoupdate" = "registry";
-        "PODMAN_SYSTEMD_UNIT" = "podman-proxy-vpn-uk-socks5.service";
-      };
-      dependsOn = [ "gluetun-uk" ];
     };
 
     mikochi = {
       image = "docker.io/zer0tonin/mikochi:latest";
       pull = "newer";
+      ports = [ "${addresses.podman-gateway}:${toString ports.mikochi}:${toString ports.mikochi}" ];
       volumes = [
         "/data/downloads:/data"
       ];
@@ -790,12 +597,7 @@ in {
         NO_AUTH = "true";
         GZIP = "true";
       };
-      extraOptions = [] ++ podOptions ++ userOptions;
-      labels = {
-        "io.containers.autoupdate" = "registry";
-        "PODMAN_SYSTEMD_UNIT" = "podman-mikochi.service";
-      };
-      dependsOn = [ ];
+      extraOptions = [] ++ userOptions;
     };
 
     unpackerr = {
@@ -812,8 +614,6 @@ in {
         UN_LOG_FILE = "/downloads/unpackerr.log";
         UN_FILE_MODE = "0775";
         UN_DIR_MODE = "0775";
-        UN_WEBSERVER_METRICS = "true";
-        UN_WEBSERVER_LISTEN_ADDR = "0.0.0.0:${toString ports.unpackerr}";
         UN_SONARR_0_URL = "http://127.0.0.1:8989";
         UN_RADARR_0_URL = "http://127.0.0.1:7878";
         UN_LIDARR_0_URL = "http://127.0.0.1:8686";
@@ -822,11 +622,7 @@ in {
       environmentFiles = [
         config.sops.secrets.mediarr-unpackerr-env.path
       ];
-      extraOptions = [] ++ podOptions ++ userOptions;
-      labels = {
-        "io.containers.autoupdate" = "registry";
-        "PODMAN_SYSTEMD_UNIT" = "podman-unpackerr.service";
-      };
+      extraOptions = [] ++ userOptions;
       dependsOn = [ "sonarr" "radarr" "lidarr" ];
     };
 
@@ -848,16 +644,13 @@ in {
       };
       cmd = [ "daemon" ];
       extraOptions = [] ++ defaultOptions ++ userOptions;
-      labels = {
-        "io.containers.autoupdate" = "registry";
-        "PODMAN_SYSTEMD_UNIT" = "podman-cross-seed.service";
-      };
       dependsOn = [ "gluetun" "prowlarr" "sonarr" "radarr" ];
     };*/
 
     sabnzbd = {
       image = "lscr.io/linuxserver/sabnzbd:latest";
       pull = "newer";
+      parentPorts = [ "${addresses.podman-gateway}:${toString ports.sabnzbd}:${toString ports.sabnzbd}" ];
       volumes = [
         "/var/lib/${userName}/sabnzbd:/config"
         "/var/lib/${userName}/sabnzbd/incomplete:/incomplete-downloads"
@@ -868,27 +661,18 @@ in {
         PUID = toString userUid;
         PGID = toString groupGid;
       };
-      extraOptions = [] ++ podOptions;
-      labels = {
-        "io.containers.autoupdate" = "registry";
-        "PODMAN_SYSTEMD_UNIT" = "podman-sabnzbd.service";
-      };
-      dependsOn = [ ];
+      networks = [ "container:gluetun" ];
     };
 
     profilarr = {
       image = "docker.io/santiagosayshey/profilarr:latest";
       pull = "newer";
+      ports = [ "${addresses.podman-gateway}:${toString ports.profilarr}:6868" ];
       volumes = [
         "/var/lib/${userName}/profilarr:/config"
       ];
       environment = {
         TZ = config.time.timeZone;
-      };
-      extraOptions = [] ++ podOptions;
-      labels = {
-        "io.containers.autoupdate" = "registry";
-        "PODMAN_SYSTEMD_UNIT" = "podman-profilarr.service";
       };
       dependsOn = [ "sonarr" "radarr" ];
     };
@@ -896,6 +680,7 @@ in {
     romm = {
       image = "docker.io/rommapp/romm:latest";
       pull = "newer";
+      ports = [ "${addresses.podman-gateway}:${toString ports.romm}:8080" ];
       volumes = [
         "/data/downloads/games:/romm/library"
         "/data/downloads/game-assets:/romm/assets"
@@ -905,16 +690,12 @@ in {
       ];
       environment = {
         TZ = config.time.timeZone;
-        DB_HOST = "127.0.0.1";
+        DB_HOST = "mariadb";
         DB_PORT = "3808";
         DB_NAME = "romm";
       };
       environmentFiles = [ config.sops.secrets.mediarr-romm-env.path ];
-      extraOptions = [] ++ podOptions ++ userOptions;
-      labels = {
-        "io.containers.autoupdate" = "registry";
-        "PODMAN_SYSTEMD_UNIT" = "podman-romm.service";
-      };
+      extraOptions = [] ++ userOptions;
       dependsOn = [ "mariadb" ];
     };
 
@@ -938,12 +719,7 @@ in {
         "--health-cmd='--innodb_initialized'"
         "--health-start-period" "30s"
         "--health-interval" "10s"*/
-      ] ++ podOptions ++ userOptions;
-      labels = {
-        "io.containers.autoupdate" = "registry";
-        "PODMAN_SYSTEMD_UNIT" = "podman-mariadb.service";
-      };
-      dependsOn = [ ];
+      ] ++ userOptions;
     };
 
     /*
@@ -970,18 +746,13 @@ in {
       extraOptions = [
         "--device=/dev/dri/:/dev/dri/"
       ] ++ podOptions;
-      labels = {
-        "io.containers.autoupdate" = "registry";
-        "PODMAN_SYSTEMD_UNIT" = "podman-neko.service";
-      };
-      dependsOn = [ ];
     };
     */
 
     calibre = {
       image = "ghcr.io/new-usemame/calibre-web-nextgen:latest";
       pull = "newer";
-      ports = [ "${toString ports.calibre-web-automated}:8083" ];
+      ports = [ "${addresses.podman-gateway}:${toString ports.calibre-web-automated}:8083" ];
       volumes = [
         "/var/lib/${userName}/calibre-web-automated:/config"
         "/data/downloads/books:/calibre-library"
@@ -995,18 +766,12 @@ in {
         PGID = toString groupGid;
         TRUSTED_PROXY_COUNT = "3";
       };
-      extraOptions = [
-        "--ip=10.88.0.7"
-      ];
-      labels = {
-        "io.containers.autoupdate" = "registry";
-        "PODMAN_SYSTEMD_UNIT" = "podman-calibre.service";
-      };
     };
 
     shelfmark = {
       image = "ghcr.io/calibrain/shelfmark:latest";
       pull = "newer";
+      parentPorts = [ "${addresses.podman-gateway}:${toString ports.shelfmark}:${toString ports.shelfmark}" ];
       volumes = [
         "/var/lib/${userName}/shelfmark:/config"
         "/data/downloads/books-ingest:/ingest"
@@ -1034,17 +799,13 @@ in {
         HARDCOVER_ENABLED = "true";
         OPENLIBRARY_ENABLED = "true";
       };
-      extraOptions = [] ++ defaultOptions;
-      labels = {
-        "io.containers.autoupdate" = "registry";
-        "PODMAN_SYSTEMD_UNIT" = "podman-shelfmark.service";
-      };
-      dependsOn = [ "gluetun" ];
+      networks = [ "container:gluetun" ];
     };
 
     pinchflat = {
       image = "ghcr.io/kieraneglin/pinchflat:latest";
       pull = "newer";
+      parentPorts = [ "${addresses.podman-gateway}:${toString ports.pinchflat}:8945" ];
       volumes = [
         "/var/lib/${userName}/pinchflat:/config"
         "/data/downloads/youtube:/downloads"
@@ -1056,12 +817,7 @@ in {
         TZ = config.time.timeZone;
         YT_DLP_WORKER_CONCURRENCY = "1";
       };
-      extraOptions = [] ++ defaultOptions;
-      labels = {
-        "io.containers.autoupdate" = "registry";
-        "PODMAN_SYSTEMD_UNIT" = "podman-pinchflat.service";
-      };
-      dependsOn = [ "gluetun" ];
+      networks = [ "container:gluetun" ];
     };
 
   };

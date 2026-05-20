@@ -28,9 +28,15 @@ in
       "--login-server=https://headscale.constellation.moe"
     ];
     extraSetFlags = [] ++ (if (isAsiyah || isBriah) then [
-      "--advertise-exit-node"
-    ] else []);
+      "--advertise-exit-node=true"
+    ] else [
+      "--advertise-exit-node=false"
+    ]);
   };
+
+  systemd.services.tailscaled-autoconnect.startLimitIntervalSec = lib.mkForce 5;
+  systemd.services.tailscaled-autoconnect.startLimitBurst = lib.mkForce 10;
+  systemd.services.tailscaled-autoconnect.serviceConfig.Restart = lib.mkForce "on-failure";
 
   environment.systemPackages = if config.gradient.profiles.desktop.enable then [ pkgs.tail-tray ] else [];
 
