@@ -248,6 +248,9 @@ in
       # Enable the sysctl setting kernel.unprivileged_userns_clone to allow normal users to run unprivileged containers.
       "kernel.unprivileged_userns_clone" = "1";
 
+      # Wine performance
+      "kernel.split_lock_mitigate" = "0";
+
       # Increase netdev receive queue
       # May help prevent losing packets
       "net.core.netdev_max_backlog" = "4096";
