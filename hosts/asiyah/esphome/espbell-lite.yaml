@@ -22,6 +22,9 @@ logger:
 # Enable Home Assistant API
 api:
 
+mdns:
+  disabled: false
+
 ota:
   - platform: esphome
     id: ota_esphome

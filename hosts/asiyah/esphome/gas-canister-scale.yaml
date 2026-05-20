@@ -7,6 +7,7 @@ esphome:
 esp32:
   board: nodemcu-32s
   framework:
+    type: esp-idf
     version: recommended
 
 logger:
@@ -152,7 +153,7 @@ sensor:
     dout_pin: GPIO25
     clk_pin: GPIO26
     gain: 128
-    update_interval: 0.2s
+    update_interval: 1s
     filters:
       - quantile:
           window_size: 10
@@ -215,8 +216,8 @@ sensor:
           # note that a bigger difference between measurements usually results in higher resolution,
           # so measure 0 Kg and the highest known mass you have (like f.ex. your own weight, measured by a normal scale with good accuracy)
           - 462381 -> 0
-          - 920515 -> 20.7
-          - 2454463 -> 96.6
+          - 891755 -> 20.6
+          - 2532642 -> 96.6
       # map values below 0.1 to 0 (to decrease value changes due to random fluctuation)
       - lambda: |-
           if (x <= 0.1) {
