@@ -62,6 +62,30 @@ in
         };
       };
 
+      services.pipewire.wireplumber.configPackages = [
+        (pkgs.writeTextDir "share/wireplumber/wireplumber.conf.d/51-disable-suspension.conf" ''
+          monitor.alsa.rules = [
+            {
+              matches = [
+                {
+                  # Matches all sources
+                  node.name = "~alsa_input.*"
+                },
+                {
+                  # Matches all sinks
+                  node.name = "~alsa_output.*"
+                }
+              ]
+              actions = {
+                update-props = {
+                  session.suspend-timeout-seconds = 0
+                }
+              }
+            }
+          ]
+        '')
+      ];
+
       services.udev.extraRules = ''
         DEVPATH=="/devices/virtual/misc/cpu_dma_latency", OWNER="root", GROUP="audio", MODE="0660"
         KERNEL=="rtc0", GROUP="audio"
