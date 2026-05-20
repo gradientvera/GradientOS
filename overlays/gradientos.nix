@@ -113,8 +113,6 @@ in {
   
   gradient-generator = flake.inputs.gradient-generator.packages.${prev.stdenv.hostPlatform.system}.default;
 
-  nix-gaming = flake.inputs.nix-gaming.packages.${prev.stdenv.hostPlatform.system};
-
   # Unmodified unstable nixpkgs overlay.
   unstable = import flake.inputs.nixpkgs {
     inherit (prev) config;
