@@ -34,6 +34,9 @@
     ACTION=="add|change", SUBSYSTEM=="input", TEST=="power/control", ATTR{power/control}="on"
     ACTION=="add|change", SUBSYSTEM=="input", TEST=="power/autosuspend", ATTR{power/autosuspend}="-1"
     ACTION=="add|change", SUBSYSTEM=="input", TEST=="power/autosuspend_delay_ms", ATTR{power/autosuspend_delay_ms}="-1"
+
+    # Dolphin motion, see https://github.com/ublue-os/bazzite/blob/dfa558b00764dcddc2e3e3948083539a80e8acae/system_files/desktop/shared/usr/lib/udev/rules.d/90-dolphin-motion.rules
+    SUBSYSTEM=="input", KERNEL=="event*", ATTRS{name}=="*Motion Sensors", TAG+="uaccess"
   '';
 
 }
