@@ -17,9 +17,7 @@
       OPENWEBRX_ADMIN_USER = "admin";
       OPENWEBRX_ADMIN_PASSWORD = "password";
     };
-    extraOptions = [
-      "--device" "/dev/bus/usb"
-    ];
+    devices = [ "/dev/bus/usb" ];
   };
 
   /*systemd.services.openwebrx.serviceConfig = {

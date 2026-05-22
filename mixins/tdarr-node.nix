@@ -77,10 +77,8 @@ in
       ffmpegVersion = "6";
       nodeName = config.networking.hostName;
     };
-    extraOptions = [
-      "--network=host"
-      "--device=/dev/dri/:/dev/dri/"
-    ];
+    networks = [ "host" ];
+    devices = [ "/dev/dri:/dev/dri" ];
   };
 
   systemd.services.podman-tdarrNode = {
