@@ -129,7 +129,7 @@
           mixins.upgrade-diff
           mixins.v4l2loopback
           mixins.vera-locale
-          mixins.virtualisation
+          # mixins.virtualisation
           mixins.nix-store-serve
           mixins.binfmt-emulation
 
@@ -218,7 +218,7 @@
           mixins.vera-locale
           mixins.upgrade-diff
           mixins.v4l2loopback
-          mixins.virtualisation
+          # mixins.virtualisation
           mixins.nix-store-serve
           
           mixins.graphical-steam
@@ -317,7 +317,7 @@
           mixins.vera-locale
           mixins.upgrade-diff
           mixins.v4l2loopback
-          mixins.virtualisation
+          # mixins.virtualisation
           mixins.nix-store-serve
           mixins.binfmt-emulation
           mixins.hardware-bluetooth
