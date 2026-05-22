@@ -24,6 +24,7 @@ in
       then config.sops.secrets.tailscale-auth-key.path 
       else config.sops.secrets.tailscale-auth-key-neith.path;
     useRoutingFeatures = "both";
+    extraDaemonFlags = [ "--no-logs-no-support" ];
     extraUpFlags = [
       "--login-server=https://headscale.constellation.moe"
     ];
