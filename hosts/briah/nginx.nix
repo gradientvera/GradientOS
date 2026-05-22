@@ -22,6 +22,9 @@ in
       { addr = "[::]"; port = ports.https; ssl = true; }
     ];
 
+    # Set to 4G as the max for briah, but let asiyah vhosts decide on a smaller amount
+    clientMaxBodySize = "4G";
+
     virtualHosts."gradient.moe" = {
       # Only specify ONCE!
       reuseport = true;
