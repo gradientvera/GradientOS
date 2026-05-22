@@ -53,12 +53,10 @@
   slskd = 5030;
   slskd-peer = 26156;
   romm = 8095; # ?
-  neko = 8097;
-  neko-epr-start = 52000;
-  neko-epr-end = 52100;
   calibre-web-automated = 8078; # ?
   shelfmark = 8077;
   pinchflat = 8945;
+  threadfin = 34400;
 
   # Wolf
   wolf-http = 47989;

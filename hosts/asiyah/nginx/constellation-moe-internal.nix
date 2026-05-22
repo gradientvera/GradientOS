@@ -119,7 +119,6 @@ in {
     "romm.constellation.moe" = mkReverseProxy { port = ports.romm; address = addresses.podman-gateway; };
     "search.constellation.moe" = mkReverseProxy { port = ports.searx; };
     "files.constellation.moe" = mkReverseProxy { port = ports.mikochi; address = addresses.podman-gateway; };
-    # "neko.constellation.moe" = mkReverseProxy { port = ports.neko; address = addresses.podman-gateway; };
     "calibre.constellation.moe" = mkReverseProxy {
       port = ports.calibre-web-automated;
       address = addresses.podman-gateway;
@@ -147,6 +146,7 @@ in {
     "pinchflat.constellation.moe" = mkReverseProxy { port = ports.pinchflat; address = addresses.podman-gateway; };
     "crafty.constellation.moe" = mkReverseProxy { port = ports.crafty; address = addresses.podman-gateway;  protocol = "https"; };
     "olivetin.constellation.moe" = mkReverseProxy { port = ports.olivetin; };
+    "threadfin.constellation.moe" = mkReverseProxy { port = ports.threadfin; address = addresses.podman-gateway; };
   };
 
   # TODO: Figure out a way to automate the below list eugh
@@ -175,7 +175,6 @@ in {
     "romm.constellation.moe" = {};
     "search.constellation.moe" = {};
     "files.constellation.moe" = {};
-    # "neko.constellation.moe" = {};
     "calibre.constellation.moe" = {};
     "shelfmark.constellation.moe" = {};
     "radio.constellation.moe" = {};
@@ -184,6 +183,7 @@ in {
     "crafty.constellation.moe" = {};
     "craftydynmap.constellation.moe" = {};
     "olivetin.constellation.moe" = {};
+    "threadfin.constellation.moe" = {};
   };
   
 }

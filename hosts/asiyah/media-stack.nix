@@ -38,7 +38,6 @@ let
     mikochi
     cross-seed
     sabnzbd
-    neko
     profilarr
     calibre-web-automated
     shelfmark
@@ -138,6 +137,7 @@ in {
     "/var/lib/${userName}/.mozilla".d = rule;
     "/var/lib/${userName}/.mozilla/firefox".d = rule;
     "/var/lib/${userName}/modcache".d = rule;
+    "/var/lib/${userName}/threadfin".d = rule;
   };
 
   services.clamav.scanner.scanDirectories = [ "/data/downloads" ]; # /var/lib already scanned by default
@@ -166,9 +166,9 @@ in {
         DOCKER_MODS="linuxserver/mods:jellyfin-opencl-intel";
       };
       networks = [ "container:gluetun" ];
+      devices = [ "/dev/dri:/dev/dri" ];
       extraOptions = [
         "--mount" "type=bind,source=/data/downloads,target=/media"
-        "--device=/dev/dri/:/dev/dri/"
       ];
     };
 
@@ -196,10 +196,10 @@ in {
         PGID = toString groupGid;
       };
       environmentFiles = [ config.sops.secrets.mediarr-iptv-env.path ];
+      devices = [ "/dev/dri:/dev/dri" ];
       extraOptions = [
         "--mount" "type=bind,source=/data/downloads,target=/media"
         "--mount" "type=tmpfs,destination=/transcode"
-        "--device=/dev/dri/:/dev/dri/"
       ];
     };
 
@@ -518,9 +518,8 @@ in {
         auth = "false"; # OAuth2 proxy handles this
         nodeName = config.networking.hostName;
       };
-      extraOptions = [
-        "--device=/dev/dri/:/dev/dri/"
-      ];
+      devices = [ "/dev/dri:/dev/dri" ];
+      extraOptions = [ ];
     };
 
     gluetun = {
@@ -542,10 +541,10 @@ in {
         WIREGUARD_PERSISTENT_KEEPALIVE_INTERVAL = "15s";
       };
       environmentFiles = [ config.sops.secrets.mediarr-gluetun-env.path ];
+      privileged = true;
+      capabilities.NET_ADMIN = true;
       extraOptions = [
         "--network-alias=mediarr"
-        "--privileged"
-        "--cap-add=NET_ADMIN"
         "--dns=1.1.1.1"
         "--dns=1.0.0.1"
       ];
@@ -574,9 +573,9 @@ in {
         HEALTH_SERVER_ADDRESS = "127.0.0.1:9998";
       };
       environmentFiles = [ config.sops.secrets.mediarr-gluetun-uk-env.path ];
+      privileged = true;
+      capabilities.NET_ADMIN = true;
       extraOptions = [
-        "--privileged"
-        "--cap-add=NET_ADMIN"
         "--dns=1.1.1.1"
         "--dns=1.0.0.1"
       ];
@@ -722,33 +721,6 @@ in {
       ] ++ userOptions;
     };
 
-    /*
-    neko = {
-      image = "ghcr.io/m1k1o/neko/firefox:latest";
-      pull = "newer";
-      volumes = [
-        "/var/lib/${userName}/.mozilla:/home/neko/.mozilla"
-      ];
-      environment = {
-        TZ = config.time.timeZone;
-        NEKO_SCREEN = "1920x1080@30";
-        NEKO_BIND = ":${toString ports.neko}";
-        NEKO_EPR = "${toString ports.neko-epr-start}-${toString ports.neko-epr-end}";
-        NEKO_UDPMUX = "${toString ports.neko-epr-start}";
-        NEKO_PROXY = "true";
-        NEKO_IPFETCH = "https://checkip.amazonaws.com";
-        NEKO_CORS = "127.0.0.1 neko.constellation.moe"; 
-        NEKO_ICESERVER = "stun:stun.l.google.com:19302";
-        NEKO_IMPLICIT_CONTROL = "true";
-        NEKO_CONTROL_PROTECTION = "true";
-      };
-      environmentFiles = [ config.sops.secrets.mediarr-neko-env.path ];
-      extraOptions = [
-        "--device=/dev/dri/:/dev/dri/"
-      ] ++ podOptions;
-    };
-    */
-
     calibre = {
       image = "ghcr.io/new-usemame/calibre-web-nextgen:latest";
       pull = "newer";
@@ -820,6 +792,24 @@ in {
       networks = [ "container:gluetun" ];
     };
 
+    threadfin = {
+      image = "docker.io/fyb3roptik/threadfin";
+      ports = [ "${addresses.podman-gateway}:${toString ports.threadfin}:${toString ports.threadfin}" ];
+      volumes = [
+        "/var/lib/${userName}/threadfin:/home/threadfin/conf"
+      ];
+      environment = {
+        TZ = config.time.timeZone;
+        PUID = toString userUid;
+        PGID = toString groupGid;
+        THREADFIN_PORT = toString ports.threadfin;
+      };
+      devices = [ "/dev/dri:/dev/dri" ];
+      extraOptions = [
+        "--mount" "type=tmpfs,destination=/tmp/threadfin"
+      ];
+    };
+
   };
 
   # -- Firewall Setup --
@@ -831,13 +821,6 @@ in {
 
   networking.firewall.allowedUDPPorts = with ports; [
     qbittorrent-peer
-  ];
-
-  networking.firewall.allowedUDPPortRanges = [
-    {
-      from = ports.neko-epr-start;
-      to = ports.neko-epr-end;
-    }
   ];
 
 }

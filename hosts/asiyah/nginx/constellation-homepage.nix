@@ -253,16 +253,6 @@ in
               };
             };
           }
-          /*{
-            "Neko" = {
-              description = "A self-hosted virtual browser.";
-              href = "https://neko.constellation.moe/";
-              icon = "sh-neko.svg";
-              server = "asiyah";
-              container = "neko";
-              showStats = true;
-            };
-          }*/
         ];
       }
       {
@@ -489,6 +479,16 @@ in
               description = "OliveTin gives safe and simple access to predefined shell commands from a web interface.";
               href = "https://olivetin.constellation.moe/";
               icon = "sh-olivetin.svg";
+            };
+          }
+          {
+            "Threadfin" = {
+              description = "An M3U proxy for Jellyfin.";
+              href = "https://threadfin.constellation.moe/web/";
+              icon = "sh-threadfin.svg";
+              server = "asiyah";
+              container = "threadfin";
+              showStats = true;
             };
           }
         ];

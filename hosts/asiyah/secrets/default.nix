@@ -110,13 +110,6 @@
         restartUnits = [ "podman-mariadb.service" ];
       };
 
-      mediarr-neko-env = {
-        mode = "0440";
-        owner = config.users.users.mediarr.name or null;
-        group = config.users.users.mediarr.group or null;
-        restartUnits = [ "podman-neko.service" ];
-      };
-
       mediarr-amule-env = {
         mode = "0440";
         owner = config.users.users.mediarr.name or null;
