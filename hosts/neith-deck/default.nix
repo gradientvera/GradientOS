@@ -52,6 +52,10 @@
     hashedPassword = "$6$7mwTIbQIbSE9s6h5$J1Z5xG3V5kY65pgSQKulKg5UpVUnKuHnZoXmZ98IMCRNXhLHWgEAbizz8g4d1IJvDMp/pLBl4EKK.0fzcyb6N0";
   };
 
+  # Don't start another Pipewire/Wireplumber instance
+  systemd.user.services.pipewire.unitConfig.ConditionUser = "!constellation";
+  systemd.user.services.wireplumber.unitConfig.ConditionUser = "!constellation";
+
   security.polkit.extraConfig = ''
     polkit.addRule(function(action, subject) {
         if (action.id == "org.freedesktop.machine1.host-shell" &&
