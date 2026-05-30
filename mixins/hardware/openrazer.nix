@@ -2,7 +2,7 @@
 {
 
   hardware.openrazer = {
-    enable = true;
+    # enable = true;
     keyStatistics = true;
     users = [ "vera" ];
   };
