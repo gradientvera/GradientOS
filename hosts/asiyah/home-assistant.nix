@@ -114,7 +114,7 @@ in
       sonarr-upcoming-media
       mqtt-vacuum-camera
       thermal-comfort
-      google-find-my
+      # google-find-my # TODO: fix...
       anniversaries
       # feedparser # TODO: fix
       moonraker
