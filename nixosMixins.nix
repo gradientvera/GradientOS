@@ -6,7 +6,6 @@
   crowdsec = ./mixins/crowdsec.nix;
   gnupg = ./mixins/gnupg.nix;
   jovian-decky-loader = ./mixins/jovian-decky-loader.nix;
-  microsocks = ./mixins/microsocks.nix;
   neith-locale = ./mixins/neith-locale.nix;
   networkd = ./mixins/networkd.nix;
   nginx = ./mixins/nginx.nix;

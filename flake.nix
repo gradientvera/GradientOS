@@ -311,7 +311,6 @@
           mixins.steamcmd
           mixins.tailscale
           mixins.wireguard
-          mixins.microsocks
           mixins.vera-locale
           mixins.upgrade-diff
           mixins.v4l2loopback
@@ -346,7 +345,6 @@
           mixins.crowdsec
           mixins.tailscale
           mixins.wireguard
-          mixins.microsocks
           #mixins.vera-locale
           #mixins.upgrade-diff
           #mixins.restic-repository-hokma

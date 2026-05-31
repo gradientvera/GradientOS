@@ -101,7 +101,6 @@
   wgautomesh-external = 33723;
   crowdsec-lapi = 8076;
   crowdsec-metrics = 6060;
-  microsocks = 1079;
   olivetin = 8075;
   
   # Frigate, cannot be changed because fuck you
