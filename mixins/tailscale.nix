@@ -4,6 +4,7 @@ let
   isBriah = hostName == "briah";
   isAsiyah = hostName == "asiyah";
   isNeith = hostName == "neith-deck";
+  isExitNode = isAsiyah || isBriah;
 in
 {
 
@@ -28,11 +29,26 @@ in
     extraUpFlags = [
       "--login-server=https://headscale.constellation.moe"
     ];
-    extraSetFlags = [] ++ (if (isAsiyah || isBriah) then [
+    extraSetFlags = [] ++ (if isExitNode then [
       "--advertise-exit-node=true"
     ] else [
       "--advertise-exit-node=false"
     ]);
+  };
+
+  # https://tailscale.com/docs/features/subnet-routers#enable-ip-forwarding
+  boot.kernel.sysctl = if isExitNode then {
+    "net.ipv4.ip_forward" = lib.mkDefault "1";
+    "net.ipv6.conf.all.forwarding" = lib.mkDefault "1";
+  } else {};
+
+  # https://tailscale.com/docs/reference/best-practices/performance#ethtool-configuration
+  systemd.services.tailscaled = {
+    path = if isExitNode then [ pkgs.ethtool pkgs.iproute2 pkgs.coreutils ] else [];
+    preStart = if isExitNode then ''
+      NETDEV=$(ip -o route get 8.8.8.8 | cut -f 5 -d " ")
+      ethtool -K $NETDEV rx-udp-gro-forwarding on rx-gro-list off
+    '' else "";
   };
 
   systemd.services.tailscaled-autoconnect.startLimitIntervalSec = lib.mkForce 5;
