@@ -11,8 +11,6 @@
   http = 80;
   https = 443;
 
-  microsocks = 1080;
-
   crowdsec-metrics = 6060;
 
   headscale = 8074;

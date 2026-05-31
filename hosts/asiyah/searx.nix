@@ -75,8 +75,6 @@ in
           "all://:" = [
             "socks5://127.0.0.1:${toString ports.proxy-vpn}"
             "socks5://127.0.0.1:${toString ports.proxy-vpn-uk}"
-            "socks5:://${config.gradient.const.wireguard.addresses.gradientnet.asiyah}:${toString ports.microsocks}"
-            "socks5:://${config.gradient.const.wireguard.addresses.gradientnet.briah}:${toString config.gradient.hosts.briah.ports.microsocks}"
           ];
         };*/
       };
