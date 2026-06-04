@@ -95,6 +95,11 @@
       url = "github:gradientvera/mmproxy-rs";
       inputs.nixpkgs.follows = "nixpkgs";
     };
+
+    ik_llamacpp = {
+      url = "github:ikawrakow/ik_llama.cpp";
+      inputs.nixpkgs.follows = "nixpkgs";
+    };
   };
 
   outputs = { self, nixpkgs, gradient-generator, jovian-nixos, sops-nix, nixos-hardware, cryolitia-nur, lanzaboote, ... }:

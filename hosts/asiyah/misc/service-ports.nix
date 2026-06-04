@@ -102,6 +102,13 @@
   crowdsec-lapi = 8076;
   crowdsec-metrics = 6060;
   olivetin = 8075;
+
+  # Wyoming
+  piper-english = 10200;
+  piper-spanish = 10201;
+  whisper-english = 10300;
+  whisper-spanish = 10301;
+  openwakeword = 10400;
   
   # Frigate, cannot be changed because fuck you
   frigate = 5000;

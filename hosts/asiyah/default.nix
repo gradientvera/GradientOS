@@ -19,6 +19,7 @@
     ./frigate.nix
     ./grafana.nix
     ./forgejo.nix
+    ./wyoming.nix
     ./duckdns.nix
     # ./olivetin.nix # TODO: Re-enable and re-do config after https://github.com/NixOS/nixpkgs/pull/498611 
     ./postgres.nix
