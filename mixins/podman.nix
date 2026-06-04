@@ -28,7 +28,8 @@ except-interface=podman0
     enable = true;
     wantedBy = [ "timers.target" ];
     timerConfig = {
-      OnCalendar = [ "" "*-*-* 5:00:00" ];
+      OnCalendar = [ "" "Mon 05:00" ];
+      RandomizedDelaySec = "2h";
       Persistent = true;
     };
   };
