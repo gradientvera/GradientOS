@@ -5,4 +5,6 @@
   wgautomesh-gossip = 1666;
   wgautomesh-external = 33725;
 
+  wyoming-satellite = 10700;
+
 }
