@@ -1,19 +1,55 @@
-{ config, pkgs, lib, ... }:
+{ config, self, pkgs, ports, lib, ... }:
 let
+  modelsDir = "/var/lib/llama-cpp/models";
   ports = config.gradient.currentHost.ports;
 in
 {
 
-  services.ollama = {
+  systemd.services.llama-cpp = {
+    serviceConfig.LimitMEMLOCK = "infinity"; # wew lass
+    preStart = "mkdir -p ${modelsDir}";
+    environment.LLAMA_CACHE = "/var/cache/llama-cpp";
+    environment.MESA_SHADER_CACHE_DIR = "/var/cache/llama-cpp";
+  };
+
+  services.llama-cpp = {
+    inherit modelsDir;
     enable = true;
-    package = pkgs.ollama-vulkan;
-    port = ports.ollama;
-    syncModels = true;
-    loadModels = [
-      config.services.frigate.settings.genai.model
+    host = "127.0.0.1";
+    port = ports.llama-cpp;
+    package = pkgs.master.llama-cpp-vulkan;
+    extraFlags = [
+        # Only one model loaded at max
+        "--models-max" "1"
+
+
+        "--numa" "isolate"
+        
+        # Load models automatically
+        "--models-autoload"
+
+        # Stay active for 5 minutes, then sleep...
+        "--sleep-idle-seconds" "300"
     ];
-    environmentVariables = {
-      OLLAMA_VULKAN = "1";
+    modelsPreset."Qwen3.5-9B-Q4_K_M" = {
+      hf = "unsloth/Qwen3.5-9B-GGUF:Q4_K_M";
+      temp = "0.6";
+      top-p = "0.95";
+      top-k = "20";
+      min-p = "0.00";
+      reasoning = "off";
+      t = "18";
+      tb = "18";
+      b = "2048";
+      ub = "1024";
+      ctk = "q4_0";
+      ctv = "q4_0";
+      ctx-size = "8192";
+      flash-attn = "on";
+      ngl = "auto";
+      mmproj-auto = "on";
+      no-mmproj-offload = "on";
+      spec-default = "on";
     };
   };
 
@@ -21,8 +57,10 @@ in
     enable = true;
     port = ports.open-webui;
     environment = {
-      OLLAMA_API_BASE_URL = "http://127.0.0.1:${toString ports.ollama}";
       WEBUI_AUTH = "False";
+
+      ENABLE_OPENAI_API = "true";
+      OPENAI_API_BASE_URL = "http://127.0.0.1:${toString ports.llama-cpp}/v1";
 
       ENABLE_RAG_WEB_SEARCH = "True";
       RAG_WEB_SEARCH_ENGINE = "searxng";
@@ -55,7 +93,11 @@ in
   };
 
   networking.firewall.interfaces.gradientnet.allowedTCPPorts = [
-    ports.ollama
+    ports.llama-cpp
+  ];
+
+  networking.firewall.interfaces.podman0.allowedTCPPorts = [
+    ports.llama-cpp
   ];
 
 }

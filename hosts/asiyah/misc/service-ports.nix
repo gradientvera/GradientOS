@@ -95,6 +95,7 @@
   nut = 3493;
   open-webui = 8100;
   ollama = 11434;
+  llama-cpp = 11435;
   uptime-kuma = 4003;
   attic = 8060;
   wgautomesh-gossip = 1666;

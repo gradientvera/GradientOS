@@ -116,6 +116,7 @@ in
       thermal-comfort
       # google-find-my # TODO: fix...
       anniversaries
+      local_openai
       # feedparser # TODO: fix
       moonraker
       ingress

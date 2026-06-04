@@ -75,10 +75,18 @@ in
       };
 
       genai = {
-        enabled = false; # borked
-        provider = "ollama";
-        base_url = "http://127.0.0.1:${toString ports.ollama}";
-        model = "llava:7b";
+        enabled = true;
+        provider = "openai";
+        base_url = "http://127.0.0.1:${toString ports.llama-cpp}";
+        api_key = "";
+        model = "Qwen3.5-9B-Q4_K_M";
+      };
+
+      review = {
+        genai = {
+          enabled = true;
+          image_source = "recordings";
+        };
       };
 
       # Extremely important! Makes webrtc and two-way audio work
@@ -124,8 +132,9 @@ in
             };
           };
           genai = {
-            enabled = false; # borked
-            objects = [ "person" ];
+            enabled = true;
+            use_snapshot = true;
+            objects = [ "person" "cat" ];
             required_zones = [ "main" ];
           };
         };
@@ -178,6 +187,7 @@ in
   systemd.services.frigate = {
     after = [ "go2rtc.service" ];
     wants = [ "go2rtc.service" ];
+    environment.OPENAI_BASE_URL = config.services.frigate.settings.genai.base_url;
   };
 
   systemd.services.go2rtc = {
