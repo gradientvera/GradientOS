@@ -5,7 +5,7 @@
 let
   owner = "uvejota";
   version = "2024.07.6";
-  pythonPkgs = home-assistant.python.pkgs;
+  pythonPkgs = home-assistant.python3Packages;
 in buildHomeAssistantComponent {
   inherit version owner;
   domain = "edata";

@@ -5,7 +5,7 @@
 let
   owner = "custom-components";
   version = "0.4.2";
-  pythonPkgs = home-assistant.python.pkgs;
+  pythonPkgs = home-assistant.python3Packages;
 in buildHomeAssistantComponent {
   inherit version owner;
   domain = "radarr_upcoming_media";

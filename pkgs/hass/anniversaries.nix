@@ -5,7 +5,7 @@
 let
   owner = "pinkywafer";
   version = "6.0.1";
-  pythonPkgs = home-assistant.python.pkgs;
+  pythonPkgs = home-assistant.python3Packages;
 in buildHomeAssistantComponent {
   inherit version owner;
   domain = "anniversaries";

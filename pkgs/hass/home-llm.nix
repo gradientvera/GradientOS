@@ -5,7 +5,7 @@
 let
   owner = "acon96";
   version = "0.4.9";
-  pythonPkgs = home-assistant.python.pkgs;
+  pythonPkgs = home-assistant.python3Packages;
 in buildHomeAssistantComponent {
   inherit version owner;
   domain = "llama_conversation";

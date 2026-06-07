@@ -5,7 +5,7 @@
 let
   owner = "custom-components";
   version = "0.1.12";
-  pythonPkgs = home-assistant.python.pkgs;
+  pythonPkgs = home-assistant.python3Packages;
 in buildHomeAssistantComponent {
   inherit version owner;
   domain = "feedparser";

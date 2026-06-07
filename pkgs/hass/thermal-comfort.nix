@@ -5,7 +5,7 @@
 let
   owner = "dolezsa";
   version = "2.2.5";
-  pythonPkgs = home-assistant.python.pkgs;
+  pythonPkgs = home-assistant.python3Packages;
 in buildHomeAssistantComponent {
   inherit version owner;
   domain = "thermal_comfort";

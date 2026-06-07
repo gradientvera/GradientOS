@@ -1,14 +1,24 @@
-{ config, pkgs, lib, ... }:
+{ config, pkgs, self, lib, ... }:
 let
   ports = config.gradient.currentHost.ports;
   localAddresses = config.gradient.const.localAddresses;
   addresses = config.gradient.const.wireguard.addresses.gradientnet;
   pythonPkgs = config.services.home-assistant.package.python.pkgs;
+  pkgsCustomComponents = pkgs.master.home-assistant-custom-components;
+  pkgsCustomComponentsGradientOS = pkgs.master.home-assistant-custom-components-gradientos;
+  pkgsCustomLovelaceModules = pkgs.master.home-assistant-custom-lovelace-modules;
+  pkgsCustomLovelaceModulesGradientOS = pkgs.master.home-assistant-custom-lovelace-modules-gradientos;
 in
 {
 
+  # just temporary I swear!
+  disabledModules = [ "services/home-automation/home-assistant.nix" ];
+  imports = [ "${toString self.inputs.nixpkgs-master}/nixos/modules/services/home-automation/home-assistant.nix" ];
+
   services.home-assistant = {
     enable = true;
+    package = pkgs.master.home-assistant;
+    # TODO: remove, this is temporary to fix something
     lovelaceConfigWritable = true;
     extraComponents = [
       "homeassistant_alerts"
@@ -112,8 +122,8 @@ in
       "my"
     ];
     customComponents = 
-      with pkgs.home-assistant-custom-components;
-      with pkgs.home-assistant-custom-components-gradientos;
+      with pkgsCustomComponents;
+      with pkgsCustomComponentsGradientOS;
     [
       radarr-upcoming-media
       sonarr-upcoming-media
@@ -137,8 +147,8 @@ in
     extraPackages = ps: with ps; [ psycopg2 ];
 
     customLovelaceModules = 
-      with pkgs.home-assistant-custom-lovelace-modules;
-      with pkgs.home-assistant-custom-lovelace-modules-gradientos;
+      with pkgsCustomLovelaceModules;
+      with pkgsCustomLovelaceModulesGradientOS;
     [
       zigbee2mqtt-networkmap
       xiaomi-vacuum-map-card
@@ -310,8 +320,6 @@ in
   systemd.services.home-assistant = {
     wants = [ "postgresql.service" "influxdb2.service" ];
     after = [ "postgresql.service" "influxdb2.service" ];
-    # Needed for PicoTTS
-    path = [ pkgs.picotts ];
   };
 
   networking.firewall.allowedTCPPorts = [ ports.home-assistant ];

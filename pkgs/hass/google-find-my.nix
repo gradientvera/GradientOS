@@ -6,7 +6,7 @@ let
   owner = "BSkando";
   repo = "GoogleFindMy-HA";
   version = "V1.7.0-3";
-  pythonPkgs = home-assistant.python.pkgs;
+  pythonPkgs = home-assistant.python3Packages;
 in buildHomeAssistantComponent {
   inherit version owner;
   domain = "googlefindmy";

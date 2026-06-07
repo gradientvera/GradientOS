@@ -62,6 +62,8 @@ in
     environment = {
       WEBUI_AUTH = "False";
 
+      HOME = "/var/lib/open-webui";
+
       ENABLE_OPENAI_API = "true";
       OPENAI_API_BASE_URL = "http://127.0.0.1:${toString ports.llama-cpp}/v1";
 

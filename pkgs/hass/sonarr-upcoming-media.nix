@@ -5,7 +5,7 @@
 let
   owner = "custom-components";
   version = "0.4.4";
-  pythonPkgs = home-assistant.python.pkgs;
+  pythonPkgs = home-assistant.python3Packages;
 in buildHomeAssistantComponent {
   inherit version owner;
   domain = "sonarr_upcoming_media";

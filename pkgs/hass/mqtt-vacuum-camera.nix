@@ -6,7 +6,7 @@
 let
   owner = "sca075";
   version = "2025.11.0";
-  pythonPkgs = home-assistant.python.pkgs;
+  pythonPkgs = home-assistant.python3Packages;
   # These two derivations are ONLY used for this integration, so just keep it here
   mvcrender = (
     let
