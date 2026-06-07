@@ -78,6 +78,7 @@ in
       age
       dig
       eza
+      jq
     ] ++ (if pkgs.stdenv.hostPlatform.system == "x86_64-linux" then [
       unrar
       rar
