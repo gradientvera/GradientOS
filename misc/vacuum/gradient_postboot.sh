@@ -14,6 +14,43 @@ ln -s /data/gradient_profile.sh /tmp/.profile
 
 echo "Linked gradient_profile to temporary folder." 
 
+echo "Setting up audio..."
+rm -f /tmp/.asoundrc
+cat >/tmp/.asoundrc <<'EOF'
+pcm.dmix0 {
+    type dmix
+    ipc_key 1024
+    slave {
+        pcm "hw:audiocodec,0"
+    }
+}
+
+pcm.dsnoop0 {
+    type dsnoop
+    ipc_key 1025
+    slave {
+        pcm "hw:audiocodec,0"
+    }
+}
+
+pcm.asym0 {
+    type asym
+    playback.pcm "dmix0"
+    capture.pcm "dsnoop0"
+}
+
+pcm.!default {
+    type plug
+    slave.pcm "asym0"
+}
+EOF
+
+echo "Changed audio configuration to allow concurrent playback."
+
+echo "Restarting ava..."
+/etc/rc.d/ava.sh
+echo "ava restarted."
+
 mkdir -p /data/overlay
 mkdir -p /data/overlay/work
 mkdir -p /data/overlay/upper
