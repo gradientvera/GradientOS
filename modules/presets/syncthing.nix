@@ -158,6 +158,12 @@ in
           path = "/etc/nixos";
           devices = [ "bernkastel" "featherine" "asiyah" ];
         };
+        wakewords = {
+          id = "wakewords";
+          versioning.type = "trashcan";
+          path = "~/.wakewords";
+          devices = [ "bernkastel" "asiyah" "vera-phone" ];
+        };
       } // config.gradient.presets.syncthing.folders)
       );
     })

@@ -3,6 +3,7 @@
 
   alloy = ./mixins/alloy.nix;
   binfmt-emulation = ./mixins/binfmt-emulation.nix;
+  container-linux-voice-assistant = ./mixins/container-linux-voice-assistant.nix;
   crowdsec = ./mixins/crowdsec.nix;
   gnupg = ./mixins/gnupg.nix;
   jovian-decky-loader = ./mixins/jovian-decky-loader.nix;

@@ -34,7 +34,15 @@
     openwakeword = {
       enable = true;
       uri = "tcp://0.0.0.0:${toString ports.openwakeword}";
+      customModelsDirectories = [
+        "/home/vera/.wakewords/openWakeWord"
+        "/data/openwakeword"
+      ];
     };
+  };
+
+  systemd.tmpfiles.settings."10-openwakeword"."/data/openwakeword".d = {
+    mode = "0777";
   };
 
 }

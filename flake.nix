@@ -134,6 +134,8 @@
           mixins.graphical-steam
 
           mixins.restic-repository-hokma
+          
+          mixins.container-linux-voice-assistant
 
           mixins.hardware-qmk
           mixins.hardware-wacom

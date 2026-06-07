@@ -20,7 +20,7 @@ in
     package = pkgs.master.llama-cpp-vulkan;
     extraFlags = [
         # Only one model loaded at max
-        "--models-max" "2"
+        "--models-max" "1"
 
 
         "--numa" "isolate"

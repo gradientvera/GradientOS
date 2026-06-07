@@ -5,7 +5,6 @@ in
  {
 
   imports = [
-    ./wyoming.nix
     ./backups.nix
     ./programs.nix
     ./filesystems.nix
