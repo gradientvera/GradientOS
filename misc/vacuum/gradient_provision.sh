@@ -68,6 +68,9 @@ provision() {
   echo "Installing system utilities..."
   apk add gcompat curl wget busybox nano espeak-ng
 
+  echo "Installing Pulseaudio emulator for ALSA..."
+  apk add apulse --repository=http://dl-cdn.alpinelinux.org/alpine/edge/testing/
+
   echo "Installing Ansible requirements through apk..."
   apk add python3 openssh-sftp-server
 
