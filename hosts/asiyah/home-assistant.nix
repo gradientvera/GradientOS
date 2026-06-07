@@ -36,11 +36,13 @@ in
       "telegram_bot"
       "geo_location"
       "conversation"
+      "rest_command"
       "image_upload"
       "media_source"
       "air_quality"
       "nfandroidtv"
       "mobile_app"
+      "mcp_server"
       "vlc_telnet"
       "xiaomi_ble"
       "bluetooth"
@@ -79,6 +81,7 @@ in
       "config"
       "webdav"
       "vacuum"
+      "ffmpeg"
       "piper"
       "cloud"
       "html5"
@@ -88,6 +91,7 @@ in
       "moon"
       "mqtt"
       "waqi"
+      "rest"
       "dhcp"
       "ssdp"
       "tuya"
@@ -99,6 +103,7 @@ in
       "sun"
       "usb"
       "ios"
+      "mcp"
       "sql"
       "nut"
       "vlc"
@@ -116,9 +121,10 @@ in
       thermal-comfort
       # google-find-my # TODO: fix...
       anniversaries
-      local_openai
+      bodymiscale
       # feedparser # TODO: fix
       moonraker
+      home-llm
       ingress
       smartir
       frigate
@@ -176,11 +182,16 @@ in
           ++ [];
       };
 
+      system_log = {
+        fire_event = true;
+      };
+
       zha.zigpy_config.ota.z2m_remote_index = "https://raw.githubusercontent.com/Koenkk/zigbee-OTA/master/index.json";
       lovelace.mode = "storage";
       default_config = {};
       mobile_app = {};
       history = {};
+      ffmpeg = {};
 
       http = {
         server_port = ports.home-assistant;
@@ -206,12 +217,43 @@ in
 
       media_player = [ ];
 
+      rest = [
+        {
+          scan_interval = 60;
+          resource = "http://127.0.0.1:${toString ports.llama-cpp}/models";
+          sensor = [
+            {
+              name = "llama-cpp default model";
+              json_attributes_path = "$.data.[0]";
+              json_attributes = [ "id" "created" "owned_by" ];
+              value_template = "{{ value_json.data[0].status.value }}";
+            }
+          ];
+        }
+      ];
+
+      rest_command = {
+        llama_cpp_load_model = {
+          url = "http://127.0.0.1:${toString ports.llama-cpp}/models/load";
+          method = "post";
+          content_type = "application/json";
+          payload = ''{ "model": "{{ model }}" }'';
+        };
+        llama_cpp_unload_model = {
+          url = "http://127.0.0.1:${toString ports.llama-cpp}/models/unload";
+          method = "post";
+          content_type = "application/json";
+          payload = ''{ "model": "{{ model }}" }'';
+        };
+      };
+
       shell_command = {
         # Literally SSH into a host with the home assistant private SSH key and run a command
         ssh = "${toString pkgs.openssh}/bin/ssh -i ${config.sops.secrets.hass-ssh-priv.path} -o StrictHostKeyChecking=accept-new {{ host }} {{ command }}";
         # Workaround for a stupid DNS issue I cannot find a proper solution for lol
         dig = "${toString pkgs.dig}/bin/dig {{ host }}";
         curl = "${toString pkgs.curl}/bin/curl {{ args }}";
+        systemd_restart = "${toString pkgs.systemd}/bin/systemctl restart {{ unit }}"; # lol lmao
       };
 
       go2rtc.url = "http://127.0.0.1:${toString ports.frigate-go2rtc}";
@@ -263,8 +305,8 @@ in
     };
   };
 
-  users.users.hass.extraGroups = [ "mediarr" ];
-  
+  users.users.hass.extraGroups = [ "mediarr" "systemd-restart-units"  ];
+
   systemd.services.home-assistant = {
     wants = [ "postgresql.service" "influxdb2.service" ];
     after = [ "postgresql.service" "influxdb2.service" ];
