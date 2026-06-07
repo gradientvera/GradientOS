@@ -7,6 +7,7 @@ final: prev: {
     google-find-my = prev.callPackage ../pkgs/hass/google-find-my.nix { };
     anniversaries = prev.callPackage ../pkgs/hass/anniversaries.nix { };
     feedparser = prev.callPackage ../pkgs/hass/feedparser.nix { };
+    home-llm = prev.callPackage ../pkgs/hass/home-llm.nix { };
     bermuda = prev.callPackage ../pkgs/hass/bermuda.nix { };
     edata = prev.callPackage ../pkgs/hass/edata.nix { };
   };

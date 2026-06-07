@@ -20,7 +20,7 @@ in
     package = pkgs.master.llama-cpp-vulkan;
     extraFlags = [
         # Only one model loaded at max
-        "--models-max" "1"
+        "--models-max" "2"
 
 
         "--numa" "isolate"
@@ -28,15 +28,17 @@ in
         # Load models automatically
         "--models-autoload"
 
-        # Stay active for 5 minutes, then sleep...
-        "--sleep-idle-seconds" "300"
+        # Stay active for 10 minutes, then sleep...
+        "--sleep-idle-seconds" "600"
     ];
     modelsPreset."Qwen3.5-9B-Q4_K_M" = {
       hf = "unsloth/Qwen3.5-9B-GGUF:Q4_K_M";
-      temp = "0.6";
-      top-p = "0.95";
+      temp = "0.7";
+      top-p = "0.8";
       top-k = "20";
-      min-p = "0.00";
+      min-p = "0.0";
+      presence-penalty = "1.5";
+      repeat-penalty = "1.0";
       reasoning = "off";
       t = "18";
       tb = "18";
@@ -46,10 +48,11 @@ in
       ctv = "q4_0";
       ctx-size = "8192";
       flash-attn = "on";
-      ngl = "auto";
+      fit = "on";
       mmproj-auto = "on";
       no-mmproj-offload = "on";
       spec-default = "on";
+      context-shift = "on";
     };
   };
 
@@ -88,8 +91,8 @@ in
   };
 
   systemd.services.open-webui = {
-    wants = [ "redis-open-webui.service" "searx.service" "ollama.service" ];
-    after = [ "redis-open-webui.service" "searx.service" "ollama.service" ];
+    wants = [ "redis-open-webui.service" "searx.service" ];
+    after = [ "redis-open-webui.service" "searx.service" "llama-cpp.service" ];
   };
 
   networking.firewall.interfaces.gradientnet.allowedTCPPorts = [
