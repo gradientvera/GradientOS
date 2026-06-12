@@ -38,6 +38,10 @@
 
   services.lact.enable = true;
 
+  environment.systemPackages = with pkgs; [
+    nvtopPackages.amd
+  ];
+
   hardware.graphics.extraPackages = with pkgs; [
     lact
     libvdpau-va-gl

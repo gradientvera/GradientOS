@@ -9,6 +9,7 @@
   environment.systemPackages = with pkgs; [
     vdpauinfo
     libva-utils
+    nvtopPackages.intel
   ];
 
   hardware.intelgpu.enableHybridCodec = true;
