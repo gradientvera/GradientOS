@@ -137,11 +137,11 @@ in
       KExecWatchdogSec = "45s";
     };
 
-    systemd.user.extraConfig = ''
-      DefaultTimeoutStartSec=15s
-      DefaultTimeoutStopSec=10s
-      DefaultLimitNOFILE=32768:2097152
-    '';
+    systemd.user.settings.Manager = {
+      DefaultTimeoutStartSec = "15s";
+      DefaultTimeoutStopSec = "10s";
+      DefaultLimitNOFILE = "32768:2097152";
+    };
 
     security.pam.loginLimits = [
       {
