@@ -66,21 +66,35 @@ provision() {
   apk fix --reinstall ca-certificates
 
   echo "Installing system utilities..."
-  apk add gcompat curl wget busybox nano espeak-ng
+  apk add gcompat curl wget busybox nano espeak-ng jq
+
+  export FRIENDLY_NAME=$(cat /data/valetudo_config.json | jq .valetudo.customizations.friendlyName -r)
 
   echo "Installing Pulseaudio emulator for ALSA..."
   apk add apulse --repository=http://dl-cdn.alpinelinux.org/alpine/edge/testing/
 
-  echo "Installing Ansible requirements through apk..."
-  apk add python3 openssh-sftp-server
+  echo "Installing updated Dropbear..."
+  apk add python3 openssh-sftp-server dropbear dropbear-ssh
 
   ln -sf /usr/lib/ssh/sftp-server /usr/libexec/sftp-server
 
-  echo "Initializing dropbear daemon on chroot with SFTP support at port 222."
+  echo "Fixing settings for Dropbear..."
+  
+  # Shells file does not exist by default
+  rm -f /etc/shells
+  echo "/bin/sh" > /etc/shells
+
+  # Dropbear complains that /tmp (root $HOME) is writeable by anyone
+  mkdir -p /root
+  chmod -R 0600 /root
+  chown root:root /root
+  ln -sf /tmp/.ssh /root/.ssh
+
+  echo "Initializing Dropbear daemon on chroot with SFTP support at port 222."
 
   # SSH server with SFTP support
-  pkill -f "dropbear -s -p 222" || true
-  /usr/local/sbin/dropbear -s -p 222 &
+  pkill -f "dropbear -s -E -p 222 -D /root/.ssh" || true
+  /usr/sbin/dropbear -s -E -p 222 -D /root/.ssh &
 
   echo "Installing sops and age..."
   apk add sops age
@@ -100,7 +114,7 @@ provision() {
   if [[ -x "/data/gradient_publish_photo.sh" ]]; then
     echo "Initializing gradient_publish_photo daemon..."
     echo "Installing dependencies for gradient_publish_photo..."
-    apk add mosquitto-clients imagemagick curl jq
+    apk add mosquitto-clients imagemagick curl
     pkill gradient_publish_photo.sh || true
     /data/gradient_publish_photo.sh &
   fi
@@ -113,6 +127,11 @@ provision() {
     pkill oucher.sh || true
     /data/oucher/oucher.sh &
   fi
+
+  echo "Installing and executing MPD daemon..."
+  apk add mpd
+  pkill -f "mpd --no-config" || true
+  mpd --no-config &
 
   # Tailscale
   mkdir -p /data/tailscale-state
