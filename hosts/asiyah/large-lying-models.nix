@@ -1,60 +1,68 @@
 { config, self, pkgs, ports, lib, ... }:
 let
-  modelsDir = "/var/lib/llama-cpp/models";
+  cacheDir = "/var/cache/llama-cpp";
   ports = config.gradient.currentHost.ports;
 in
 {
 
+  systemd.tmpfiles.settings."10-llama-cpp-slot-cache.conf"."${cacheDir}/slots".d.mode = "0777";
+
   systemd.services.llama-cpp = {
     serviceConfig.LimitMEMLOCK = "infinity"; # wew lass
-    preStart = "mkdir -p ${modelsDir}";
-    environment.LLAMA_CACHE = "/var/cache/llama-cpp";
-    environment.MESA_SHADER_CACHE_DIR = "/var/cache/llama-cpp";
+    environment.LLAMA_CACHE = cacheDir;
+    environment.MESA_SHADER_CACHE_DIR = cacheDir;
   };
 
   services.llama-cpp = {
-    inherit modelsDir;
     enable = true;
-    host = "127.0.0.1";
-    port = ports.llama-cpp;
     package = pkgs.master.llama-cpp-vulkan;
-    extraFlags = [
-        # Only one model loaded at max
-        "--models-max" "1"
-
-
-        "--numa" "isolate"
-        
-        # Load models automatically
-        "--models-autoload"
-
-        # Stay active for 10 minutes, then sleep...
-        "--sleep-idle-seconds" "600"
-    ];
-    modelsPreset."Qwen3.5-9B-Q4_K_M" = {
-      hf = "unsloth/Qwen3.5-9B-GGUF:Q4_K_M";
-      temp = "0.7";
-      top-p = "0.8";
-      top-k = "20";
-      min-p = "0.0";
-      presence-penalty = "1.5";
-      repeat-penalty = "1.0";
-      reasoning = "off";
-      t = "18";
-      tb = "18";
-      b = "2048";
-      ub = "1024";
-      ctk = "q4_0";
-      ctv = "q4_0";
-      ctx-size = "8192";
-      flash-attn = "on";
-      fit = "on";
-      mmproj-auto = "on";
-      no-mmproj-offload = "on";
-      spec-default = "on";
-      context-shift = "on";
+    settings = {
+      host = "0.0.0.0";
+      port = ports.llama-cpp;
+      # Only one model loaded at max
+      models-max = "1";
+      # Try to keep threads on a single CPU (asiyah has two)
+      numa = "isolate";
+      # Load models automatically
+      models-autoload = "";
+      # Stay active for 10 minutes, then sleep...
+      # sleep-idle-seconds = "600";
+      slot-save-path = "/var/cache/llama-cpp/slots";
+      models-preset = toString (pkgs.writeText "model-presets.ini" (lib.generators.toINI {} { 
+        "Qwen3.5-2B" = {
+          hf = "Jackrong/Qwen3.5-2B-Claude-4.6-Opus-Reasoning-Distilled-GGUF:Q6_K";
+          alias = "hass-default,frigate-default";
+          parallel = "1";
+          /*temp = "0.7";
+          top-p = "0.8";
+          top-k = "20";
+          min-p = "0.0";
+          presence-penalty = "1.5";
+          repeat-penalty = "1.0";*/
+          reasoning = "on";
+          reasoning-budget = "128";
+          reasoning-budget-message = "... Reasoning budget exhausted. I should have enough to answer now.";
+          /*t = "18";
+          tb = "18";
+          b = "2048";
+          ub = "1024";*/
+          /*ctk = "q4_0";
+          ctv = "q4_0";*/
+          flash-attn = "on";
+          fit = "on";
+          jinja = "on";
+          mmproj-auto = "on";
+          no-mmproj-offload = "on";
+          spec-default = "on";
+          context-shift = "on";
+        };
+      }));
     };
   };
+
+  environment.systemPackages = [
+    config.services.llama-cpp.package
+  ];
 
   services.open-webui = {
     enable = true;
