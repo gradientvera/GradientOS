@@ -15,6 +15,7 @@ in
   config = lib.mkMerge [
     (lib.mkIf (cfg.enable) {
       catppuccin.enable = true;
+      catppuccin.autoEnable = true;
       catppuccin.flavor = lib.mkDefault "mocha";
       
       catppuccin.plymouth.enable = true;
