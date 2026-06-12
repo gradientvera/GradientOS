@@ -79,7 +79,7 @@ in
         provider = "openai";
         base_url = "http://127.0.0.1:${toString ports.llama-cpp}";
         api_key = "";
-        model = "Qwen3.5-9B-Q4_K_M";
+        model = "frigate-default";
       };
 
       review = {
