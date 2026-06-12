@@ -131,10 +131,11 @@ in
       thermal-comfort
       # google-find-my # TODO: fix...
       anniversaries
+      local_openai # for the task
       bodymiscale
       # feedparser # TODO: fix
       moonraker
-      home-llm
+      home-llm # for the assistant
       ingress
       smartir
       frigate
@@ -247,13 +248,13 @@ in
           url = "http://127.0.0.1:${toString ports.llama-cpp}/models/load";
           method = "post";
           content_type = "application/json";
-          payload = ''{ "model": "{{ model }}" }'';
+          payload = "{\"model\": \"{{ model }}\"}";
         };
         llama_cpp_unload_model = {
           url = "http://127.0.0.1:${toString ports.llama-cpp}/models/unload";
           method = "post";
           content_type = "application/json";
-          payload = ''{ "model": "{{ model }}" }'';
+          payload = "{\"model\": \"{{ model }}\"}";
         };
       };
 
