@@ -20,6 +20,7 @@
     faster-whisper.servers.english = {
       enable = true;
       language = "en";
+      model = "small-int8";
       zeroconf.enable = true;
       uri = "tcp://0.0.0.0:${toString ports.whisper-english}";
     };
@@ -27,6 +28,7 @@
     faster-whisper.servers.spanish = {
       enable = true;
       language = "es";
+      model = "small-int8";
       zeroconf.enable = true;
       uri = "tcp://0.0.0.0:${toString ports.whisper-spanish}";
     };
@@ -40,6 +42,10 @@
       ];
     };
   };
+
+  # Same as the threads in a single CPU on asiyah
+  systemd.services.wyoming-faster-whisper-english.environment.OMP_NUM_THREADS = "36";
+  systemd.services.wyoming-faster-whisper-spanish.environment.OMP_NUM_THREADS = "36";
 
   systemd.tmpfiles.settings."10-openwakeword"."/data/openwakeword".d = {
     mode = "0777";
