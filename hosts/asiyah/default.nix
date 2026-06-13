@@ -24,8 +24,10 @@
     # ./olivetin.nix # TODO: Re-enable and re-do config after https://github.com/NixOS/nixpkgs/pull/498611 
     ./postgres.nix
     ./scrutiny.nix
+    ./llama-cpp.nix
     ./paperless.nix
     ./cloudflare.nix
+    ./open-webui.nix
     ./filesystems.nix
     ./vaultwarden.nix
     ./media-stack.nix
@@ -39,7 +41,6 @@
     ./secrets/default.nix
     #./libvirtd/default.nix # Unused, removed SSD for now
     ./redbot-stardream.nix
-    ./large-lying-models.nix
     ./gradient-generator.nix
     # ./project-zomboid-server.nix
     ./hardware-configuration.nix
