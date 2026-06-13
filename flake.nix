@@ -100,6 +100,11 @@
       url = "github:ggml-org/llama.cpp";
       inputs.nixpkgs.follows = "nixpkgs";
     };
+
+    ik-llama-cpp = {
+      url = "github:ikawrakow/ik_llama.cpp";
+      inputs.nixpkgs.follows = "nixpkgs";
+    };
   };
 
   outputs = { self, nixpkgs, gradient-generator, jovian-nixos, sops-nix, nixos-hardware, cryolitia-nur, lanzaboote, ... }:
