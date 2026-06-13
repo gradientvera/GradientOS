@@ -132,15 +132,19 @@ in
       # google-find-my # TODO: fix...
       anniversaries
       local_openai # for the task
+      ha_mcp_tools
+      llm_intents
       bodymiscale
       # feedparser # TODO: fix
       moonraker
       home-llm # for the assistant
+      valetudo
       ingress
       smartir
       frigate
       bermuda
       edata
+      spook
 
       #auth_oidc # disable for now, not really that good
       
