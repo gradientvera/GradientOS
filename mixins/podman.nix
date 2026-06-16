@@ -15,6 +15,14 @@
 
   virtualisation.oci-containers.backend = "podman";
 
+  virtualisation.containers = {
+    enable = true;
+    registries.search = [
+      "docker.io"
+      "ghcr.io"
+    ];
+  };
+
   # Allow accesing published ports...
   boot.kernel.sysctl."net.ipv4.conf.podman0.route_localnet" = 1;
 
