@@ -11,8 +11,10 @@ logs HOST UNIT: (run HOST "sudo journalctl -xefu" UNIT)
 check:
     nix flake check --keep-going --show-trace
 
-playbook *args:
-    nix run .\#ansible-playbook -- -v {{ args }}
+# funny hehe
+vacuum:
+    rsync -e 'ssh -p 222' -avzP --chmod=0760 --chown=root:root ./misc/vacuum/ root@vacuum-angela:/data
+    rsync -e 'ssh -p 222' -avzP --chmod=0760 --chown=root:root ./misc/vacuum/ root@vacuum-mute:/data
 
 [group('deployment')]
 update-inputs:
