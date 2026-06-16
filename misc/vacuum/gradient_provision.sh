@@ -66,9 +66,11 @@ provision() {
   apk fix --reinstall ca-certificates
 
   echo "Installing system utilities..."
-  apk add gcompat curl wget busybox nano espeak-ng jq
+  apk add gcompat curl wget busybox nano espeak-ng jq rsync
 
+  echo "Writing hostname..."
   export FRIENDLY_NAME=$(cat /data/valetudo_config.json | jq .valetudo.customizations.friendlyName -r)
+  echo "vacuum-$($FRIENDLY_NAME | tr '[:upper:]' '[:lower:]')" > /etc/hostname
 
   echo "Installing Pulseaudio emulator for ALSA..."
   apk add apulse --repository=http://dl-cdn.alpinelinux.org/alpine/edge/testing/
@@ -99,16 +101,16 @@ provision() {
   echo "Installing sops and age..."
   apk add sops age
 
-  mkdir -p /etc/age
+  mkdir -p /data/age
 
-  if ! [ -f "/etc/age/keys.txt" ]; then
+  if ! [ -f "/data/age/keys.txt" ]; then
       echo "Generating age keys..."
-      age-keygen -o /etc/age/keys.txt
-      age-keygen -y /etc/age/keys.txt > /etc/age/pub-keys.txt
+      age-keygen -o /data/age/keys.txt
+      age-keygen -y /data/age/keys.txt > /data/age/pub-keys.txt
   fi
 
-  export SOPS_AGE_KEY_FILE="/etc/age/keys.txt"
-  export SOPS_SECRETS_FILE="/etc/secrets.yml"
+  export SOPS_AGE_KEY_FILE="/data/age/keys.txt"
+  export SOPS_SECRETS_FILE="/data/secrets/secrets.yml"
 
   # Publish camera photos to MQTT
   if [[ -x "/data/gradient_publish_photo.sh" ]]; then
