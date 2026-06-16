@@ -64,7 +64,7 @@ rec {
 
       specialArgs =
       {
-        inherit self;
+        inherit self system;
         ports = mkPorts name;
       } // specialArgs;
 
