@@ -16,6 +16,9 @@ provision() {
 
   mkdir -p /opt
 
+  # ALSA config
+  ln -s /tmp/.asoundrc /etc/asound.conf
+
   echo "Fixing DNS config..."
 
   # Tailscale breaks resolv.conf unless tailscaled is running, so we fix this...
@@ -132,8 +135,30 @@ provision() {
 
   echo "Installing and executing MPD daemon..."
   apk add mpd
-  pkill -f "mpd --no-config" || true
-  mpd --no-config &
+
+  rm -f /data/mpd.conf
+  cat >/data/mpd.conf <<'EOF'
+bind_to_address "any"
+port "6600"
+log_file "/tmp/mpd.log"
+pid_file "/tmp/mpd.pid"
+zeroconf_enabled "yes"
+zeroconf_name "Music Player @ %h"
+input {
+  plugin "curl"
+}
+audio_output {
+  type "alsa"
+  name "ALSA Output"
+  auto_channels "yes"
+  auto_resample "yes"
+  auto_format "yes"
+  mixer_type "software"
+}
+EOF
+
+  pkill -f "mpd /data/mpd.conf" || true
+  mpd /data/mpd.conf &
 
   # Tailscale
   mkdir -p /data/tailscale-state
