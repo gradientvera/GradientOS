@@ -11,7 +11,7 @@
       HOME = "/var/lib/open-webui";
 
       ENABLE_OPENAI_API = "true";
-      OPENAI_API_BASE_URL = "http://127.0.0.1:${toString ports.llama-cpp}/v1";
+      OPENAI_API_BASE_URL = "http://127.0.0.1:${toString ports.llama-swap}/v1";
 
       ENABLE_RAG_WEB_SEARCH = "True";
       RAG_WEB_SEARCH_ENGINE = "searxng";
@@ -40,7 +40,7 @@
 
   systemd.services.open-webui = {
     wants = [ "redis-open-webui.service" "searx.service" ];
-    after = [ "redis-open-webui.service" "searx.service" "llama-cpp.service" ];
+    after = [ "redis-open-webui.service" "searx.service" "llama-swap.service" ];
   };
 
 }
