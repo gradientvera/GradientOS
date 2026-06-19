@@ -97,6 +97,14 @@ in {
 
   moonraker = prev.moonraker.overrideAttrs (final.moonraker-timelapse.moonrakerOverrideAttrs);
 
+  smartgit = prev.smartgit.overrideAttrs (prevAttrs: {
+    version = "26.1.38";
+    src = prev.fetchurl {
+      url = "https://download.smartgit.dev/smartgit/smartgit-26_1_038-linux-amd64.tar.gz";
+      hash = "sha256-RiCx8EUPT+6ahUvFcgkF2p0Op8ATur8p6S7c2d1s2K4=";
+    };
+  });
+
   steam = prev.steam.override steam-override;
   steam-original-fixed = final.unstable.steam.override steam-override;
   steam-deck-client = prev.callPackage ../pkgs/steam-deck-client.nix { };
