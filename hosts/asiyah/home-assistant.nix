@@ -232,10 +232,11 @@ in
 
       media_player = [ ];
 
+      # FIXME: use llama-swap
       rest = [
         {
           scan_interval = 60;
-          resource = "http://127.0.0.1:${toString ports.llama-cpp}/models";
+          resource = "http://127.0.0.1:${toString ports.llama-swap}/v1/models";
           sensor = [
             {
               name = "llama-cpp default model";
@@ -247,15 +248,16 @@ in
         }
       ];
 
+      # FIXME: use llama-swap
       rest_command = {
         llama_cpp_load_model = {
-          url = "http://127.0.0.1:${toString ports.llama-cpp}/models/load";
+          url = "http://127.0.0.1:${toString ports.llama-swap}/models/load";
           method = "post";
           content_type = "application/json";
           payload = "{\"model\": \"{{ model }}\"}";
         };
         llama_cpp_unload_model = {
-          url = "http://127.0.0.1:${toString ports.llama-cpp}/models/unload";
+          url = "http://127.0.0.1:${toString ports.llama-swap}/models/unload";
           method = "post";
           content_type = "application/json";
           payload = "{\"model\": \"{{ model }}\"}";

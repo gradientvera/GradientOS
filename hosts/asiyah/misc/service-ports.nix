@@ -94,8 +94,7 @@
   openwebrx = 8073;
   nut = 3493;
   open-webui = 8100;
-  llama-cpp = 11435;
-  ik-llama-cpp = 11436;
+  llama-swap = 11435;
   uptime-kuma = 4003;
   attic = 8060;
   wgautomesh-gossip = 1666;

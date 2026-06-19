@@ -77,9 +77,9 @@ in
       genai = {
         enabled = true;
         provider = "openai";
-        base_url = "http://127.0.0.1:${toString ports.ik-llama-cpp}";
+        base_url = "http://127.0.0.1:${toString ports.llama-swap}";
         api_key = "";
-        model = "Qwen3.5-35B_A3B-CPU";
+        model = "frigate-default";
       };
 
       review = {

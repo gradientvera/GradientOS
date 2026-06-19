@@ -5,6 +5,7 @@
   { name = "jellyfin"; type = "Player-Video"; }
   { name = "ErsatzTV"; type = "Player-Video"; }
   { name = "ffmpeg"; type = "Heavy_CPU"; }
+  { name = "llama-server"; type = "Heavy_CPU"; }
   { name = "tdarr-ffmpeg"; type = "Heavy_CPU"; }
   { name = "mmproxy"; type = "LowLatency_RT"; }
 
