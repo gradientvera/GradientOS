@@ -170,7 +170,7 @@ in
       # Enable the KDE Plasma Desktop Environment.
       services.displayManager.enable = true;
       services.desktopManager.plasma6.enable = true;
-      services.displayManager.plasma-login-manager.enable = true;
+      services.displayManager.plasma-login-manager.enable = lib.mkDefault true;
 
       # Do not allow using passkey for login
       security.pam.services.kde.u2fAuth = lib.mkForce false;
