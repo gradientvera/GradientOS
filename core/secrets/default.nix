@@ -59,6 +59,10 @@ in
           group = "crowdsec";
           restartUnits = [ "crowdsec.service" ];
         };
+        huggingface-readonly-token = lib.mkIf config.services.llama-swap.enable {
+          sopsFile = ./secrets.yml;
+          restartUnits = [ "llama-swap.service" ];
+        };
       };
     }))
   ];

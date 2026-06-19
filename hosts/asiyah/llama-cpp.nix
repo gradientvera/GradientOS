@@ -4,17 +4,12 @@ let
 in
 {
 
+  # Can harm performance with ik_llama.cpp CPU inference
   boot.kernel.sysctl."kernel.numa_balancing" = 0;
 
+  # Create a folder under state dir for each instance
   systemd.tmpfiles.settings."10-llama-swap.conf" = 
-  let
-    rule = { mode = "750"; };
-  in
-  {
-    # Just make a directory per model...
-    "${stateDir}/1".d = rule;
-    "${stateDir}/2".d = rule;
-  };
+    (lib.mapAttrs' (n: v: lib.nameValuePair ("${stateDir}/${n}") { d.mode = "750"; }) config.services.llama-swap.settings.models);
 
   services.llama-swap = {
     enable = true;
@@ -31,19 +26,20 @@ in
 
       models = let
         # see https://github.com/ggml-org/llama.cpp/blob/master/tools/server/README.md
-        llama-cpp-server = "${self.inputs.llama-cpp.packages.${system}.vulkan}/bin/llama-server";
+        llama-cpp-vulkan-server = "${self.inputs.llama-cpp.packages.${system}.vulkan}/bin/llama-server";
         # see https://github.com/ikawrakow/ik_llama.cpp/blob/main/examples/server/README.md
-        ik-llama-cpp-server = "${self.inputs.ik-llama-cpp.packages.${system}.vulkan}/bin/llama-server";
-        mkCmd = { serverPath ? llama-cpp-server, ... }@args: "${serverPath} ${lib.cli.toGNUCommandLineShell {} (removeAttrs args ["serverPath"])}";
+        ik-llama-cpp-cpu-server = "${self.inputs.ik-llama-cpp.packages.${system}.mpi-cpu}/bin/llama-server";
+        mkCmd = { serverPath ? llama-cpp-vulkan-server, ... }@args: "${serverPath} ${lib.cli.toGNUCommandLineShell {} (removeAttrs args ["serverPath"])}";
       in
       {
 
         "Qwen3.5-2B-GPU" = {
           aliases = [ "hass-default" ];
           cmd = mkCmd {
-            serverPath = llama-cpp-server;
+            serverPath = llama-cpp-vulkan-server;
             port = "\${PORT}";
-            hf-repo = "Jackrong/Qwen3.5-2B-Claude-4.6-Opus-Reasoning-Distilled-GGUF:Q6_K";
+            model = "${stateDir}/Qwen3.5-2B-GPU/Qwen3.5-2B.Q6_K.gguf";
+            mmproj = "${stateDir}/Qwen3.5-2B-GPU/mmproj-BF16.gguf";
             temp = "0.7";
             top-p = "0.8";
             top-k = "20";
@@ -65,20 +61,19 @@ in
             no-mmproj-offload = true;
             spec-default = true;
             context-shift = true;
-            slot-save-path = "${stateDir}/1";
+            slot-save-path = "${stateDir}/Qwen3.5-2B-GPU";
           };
-          env = [ "LLAMA_CACHE=${stateDir}/1" "MESA_SHADER_CACHE_DIR=${stateDir}/1" ];
+          env = [ "LLAMA_CACHE=${stateDir}/Qwen3.5-2B-GPU" "MESA_SHADER_CACHE_DIR=${stateDir}/Qwen3.5-2B-GPU" ];
         };
 
         "Qwen3.5-35B-A3B-CPU" = {
           aliases = [ "frigate-default" ];
           cmd = mkCmd {
-            serverPath = ik-llama-cpp-server;
+            serverPath = ik-llama-cpp-cpu-server;
             port = "\${PORT}";
             numa = "isolate";
-            hf-repo = "unsloth/Qwen3.5-35B-A3B-MTP-GGUF";
-            hf-file = "Qwen3.5-35B-A3B-Q8_0.gguf";
-            mmproj = "${stateDir}/2/mmproj-F16.gguf";
+            model = "${stateDir}/Qwen3.5-35B-A3B-CPU/Qwen3.5-35B-A3B-Q8_0.gguf";
+            mmproj = "${stateDir}/Qwen3.5-35B-A3B-CPU/mmproj-F16.gguf";
             spec-type = "mtp:n_max=1,p_min=0.0";
             parallel = "1";
             gpu-layers = "0";
@@ -102,34 +97,72 @@ in
             no-kv-offload = true;
             run-time-repack = true;
             mlock = true;
-            slot-save-path = "${stateDir}/2";
+            slot-save-path = "${stateDir}/Qwen3.5-35B-A3B-CPU";
           };
-          env = [ "LLAMA_CACHE=${stateDir}/2" "MESA_SHADER_CACHE_DIR=${stateDir}/2" ];
+          env = [ "LLAMA_CACHE=${stateDir}/Qwen3.5-35B-A3B-CPU" "MESA_SHADER_CACHE_DIR=${stateDir}/Qwen3.5-35B-A3B-CPU" ];
         };
 
       };
+
+      # wtf is this?
+      matrix = {
+        vars = {
+          a = "Qwen3.5-2B-GPU";
+          b = "Qwen3.5-35B-A3B-CPU";
+        };
+        evict_costs = {
+          a = 10; # small model on the GPU, loads fast
+          b = 50; # large model on the CPU, loads slowly
+        };
+        sets = {
+          # models that run on the GPU
+          gpu = "(a)";
+
+          # models that run on the CPU
+          cpu = "(b)";
+
+          # run models on both the GPU and CPU
+          final = "+gpu & +cpu";
+        };
+      };
+
       hooks.on_startup.preload = [
         "Qwen3.5-2B-GPU"
         "Qwen3.5-35B-A3B-CPU"
       ];
-
     };
   };
 
   systemd.services.llama-swap = {
+    wants = [ "network-online.target" ];
+    after = [ "network-online.target" ];
+
     # To put downloaded models somewhere
     serviceConfig = {
+      # For hf hub
+      CacheDirectory = "llama-swap";
       StateDirectory = "llama-swap";
-      RuntimeDirectory = "llama-swap";
       LimitMEMLOCK = "infinity"; # wew lass
+      TimeoutStartSec = "15min"; # listen, these things take time to download alright?
+      LoadCredential = "hf-token:${config.sops.secrets.huggingface-readonly-token.path}";
     };
-    # Download any missing files -- mostly for ik_llama.cpp mmproj downloads
+    # Download models beforehand (will not redownload unless missing)
+    path = [ pkgs.python313Packages.huggingface-hub ];
     preStart = ''
-      if [ ! -f "${stateDir}/2/mmproj-F16.gguf" ]; then
-        pushd ${stateDir}/2
-        ${toString pkgs.curl}/bin/curl -L -O https://huggingface.co/unsloth/Qwen3.5-35B-A3B-MTP-GGUF/resolve/main/mmproj-F16.gguf
-        popd
-      fi
+      export HF_HOME=/var/cache/llama-swap
+      TOKEN=$(cat $CREDENTIALS_DIRECTORY/hf-token)
+
+      hf download Jackrong/Qwen3.5-2B-Claude-4.6-Opus-Reasoning-Distilled-GGUF \
+        --include "Qwen3.5-2B.Q6_K.gguf" \
+        --include "mmproj-BF16.gguf" \
+        --local-dir "${stateDir}/Qwen3.5-2B-GPU" \
+        --token $TOKEN
+
+      hf download unsloth/Qwen3.5-35B-A3B-MTP-GGUF \
+        --include "Qwen3.5-35B-A3B-Q8_0.gguf" \
+        --include "mmproj-F16.gguf" \
+        --local-dir "${stateDir}/Qwen3.5-35B-A3B-CPU" \
+        --token $TOKEN
     '';
   };
 
