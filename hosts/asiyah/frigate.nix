@@ -77,7 +77,7 @@ in
       genai = {
         enabled = true;
         provider = "openai";
-        base_url = "http://127.0.0.1:${toString ports.llama-swap}";
+        base_url = "http://127.0.0.1:${toString ports.llama-swap}/v1";
         api_key = "";
         model = "frigate-default";
       };
