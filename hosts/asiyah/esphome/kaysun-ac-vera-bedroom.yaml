@@ -85,8 +85,14 @@ climate:
 remote_transmitter:
   id: ir_tx
   pin: GPIO26
+  non_blocking: true
   # RF uses a 100% carrier signal
   carrier_duty_percent: 50%
+
+infrared:
+  - platform: ir_rf_proxy
+    name: IR Transmitter
+    remote_transmitter_id: ir_tx
 
 switch:
   - platform: template
@@ -163,3 +169,8 @@ sensor:
 binary_sensor:
   - platform: status
     name: Kaysun AC Vera Bedroom Controller Status
+
+esp32_ble_tracker:
+
+bluetooth_proxy:
+  active: true

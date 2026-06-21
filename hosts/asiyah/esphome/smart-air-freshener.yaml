@@ -84,8 +84,7 @@ spi:
 cc1101:
   id: transceiver
   cs_pin: GPIO19
-  output_power: 7
-  frequency: 434.110MHz
+  output_power: 2
 
 number:
   - platform: template
@@ -100,28 +99,31 @@ number:
 
 remote_transmitter:
   pin: GPIO18  # GDO0
+  id: rf_tx
+  non_blocking: true
   carrier_duty_percent: 100%
   on_transmit:
     then:
-      #- esp32_ble_tracker.stop_scan:
-      #- lambda: |- 
-      #     id(ble_proxy)->set_active(false);
       - cc1101.begin_tx: transceiver
   on_complete:
     then:
-      - cc1101.set_idle: transceiver
-      #- lambda: |- 
-      #     id(ble_proxy)->set_active(true);
-      #- esp32_ble_tracker.start_scan:
-      #      continuous: true
+      - cc1101.begin_rx: transceiver
 remote_receiver:
   pin: GPIO14  # GDO2
-  # dump:
-    # - rc_switch
-    # - raw
+  id: rf_rx
   tolerance: 50%
   filter: 250us
   idle: 4ms
+
+radio_frequency:
+  - platform: ir_rf_proxy
+    name: 433MHz RF Transmitter
+    frequency: 433.92MHz
+    remote_transmitter_id: rf_tx
+  - platform: ir_rf_proxy
+    name: 433MHz RF Receiver
+    frequency: 433.92MHz
+    remote_receiver_id: rf_rx
 
 api:
   services:
@@ -131,6 +133,7 @@ api:
         repeat: int
       then:
         - remote_transmitter.transmit_raw:
+            id: rf_tx
             code: !lambda 'return code;'
             repeat: 
               times: !lambda 'return repeat;'
@@ -148,6 +151,7 @@ script:
       repeat: int
     then:
       - remote_transmitter.transmit_raw:
+          id: rf_tx
           code: !lambda |-
             std::vector<long int> vec;
             for (int i = 0; i < code.length(); i++) {
