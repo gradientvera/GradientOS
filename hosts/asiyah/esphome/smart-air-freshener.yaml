@@ -179,6 +179,13 @@ button:
       - output.turn_on: dac_output
       - output.set_level:
           id: dac_output_inv
+          level: 0%
+      - output.set_level:
+          id: dac_output
+          level: 100%
+      - delay: 0.125s
+      - output.set_level:
+          id: dac_output_inv
           level: 100%
       - output.set_level:
           id: dac_output
