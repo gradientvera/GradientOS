@@ -3,10 +3,10 @@
 }:
 let
   pname = "es-de";
-  version = "3.4.0";
+  version = "3.4.1-58";
   src = fetchurl {
-    url = "https://gitlab.com/es-de/emulationstation-de/-/package_files/246875981/download";
-    hash = "sha256-TLZs/JIwmXEc+g7d2D22R0SmKU4C4//Rnuhn93qI7H4=";
+    url = "https://gitlab.com/es-de/emulationstation-de/-/package_files/288156961/download";
+    hash = "sha256-PGGkTXONVRY9qljt5wcgtCWg32JGDATcI908pYZyNYE=";
   };
   appimageContents = appimageTools.extract {
     inherit pname version src;
