@@ -84,6 +84,7 @@ in
 
       environment.systemPackages = with pkgs; [
         kdePackages.filelight
+        kdePackages.krfb
         moonlight-qt
         ego
       ];
