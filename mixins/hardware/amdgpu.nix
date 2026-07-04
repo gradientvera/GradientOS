@@ -40,6 +40,7 @@
 
   environment.systemPackages = with pkgs; [
     nvtopPackages.amd
+    (btop-rocm // { meta.priority = 1; })
   ];
 
   hardware.graphics.extraPackages = with pkgs; [

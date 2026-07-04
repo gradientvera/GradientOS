@@ -71,7 +71,7 @@ in
       gmic
       lsof
       htop
-      btop
+      (btop // { meta.priority = 10; })
       file
       cloc
       nil
