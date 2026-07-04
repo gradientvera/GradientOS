@@ -18,6 +18,13 @@
   # Modern driver
   environment.sessionVariables = { LIBVA_DRIVER_NAME = "iHD"; };
 
+  security.wrappers.btop = {
+    source = "${pkgs.btop}/bin/btop";
+    capabilities = "cap_perfmon+ep";
+    owner = "root";
+    group = "root";
+  };
+
   hardware.graphics = {
     enable = true;
     enable32Bit = true;
