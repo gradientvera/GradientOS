@@ -2,6 +2,7 @@
   core = ./core/default.nix;
 
   alloy = ./mixins/alloy.nix;
+  autofirma = ./mixins/autofirma.nix;
   binfmt-emulation = ./mixins/binfmt-emulation.nix;
   container-linux-voice-assistant = ./mixins/container-linux-voice-assistant.nix;
   crowdsec = ./mixins/crowdsec.nix;

@@ -77,8 +77,13 @@
     };
 
     lanzaboote = {
-      url = "github:nix-community/lanzaboote/v1.0.0";
+      url = "github:nix-community/lanzaboote/v1.1.0";
       inputs.nixpkgs.follows = "nixpkgs";
+    };
+
+    autofirma-nix = {
+      url = "github:nix-community/autofirma-nix";
+      # inputs.nixpkgs.follows = "nixpkgs";
     };
 
     crp3092 = {
@@ -131,6 +136,7 @@
           mixins.alloy
           mixins.podman
           #mixins.plymouth
+          mixins.autofirma
           mixins.tailscale
           mixins.wireguard
           mixins.uwu-style
