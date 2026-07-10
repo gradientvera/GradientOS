@@ -64,7 +64,7 @@ in
 
   services.tika = {
     enable = true;
-    package = pkgs.stable.tika;
+    package = pkgs.tika;
     port = ports.tika;
     enableOcr = true;
   };

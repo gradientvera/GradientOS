@@ -309,11 +309,11 @@ in
         # -- Standalone emulators --
         azahar # 3DS
         dolphin-emu # Wii / GC
-        stable.cemu # WiiU
+        cemu # WiiU
         ryubing-canary # Switch
         pcsx2 # PS2
-        stable.rpcs3 # PS3
-        stable.shadps4 # PS4
+        rpcs3 # PS3
+        shadps4 # PS4
         ruffle # Flash
         # -- Utilities --
         emulationstation-de

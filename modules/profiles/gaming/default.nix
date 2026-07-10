@@ -79,7 +79,7 @@ in
         capSysAdmin = true;
         openFirewall = true;
         autoStart = lib.mkDefault false;
-        package = pkgs.stable.sunshine;
+        package = pkgs.sunshine;
       };
 
       services.joycond.enable = true;
@@ -94,7 +94,7 @@ in
         xivlauncher
         steam-run
         heroic
-        stable.lutris
+        lutris
       ];
     })
 
