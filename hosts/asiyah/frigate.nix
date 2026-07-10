@@ -1,4 +1,4 @@
-{ config, pkgs, ports, ... }:
+{ config, pkgs, lib, ports, ... }:
 let
   addresses = config.gradient.const.addresses;
   localAddresses = config.gradient.const.localAddresses;
@@ -8,6 +8,7 @@ in
 
   services.frigate = {
     enable = true;
+    package = pkgs.master.frigate;
     checkConfig = false;
     hostname = "frigate.asiyah.gradient.moe";
     vaapiDriver = "iHD";

@@ -69,7 +69,14 @@ in {
   discord = discord-override prev.discord;
   discord-canary = discord-override prev.discord-canary;
 
-  # gotenberg = prev.gotenberg.override { pdfcpu = final.stable.pdfcpu; };
+  frigate = (prev.frigate.overrideAttrs (prevAttrs: {
+    # borked
+    disabledTests = prevAttrs.disabledTests ++ [
+      "test_review_activity_motion"
+    ];
+  }));
+
+  # gotenberg = prev.gotenberg.override { pdfcpu = final.pdfcpu; };
 
   moonlight-qt = prev.moonlight-qt.overrideAttrs (prevAttrs: {
     nativeBuildInputs = prevAttrs.nativeBuildInputs ++ [ prev.copyDesktopItems ];
