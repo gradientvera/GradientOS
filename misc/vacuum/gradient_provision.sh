@@ -72,8 +72,8 @@ provision() {
   apk add gcompat curl wget busybox nano espeak-ng jq rsync
 
   echo "Writing hostname..."
-  export FRIENDLY_NAME=$(cat /data/valetudo_config.json | jq .valetudo.customizations.friendlyName -r)
-  echo "vacuum-$($FRIENDLY_NAME | tr '[:upper:]' '[:lower:]')" > /etc/hostname
+  export FRIENDLY_NAME="$(cat /data/valetudo_config.json | jq .valetudo.customizations.friendlyName -r)"
+  echo "vacuum-$(echo "$FRIENDLY_NAME" | tr '[:upper:]' '[:lower:]')" > /etc/hostname
 
   echo "Installing Pulseaudio emulator for ALSA..."
   apk add apulse --repository=http://dl-cdn.alpinelinux.org/alpine/edge/testing/
