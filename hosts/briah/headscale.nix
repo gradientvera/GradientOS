@@ -33,7 +33,7 @@ in
       server_url = "https://headscale.constellation.moe:${toString ports.https}";
       noise.private_key_path = config.sops.secrets.headscale-noise-key.path;
       database.type = "sqlite";
-      dns.base_domain = "tailnet.constellation.moe";
+      dns.base_domain = addresses.tailscale-domain;
       dns.nameservers.global = [
         "1.1.1.1"
         "1.0.0.1"

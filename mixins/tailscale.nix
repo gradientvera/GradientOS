@@ -1,5 +1,6 @@
 { config, pkgs, lib, ... }:
 let
+  addresses = config.gradient.const.addresses;
   hostName = config.networking.hostName;
   isBriah = hostName == "briah";
   isAsiyah = hostName == "asiyah";
@@ -58,11 +59,11 @@ in
   environment.systemPackages = if config.gradient.profiles.desktop.enable then [ pkgs.tail-tray ] else [];
 
   environment.etc."NetworkManager/dnsmasq.d/tailscale.conf".text = ''
-server=/tailnet.constellation.moe/100.100.100.100
-domain=tailnet.constellation.moe
+server=/${addresses.tailscale-domain}/100.100.100.100
+domain=${addresses.tailscale-domain}
 '';
 
   networking.search = [
-    "tailnet.constellation.moe"
+    addresses.tailscale-domain
   ];
 }
