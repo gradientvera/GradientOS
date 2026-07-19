@@ -9,7 +9,7 @@ in
 
   # Create a folder under state dir for each instance
   systemd.tmpfiles.settings."10-llama-swap.conf" = 
-    (lib.mapAttrs' (n: v: lib.nameValuePair ("${stateDir}/${n}") { d.mode = "750"; }) config.services.llama-swap.settings.models);
+    (lib.mapAttrs' (n: v: lib.nameValuePair ("${stateDir}/${n}") { d = { mode = "750"; user = "nobody"; group = "nogroup"; }; }) config.services.llama-swap.settings.models);
 
   services.llama-swap = {
     enable = true;
@@ -33,51 +33,48 @@ in
       in
       {
 
-        "Qwen3.5-2B-GPU" = {
-          aliases = [ "hass-default" ];
+        "Bonsai-27B-GPU" = {
+          aliases = [ "hass-default" "frigate-default" ];
           cmd = mkCmd {
             serverPath = llama-cpp-vulkan-server;
             port = "\${PORT}";
-            model = "${stateDir}/Qwen3.5-2B-GPU/Qwen3.5-2B.Q6_K.gguf";
-            mmproj = "${stateDir}/Qwen3.5-2B-GPU/mmproj-BF16.gguf";
+            model = "${stateDir}/Bonsai-27B/Bonsai-27B-Q1_0.gguf";
+            mmproj = "${stateDir}/Bonsai-27B/Bonsai-27B-mmproj-Q8_0.gguf";
             temp = "0.7";
-            top-p = "0.8";
+            top-p = "0.95";
             top-k = "20";
-            min-p = "0.0";
-            presence-penalty = "1.5";
-            repeat-penalty = "1.0";
             reasoning = "on";
-            reasoning-budget = "128";
+            reasoning-budget = "2048";
             reasoning-budget-message = "\"... Reasoning budget exhausted. I should have enough to answer now.\"";
             numa = "isolate";
             threads = "18";
             threads-batch = "18";
-            batch-size = "2048";
-            ubatch-size = "1024";
-            fit = "on";
+            cache-type-k = "q4_0";
+            cache-type-v = "q4_0";
             flash-attn = "on";
+            cache-ram = "${toString (1024 * 64)}";
+            ctx-checkpoints = "128";
             jinja = true;
             mmproj-auto = true;
             no-mmproj-offload = true;
             spec-default = true;
             context-shift = true;
-            slot-save-path = "${stateDir}/Qwen3.5-2B-GPU";
+            slot-save-path = "${stateDir}/Bonsai-27B-GPU";
           };
-          env = [ "LLAMA_CACHE=${stateDir}/Qwen3.5-2B-GPU" "MESA_SHADER_CACHE_DIR=${stateDir}/Qwen3.5-2B-GPU" ];
+          env = [ "LLAMA_CACHE=${stateDir}/Bonsai-27B-GPU" "MESA_SHADER_CACHE_DIR=${stateDir}/Bonsai-27B-GPU" ];
         };
 
-        "Qwen3.5-35B-A3B-CPU" = {
+        /*"Bonsai-27B-CPU" = {
           aliases = [ "frigate-default" ];
           cmd = mkCmd {
             serverPath = ik-llama-cpp-cpu-server;
             port = "\${PORT}";
             numa = "isolate";
-            model = "${stateDir}/Qwen3.5-35B-A3B-CPU/Qwen3.5-35B-A3B-Q8_0.gguf";
-            mmproj = "${stateDir}/Qwen3.5-35B-A3B-CPU/mmproj-F16.gguf";
-            spec-type = "mtp:n_max=1,p_min=0.0";
+            model = "${stateDir}/Bonsai-27B/Bonsai-27B-Q1_0.gguf";
+            mmproj = "${stateDir}/Bonsai-27B/Bonsai-27B-mmproj-Q8_0.gguf";
             parallel = "1";
             gpu-layers = "0";
-            temp = "1.0";
+            temp = "0.7";
             top-p = "0.95";
             top-k = "20";
             min-p = "0.00";
@@ -89,46 +86,46 @@ in
             reasoning-budget = "128";
             reasoning-budget-message = "\"... Reasoning budget exhausted. I should have enough to answer now.\"";
             threads = "18";
-            cache-type-k = "q8_0";
-            cache-type-v = "q8_0";
+            cache-type-k = "q4_0";
+            cache-type-v = "q4_0";
             flash-attn = "on";
             jinja = true;
             no-mmproj-offload = true;
             no-kv-offload = true;
             run-time-repack = true;
             mlock = true;
-            slot-save-path = "${stateDir}/Qwen3.5-35B-A3B-CPU";
+            slot-save-path = "${stateDir}/Bonsai-27B-CPU";
           };
-          env = [ "LLAMA_CACHE=${stateDir}/Qwen3.5-35B-A3B-CPU" "MESA_SHADER_CACHE_DIR=${stateDir}/Qwen3.5-35B-A3B-CPU" ];
-        };
+          env = [ "LLAMA_CACHE=${stateDir}/Bonsai-27B-CPU" "MESA_SHADER_CACHE_DIR=${stateDir}/Bonsai-27B-CPU" ];
+        };*/
 
       };
 
       # wtf is this?
       matrix = {
         vars = {
-          a = "Qwen3.5-2B-GPU";
-          b = "Qwen3.5-35B-A3B-CPU";
+          a = "Bonsai-27B-GPU";
+          #b = "Bonsai-27B-CPU";
         };
         evict_costs = {
           a = 10; # small model on the GPU, loads fast
-          b = 50; # large model on the CPU, loads slowly
+          #b = 50; # large model on the CPU, loads slowly
         };
         sets = {
           # models that run on the GPU
           gpu = "(a)";
 
           # models that run on the CPU
-          cpu = "(b)";
+          #cpu = "(b)";
 
           # run models on both the GPU and CPU
-          final = "+gpu & +cpu";
+          #final = "+gpu & +cpu";
         };
       };
 
       hooks.on_startup.preload = [
-        "Qwen3.5-2B-GPU"
-        "Qwen3.5-35B-A3B-CPU"
+        "Bonsai-27B-GPU"
+        #"Bonsai-27B-CPU"
       ];
     };
   };
@@ -152,16 +149,10 @@ in
       export HF_HOME=/var/cache/llama-swap
       TOKEN=$(cat $CREDENTIALS_DIRECTORY/hf-token)
 
-      hf download Jackrong/Qwen3.5-2B-Claude-4.6-Opus-Reasoning-Distilled-GGUF \
-        --include "Qwen3.5-2B.Q6_K.gguf" \
-        --include "mmproj-BF16.gguf" \
-        --local-dir "${stateDir}/Qwen3.5-2B-GPU" \
-        --token $TOKEN
-
-      hf download unsloth/Qwen3.5-35B-A3B-MTP-GGUF \
-        --include "Qwen3.5-35B-A3B-Q8_0.gguf" \
-        --include "mmproj-F16.gguf" \
-        --local-dir "${stateDir}/Qwen3.5-35B-A3B-CPU" \
+      hf download prism-ml/Bonsai-27B-gguf \
+        --include "Bonsai-27B-Q1_0.gguf" \
+        --include "Bonsai-27B-mmproj-Q8_0.gguf" \
+        --local-dir "${stateDir}/Bonsai-27B" \
         --token $TOKEN
     '';
   };
