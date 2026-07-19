@@ -3,7 +3,7 @@
 */
 { config, ... }:
 let
-  localAddresses = config.gradient.const.localAddresses;
+  addresses = config.gradient.const.addresses;
   dashboard = builtins.toFile "dashboard.html" (dashboardReplaceConstants dashboardBaseHtml);
   dashboardReplaceConstants = html: builtins.replaceStrings 
     [
@@ -25,7 +25,7 @@ let
     allow ${ips.gradientnet.gradientnet}/24;
     deny all;
   '';
-  mkInternalVHost = { port, address ? "127.0.0.1", reverseProxySubdomain ? "", vhostExtraConfig ? "" }: {
+  mkInternalVHost = { port, dynamicAddress ? null, address ? "127.0.0.1", reverseProxySubdomain ? "", vhostExtraConfig ? "" }: {
     listenAddresses = [ ips.gradientnet.asiyah ];
     extraConfig = ''
       ${vhostConfig}
@@ -35,8 +35,11 @@ let
     quic = true;
     forceSSL = true;
     locations."/" = {
-      proxyPass = "http://${address}:${toString port}${reverseProxySubdomain}";
+      proxyPass = "http://${(if dynamicAddress == null then address else "$upstream")}:${toString port}${reverseProxySubdomain}";
       proxyWebsockets = true;
+      extraConfig = ''
+        ${(if dynamicAddress != null then "set $upstream ${dynamicAddress};" else "")}
+      '';
     };
   };
 in
@@ -74,8 +77,8 @@ in
     "jellyfin.asiyah.gradient.moe" = mkInternalVHost { port = ports.jellyfin-http; };
     "uptime.asiyah.gradient.moe" = mkInternalVHost { port = ports.uptime-kuma; };
     "k1c.asiyah.gradient.moe" = mkInternalVHost { address = "192.168.1.27"; port = 80; vhostExtraConfig = ''client_max_body_size 4G;''; };
-    "angela.asiyah.gradient.moe" = mkInternalVHost { address = localAddresses.vacuum-angela; port = 80; };
-    "mute.asiyah.gradient.moe" = mkInternalVHost { address = localAddresses.vacuum-mute; port = 80; };
+    "angela.asiyah.gradient.moe" = mkInternalVHost { dynamicAddress = "vacuum-angela.${addresses.tailscale-domain}"; port = 80; };
+    "mute.asiyah.gradient.moe" = mkInternalVHost { dynamicAddress = "vacuum-mute.${addresses.tailscale-domain}"; port = 80; };
   };
   
 }
