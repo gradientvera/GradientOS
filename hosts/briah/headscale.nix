@@ -31,6 +31,10 @@ in
 
     settings = {
       server_url = "https://headscale.constellation.moe:${toString ports.https}";
+      trusted_proxies = [
+        "127.0.0.1/32"
+        "::1/128"
+      ];
       noise.private_key_path = config.sops.secrets.headscale-noise-key.path;
       database.type = "sqlite";
       dns.base_domain = addresses.tailscale-domain;
