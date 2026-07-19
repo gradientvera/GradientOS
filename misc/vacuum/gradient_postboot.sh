@@ -14,6 +14,27 @@ ln -s /data/gradient_profile.sh /tmp/.profile
 
 echo "Linked gradient_profile to temporary folder." 
 
+echo "Setting up iptables rules..."
+iptables -F
+iptables -X
+
+iptables -P FORWARD DROP
+# Allow loopback
+iptables -A INPUT -i lo -j ACCEPT
+
+iptables -A INPUT -m state --state INVALID -j DROP
+iptables -A INPUT -m state --state RELATED,ESTABLISHED -j ACCEPT
+
+# Allow LAN and Tailscale
+iptables -A INPUT -s 192.168.1.0/24 -j ACCEPT
+iptables -A INPUT -s 100.64.0.0/10 -j ACCEPT
+
+# Disallow any other subnet
+iptables -P INPUT DROP 
+
+# ip6tables is not supported, no ipv6 for you little vacuum!
+sysctl -w net.ipv6.conf.all.disable_ipv6=1
+
 echo "Setting up audio..."
 rm -f /tmp/.asoundrc
 cat >/tmp/.asoundrc <<'EOF'
