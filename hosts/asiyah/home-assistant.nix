@@ -288,14 +288,14 @@ in
           title = "Angela";
           icon = "mdi:home-floor-1";
           work_mode = "ingress";
-          url = localAddresses.vacuum-angela;
+          url = "http://vacuum-angela.${addresses.tailscale-domain}";
         };
         mute = {
           parent = "robot_vacuums";
           title = "*Mute";
           icon = "mdi:home-floor-0";
           work_mode = "ingress";
-          url = localAddresses.vacuum-mute;
+          url = "http://vacuum-mute.${addresses.tailscale-domain}";
         };
         printer_k1c = {
           title = "3D Printer K1C";

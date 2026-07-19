@@ -61,6 +61,7 @@ in
 
     virtualHosts."headscale.constellation.moe" = {
       forceSSL = true;
+      http2 = true;
       sslCertificate = "/var/lib/acme/constellation.moe/fullchain.pem";
       sslCertificateKey = "/var/lib/acme/constellation.moe/key.pem";
       sslTrustedCertificate = "/var/lib/acme/constellation.moe/chain.pem";
@@ -68,10 +69,17 @@ in
         proxyPass = "http://127.0.0.1:${toString ports.headscale}";
         proxyWebsockets = true;
         extraConfig = ''
+          proxy_set_header True-Client-IP $remote_addr;
+          proxy_set_header X-Real-IP $remote_addr;
           proxy_buffering off;
           proxy_cache off;
           proxy_redirect http:// https://;
           add_header Strict-Transport-Security "max-age=15552000; includeSubDomains" always;
+        '';
+      };
+      locations."= /generate_204" = {
+        extraConfig = ''
+          return 204;
         '';
       };
     };
