@@ -16,6 +16,10 @@ vacuum:
     rsync -e 'ssh -p 222' -avzP --chmod=0760 --chown=root:root ./misc/vacuum/ root@vacuum-angela:/data
     rsync -e 'ssh -p 222' -avzP --chmod=0760 --chown=root:root ./misc/vacuum/ root@vacuum-mute:/data
 
+vacuum-local:
+    rsync -e 'ssh -p 222' -avzP --chmod=0760 --chown=root:root ./misc/vacuum/ root@valetudo-leanunfinishedjellyfish.local:/data
+    rsync -e 'ssh -p 222' -avzP --chmod=0760 --chown=root:root ./misc/vacuum/ root@valetudo-ironcladrashmink.local:/data
+
 [group('deployment')]
 update-inputs:
     nix flake update
