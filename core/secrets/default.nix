@@ -63,7 +63,15 @@ in
           sopsFile = ./secrets.yml;
           restartUnits = [ "llama-swap.service" ];
         };
+        attic-token = {
+          sopsFile = ./secrets.yml;
+        };
       };
+
+      sops.templates."netrc".content = ''
+        machine cache.gradient.moe
+        password ${config.sops.placeholder.attic-token}
+      '';
     }))
   ];
 
