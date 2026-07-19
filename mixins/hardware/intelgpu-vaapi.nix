@@ -20,7 +20,7 @@
 
   security.wrappers.btop = {
     source = "${pkgs.btop}/bin/btop";
-    capabilities = "cap_perfmon+ep";
+    capabilities = "cap_perfmon+ep cap_dac_read_search+ep";
     owner = "root";
     group = "root";
   };
