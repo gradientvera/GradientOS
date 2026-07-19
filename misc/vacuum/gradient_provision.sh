@@ -46,7 +46,7 @@ provision() {
 
   rm -rf /tmp/alpine
   mkdir /tmp/alpine
-  wget https://dl-cdn.alpinelinux.org/alpine/v3.23/releases/aarch64/alpine-minirootfs-3.23.4-aarch64.tar.gz -O alpine.tar.gz
+  wget https://dl-cdn.alpinelinux.org/alpine/v3.24/releases/aarch64/alpine-minirootfs-3.24.1-aarch64.tar.gz -O alpine.tar.gz
   tar -xvzf ./alpine.tar.gz -C /tmp/alpine
 
   cp -a /tmp/alpine/lib/. /lib/
@@ -62,7 +62,11 @@ provision() {
 
   echo "Alpine installed on overlay!"
 
-  apk update
+  echo "Setting up apk cache..."
+  mkdir -p /data/apk/cache
+  ln -s /data/apk/cache /etc/apk/cache
+
+  apk -U upgrade
 
   echo "Fixing busybox and ca-certificates..."
   apk fix --reinstall busybox
@@ -179,8 +183,12 @@ EOF
   tailscale set --accept-dns=false > /dev/null 2>&1
   tailscale set --accept-dns=true > /dev/null 2>&1
 
+  echo "Ensuring Alpine desired system state..."
   # Just in case?
   apk fix
+
+  echo "Synchronizing APK cache..."
+  apk cache -v sync
 
   /usr/bin/speak "Gradient provision complete!" -v en --stdout | /bin/aplay
   echo "Gradient provision complete!"
