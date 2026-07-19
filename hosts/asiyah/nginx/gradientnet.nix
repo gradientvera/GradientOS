@@ -4,6 +4,7 @@
 { config, ... }:
 let
   addresses = config.gradient.const.addresses;
+  localAddresses = config.gradient.const.localAddresses;
   dashboard = builtins.toFile "dashboard.html" (dashboardReplaceConstants dashboardBaseHtml);
   dashboardReplaceConstants = html: builtins.replaceStrings 
     [
@@ -76,7 +77,7 @@ in
     "hass.asiyah.gradient.moe" = mkInternalVHost { port = ports.home-assistant; };
     "jellyfin.asiyah.gradient.moe" = mkInternalVHost { port = ports.jellyfin-http; };
     "uptime.asiyah.gradient.moe" = mkInternalVHost { port = ports.uptime-kuma; };
-    "k1c.asiyah.gradient.moe" = mkInternalVHost { address = "192.168.1.27"; port = 80; vhostExtraConfig = ''client_max_body_size 4G;''; };
+    "k1c.asiyah.gradient.moe" = mkInternalVHost { dynamicAddress = localAddresses.printer-k1c; port = 80; vhostExtraConfig = ''client_max_body_size 4G;''; };
     "angela.asiyah.gradient.moe" = mkInternalVHost { dynamicAddress = "vacuum-angela.${addresses.tailscale-domain}"; port = 80; };
     "mute.asiyah.gradient.moe" = mkInternalVHost { dynamicAddress = "vacuum-mute.${addresses.tailscale-domain}"; port = 80; };
   };
