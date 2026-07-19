@@ -15,6 +15,16 @@ in
       # Automatically reboot to enroll the keys in the firmware
       autoReboot = true;
     };
+    # https://nix-community.github.io/lanzaboote/how-to-guides/enable-measured-boot.html
+    configurationLimit = 8;
+    measuredBoot = {
+      enable = true;
+      pcrs = [
+        0
+        4
+        7
+      ];
+    };
   };
 
   boot.loader.efi.canTouchEfiVariables = true;
