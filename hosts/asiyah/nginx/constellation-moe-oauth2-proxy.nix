@@ -18,12 +18,6 @@ in {
     upstream = [ "http://127.0.0.1:${toString ports.nginx}" ];
     trustedProxyIP = [ "127.0.0.0/8" ];
 
-    # -- github config --
-    #redirectURL = "https://polycule.constellation.moe/oauth2/callback";
-    #provider = "github";
-    #github.org = "ConstellationNRV";
-    #clientID = "05fb727827ad30eddf0d";
-
     # -- kanidm config --
     provider = "oidc";
     clientID = "constellation-oauth2-proxy";
