@@ -4,5 +4,10 @@
 			"path": "."
 		}
 	],
-	"settings": {}
+	"settings": {
+		"nix.enableLanguageServer": true,
+		"nix.serverPath": ["nil"],
+		"nix.serverSettings": {
+		}
+	}
 }
