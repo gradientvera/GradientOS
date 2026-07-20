@@ -94,23 +94,23 @@ in
 
       hostnames = {
         replace = {
-          "(.*\.)?reddit\.com$" = "old.reddit.com";
-          "(.*\.)?redd\.it$"    = "old.reddit.com";
+          "(.*\\.)?reddit\\.com$" = "old.reddit.com";
+          "(.*\\.)?redd\\.it$"    = "old.reddit.com";
         };
         remove = [
-          "(.*\.)?redditmedia.com$"
-          "(.*\.)?facebook.com$"
-          "(.*\.)?softonic.com$"
-          "(.*\.)?nixos.wiki$"
+          "(.*\\.)?redditmedia.com$"
+          "(.*\\.)?facebook.com$"
+          "(.*\\.)?softonic.com$"
+          "(.*\\.)?nixos.wiki$"
         ];
         high_priority = [
-          "(.*\.)?wikipedia.com$"
-          "(.*\.)?reddit.com$"
-          "(.*\.)?github.com$"
+          "(.*\\.)?wikipedia.com$"
+          "(.*\\.)?reddit.com$"
+          "(.*\\.)?github.com$"
 
           # For wiki articles
-          "(.*\.)?nixos.org$"
-          "(.*\.)archlinux.org$"
+          "(.*\\.)?nixos.org$"
+          "(.*\\.)archlinux.org$"
         ];
         low_priority = [
 
