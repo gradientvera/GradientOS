@@ -1,4 +1,4 @@
-{ config, pkgs, lib, modulesPath, ... }:
+{ config, pkgs, lib, ... }:
 let
   cfg = config.gradient;
 in
@@ -207,6 +207,8 @@ in
 
     # systemd-based initrd
     boot.initrd.systemd.enable = true;
+
+    boot.zfs.forceImportRoot = false;
 
     boot.kernel.sysctl = {
       "kernel.sysrq" = "1";
