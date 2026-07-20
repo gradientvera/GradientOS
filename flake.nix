@@ -55,7 +55,7 @@
     };
     
     colmena = {
-      url = "github:zhaofengli/colmena";
+      url = "github:nix-community/colmena";
       inputs.nixpkgs.follows = "nixpkgs";
       inputs.stable.follows = "nixpkgs-stable";
       inputs.flake-compat.follows = "flake-compat";
