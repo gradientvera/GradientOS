@@ -196,8 +196,8 @@ in
         name = "myfqdns/whitelist";
         whitelist = {
           expression = [
-            ''evt.Overflow.Alert.Source.IP in LookupHost("gradient.moe")''
-            ''evt.Overflow.Alert.Source.IP in LookupHost("gradientvera.duckdns.org")''
+            "evt.Overflow.Alert.Source.IP in LookupHost(\"gradient.moe\")"
+            "evt.Overflow.Alert.Source.IP in LookupHost(\"gradientvera.duckdns.org\")"
           ];
         };
       };
@@ -226,7 +226,7 @@ in
 
     "crowdsec/parsers/s02-enrich/path-whitelist.yaml" = etcDefaults // {
       source = writeYamlFile "crowdsec-parser-path-whitelist.yaml" {
-        description = "Whitelist some reqiest paths";
+        description = "Whitelist some request paths";
         name = "paths/whitelist";
         filter = "evt.Meta.service == 'http' && evt.Meta.log_type in ['http_access-log', 'http_error-log']";
         whitelist = {

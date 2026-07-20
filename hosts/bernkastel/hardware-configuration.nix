@@ -17,7 +17,7 @@
     "iommu=pt"
 
     # See https://wiki.archlinux.org/title/Power_management/Wakeup_triggers#ACPI_OSI_string
-    ''acpi_osi="!Windows 2015"''
+    "acpi_osi=\"!Windows 2015\""
 
     # needed for controlling RGB LEDs on RAM sticks, also fixes some ACPI errors
     "acpi_enforce_resources=no"

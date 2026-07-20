@@ -77,7 +77,7 @@ in
     "hass.asiyah.gradient.moe" = mkInternalVHost { port = ports.home-assistant; };
     "jellyfin.asiyah.gradient.moe" = mkInternalVHost { port = ports.jellyfin-http; };
     "uptime.asiyah.gradient.moe" = mkInternalVHost { port = ports.uptime-kuma; };
-    "k1c.asiyah.gradient.moe" = mkInternalVHost { dynamicAddress = localAddresses.printer-k1c; port = 80; vhostExtraConfig = ''client_max_body_size 4G;''; };
+    "k1c.asiyah.gradient.moe" = mkInternalVHost { dynamicAddress = localAddresses.printer-k1c; port = 80; vhostExtraConfig = "client_max_body_size 4G;"; };
     "angela.asiyah.gradient.moe" = mkInternalVHost { dynamicAddress = "vacuum-angela.${addresses.tailscale-domain}"; port = 80; };
     "mute.asiyah.gradient.moe" = mkInternalVHost { dynamicAddress = "vacuum-mute.${addresses.tailscale-domain}"; port = 80; };
   };

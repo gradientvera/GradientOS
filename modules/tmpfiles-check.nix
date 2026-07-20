@@ -23,7 +23,7 @@ systemd.tmpfiles.settings."example"."/home/vera/example.txt".C = {
   user = "vera";
   group = "users";
   mode = "0755";
-  argument = "${pkgs.writeText "example.txt" ''Hello there!''}";
+  argument = "${pkgs.writeText "example.txt" "Hello there!"}";
   repoPath = "/etc/nixos/example.txt";  # <- Optionally set this to make tmpfiles-check-sync work. 
   doCheck = true;   # <- This right here is the important bit!
 };
