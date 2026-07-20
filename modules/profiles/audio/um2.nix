@@ -14,8 +14,7 @@ in
     };
   };
 
-  config = lib.mkMerge [
-    (lib.mkIf (cfg.profiles.audio.enable && cfg.profiles.audio.um2.enable) {
+  config = lib.mkIf (cfg.profiles.audio.enable && cfg.profiles.audio.um2.enable) {
       services.pipewire.extraConfig.pipewire."10-um2.conf" = {
         "context.modules" = [
             {   "name" = "libpipewire-module-filter-chain";
@@ -82,7 +81,5 @@ in
             }
         ];
       };
-    })
-  ];
-
+  };
 }

@@ -14,8 +14,7 @@ in
     };
   };
 
-  config = lib.mkMerge [
-    (lib.mkIf (cfg.profiles.audio.enable && cfg.profiles.audio.virtual-sink.enable) {
+  config = lib.mkIf (cfg.profiles.audio.enable && cfg.profiles.audio.virtual-sink.enable) {
       services.pipewire.extraConfig.pipewire."99-virtual-sink.conf" = {
         "context.modules" = [
             {   "name" = "libpipewire-module-loopback";
@@ -39,7 +38,5 @@ in
             }
         ];
       };
-    })
-  ];
-
+  };
 }

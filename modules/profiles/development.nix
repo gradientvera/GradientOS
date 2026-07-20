@@ -15,8 +15,7 @@ in
     };
   };
 
-  config = lib.mkMerge [
-    (lib.mkIf cfg.profiles.development.enable {
+  config = lib.mkIf cfg.profiles.development.enable {
       environment.systemPackages = with pkgs; [
         jetbrains.rust-rover
         jetbrains.rider
@@ -108,7 +107,5 @@ in
             ];
           })
       ];
-    })
-  ];
-
+  };
 }

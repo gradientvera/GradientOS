@@ -14,8 +14,7 @@ in
     };
   };
 
-  config = lib.mkMerge [
-    (lib.mkIf (cfg.profiles.audio.enable && cfg.profiles.audio.rnnoise.enable) {
+  config = lib.mkIf (cfg.profiles.audio.enable && cfg.profiles.audio.rnnoise.enable) {
       services.pipewire.extraLadspaPackages = [ pkgs.rnnoise-plugin ];
       services.pipewire.extraConfig.pipewire."00-rnnoise.conf" = {
         "context.modules" = [
@@ -54,7 +53,5 @@ in
         }
         ];
       };
-    })
-  ];
-
+  };
 }

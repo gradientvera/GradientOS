@@ -14,8 +14,7 @@ in
     };
   };
 
-  config = lib.mkMerge [
-    (lib.mkIf (cfg.profiles.audio.enable && cfg.profiles.audio.umc202hd.enable) {
+  config = lib.mkIf (cfg.profiles.audio.enable && cfg.profiles.audio.umc202hd.enable) {
       services.pipewire.extraConfig.pipewire."10-umc202hd.conf" = {
         "context.modules" = [
             {   "name" = "libpipewire-module-filter-chain";
@@ -157,7 +156,5 @@ in
             }
         ];
       };
-    })
-  ];
-
+  };
 }

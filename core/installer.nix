@@ -13,13 +13,11 @@ in
     };
   };
 
-  config = lib.mkMerge [
-    (lib.mkIf cfg.installer.addSsh {
-      system.nixos-generate-config.desktopConfiguration = [
-        "services.openssh.enable = true;"
-        "services.openssh.openFirewall = true;"
-        "users.users.root.openssh.authorizedKeys.keys = [ \"${cfg.const.ssh.pubKeys.vera}\" ];"
-      ];
-    })
-  ];
+  config = lib.mkIf cfg.installer.addSsh {
+    system.nixos-generate-config.desktopConfiguration = [
+      "services.openssh.enable = true;"
+      "services.openssh.openFirewall = true;"
+      "users.users.root.openssh.authorizedKeys.keys = [ \"${cfg.const.ssh.pubKeys.vera}\" ];"
+    ];
+  };
 }

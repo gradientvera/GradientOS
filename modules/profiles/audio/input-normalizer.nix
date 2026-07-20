@@ -14,8 +14,7 @@ in
     };
   };
 
-  config = lib.mkMerge [
-    (lib.mkIf (cfg.profiles.audio.enable && cfg.profiles.audio.input-normalizer.enable) {
+  config = lib.mkIf (cfg.profiles.audio.enable && cfg.profiles.audio.input-normalizer.enable) {
       services.pipewire.extraLadspaPackages = [ pkgs.ladspaPlugins ];
       services.pipewire.extraConfig.pipewire."00-normalizer.conf" = {
         "context.modules" = [
@@ -77,7 +76,5 @@ in
         }
         ];
       };
-    })
-  ];
-
+  };
 }
