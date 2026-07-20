@@ -25,6 +25,24 @@ in
     # Set to 4G as the max for briah, but let asiyah vhosts decide on a smaller amount
     clientMaxBodySize = "4G";
 
+    virtualHosts."cache.gradient.moe" = {
+      forceSSL = true;
+      sslCertificate = "/var/lib/acme/gradient.moe/fullchain.pem";
+      sslCertificateKey = "/var/lib/acme/gradient.moe/key.pem";
+      sslTrustedCertificate = "/var/lib/acme/gradient.moe/chain.pem";
+      locations."/" = {
+        proxyPass = "https://${gradientnet.asiyah}:${toString asiyahPorts.nginx-ssl}";
+        proxyWebsockets = false;
+        extraConfig = ''
+          proxy_http_version 1.1;
+          proxy_set_header Connection "";
+          proxy_read_timeout 600s;
+          proxy_send_timeout 600s;
+          proxy_buffering off;
+        '';
+      };
+    };
+
     virtualHosts."gradient.moe" = {
       # Only specify ONCE!
       reuseport = true;
