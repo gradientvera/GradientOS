@@ -1,8 +1,9 @@
 { config, pkgs, self, lib, ... }:
 let
   ports = config.gradient.currentHost.ports;
+  addresses = config.gradient.const.addresses;
   localAddresses = config.gradient.const.localAddresses;
-  addresses = config.gradient.const.wireguard.addresses.gradientnet;
+  gradientnet = config.gradient.const.wireguard.addresses.gradientnet;
   pythonPkgs = config.services.home-assistant.package.python.pkgs;
   pkgsCustomComponents = pkgs.master.home-assistant-custom-components;
   pkgsCustomComponentsGradientOS = pkgs.master.home-assistant-custom-components-gradientos;
@@ -202,7 +203,6 @@ in
       };
 
       zha.zigpy_config.ota.z2m_remote_index = "https://raw.githubusercontent.com/Koenkk/zigbee-OTA/master/index.json";
-      lovelace.mode = "storage";
       default_config = {};
       mobile_app = {};
       history = {};
@@ -211,7 +211,7 @@ in
       http = {
         server_port = ports.home-assistant;
         use_x_forwarded_for = true;
-        trusted_proxies = [ "${addresses.asiyah}" "127.0.0.1" ];
+        trusted_proxies = [ "${gradientnet.asiyah}" "127.0.0.1" ];
         ip_ban_enabled = true;
         login_attempts_threshold = 10;
       };
