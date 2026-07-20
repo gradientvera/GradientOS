@@ -1,8 +1,9 @@
 [
-  "dotnet-runtime-7.0.20" # TODO: Remove when not needed anymore
-  "freeimage-3.18.0-unstable-2024-04-18" # TODO: Remove when not needed anymore
-  "libsoup-2.74.3" # TODO: Remove when not needed anymore
+  "dotnet-runtime-7.0.20"
+  "freeimage-3.18.0-unstable-2024-04-18"
+  "libsoup-2.74.3"
   "python3.14-ecdsa-0.19.2"
-  "openssl-1.1.1w" # TODO: Remove, thanks discord
-  "electron-39.8.10" # TODO: Remove, thanks bitwarden
+  "openssl-1.1.1w"
+  "electron-39.8.10"
+  "pnpm-9.15.9"
 ]
