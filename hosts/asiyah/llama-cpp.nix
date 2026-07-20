@@ -29,7 +29,22 @@ in
         llama-cpp-vulkan-server = "${self.inputs.llama-cpp.packages.${system}.vulkan}/bin/llama-server";
         # see https://github.com/ikawrakow/ik_llama.cpp/blob/main/examples/server/README.md
         ik-llama-cpp-cpu-server = "${self.inputs.ik-llama-cpp.packages.${system}.mpi-cpu}/bin/llama-server";
-        mkCmd = { serverPath ? llama-cpp-vulkan-server, ... }@args: "${serverPath} ${lib.cli.toGNUCommandLineShell {} (removeAttrs args ["serverPath"])}";
+        mkCmd = { serverPath ? llama-cpp-vulkan-server, ... }@args:
+          let
+            # The following functions will generate a command like this:
+            # "llama-server --reasoning on --threads 18 [...]"
+            # llama-cpp is a bit weird with arguments, always try to use long-format args.
+            mkLlamaCommandLine = lib.cli.toCommandLine
+              (optionName: {
+                option = if (lib.stringLength optionName > 1) then "--${optionName}" else "-${optionName}";
+                sep = " ";
+                explicitBool = false;
+              });
+            cmdArgs = mkLlamaCommandLine (removeAttrs args ["serverPath"]);
+            shellArgs = builtins.concatStringsSep " " cmdArgs;
+            script = pkgs.writeShellScript "llama-swap-cmd.sh" "${serverPath} ${shellArgs}";
+          in
+            "${script} \${PORT}";
       in
       {
 
@@ -37,7 +52,7 @@ in
           aliases = [ "hass-default" "frigate-default" ];
           cmd = mkCmd {
             serverPath = llama-cpp-vulkan-server;
-            port = "\${PORT}";
+            port = "$1";
             model = "${stateDir}/Bonsai-27B/Bonsai-27B-Q1_0.gguf";
             mmproj = "${stateDir}/Bonsai-27B/Bonsai-27B-mmproj-Q8_0.gguf";
             temp = "0.7";
@@ -54,6 +69,7 @@ in
             flash-attn = "on";
             cache-ram = "${toString (1024 * 64)}";
             ctx-checkpoints = "128";
+            reasoning-preserve = true;
             jinja = true;
             mmproj-auto = true;
             no-mmproj-offload = true;
