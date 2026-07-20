@@ -21,6 +21,7 @@
   xdg.userDirs = {
     enable = true;
     createDirectories = true;
+    setSessionVariables = true;
   };
 
   # home.file.".face".source = ./face.png;

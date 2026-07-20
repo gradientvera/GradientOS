@@ -27,6 +27,7 @@
   xdg.userDirs = {
     enable = true;
     createDirectories = true;
+    setSessionVariables = true;
   };
 
   programs.carapace.enable = true;
