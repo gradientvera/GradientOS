@@ -9,8 +9,6 @@
     ./hardware-configuration.nix
   ];
 
-  networking.hostName = "neith-deck";
-
   gradient.profiles.gaming.enable = true;
   gradient.profiles.gaming.emulation.enable = true;
   gradient.profiles.gaming.emulation.romPath = "/run/media/deck/mmcblk0p1/roms";

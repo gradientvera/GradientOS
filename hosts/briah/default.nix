@@ -13,7 +13,6 @@
 
   boot.tmp.cleanOnBoot = true;
   services.swapspace.enable = true;
-  networking.hostName = "briah";
   networking.domain = "";
   services.openssh.enable = true;
 }

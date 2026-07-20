@@ -13,8 +13,6 @@ in
     ./hardware-configuration.nix
   ];
 
-  networking.hostName = "bernkastel";
-
   gradient.profiles.gaming.enable = true;
   gradient.profiles.gaming.emulation.romPath = "/data/roms";
   gradient.profiles.desktop.enable = true;

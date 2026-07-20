@@ -1,4 +1,4 @@
-{ self, config, lib, ... }:
+{ config, lib, ... }:
 let
   cfg = config.gradient.containers;
   ociCfg = config.virtualisation.oci-containers.containers;
@@ -11,7 +11,7 @@ in
     type = lib.types.attrsOf (lib.types.submodule ({ name, config, ... }:
     let
       # Containers that are attached to this one through --network=container:<name>
-      childrenContainers = (lib.filterAttrs (n: v: n != name && (builtins.any (x: x == "container:${name}") v.networks)) ociCfg);
+      childrenContainers = (lib.filterAttrs (n: v: n != name && (builtins.any (x: x == "container:${name}") (v.networks or []))) ociCfg);
       # Which containers we're attached to --network=container:<name>
       parentContainers = (builtins.map (n: lib.strings.removePrefix "container:" n) (builtins.filter (n: lib.strings.hasPrefix "container:" n) config.networks));
       firstParent = if parentContainers == [] then null else builtins.head parentContainers;
