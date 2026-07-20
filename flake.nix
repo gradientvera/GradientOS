@@ -467,7 +467,15 @@
 
     apps = self.lib.forAllSystemsWithOverlays [ self.overlays.gradientpkgs self.overlays.gradientos  ] (pkgs: (import ./ansible/apps.nix pkgs));
 
-    packages = self.lib.forAllSystemsWithOverlays [ self.overlays.gradientpkgs self.overlays.gradientos ] (pkgs: (self.overlays.gradientpkgs pkgs pkgs) // (self.overlays.home-assistant pkgs pkgs));
+    packages = self.lib.forAllSystemsWithOverlays [ self.overlays.gradientpkgs self.overlays.gradientos ]
+      (pkgs:
+        (self.overlays.gradientpkgs pkgs pkgs) //
+        (let hass = self.overlays.home-assistant pkgs pkgs;
+          in hass.home-assistant-custom-components-gradientos //
+             hass.home-assistant-custom-lovelace-modules-gradientos
+        )
+      );
+
     legacyPackages = self.lib.forAllSystemsWithOverlays [ self.overlays.gradientpkgs self.overlays.gradientos self.overlays.home-assistant  ] (pkgs: (pkgs));
 
   };
