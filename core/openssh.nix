@@ -7,10 +7,10 @@ in {
   
   programs.ssh = {
     startAgent = true;
-    hostKeyAlgorithms = [ "ssh-ed25519" "ssh-rsa" ];
+    hostKeyAlgorithms = [ "ssh-ed25519" ];
 
     extraConfig = ''
-Host * 
+Host *.gradient *.gradient.moe *.constellation.moe
   IdentityFile /etc/ssh/ssh_host_ed25519_key
   IdentityFile ~/.ssh/id_ed25519
 '';
