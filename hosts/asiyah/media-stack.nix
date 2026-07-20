@@ -696,26 +696,7 @@ in {
       dependsOn = [ "sonarr" "radarr" "lidarr" ];
     };
 
-    # TODO: Broken! Fix sometime
-    /*cross-seed = {
-      image = "ghcr.io/cross-seed/cross-seed:6";
-      pull = "newer";
-      volumes = [
-        "/var/lib/${userName}/cross-seed:/config"
-        "/data/downloads:/downloads:ro"
-        "/data/downloads/torrents:/torrents:ro"
-        "/data/downloads/cross-seeds:/cross-seeds"
-      ];
-      environment = {
-        TZ = config.time.timeZone;
-        PUID = toString userUid;
-        PGID = toString groupGid;
 
-      };
-      cmd = [ "daemon" ];
-      extraOptions = [] ++ defaultOptions ++ userOptions;
-      dependsOn = [ "gluetun" "prowlarr" "sonarr" "radarr" ];
-    };*/
 
     sabnzbd = {
       image = "lscr.io/linuxserver/sabnzbd:latest";
@@ -781,15 +762,7 @@ in {
       };
       environmentFiles = [ config.sops.secrets.mediarr-mariadb-env.path ];
       cmd = [ "--port" "3808" ];
-      extraOptions = [
-        # TODO: Broken! Fix sometime...
-        /*"--health-cmd" "CMD"
-        "--health-cmd" "healthcheck.sh"
-        "--health-cmd='--connect'"
-        "--health-cmd='--innodb_initialized'"
-        "--health-start-period" "30s"
-        "--health-interval" "10s"*/
-      ] ++ userOptions;
+      extraOptions = [ ] ++ userOptions;
     };
 
     calibre = {

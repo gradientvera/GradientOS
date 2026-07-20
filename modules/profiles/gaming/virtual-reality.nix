@@ -260,7 +260,6 @@ in
         install-wayvr-dashboard
         android-tools # adb for standalone headsets
         bs-manager
-        # immersed
         xrgears
       ];
 

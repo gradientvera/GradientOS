@@ -64,68 +64,12 @@ in
           env = [ "LLAMA_CACHE=${stateDir}/Bonsai-27B-GPU" "MESA_SHADER_CACHE_DIR=${stateDir}/Bonsai-27B-GPU" ];
         };
 
-        /*"Bonsai-27B-CPU" = {
-          aliases = [ "frigate-default" ];
-          cmd = mkCmd {
-            serverPath = ik-llama-cpp-cpu-server;
-            port = "\${PORT}";
-            numa = "isolate";
-            model = "${stateDir}/Bonsai-27B/Bonsai-27B-Q1_0.gguf";
-            mmproj = "${stateDir}/Bonsai-27B/Bonsai-27B-mmproj-Q8_0.gguf";
-            parallel = "1";
-            gpu-layers = "0";
-            temp = "0.7";
-            top-p = "0.95";
-            top-k = "20";
-            min-p = "0.00";
-            batch-size = "1024";
-            ubatch-size = "1024";
-            presence-penalty = "1.5";
-            repeat-penalty = "1.0";
-            reasoning = "on";
-            reasoning-budget = "128";
-            reasoning-budget-message = "\"... Reasoning budget exhausted. I should have enough to answer now.\"";
-            threads = "18";
-            cache-type-k = "q4_0";
-            cache-type-v = "q4_0";
-            flash-attn = "on";
-            jinja = true;
-            no-mmproj-offload = true;
-            no-kv-offload = true;
-            run-time-repack = true;
-            mlock = true;
-            slot-save-path = "${stateDir}/Bonsai-27B-CPU";
-          };
-          env = [ "LLAMA_CACHE=${stateDir}/Bonsai-27B-CPU" "MESA_SHADER_CACHE_DIR=${stateDir}/Bonsai-27B-CPU" ];
-        };*/
 
-      };
 
-      # wtf is this?
-      matrix = {
-        vars = {
-          a = "Bonsai-27B-GPU";
-          #b = "Bonsai-27B-CPU";
-        };
-        evict_costs = {
-          a = 10; # small model on the GPU, loads fast
-          #b = 50; # large model on the CPU, loads slowly
-        };
-        sets = {
-          # models that run on the GPU
-          gpu = "(a)";
-
-          # models that run on the CPU
-          #cpu = "(b)";
-
-          # run models on both the GPU and CPU
-          #final = "+gpu & +cpu";
-        };
       };
 
       hooks.on_startup.preload = [
         "Bonsai-27B-GPU"
-        #"Bonsai-27B-CPU"
       ];
     };
   };
