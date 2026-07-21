@@ -32,13 +32,13 @@ in
       sslTrustedCertificate = "/var/lib/acme/gradient.moe/chain.pem";
       locations."/" = {
         proxyPass = "https://${gradientnet.asiyah}:${toString asiyahPorts.nginx-ssl}";
-        proxyWebsockets = false;
         extraConfig = ''
-          proxy_http_version 1.1;
-          proxy_set_header Connection "";
+          client_max_body_size 32G;
           proxy_read_timeout 600s;
           proxy_send_timeout 600s;
-          proxy_buffering off;
+          send_timeout 600s;
+          proxy_buffering on;
+          proxy_request_buffering on;
         '';
       };
     };
