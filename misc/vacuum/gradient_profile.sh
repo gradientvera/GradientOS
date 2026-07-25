@@ -2,14 +2,14 @@
 
 echo "-- Gradient Profile --"
 
+export SOPS_AGE_KEY_FILE="/data/age/keys.txt"
+export SOPS_SECRETS_FILE="/data/secrets/secrets.yml"
+
 if [ -f "/sbin/apk"  ]; then
     echo " -- inside chroot --"
-    export SOPS_AGE_KEY_FILE="/etc/age/keys.txt"
-    export SOPS_SECRETS_FILE="/etc/secrets.yml"
 else
-    if [ -d "/data/overlay/root/etc/age" ]; then
+    echo " -- outside chroot --"
+    if [ -d "/data/overlay/root" ]; then
         alias enter="chroot /data/overlay/root /bin/sh -l"
-        export SOPS_AGE_KEY_FILE="/data/overlay/root/etc/age/keys.txt"
-        export SOPS_SECRETS_FILE="/data/overlay/root/etc/secrets.yml"
     fi
 fi

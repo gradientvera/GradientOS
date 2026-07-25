@@ -2,8 +2,8 @@
 with gradient-ansible-lib.tasks;
 [
   {
-    name = "*Mute play";
-    hosts = [ "mute" ];
+    name = "Roland play";
+    hosts = [ "roland" ];
     tasks = [
       (ansibleBuiltinCopy { name = "Copy Sops secrets file"; } {
         src = ./secrets/secrets.yml;

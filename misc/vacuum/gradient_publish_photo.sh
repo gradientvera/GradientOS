@@ -6,7 +6,7 @@
 set -eu
 set -o pipefail
 
-exec >> /dev/kmsg
+exec >> /tmp/gradient.log
 exec 2>&1
 
 trap 'echo "Interrupted, exiting camera publish now..."; exit 1' INT
@@ -15,18 +15,20 @@ export MODE=${1:-daemon}
 
 GetVars () {
     export VALETUDO_CONFIG="/data/valetudo_config.json"
-    export VALETUDO_ID=$(curl -s 'http://127.0.0.1:80/api/v2/valetudo' -H 'accept: application/json' | jq .systemId -r)
+    export VALETUDO_SYSTEM_ID=$(curl -s 'http://127.0.0.1:80/api/v2/valetudo' -H 'accept: application/json' | jq .systemId -r)
+    export VALETUDO_ID=$(cat $VALETUDO_CONFIG | jq -r ".mqtt?.identity?.identifier // \"\" | if . == \"\" then \"$VALETUDO_SYSTEM_ID\" end")
     export VALETUDO_ID_LOWER=$(echo $VALETUDO_ID | tr '[:upper:]' '[:lower:]')
-    export VALETUDO_FRIENDLY_NAME=$(cat $VALETUDO_CONFIG | jq .valetudo.customizations.friendlyName -r)
-    export VALETUDO_VERSION=$(cat $VALETUDO_CONFIG | jq ._version -r)
+    export VALETUDO_FRIENDLY_NAME=$(cat $VALETUDO_CONFIG | jq -r ".valetudo?.customizations?.friendlyName // \"\" | if . == \"\" then \"$VALETUDO_SYSTEM_ID\" end")
+    export VALETUDO_VERSION=$(cat $VALETUDO_CONFIG | jq -r ._version)
     export VALETUDO_DOCKED=$(curl -s -X 'GET' 'http://127.0.0.1:80/api/v2/robot/state/attributes' -H 'accept: application/json' | jq '.[] | select ( .__class == "StatusStateAttribute" ) | .value | . == "docked"')
-    export MQTT_HOST=$(cat $VALETUDO_CONFIG | jq .mqtt.connection.host -r)
-    export MQTT_PORT=$(cat $VALETUDO_CONFIG | jq .mqtt.connection.port -r)
-    export TOPIC="valetudo/${VALETUDO_ID}/GradientPublishPhoto/file"
+    export MQTT_HOST=$(cat $VALETUDO_CONFIG | jq -r .mqtt.connection.host)
+    export MQTT_PORT=$(cat $VALETUDO_CONFIG | jq -r .mqtt.connection.port)
+    export MQTT_PREFIX=$(cat $VALETUDO_CONFIG | jq -r ".mqtt?.customizations?.topicPrefix // \"\" | if . == \"\" then \"valetudo\" end" )
+    export TOPIC="${MQTT_PREFIX}/${VALETUDO_ID}/GradientPublishPhoto/file"
     export AUTODISCOVER=$(cat <<EOF
 {
 "name": "Main Camera",
-"availability_topic": "valetudo/${VALETUDO_ID}/\$state",
+"availability_topic": "${MQTT_PREFIX}/${VALETUDO_ID}/\$state",
 "object_id": "valetudo_${VALETUDO_ID_LOWER}_gradient_main_camera",
 "unique_id": "${VALETUDO_ID}_gradient_main_camera",
 "payload_available": "ready",
@@ -56,6 +58,10 @@ while true; do
     if [ "$VALETUDO_DOCKED" = "true" ] && [ "$MODE" != "once" ]; then
         continue
     fi;
+
+    if pidof video_monitor > /dev/null 2>&1; then
+        continue
+    fi
 
     camerademo YUV420 1632 1224 0 bmp /tmp 1 >> /dev/null || continue
 

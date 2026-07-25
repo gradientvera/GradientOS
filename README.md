@@ -46,8 +46,8 @@ GradientOS supports the [auxolotl](https://auxolotl.org/) and [Lix](https://lix.
 
 #### Managed with Ansible
 
-- **[angela](hosts/angela)**: Xiaomi X10+ Robot Vacuum running a rooted firmware.
-- **[\*mute](hosts/mute)**: Xiaomi X10+ Robot Vacuum running a rooted firmware.
+- **[angela](hosts/angela)**: Dreame Robot Vacuum running a rooted firmware.
+- **[roland](hosts/roland)**: Dreame Robot Vacuum running a rooted firmware.
 - **[atziluth](hosts/atziluth)**: (WIP) BigTechTree CB1 running Armbian, Voron 2.4r2.
 
 ### FAQ

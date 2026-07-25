@@ -69,7 +69,8 @@ EOF
 echo "Changed audio configuration to allow concurrent playback."
 
 echo "Restarting ava..."
-/etc/rc.d/ava.sh
+/etc/rc.d/ava.sh &
+sleep 10
 echo "ava restarted."
 
 mkdir -p /data/overlay
@@ -101,3 +102,9 @@ mount vartmp /data/overlay/root/var/tmp -t tmpfs
 echo "Other mounts bound to gradient overlay folders, running gradient provisioning script..."
 
 /bin/sh -c 'chroot /data/overlay/root /data/gradient_provision.sh' &
+
+if [[ -x "/data/gradient_video_monitor.sh" ]]; then
+    echo "Initializing gradient_video_monitor daemon..."
+    pkill /data/gradient_video_monitor.sh || true
+    /data/gradient_video_monitor.sh &
+fi

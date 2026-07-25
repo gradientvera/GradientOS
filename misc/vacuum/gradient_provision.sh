@@ -17,7 +17,7 @@ provision() {
   mkdir -p /opt
 
   # ALSA config
-  ln -s /tmp/.asoundrc /etc/asound.conf
+  ln -sf /tmp/.asoundrc /etc/asound.conf
 
   echo "Fixing DNS config..."
 
@@ -64,7 +64,7 @@ provision() {
 
   echo "Setting up apk cache..."
   mkdir -p /data/apk/cache
-  ln -s /data/apk/cache /etc/apk/cache
+  ln -sf /data/apk/cache /etc/apk/cache
 
   apk -U upgrade
 
@@ -74,6 +74,10 @@ provision() {
 
   echo "Installing system utilities..."
   apk add gcompat curl wget busybox nano espeak-ng jq rsync
+
+  echo "Fixing iptables..."
+  apk add iptables-legacy
+  ln -sf /usr/sbin/iptables-legacy /usr/sbin/iptables
 
   echo "Writing hostname..."
   export FRIENDLY_NAME="$(cat /data/valetudo_config.json | jq .valetudo.customizations.friendlyName -r)"
@@ -129,12 +133,12 @@ provision() {
   fi
 
   # Oucher script
-  if [[ -x "/data/oucher/oucher.sh" ]]; then
+  if [[ -x "/data/oucher.sh" ]]; then
     echo "Initializing Oucher daemon..."
     echo "Installing dependencies for oucher..."
     apk add strace ffmpeg vorbis-tools libao # + curl + jq
     pkill oucher.sh || true
-    /data/oucher/oucher.sh &
+    /data/oucher.sh &
   fi
 
   echo "Installing and executing MPD daemon..."
