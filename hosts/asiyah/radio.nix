@@ -1,4 +1,9 @@
-{ config, pkgs, lib, ... }:
+{
+  config,
+  pkgs,
+  lib,
+  ...
+}:
 {
 
   hardware.rtl-sdr.enable = true;
@@ -6,7 +11,9 @@
   virtualisation.oci-containers.containers.openwebrxplus = {
     image = "docker.io/slechev/openwebrxplus-softmbe:latest";
     pull = "newer";
-    ports = [ "${config.gradient.const.addresses.podman-gateway}:${toString config.gradient.currentHost.ports.openwebrx}:8073" ];
+    ports = [
+      "${config.gradient.const.addresses.podman-gateway}:${toString config.gradient.currentHost.ports.openwebrx}:8073"
+    ];
     volumes = [
       "/var/lib/openwebrx:/var/lib/openwebrx"
       "/var/lib/openwebrx/etc:/etc/openwebrx"
@@ -20,22 +27,24 @@
     devices = [ "/dev/bus/usb" ];
   };
 
-  /*systemd.services.openwebrx.serviceConfig = {
-    DynamicUser = lib.mkForce false;
-    User = config.users.users.openwebrx.name;
-    Group = config.users.users.openwebrx.group;
-  };
+  /*
+    systemd.services.openwebrx.serviceConfig = {
+      DynamicUser = lib.mkForce false;
+      User = config.users.users.openwebrx.name;
+      Group = config.users.users.openwebrx.group;
+    };
 
-  users.users.openwebrx = {
-    isSystemUser = true;
-    home = "/var/lib/openwebrx";
-    createHome = true;
-    homeMode = "750";
-    group = config.users.groups.openwebrx.name;
-    # Allow access to RTL-SDR
-    extraGroups = [ config.users.groups.plugdev.name ];
-  };
+    users.users.openwebrx = {
+      isSystemUser = true;
+      home = "/var/lib/openwebrx";
+      createHome = true;
+      homeMode = "750";
+      group = config.users.groups.openwebrx.name;
+      # Allow access to RTL-SDR
+      extraGroups = [ config.users.groups.plugdev.name ];
+    };
 
-  users.groups.openwebrx = {};*/
+    users.groups.openwebrx = {};
+  */
 
 }

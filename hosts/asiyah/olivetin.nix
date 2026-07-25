@@ -1,12 +1,21 @@
-{ config, pkgs, ports, ... }:
+{
+  config,
+  pkgs,
+  ports,
+  ...
+}:
 let
   systemdUnits = [
     "hytale-server.service"
   ];
   systemdUnitsFile = "/run/olivetin/systemd_units.json";
-  systemdUnitsFileGenerate = "echo \"\" > ${systemdUnitsFile}\n" + builtins.concatStringsSep "\n" (builtins.map (u: ''
-    echo "{\"unit\": \"${u}\", \"description\": \"$(systemctl show ${u} -P Description)\", \"status\": \"$(systemctl show ${u} -P SubState)\"}" >> ${systemdUnitsFile}
-  '') systemdUnits);
+  systemdUnitsFileGenerate =
+    "echo \"\" > ${systemdUnitsFile}\n"
+    + builtins.concatStringsSep "\n" (
+      builtins.map (u: ''
+        echo "{\"unit\": \"${u}\", \"description\": \"$(systemctl show ${u} -P Description)\", \"status\": \"$(systemctl show ${u} -P SubState)\"}" >> ${systemdUnitsFile}
+      '') systemdUnits
+    );
 in
 {
 
@@ -138,6 +147,11 @@ in
     };
   };
 
-  users.users.olivetin.extraGroups = [ "systemd-restart-units" "systemd-start-units" "systemd-stop-units" "systemd-journal" ];
+  users.users.olivetin.extraGroups = [
+    "systemd-restart-units"
+    "systemd-start-units"
+    "systemd-stop-units"
+    "systemd-journal"
+  ];
 
 }

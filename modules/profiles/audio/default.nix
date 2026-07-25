@@ -1,4 +1,9 @@
-{ config, lib, pkgs, ... }:
+{
+  config,
+  lib,
+  pkgs,
+  ...
+}:
 let
   cfg = config.gradient;
 in
@@ -25,7 +30,7 @@ in
   config = lib.mkMerge [
     (lib.mkIf cfg.profiles.audio.enable {
       services.pulseaudio.enable = lib.mkForce false;
-    
+
       services.pipewire = {
         enable = true;
         alsa.enable = true;
@@ -100,18 +105,18 @@ in
             type = "-";
           };
         in
-      [
-        # As per https://gitlab.freedesktop.org/pipewire/pipewire/-/wikis/Performance-tuning#rlimits
-        (mkLimit "rtprio" "95")
-        (mkLimit "nice" "-19")
-        (mkLimit "memlock" "4194304")
-        {
-          domain = "@audio";
-          type = "-";
-          item = "rtprio";
-          value = "99";
-        }
-      ];
+        [
+          # As per https://gitlab.freedesktop.org/pipewire/pipewire/-/wikis/Performance-tuning#rlimits
+          (mkLimit "rtprio" "95")
+          (mkLimit "nice" "-19")
+          (mkLimit "memlock" "4194304")
+          {
+            domain = "@audio";
+            type = "-";
+            item = "rtprio";
+            value = "99";
+          }
+        ];
 
       environment.systemPackages = with pkgs; [
         jack-matchmaker

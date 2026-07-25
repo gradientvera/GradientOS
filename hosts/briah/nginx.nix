@@ -1,25 +1,48 @@
- { config, lib, ... }:
- let
-    ports = config.gradient.currentHost.ports;
-    gradientnet = config.gradient.const.wireguard.addresses.gradientnet;
-    asiyahPorts = config.gradient.hosts.asiyah.ports;
+{ config, lib, ... }:
+let
+  ports = config.gradient.currentHost.ports;
+  gradientnet = config.gradient.const.wireguard.addresses.gradientnet;
+  asiyahPorts = config.gradient.hosts.asiyah.ports;
 in
- {
+{
 
-  networking.firewall.allowedTCPPorts = [ ports.http ports.https asiyahPorts.forgejo-ssh ];
-  networking.firewall.allowedUDPPorts = [ ports.http ports.https ];
+  networking.firewall.allowedTCPPorts = [
+    ports.http
+    ports.https
+    asiyahPorts.forgejo-ssh
+  ];
+  networking.firewall.allowedUDPPorts = [
+    ports.http
+    ports.https
+  ];
 
   services.nginx = {
     enable = true;
 
     defaultListen = [
       # HTTP
-      { addr = "0.0.0.0"; port = ports.http; ssl = false; }
-      { addr = "[::]"; port = ports.http; ssl = false; }
+      {
+        addr = "0.0.0.0";
+        port = ports.http;
+        ssl = false;
+      }
+      {
+        addr = "[::]";
+        port = ports.http;
+        ssl = false;
+      }
 
       # HTTPS
-      { addr = "0.0.0.0"; port = ports.https; ssl = true; }
-      { addr = "[::]"; port = ports.https; ssl = true; }
+      {
+        addr = "0.0.0.0";
+        port = ports.https;
+        ssl = true;
+      }
+      {
+        addr = "[::]";
+        port = ports.https;
+        ssl = true;
+      }
     ];
 
     # Set to 4G as the max for briah, but let asiyah vhosts decide on a smaller amount
@@ -130,4 +153,4 @@ in
 
   };
 
- }
+}

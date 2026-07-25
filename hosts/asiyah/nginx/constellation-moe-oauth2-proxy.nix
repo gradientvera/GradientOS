@@ -2,7 +2,8 @@
 let
   secrets = config.sops.secrets;
   ports = config.gradient.currentHost.ports;
-in {
+in
+{
 
   # TODO: Make this a container so we can have multiple instances of oauth2_proxy?
   # TODO-Followup: Might actually not be needed with kanidm, just use groups maybe?
@@ -46,8 +47,16 @@ in {
   };
 
   systemd.services.oauth2-proxy = {
-    wants = [ "kanidm.service" "nginx.service" "network-online.target" ];
-    after = [ "kanidm.service" "nginx.service" "network-online.target" ];
+    wants = [
+      "kanidm.service"
+      "nginx.service"
+      "network-online.target"
+    ];
+    after = [
+      "kanidm.service"
+      "nginx.service"
+      "network-online.target"
+    ];
     # Keep restarting OAuth2-Proxy no matter what
     startLimitIntervalSec = lib.mkForce 0;
     startLimitBurst = lib.mkForce 0;

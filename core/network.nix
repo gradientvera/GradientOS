@@ -16,22 +16,22 @@
   };
 
   environment.etc."NetworkManager/dnsmasq.d/default.conf".text = ''
-listen-address=::1,127.0.0.1
-domain-needed
-bogus-priv
-no-resolv
-'';
+    listen-address=::1,127.0.0.1
+    domain-needed
+    bogus-priv
+    no-resolv
+  '';
 
   environment.etc."NetworkManager/dnsmasq.d/nameservers.conf".text = ''
-local=/local/
-domain=local
-expand-hosts
-server=1.1.1.1
-server=1.0.0.1
-server=8.8.8.8
-server=8.8.4.4
-server=2606:4700:4700::1111
-server=2606:4700:4700::1001
+    local=/local/
+    domain=local
+    expand-hosts
+    server=1.1.1.1
+    server=1.0.0.1
+    server=8.8.8.8
+    server=8.8.4.4
+    server=2606:4700:4700::1111
+    server=2606:4700:4700::1001
   '';
 
   networking.resolvconf = {
@@ -46,5 +46,8 @@ server=2606:4700:4700::1001
   networking.dhcpcd.enable = false;
 
   # Ignore loopback/virtual interfaces.
-  systemd.network.wait-online.ignoredInterfaces = ["lo" "virbr0"];
+  systemd.network.wait-online.ignoredInterfaces = [
+    "lo"
+    "virbr0"
+  ];
 }

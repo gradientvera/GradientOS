@@ -1,4 +1,9 @@
-{ config, pkgs, lib, ... }:
+{
+  config,
+  pkgs,
+  lib,
+  ...
+}:
 let
   addresses = config.gradient.const.addresses;
   gradientnet = config.gradient.const.wireguard.addresses.gradientnet;
@@ -6,7 +11,7 @@ let
   ports = config.gradient.currentHost.ports;
   hostName = config.networking.hostName;
   isAsiyah = hostName == "asiyah";
-  writeYamlFile = (pkgs.formats.yaml {}).generate;
+  writeYamlFile = (pkgs.formats.yaml { }).generate;
   etcDefaults = {
     enable = true;
     user = "crowdsec";
@@ -16,12 +21,16 @@ let
 in
 {
 
-  networking.firewall.interfaces.gradientnet.allowedTCPPorts = if isAsiyah then [
-    asiyahPorts.crowdsec-lapi
-    asiyahPorts.crowdsec-metrics
-  ] else [
-    ports.crowdsec-metrics
-  ];
+  networking.firewall.interfaces.gradientnet.allowedTCPPorts =
+    if isAsiyah then
+      [
+        asiyahPorts.crowdsec-lapi
+        asiyahPorts.crowdsec-metrics
+      ]
+    else
+      [
+        ports.crowdsec-metrics
+      ];
 
   services.crowdsec = {
     enable = true;
@@ -34,14 +43,19 @@ in
       "crowdsecurity/auditd"
       "crowdsecurity/iptables"
       "crowdsecurity/linux-lpe"
-    ] 
-    ++ (if config.services.openssh.enable then [ "crowdsecurity/sshd" ] else [])
+    ]
+    ++ (if config.services.openssh.enable then [ "crowdsecurity/sshd" ] else [ ])
     # Needs spammy option so disable it: ++ (if config.networking.wireguard.enable then [ "crowdsecurity/wireguard" ] else [])
-    ++ (if config.services.home-assistant.enable then [ "crowdsecurity/home-assistant" ] else [])
-    ++ (if config.services.nginx.enable then [
-      "crowdsecurity/nginx"
-      "crowdsecurity/http-dos"
-    ] else []);
+    ++ (if config.services.home-assistant.enable then [ "crowdsecurity/home-assistant" ] else [ ])
+    ++ (
+      if config.services.nginx.enable then
+        [
+          "crowdsecurity/nginx"
+          "crowdsecurity/http-dos"
+        ]
+      else
+        [ ]
+    );
 
     hub.parsers = [
       "crowdsecurity/whitelists"
@@ -84,15 +98,20 @@ in
         labels.type = "auditd";
       }
     ]
-    ++ (if config.services.nginx.enable then [
-      {
-        source = "file";
-        filenames = [
-          "/var/log/nginx/*.log"
-        ];
-        labels.type = "nginx";
-      }
-    ] else []);
+    ++ (
+      if config.services.nginx.enable then
+        [
+          {
+            source = "file";
+            filenames = [
+              "/var/log/nginx/*.log"
+            ];
+            labels.type = "nginx";
+          }
+        ]
+      else
+        [ ]
+    );
 
     # What action to take for alerts
     localConfig.profiles = [
@@ -133,7 +152,7 @@ in
         filters = [
           "Alert.GetScope() == 'pid'"
         ];
-        decisions = [];
+        decisions = [ ];
         notifications = lib.mkIf isAsiyah [
           # "http_discord_pid"
         ];
@@ -149,25 +168,29 @@ in
         user = "crowdsec";
         group = "crowdsec";
       };
-      api.server = if isAsiyah then {
-        enable = true;
-        listen_uri = "${gradientnet.asiyah}:${toString asiyahPorts.crowdsec-lapi}";
-        trusted_ips = [
-          "::1"
-          "127.0.0.1"
-          "${gradientnet.gradientnet}/24"
-        ];
-        auto_registration = {
-          enabled = true;
-          token = "\${CROWDSEC_AUTO_REGISTRATION_TOKEN}";
-          allowed_ranges = [
-            "127.0.0.0/8"
-            "${gradientnet.gradientnet}/24"
-          ];
-        };
-      } else {
-        enable = false;
-      };
+      api.server =
+        if isAsiyah then
+          {
+            enable = true;
+            listen_uri = "${gradientnet.asiyah}:${toString asiyahPorts.crowdsec-lapi}";
+            trusted_ips = [
+              "::1"
+              "127.0.0.1"
+              "${gradientnet.gradientnet}/24"
+            ];
+            auto_registration = {
+              enabled = true;
+              token = "\${CROWDSEC_AUTO_REGISTRATION_TOKEN}";
+              allowed_ranges = [
+                "127.0.0.0/8"
+                "${gradientnet.gradientnet}/24"
+              ];
+            };
+          }
+        else
+          {
+            enable = false;
+          };
       prometheus = {
         enabled = true;
         level = "full";
@@ -176,12 +199,16 @@ in
       };
     };
 
-    settings.capi.credentialsFile = if isAsiyah then "/etc/crowdsec/online_api_credentials.yaml" else null;
+    settings.capi.credentialsFile =
+      if isAsiyah then "/etc/crowdsec/online_api_credentials.yaml" else null;
     settings.lapi.credentialsFile = "/etc/crowdsec/local_api_credentials.yaml";
     settings.console.tokenFile = config.sops.secrets.crowdsec-console-token.path;
   };
 
-  users.users.${config.services.crowdsec.user}.extraGroups = [ "nginx" "auditd" ];
+  users.users.${config.services.crowdsec.user}.extraGroups = [
+    "nginx"
+    "auditd"
+  ];
 
   environment.etc = {
     "crowdsec/plugins/notification-http" = etcDefaults // {
@@ -330,7 +357,9 @@ in
         max_retry = 5;
         log_level = "info";
         method = "POST";
-        headers = { Content-Type = "application/json"; };
+        headers = {
+          Content-Type = "application/json";
+        };
         url = "https://discord.com/api/webhooks/\${CROWDSEC_DISCORD_WEBHOOK_CODE}";
       };
     };
@@ -340,30 +369,30 @@ in
     # Load secrets
     EnvironmentFile = lib.mkAfter [ config.sops.secrets.crowdsec-env.path ];
     ReadWritePaths = lib.mkAfter [ config.sops.secrets.crowdsec-env.path ];
-    # TODO: see what can we get away with rather than disabling everything 
-    CapabilityBoundingSet=lib.mkForce [];
-    DevicePolicy=lib.mkForce [];
-    LockPersonality=lib.mkForce [];
-    NoNewPrivileges=lib.mkForce [];
-    PrivateDevices=lib.mkForce [];
-    PrivateTmp=lib.mkForce [];
-    PrivateUsers=lib.mkForce [];
-    ProtectClock=lib.mkForce [];
-    ProtectControlGroups=lib.mkForce [];
-    ProtectHome=lib.mkForce [];
-    ProtectHostname=lib.mkForce [];
-    ProtectKernelLogs=lib.mkForce [];
-    ProtectKernelModules=lib.mkForce [];
-    ProtectKernelTunables=lib.mkForce [];
-    ProtectProc=lib.mkForce [];
-    ProtectSystem=lib.mkForce [];
-    RemoveIPC=lib.mkForce [];
-    RestrictAddressFamilies=lib.mkForce [];
-    RestrictNamespaces=lib.mkForce [];
-    RestrictRealtime=lib.mkForce [];
-    RestrictSUIDSGID=lib.mkForce [];
-    SystemCallArchitectures=lib.mkForce [];
-    SystemCallFilter=lib.mkForce [];
+    # TODO: see what can we get away with rather than disabling everything
+    CapabilityBoundingSet = lib.mkForce [ ];
+    DevicePolicy = lib.mkForce [ ];
+    LockPersonality = lib.mkForce [ ];
+    NoNewPrivileges = lib.mkForce [ ];
+    PrivateDevices = lib.mkForce [ ];
+    PrivateTmp = lib.mkForce [ ];
+    PrivateUsers = lib.mkForce [ ];
+    ProtectClock = lib.mkForce [ ];
+    ProtectControlGroups = lib.mkForce [ ];
+    ProtectHome = lib.mkForce [ ];
+    ProtectHostname = lib.mkForce [ ];
+    ProtectKernelLogs = lib.mkForce [ ];
+    ProtectKernelModules = lib.mkForce [ ];
+    ProtectKernelTunables = lib.mkForce [ ];
+    ProtectProc = lib.mkForce [ ];
+    ProtectSystem = lib.mkForce [ ];
+    RemoveIPC = lib.mkForce [ ];
+    RestrictAddressFamilies = lib.mkForce [ ];
+    RestrictNamespaces = lib.mkForce [ ];
+    RestrictRealtime = lib.mkForce [ ];
+    RestrictSUIDSGID = lib.mkForce [ ];
+    SystemCallArchitectures = lib.mkForce [ ];
+    SystemCallFilter = lib.mkForce [ ];
   };
 
   # Auto-register machines
@@ -381,9 +410,14 @@ in
     # Use cscli from environment, which already has the config file specified
     path = [ "/run/current-system/sw" ]; # ugly hack lol
     script = ''
-      ${if isAsiyah then ''
-      cscli bouncers add gradient --key $CROWDSEC_BOUNCER_API_KEY || echo "Done adding bouncer!"
-      '' else ""}
+      ${
+        if isAsiyah then
+          ''
+            cscli bouncers add gradient --key $CROWDSEC_BOUNCER_API_KEY || echo "Done adding bouncer!"
+          ''
+        else
+          ""
+      }
 
       if [ ! -f ${config.services.crowdsec.settings.lapi.credentialsFile} ]; then
         touch ${config.services.crowdsec.settings.lapi.credentialsFile}
@@ -416,39 +450,46 @@ in
 
   # Bouncer
   systemd.services.crowdsec-firewall-bouncer =
-  let
-    bouncerConfig = (pkgs.formats.yaml {}).generate "crowdsec-firewall-bouncer.yaml" ({
-      mode = "iptables";
-      update_frequency = "10s";
-      scenarios_containing = [ "ssh" "http" ];
-      scopes = [ "Ip" "Range" ];
-      origins = [ "cscli" "crowdsec" "CAPI" "lists" ];
-      api_url = "http://${gradientnet.asiyah}:${toString asiyahPorts.crowdsec-lapi}";
-      api_key = "\${CROWDSEC_BOUNCER_API_KEY}";
-      iptables_chains = [ "INPUT" ];
-      ipset_type = "nethash";
-      blacklists_ipv4 = "crowdsec-blacklists";
-      blacklists_ipv6 = "crowdsec6-blacklists";
-    });
-  in
-  {
-    partOf = [ "crowdsec.service" ];
-    after = [ "crowdsec.service" ];
-    wantedBy = [ "multi-user.target" ];
-    serviceConfig.EnvironmentFile = config.sops.secrets.crowdsec-env.path;
-    serviceConfig.Restart = "always";
-    # Dependencies of bouncer
-    path = [ pkgs.ipset pkgs.iptables ];
-    script = ''
-      ${lib.getExe pkgs.crowdsec-firewall-bouncer} -c ${toString bouncerConfig}
-    '';
-  };
+    let
+      bouncerConfig = (pkgs.formats.yaml { }).generate "crowdsec-firewall-bouncer.yaml" ({
+        mode = "iptables";
+        update_frequency = "10s";
+        scenarios_containing = [
+          "ssh"
+          "http"
+        ];
+        scopes = [
+          "Ip"
+          "Range"
+        ];
+        origins = [
+          "cscli"
+          "crowdsec"
+          "CAPI"
+          "lists"
+        ];
+        api_url = "http://${gradientnet.asiyah}:${toString asiyahPorts.crowdsec-lapi}";
+        api_key = "\${CROWDSEC_BOUNCER_API_KEY}";
+        iptables_chains = [ "INPUT" ];
+        ipset_type = "nethash";
+        blacklists_ipv4 = "crowdsec-blacklists";
+        blacklists_ipv6 = "crowdsec6-blacklists";
+      });
+    in
+    {
+      partOf = [ "crowdsec.service" ];
+      after = [ "crowdsec.service" ];
+      wantedBy = [ "multi-user.target" ];
+      serviceConfig.EnvironmentFile = config.sops.secrets.crowdsec-env.path;
+      serviceConfig.Restart = "always";
+      # Dependencies of bouncer
+      path = [
+        pkgs.ipset
+        pkgs.iptables
+      ];
+      script = ''
+        ${lib.getExe pkgs.crowdsec-firewall-bouncer} -c ${toString bouncerConfig}
+      '';
+    };
 
 }
-
-/*
-
-
-
-
-*/

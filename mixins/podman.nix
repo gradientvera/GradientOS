@@ -27,16 +27,19 @@
   boot.kernel.sysctl."net.ipv4.conf.podman0.route_localnet" = 1;
 
   environment.etc."NetworkManager/dnsmasq.d/podman.conf".text = ''
-except-interface=podman0
-'';
+    except-interface=podman0
+  '';
 
-  systemd.network.wait-online.ignoredInterfaces = ["podman0"];
-  
+  systemd.network.wait-online.ignoredInterfaces = [ "podman0" ];
+
   systemd.timers.podman-auto-update = {
     enable = true;
     wantedBy = [ "timers.target" ];
     timerConfig = {
-      OnCalendar = [ "" "Mon 05:00" ];
+      OnCalendar = [
+        ""
+        "Mon 05:00"
+      ];
       RandomizedDelaySec = "2h";
       Persistent = true;
     };

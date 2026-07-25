@@ -1,5 +1,6 @@
-{ fetchurl
-, appimageTools
+{
+  fetchurl,
+  appimageTools,
 }:
 let
   pname = "byar";

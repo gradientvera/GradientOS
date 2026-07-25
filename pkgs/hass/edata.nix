@@ -1,12 +1,14 @@
-{ fetchFromGitHub
-, home-assistant
-, buildHomeAssistantComponent
+{
+  fetchFromGitHub,
+  home-assistant,
+  buildHomeAssistantComponent,
 }:
 let
   owner = "uvejota";
   version = "2024.07.6";
   pythonPkgs = home-assistant.python3Packages;
-in buildHomeAssistantComponent {
+in
+buildHomeAssistantComponent {
   inherit version owner;
   domain = "edata";
   src = fetchFromGitHub {
@@ -19,33 +21,36 @@ in buildHomeAssistantComponent {
   propagatedBuildInputs = [
     pythonPkgs.python-dateutil
     # This derivation is ONLY used for this integration, so just keep it here
-    (let
-      pname = "e-data";
-      version = "1.2.22";
-    in pythonPkgs.buildPythonPackage {
-      inherit pname version;
-      pyproject = true;
-      src = fetchFromGitHub {
-        inherit owner;
-        repo = "python-edata";
-        rev = "v${version}";
-        hash = "sha256-h7nqrFKsh97GIebGeIC5E1m1BROTu8ZZ1TrDSO4nFWk=";
-      };
+    (
+      let
+        pname = "e-data";
+        version = "1.2.22";
+      in
+      pythonPkgs.buildPythonPackage {
+        inherit pname version;
+        pyproject = true;
+        src = fetchFromGitHub {
+          inherit owner;
+          repo = "python-edata";
+          rev = "v${version}";
+          hash = "sha256-h7nqrFKsh97GIebGeIC5E1m1BROTu8ZZ1TrDSO4nFWk=";
+        };
 
-      build-system = [
-        pythonPkgs.setuptools
-      ];
+        build-system = [
+          pythonPkgs.setuptools
+        ];
 
-      dependencies = with pythonPkgs; [
-        dateparser
-        freezegun
-        holidays
-        pytest
-        python-dateutil
-        requests
-        voluptuous
-        jinja2
-      ];
-    })
+        dependencies = with pythonPkgs; [
+          dateparser
+          freezegun
+          holidays
+          pytest
+          python-dateutil
+          requests
+          voluptuous
+          jinja2
+        ];
+      }
+    )
   ];
 }

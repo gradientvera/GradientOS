@@ -6,5 +6,5 @@
     # enable = true;
     packages = [ pkgs.tiscamera ];
   };
-  
+
 }

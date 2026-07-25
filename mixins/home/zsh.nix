@@ -9,7 +9,11 @@
     historySubstringSearch.enable = true;
     oh-my-zsh = {
       enable = true;
-      plugins = [ "git" "python" "man" ];
+      plugins = [
+        "git"
+        "python"
+        "man"
+      ];
     };
   };
 }

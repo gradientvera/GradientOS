@@ -31,7 +31,7 @@
         host = "${config.networking.hostName}",
       }
     }
-    
+
     loki.source.file "audit" {
       targets = [
         { __path__ = "/var/log/audit/audit.log", "type" = "auditd", "component" = "loki.source.file", "job" = "auditd", "unit" = "auditd.service", "host" = "${config.networking.hostName}" },

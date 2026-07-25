@@ -21,7 +21,9 @@
     "vm.max_map_count" = 2147483642;
   };
 
-  environment.sessionVariables = { WINEDEBUG = "-all"; };
+  environment.sessionVariables = {
+    WINEDEBUG = "-all";
+  };
 
   # See https://github.com/NixOS/nixpkgs/issues/230575
   # Breaks some other things...

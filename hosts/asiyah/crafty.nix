@@ -4,19 +4,20 @@ let
 in
 {
 
-  systemd.tmpfiles.settings."99-crafty.conf" = 
-  let
-    rule = {
-      mode = "0775";
+  systemd.tmpfiles.settings."99-crafty.conf" =
+    let
+      rule = {
+        mode = "0775";
+      };
+    in
+    {
+      "/var/lib/crafty".d = rule;
+      "/var/lib/crafty/backups".d = rule;
+      "/var/lib/crafty/logs".d = rule;
+      "/var/lib/crafty/servers".d = rule;
+      "/var/lib/crafty/config".d = rule;
+      "/var/lib/crafty/import".d = rule;
     };
-  in {
-    "/var/lib/crafty".d = rule;
-    "/var/lib/crafty/backups".d = rule;
-    "/var/lib/crafty/logs".d = rule;
-    "/var/lib/crafty/servers".d = rule;
-    "/var/lib/crafty/config".d = rule;
-    "/var/lib/crafty/import".d = rule;
-  };
 
   virtualisation.oci-containers.containers.crafty = {
     image = "registry.gitlab.com/crafty-controller/crafty-4:latest";
@@ -39,11 +40,17 @@ in
   };
 
   networking.firewall.allowedTCPPortRanges = [
-    { from = ports.crafty-server-start; to = ports.crafty-server-end; }
+    {
+      from = ports.crafty-server-start;
+      to = ports.crafty-server-end;
+    }
   ];
 
   networking.firewall.allowedUDPPortRanges = [
-    { from = ports.crafty-server-start; to = ports.crafty-server-end; }
+    {
+      from = ports.crafty-server-start;
+      to = ports.crafty-server-end;
+    }
   ];
 
 }

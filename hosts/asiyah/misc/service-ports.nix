@@ -109,7 +109,7 @@
   whisper-english = 10300;
   whisper-spanish = 10301;
   openwakeword = 10400;
-  
+
   # Frigate, cannot be changed because fuck you
   frigate = 5000;
   frigate-api = 5001;
@@ -132,7 +132,7 @@
   victorialogs = 8086;
   alloy = 8087;
   victoriametrics = 8428;
-  
+
   # scrutiny
   scrutiny = 8093;
   influxdb = 8094;

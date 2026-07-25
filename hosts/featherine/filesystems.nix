@@ -1,4 +1,9 @@
-{ pkgs, config, lib, ... }:
+{
+  pkgs,
+  config,
+  lib,
+  ...
+}:
 let
   auroraUuid = "20d3ee15-2596-4c2c-92b8-af5bd7c0b096";
 in
@@ -60,7 +65,15 @@ in
   fileSystems."/data" = {
     device = "/dev/disk/by-uuid/e44adef8-7bcf-42eb-ae52-25e69e6a27d8";
     fsType = "ext4";
-    options = [ "defaults" "rw" "nofail" "noatime" "x-systemd.automount" "x-systemd.device-timeout=1ms" "comment=x-gvfs-show" ];
+    options = [
+      "defaults"
+      "rw"
+      "nofail"
+      "noatime"
+      "x-systemd.automount"
+      "x-systemd.device-timeout=1ms"
+      "comment=x-gvfs-show"
+    ];
   };
 
   swapDevices = [

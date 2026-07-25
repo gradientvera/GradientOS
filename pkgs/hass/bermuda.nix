@@ -1,11 +1,13 @@
-{ fetchFromGitHub
-, home-assistant
-, buildHomeAssistantComponent
+{
+  fetchFromGitHub,
+  home-assistant,
+  buildHomeAssistantComponent,
 }:
 let
   owner = "agittins";
   version = "0.8.4";
-in buildHomeAssistantComponent {
+in
+buildHomeAssistantComponent {
   inherit version owner;
   domain = "bermuda";
 
@@ -16,7 +18,7 @@ in buildHomeAssistantComponent {
     hash = "sha256-xshVYsFJKxfTBIFFDE5fx3fX2CilTVBV0+azUbxjv0c=";
   };
 
-  propagatedBuildInputs = [];
+  propagatedBuildInputs = [ ];
 
   # TODO: Metadata etc
 }

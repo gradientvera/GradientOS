@@ -1,4 +1,9 @@
-{ config, pkgs, ports, ... }:
+{
+  config,
+  pkgs,
+  ports,
+  ...
+}:
 let
   addresses = config.gradient.const.addresses;
 in
@@ -169,12 +174,14 @@ in
               href = "https://git.gradient.moe/";
               icon = "sh-forgejo.svg";
               siteMonitor = "http://127.0.0.1:${toString ports.forgejo}";
-              /* Does not work for some reason!
-              widget = {
-                type = "gitea";
-                url = "http://127.0.0.1:${toString ports.forgejo}";
-                key = "{{HOMEPAGE_VAR_FORGEJO_API_KEY}}";
-              };*/
+              /*
+                Does not work for some reason!
+                widget = {
+                  type = "gitea";
+                  url = "http://127.0.0.1:${toString ports.forgejo}";
+                  key = "{{HOMEPAGE_VAR_FORGEJO_API_KEY}}";
+                };
+              */
             };
           }
           {
@@ -321,7 +328,7 @@ in
               };
             };
           }
-          { 
+          {
             "Sonarr (ES)" = {
               description = "A PVR for Usenet and BitTorrent users. For shows in Spanish.";
               href = "https://sonarr-es.constellation.moe/";

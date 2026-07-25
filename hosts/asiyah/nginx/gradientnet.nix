@@ -1,23 +1,23 @@
-/*
-  Internal services accessible via the gradientnet VPN.
-*/
+# Internal services accessible via the gradientnet VPN.
 { config, ... }:
 let
   addresses = config.gradient.const.addresses;
   localAddresses = config.gradient.const.localAddresses;
   dashboard = builtins.toFile "dashboard.html" (dashboardReplaceConstants dashboardBaseHtml);
-  dashboardReplaceConstants = html: builtins.replaceStrings 
-    [
-      "@ASIYAH@"
-      "@PORT-PROWLARR@"
-      "@PORT-SEARX@"
-    ]
-    [
-      "asiyah.gradient"
-      (toString ports.prowlarr)
-      (toString ports.searx)
-    ]
-    html;
+  dashboardReplaceConstants =
+    html:
+    builtins.replaceStrings
+      [
+        "@ASIYAH@"
+        "@PORT-PROWLARR@"
+        "@PORT-SEARX@"
+      ]
+      [
+        "asiyah.gradient"
+        (toString ports.prowlarr)
+        (toString ports.searx)
+      ]
+      html;
   # TODO: Rebuild this mess ugh
   dashboardBaseHtml = (builtins.readFile ./dashboard.html);
   ports = config.gradient.currentHost.ports;
@@ -26,23 +26,33 @@ let
     allow ${ips.gradientnet.gradientnet}/24;
     deny all;
   '';
-  mkInternalVHost = { port, dynamicAddress ? null, address ? "127.0.0.1", reverseProxySubdomain ? "", vhostExtraConfig ? "" }: {
-    listenAddresses = [ ips.gradientnet.asiyah ];
-    extraConfig = ''
-      ${vhostConfig}
-      ${vhostExtraConfig}
-    '';
-    useACMEHost = "gradient.moe";
-    quic = true;
-    forceSSL = true;
-    locations."/" = {
-      proxyPass = "http://${(if dynamicAddress == null then address else "$upstream")}:${toString port}${reverseProxySubdomain}";
-      proxyWebsockets = true;
+  mkInternalVHost =
+    {
+      port,
+      dynamicAddress ? null,
+      address ? "127.0.0.1",
+      reverseProxySubdomain ? "",
+      vhostExtraConfig ? "",
+    }:
+    {
+      listenAddresses = [ ips.gradientnet.asiyah ];
       extraConfig = ''
-        ${(if dynamicAddress != null then "set $upstream ${dynamicAddress};" else "")}
+        ${vhostConfig}
+        ${vhostExtraConfig}
       '';
+      useACMEHost = "gradient.moe";
+      quic = true;
+      forceSSL = true;
+      locations."/" = {
+        proxyPass = "http://${
+          (if dynamicAddress == null then address else "$upstream")
+        }:${toString port}${reverseProxySubdomain}";
+        proxyWebsockets = true;
+        extraConfig = ''
+          ${(if dynamicAddress != null then "set $upstream ${dynamicAddress};" else "")}
+        '';
+      };
     };
-  };
 in
 {
 
@@ -77,9 +87,19 @@ in
     "hass.asiyah.gradient.moe" = mkInternalVHost { port = ports.home-assistant; };
     "jellyfin.asiyah.gradient.moe" = mkInternalVHost { port = ports.jellyfin-http; };
     "uptime.asiyah.gradient.moe" = mkInternalVHost { port = ports.uptime-kuma; };
-    "k1c.asiyah.gradient.moe" = mkInternalVHost { dynamicAddress = localAddresses.printer-k1c; port = 80; vhostExtraConfig = "client_max_body_size 4G;"; };
-    "angela.asiyah.gradient.moe" = mkInternalVHost { dynamicAddress = "vacuum-angela.${addresses.tailscale-domain}"; port = 80; };
-    "mute.asiyah.gradient.moe" = mkInternalVHost { dynamicAddress = "vacuum-mute.${addresses.tailscale-domain}"; port = 80; };
+    "k1c.asiyah.gradient.moe" = mkInternalVHost {
+      dynamicAddress = localAddresses.printer-k1c;
+      port = 80;
+      vhostExtraConfig = "client_max_body_size 4G;";
+    };
+    "angela.asiyah.gradient.moe" = mkInternalVHost {
+      dynamicAddress = "vacuum-angela.${addresses.tailscale-domain}";
+      port = 80;
+    };
+    "roland.asiyah.gradient.moe" = mkInternalVHost {
+      dynamicAddress = "vacuum-roland.${addresses.tailscale-domain}";
+      port = 80;
+    };
   };
-  
+
 }

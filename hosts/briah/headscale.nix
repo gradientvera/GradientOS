@@ -1,4 +1,9 @@
-{ config, pkgs, lib, ... }:
+{
+  config,
+  pkgs,
+  lib,
+  ...
+}:
 let
   addresses = config.gradient.const.addresses;
   ports = config.gradient.currentHost.ports;
@@ -46,7 +51,14 @@ in
       ];
       policy = {
         mode = "file";
-        path = pkgs.writeText "policy.json" (builtins.toJSON (import ../../misc/headscale-acl.nix { hosts = config.gradient.hosts; const = config.gradient.const; } ));
+        path = pkgs.writeText "policy.json" (
+          builtins.toJSON (
+            import ../../misc/headscale-acl.nix {
+              hosts = config.gradient.hosts;
+              const = config.gradient.const;
+            }
+          )
+        );
       };
       prefixes.v4 = addresses.tailscale-ipv4-cidr;
       prefixes.v6 = addresses.tailscale-ipv6-cidr;
@@ -60,24 +72,24 @@ in
   systemd.services.tailscaled.after = [ "headscale.service" ];
 
   systemd.services.headscale.postStart = ''
-      DB_PATH="${config.services.headscale.settings.database.sqlite.path}"
+    DB_PATH="${config.services.headscale.settings.database.sqlite.path}"
 
+    sleep 5
+
+    until [ -f $DB_PATH ]; do
       sleep 5
-      
-      until [ -f $DB_PATH ]; do
-        sleep 5
-      done
+    done
 
-      until sqlite3 $DB_PATH .tables | grep -q users; do
-        sleep 5
-      done
+    until sqlite3 $DB_PATH .tables | grep -q users; do
+      sleep 5
+    done
 
-      until sqlite3 $DB_PATH .tables | grep -q pre_auth_keys; do
-        sleep 5
-      done
+    until sqlite3 $DB_PATH .tables | grep -q pre_auth_keys; do
+      sleep 5
+    done
 
-      sqlite3 $DB_PATH < ${config.sops.secrets.headscale.path}
-    '';
+    sqlite3 $DB_PATH < ${config.sops.secrets.headscale.path}
+  '';
 
   # Keep restarting Headscale no matter what
   systemd.services.headscale.startLimitIntervalSec = lib.mkForce 0;

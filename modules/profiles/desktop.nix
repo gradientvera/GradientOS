@@ -1,4 +1,9 @@
-{ config, lib, pkgs, ... }:
+{
+  config,
+  lib,
+  pkgs,
+  ...
+}:
 let
   cfg = config.gradient;
 in
@@ -67,13 +72,15 @@ in
 
       services.displayManager.enable = true;
       services.displayManager.autoLogin.enable = cfg.profiles.desktop.wayland.autologin.enable;
-      services.displayManager.autoLogin.user = lib.mkIf cfg.profiles.desktop.wayland.autologin.enable (lib.mkDefault "vera");
+      services.displayManager.autoLogin.user = lib.mkIf cfg.profiles.desktop.wayland.autologin.enable (
+        lib.mkDefault "vera"
+      );
 
       # Enable portals.
       xdg.portal.enable = true;
       xdg.portal.xdgOpenUsePortal = true;
       xdg.autostart.enable = true;
-      
+
       # Enable flatpak
       services.flatpak.enable = true;
       services.packagekit.enable = true;
@@ -101,18 +108,25 @@ in
       ];
     })
 
-    (lib.mkIf (cfg.profiles.desktop.enable && cfg.profiles.desktop.wayland.enable && cfg.profiles.desktop.wayland.environment.enable) {
-      # Wayland support for most applications.
-      environment.sessionVariables = {
-        NIXOS_OZONE_WL = "1";
-        
-        # Apparently not a good idea to set the below env vars
-        # SDL_VIDEODRIVER = "wayland";
-        # GDK_BACKEND = "wayland";
-        # QT_QPA_PLATFORM = "wayland";
-        # XDG_SESSION_TYPE = "wayland";
-      };
-    })
+    (lib.mkIf
+      (
+        cfg.profiles.desktop.enable
+        && cfg.profiles.desktop.wayland.enable
+        && cfg.profiles.desktop.wayland.environment.enable
+      )
+      {
+        # Wayland support for most applications.
+        environment.sessionVariables = {
+          NIXOS_OZONE_WL = "1";
+
+          # Apparently not a good idea to set the below env vars
+          # SDL_VIDEODRIVER = "wayland";
+          # GDK_BACKEND = "wayland";
+          # QT_QPA_PLATFORM = "wayland";
+          # XDG_SESSION_TYPE = "wayland";
+        };
+      }
+    )
 
     (lib.mkIf (cfg.profiles.desktop.enable && cfg.profiles.desktop.fonts.enable) {
       fonts = {
@@ -130,7 +144,11 @@ in
             monospace = [ "NotoSansM Nerd Font Mono" ];
             sansSerif = [ "NotoSans Nerd Font" ];
             serif = [ "Noto Serif" ];
-            emoji = [ "Twitter Color Emoji" "Noto Color Emoji" "Noto Emoji" ];
+            emoji = [
+              "Twitter Color Emoji"
+              "Noto Color Emoji"
+              "Noto Emoji"
+            ];
           };
         };
         enableDefaultPackages = true;
@@ -180,7 +198,7 @@ in
       programs.kdeconnect.enable = true;
 
       services.power-profiles-daemon.enable = true;
-      
+
       environment.systemPackages = with pkgs; [
         kdePackages.powerdevil
         kdePackages.kio-admin

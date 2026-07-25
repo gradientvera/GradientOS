@@ -7,7 +7,9 @@
 
     secrets = {
 
-      wireguard-private-key = { restartUnits = [ "wireguard-*" ]; };
+      wireguard-private-key = {
+        restartUnits = [ "wireguard-*" ];
+      };
 
       network-manager-env = {
         restartUnits = [ "NetworkManager.service" ];
@@ -15,6 +17,5 @@
 
     };
   };
-
 
 }

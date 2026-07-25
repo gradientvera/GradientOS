@@ -17,7 +17,7 @@ in
         settings.allow_anonymous = true;
       }
     ];
-  };  
+  };
 
   networking.firewall.allowedTCPPorts = [ ports.mqtt ];
   networking.firewall.allowedUDPPorts = [ ports.mqtt ];
@@ -39,7 +39,7 @@ in
     iptables -D nixos-fw -p udp --source 192.168.0.0/24 --dport ${toString ports.mqtt} -j nixos-fw-accept || true
     iptables -D nixos-fw -p tcp --source 127.0.0.0/8 --dport ${toString ports.mqtt} -j nixos-fw-accept || true
     iptables -D nixos-fw -p udp --source 127.0.0.0/8 --dport ${toString ports.mqtt} -j nixos-fw-accept || true
-    
+
     iptables -D nixos-fw -p tcp --source ${addresses.tailscale-ipv4-cidr} --dport ${toString ports.mqtt} -j nixos-fw-accept || true
     iptables -D nixos-fw -p udp --source ${addresses.tailscale-ipv4-cidr} --dport ${toString ports.mqtt} -j nixos-fw-accept || true
   '';

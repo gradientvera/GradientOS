@@ -1,5 +1,6 @@
-{ fetchurl
-, appimageTools
+{
+  fetchurl,
+  appimageTools,
 }:
 let
   pname = "es-de";
@@ -21,7 +22,7 @@ let
 in
 appimageTools.wrapAppImage {
   inherit pname version;
-  
+
   src = appimageContents;
 
   extraInstallCommands = ''

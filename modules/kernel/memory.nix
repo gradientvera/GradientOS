@@ -17,7 +17,11 @@ in
     };
 
     gradient.kernel.transparent_hugepages.policy = lib.mkOption {
-      type = lib.types.enum [ "always" "madvise" "never" ];
+      type = lib.types.enum [
+        "always"
+        "madvise"
+        "never"
+      ];
       default = "always";
       description = ''
         The policy to use for transparent hugepages.
@@ -26,7 +30,13 @@ in
     };
 
     gradient.kernel.transparent_hugepages.defrag = lib.mkOption {
-      type = lib.types.enum [ "always" "defer" "defer+madvise" "madvise" "never" ];
+      type = lib.types.enum [
+        "always"
+        "defer"
+        "defer+madvise"
+        "madvise"
+        "never"
+      ];
       default = "defer+madvise";
       description = ''
         Whether to enable defragmentation.
@@ -35,7 +45,10 @@ in
     };
 
     gradient.kernel.transparent_hugepages.khugepaged.defrag = lib.mkOption {
-      type = lib.types.enum [ "0" "1" ];
+      type = lib.types.enum [
+        "0"
+        "1"
+      ];
       default = "0";
       description = ''
         Whether to enable khugepaged defragmentation.
@@ -53,7 +66,14 @@ in
     };
 
     gradient.kernel.transparent_hugepages.sharedMemory = lib.mkOption {
-      type = lib.types.enum [ "always" "within_size" "advise" "never" "deny" "force" ];
+      type = lib.types.enum [
+        "always"
+        "within_size"
+        "advise"
+        "never"
+        "deny"
+        "force"
+      ];
       default = "advise";
       description = ''
         Determines the transparent hugepage allocation policy for the internal shmem mount.
@@ -88,7 +108,7 @@ in
         Determines the number of times that the page lock can be stolen from under a waiter before "fair" behavior kicks in.
       '';
     };
-    
+
   };
 
   config = lib.mkMerge [
@@ -115,6 +135,6 @@ in
     (lib.mkIf (cfg.kernel.pageLockUnfairness != null) {
       boot.kernel.sysctl."vm.page_lock_unfairness" = cfg.kernel.pageLockUnfairness;
     })
-    ];
+  ];
 
 }

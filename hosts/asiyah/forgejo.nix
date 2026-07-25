@@ -1,10 +1,14 @@
 /*
-
   Takes heavy inspiration from https://git.lix.systems/the-distro/infra/src/commit/f37ac9edf339710929556f3498a41b5375692c34/services/forgejo/default.nix
   Thank you, Lix infra team! <3
-
 */
-{ config, pkgs, lib, ports, ... }:
+{
+  config,
+  pkgs,
+  lib,
+  ports,
+  ...
+}:
 let
   repositoryRoot = "/data/repositories";
   lfsRoot = "/data/lfs";
@@ -53,7 +57,7 @@ in
         HTTP_PORT = ports.forgejo;
         DOMAIN = "git.gradient.moe";
         ROOT_URL = "https://git.gradient.moe/";
-      
+
         # SSH support
         DISABLE_SSH = false;
         START_SSH_SERVER = true;
@@ -72,7 +76,7 @@ in
 
       session = {
         COOKIE_SECURE = true;
-        PROVIDER = "db";  
+        PROVIDER = "db";
         PROVIDER_CONFIG = "";
         SESSION_LIFE_TIME = 86400 * 5;
       };
@@ -154,20 +158,30 @@ in
       # Allow binding to port below 1024, for ssh
       AmbientCapabilities = [ "CAP_NET_BIND_SERVICE" ];
       CapabilityBoundingSet = [ "CAP_NET_BIND_SERVICE" ];
-      
+
       # Allow using git user
       PrivateUsers = lib.mkForce false;
     };
 
     # Prevent race conditions with sshd in case of misconfiguration
-    wants = [ "sshd.service" "postgresql.service" "kanidm.service" "redis-forgejo.service" ];
-    after = [ "sshd.service" "postgresql.service" "kanidm.service" "redis-forgejo.service" ];
+    wants = [
+      "sshd.service"
+      "postgresql.service"
+      "kanidm.service"
+      "redis-forgejo.service"
+    ];
+    after = [
+      "sshd.service"
+      "postgresql.service"
+      "kanidm.service"
+      "redis-forgejo.service"
+    ];
   };
 
   services.redis.servers.forgejo = {
     enable = true;
     user = config.services.forgejo.user;
-    save = [];
+    save = [ ];
     openFirewall = false;
     port = ports.redis-forgejo;
   };
@@ -179,7 +193,7 @@ in
     createHome = false;
   };
 
-  users.groups.git = {};
+  users.groups.git = { };
 
   networking.firewall.allowedTCPPorts = [
     ports.forgejo-ssh

@@ -1,7 +1,8 @@
-{ fetchFromGitHub
-, fetchPypi
-, home-assistant
-, buildHomeAssistantComponent
+{
+  fetchFromGitHub,
+  fetchPypi,
+  home-assistant,
+  buildHomeAssistantComponent,
 }:
 let
   owner = "sca075";
@@ -64,7 +65,8 @@ let
       ];
     }
   );
-in buildHomeAssistantComponent {
+in
+buildHomeAssistantComponent {
   inherit version owner;
   domain = "mqtt_vacuum_camera";
 

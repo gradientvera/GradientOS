@@ -1,4 +1,9 @@
-{ pkgs, config, lib, ... }:
+{
+  pkgs,
+  config,
+  lib,
+  ...
+}:
 let
   ports = config.gradient.currentHost.ports;
 in
@@ -29,7 +34,9 @@ in
         elapsed = true;
         log_directories_to_keep = 10;
         log_level = "info";
-        log_namespaced_levels = { "z2m:mqtt" = "warning"; };
+        log_namespaced_levels = {
+          "z2m:mqtt" = "warning";
+        };
         homeassistant_legacy_entity_attributes = false;
         homeassistant_legacy_triggers = false;
         legacy_api = false;
@@ -38,11 +45,11 @@ in
       device_options = {
         legacy = false;
       };
-    };  
+    };
   };
 
   systemd.services.zigbee2mqtt.serviceConfig = {
-    Restart = lib.mkForce "always"; # Sometimes fails with successful exit code 
+    Restart = lib.mkForce "always"; # Sometimes fails with successful exit code
     RestartSec = 10;
   };
 

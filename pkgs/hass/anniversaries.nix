@@ -1,12 +1,14 @@
-{ fetchFromGitHub
-, home-assistant
-, buildHomeAssistantComponent
+{
+  fetchFromGitHub,
+  home-assistant,
+  buildHomeAssistantComponent,
 }:
 let
   owner = "pinkywafer";
   version = "6.0.1";
   pythonPkgs = home-assistant.python3Packages;
-in buildHomeAssistantComponent {
+in
+buildHomeAssistantComponent {
   inherit version owner;
   domain = "anniversaries";
 
@@ -20,31 +22,34 @@ in buildHomeAssistantComponent {
   propagatedBuildInputs = with pythonPkgs; [
     python-dateutil
     voluptuous
-    (let
-      owner = "ludeeus";
-      pname = "integrationhelper";
-      version = "0.2.2";
-    in pythonPkgs.buildPythonPackage {
-      inherit pname version;
+    (
+      let
+        owner = "ludeeus";
+        pname = "integrationhelper";
+        version = "0.2.2";
+      in
+      pythonPkgs.buildPythonPackage {
+        inherit pname version;
 
-      pyproject = true;
+        pyproject = true;
 
-      src = fetchFromGitHub {
-        inherit owner;
-        repo = "integrationhelper";
-        rev = version;
-        hash = "sha256-Eoa3rRa3SssVNItFEK/67JAkcio22z0ACYRmv2fRDtg=";
-      };
+        src = fetchFromGitHub {
+          inherit owner;
+          repo = "integrationhelper";
+          rev = version;
+          hash = "sha256-Eoa3rRa3SssVNItFEK/67JAkcio22z0ACYRmv2fRDtg=";
+        };
 
-      build-system = [
-        pythonPkgs.setuptools
-      ];
+        build-system = [
+          pythonPkgs.setuptools
+        ];
 
-      dependencies = with pythonPkgs; [
-        aiohttp
-        async-timeout
-        backoff
-      ];
-    })
+        dependencies = with pythonPkgs; [
+          aiohttp
+          async-timeout
+          backoff
+        ];
+      }
+    )
   ];
 }

@@ -1,9 +1,10 @@
-{ lib
-, stdenv
-, fetchzip
-, makeWrapper
-, makeDesktopItem
-, steam-run
+{
+  lib,
+  stdenv,
+  fetchzip,
+  makeWrapper,
+  makeDesktopItem,
+  steam-run,
 }:
 let
   version = "4.3";
@@ -30,7 +31,10 @@ stdenv.mkDerivation {
     mimeTypes = [ "application/x-godot-project" ];
     comment = "Multi-platform 2D and 3D game engine with a feature-rich editor";
     genericName = "Libre game engine";
-    categories = [ "Development" "IDE" ];
+    categories = [
+      "Development"
+      "IDE"
+    ];
     extraConfig.StartupWMClass = "Godot";
   };
 

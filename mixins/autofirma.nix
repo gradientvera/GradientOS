@@ -1,6 +1,11 @@
 # See https://nix-community.github.io/autofirma-nix/installation_nixos_module.html
 # copy-pasted from there lol
-{ self, pkgs, config, ... }:
+{
+  self,
+  pkgs,
+  config,
+  ...
+}:
 {
 
   imports = [

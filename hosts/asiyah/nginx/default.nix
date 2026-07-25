@@ -1,8 +1,14 @@
-{ pkgs, lib, config, ... }:
+{
+  pkgs,
+  lib,
+  config,
+  ...
+}:
 let
   addresses = config.gradient.const.addresses;
   ports = config.gradient.currentHost.ports;
-in {
+in
+{
 
   imports = [
     ./crp3092.nix
@@ -18,12 +24,28 @@ in {
     enable = true;
     defaultListen = [
       # HTTP
-      { addr = "0.0.0.0"; port = ports.nginx; ssl = false; }
-      { addr = "[::]"; port = ports.nginx; ssl = false; }
+      {
+        addr = "0.0.0.0";
+        port = ports.nginx;
+        ssl = false;
+      }
+      {
+        addr = "[::]";
+        port = ports.nginx;
+        ssl = false;
+      }
 
       # HTTPS
-      { addr = "0.0.0.0"; port = ports.nginx-ssl; ssl = true; }
-      { addr = "[::]"; port = ports.nginx-ssl; ssl = true; }
+      {
+        addr = "0.0.0.0";
+        port = ports.nginx-ssl;
+        ssl = true;
+      }
+      {
+        addr = "[::]";
+        port = ports.nginx-ssl;
+        ssl = true;
+      }
     ];
 
     appendHttpConfig = ''
@@ -91,12 +113,13 @@ in {
     };
   };
 
-
   networking.firewall.allowedTCPPorts = with ports; [
-    nginx nginx-ssl
+    nginx
+    nginx-ssl
   ];
   networking.firewall.allowedUDPPorts = with ports; [
-    nginx nginx-ssl 
+    nginx
+    nginx-ssl
   ];
 
 }

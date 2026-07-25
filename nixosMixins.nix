@@ -29,7 +29,7 @@
   tailscale = ./mixins/tailscale.nix;
 
   graphical-steam = ./mixins/graphical/steam.nix;
-  
+
   home-zsh = ./mixins/home/zsh.nix;
 
   restic-repository-hokma = ./mixins/restic/repository-hokma.nix;

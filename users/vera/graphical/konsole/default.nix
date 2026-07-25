@@ -9,7 +9,6 @@
     # Modified to my liking!
     ".local/share/konsole/catppuccin-mocha.colorscheme".source = ./catppuccin-mocha.colorscheme;
 
-
     ".local/share/konsole/vera.profile".source = ./vera.profile;
     ".config/konsolerc".source = ./konsolerc;
   };

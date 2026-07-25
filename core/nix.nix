@@ -1,4 +1,10 @@
-{ config, pkgs, lib, self, ... }:
+{
+  config,
+  pkgs,
+  lib,
+  self,
+  ...
+}:
 let
   cfg = config.gradient;
 in
@@ -32,14 +38,16 @@ in
 
   config = lib.mkMerge [
     (lib.mkIf cfg.core.nix.enable {
-      nix =
-      {
+      nix = {
         package = pkgs.lix;
- 
+
         settings = {
           cores = 0;
           max-jobs = "auto";
-          experimental-features = [ "nix-command" "flakes" ];
+          experimental-features = [
+            "nix-command"
+            "flakes"
+          ];
           keep-outputs = true;
           keep-derivations = true;
 
@@ -62,7 +70,7 @@ in
             erika
             neith-deck
           ];
-          
+
           trusted-users = [
             "root"
             "@wheel"
@@ -91,9 +99,9 @@ in
 
       };
     })
-    
+
     (lib.mkIf cfg.core.nix.emptyGlobalFlakeRegistry {
-        nix.settings.flake-registry = builtins.toFile "empty-registry.json" ''{"flakes": [], "version": 2}'';
+      nix.settings.flake-registry = builtins.toFile "empty-registry.json" ''{"flakes": [], "version": 2}'';
     })
 
     (lib.mkIf cfg.core.nix.pinChannelsToFlakeInputs {

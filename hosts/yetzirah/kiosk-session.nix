@@ -1,7 +1,8 @@
 { config, pkgs, ... }:
 let
   ports = config.gradient.currentHost.ports;
-in {
+in
+{
 
   services.cage = {
     enable = true;
@@ -13,7 +14,10 @@ in {
     extraArguments = [ "-d" ];
   };
 
-  systemd.services."cage-tty1".after = [ "nginx.service" "moonraker.service" ];
+  systemd.services."cage-tty1".after = [
+    "nginx.service"
+    "moonraker.service"
+  ];
 
   systemd.services."serial-getty@ttyS0".enable = false;
   systemd.services."serial-getty@hvc0".enable = false;

@@ -26,7 +26,7 @@
   services.displayManager.autoLogin.enable = lib.mkForce false;
 
   services.openssh.openFirewall = true;
-  
+
   services.handheld-daemon = {
     user = "vera";
     enable = true;
@@ -37,7 +37,6 @@
 
   # Use HHD instead
   services.inputplumber.enable = lib.mkForce false;
-  
 
   # Dolphin Bluetooth passthrough
   services.udev.extraRules = ''

@@ -53,7 +53,7 @@
       url = "github:Mic92/sops-nix";
       inputs.nixpkgs.follows = "nixpkgs";
     };
-    
+
     colmena = {
       url = "github:nix-community/colmena";
       inputs.nixpkgs.follows = "nixpkgs";
@@ -112,371 +112,439 @@
     };
   };
 
-  outputs = { self, nixpkgs, gradient-generator, jovian-nixos, sops-nix, nixos-hardware, cryolitia-nur, lanzaboote, ... }:
-  let
-    addr = import ./misc/addresses.nix;
-    ips = import ./misc/wireguard-addresses.nix;
-    colmena-tags = import ./misc/colmena-tags.nix;
-    mkFlake = (import ./lib/mkFlake.nix self);
-    mixins = import ./nixosMixins.nix;
-    modules = import ./nixosModules.nix;
-  in
-  mkFlake {
+  outputs =
+    {
+      self,
+      nixpkgs,
+      gradient-generator,
+      jovian-nixos,
+      sops-nix,
+      nixos-hardware,
+      cryolitia-nur,
+      lanzaboote,
+      ...
+    }:
+    let
+      addr = import ./misc/addresses.nix;
+      ips = import ./misc/wireguard-addresses.nix;
+      colmena-tags = import ./misc/colmena-tags.nix;
+      mkFlake = (import ./lib/mkFlake.nix self);
+      mixins = import ./nixosMixins.nix;
+      modules = import ./nixosModules.nix;
+    in
+    mkFlake {
 
-    gradientosConfigurations = [
-        
-      {
-        name = "bernkastel";
+      gradientosConfigurations = [
 
-        modules = [
-          lanzaboote.nixosModules.lanzaboote
+        {
+          name = "bernkastel";
 
-          mixins.wine
-          mixins.gnupg
-          mixins.alloy
-          mixins.podman
-          #mixins.plymouth
-          mixins.autofirma
-          mixins.tailscale
-          mixins.wireguard
-          mixins.uwu-style
-          mixins.upgrade-diff
-          mixins.v4l2loopback
-          mixins.vera-locale
-          # mixins.virtualisation
-          mixins.nix-store-serve
-          mixins.binfmt-emulation
+          modules = [
+            lanzaboote.nixosModules.lanzaboote
 
-          mixins.graphical-steam
+            mixins.wine
+            mixins.gnupg
+            mixins.alloy
+            mixins.podman
+            #mixins.plymouth
+            mixins.autofirma
+            mixins.tailscale
+            mixins.wireguard
+            mixins.uwu-style
+            mixins.upgrade-diff
+            mixins.v4l2loopback
+            mixins.vera-locale
+            # mixins.virtualisation
+            mixins.nix-store-serve
+            mixins.binfmt-emulation
 
-          mixins.restic-repository-hokma
-          
-          mixins.container-linux-voice-assistant
+            mixins.graphical-steam
 
-          mixins.hardware-qmk
-          mixins.hardware-wacom
-          mixins.hardware-amdcpu
-          mixins.hardware-amdgpu
-          mixins.hardware-webcam
-          mixins.hardware-bluetooth
-          mixins.hardware-eaton-ups
-          mixins.hardware-openrazer
-          mixins.hardware-home-dcp-l2530dw
-          mixins.hardware-xbox-one-controller
-          # mixins.hardware-logitech-driving-wheels # TODO: Build broken
-        ];
+            mixins.restic-repository-hokma
 
-        users.vera.modules = [
-          sops-nix.homeManagerModule
-          ./users/vera/graphical/default.nix
-        ];
+            mixins.container-linux-voice-assistant
 
-        deployment = {
-          tags = with colmena-tags; [ x86_64 desktop vera nightly ];
-          allowLocalDeployment = true;
-          buildOnTarget = true;
-        };
-      }
+            mixins.hardware-qmk
+            mixins.hardware-wacom
+            mixins.hardware-amdcpu
+            mixins.hardware-amdgpu
+            mixins.hardware-webcam
+            mixins.hardware-bluetooth
+            mixins.hardware-eaton-ups
+            mixins.hardware-openrazer
+            mixins.hardware-home-dcp-l2530dw
+            mixins.hardware-xbox-one-controller
+            # mixins.hardware-logitech-driving-wheels # TODO: Build broken
+          ];
 
-      {
-        name = "neith-deck";
-        overlays = [ self.overlays.kernel-allow-missing ];
+          users.vera.modules = [
+            sops-nix.homeManagerModule
+            ./users/vera/graphical/default.nix
+          ];
 
-        modules = [
-          jovian-nixos.nixosModules.default
+          deployment = {
+            tags = with colmena-tags; [
+              x86_64
+              desktop
+              vera
+              nightly
+            ];
+            allowLocalDeployment = true;
+            buildOnTarget = true;
+          };
+        }
 
-          mixins.wine
-          mixins.gnupg
-          mixins.plymouth
-          mixins.wireguard
-          mixins.uwu-style
-          mixins.tailscale
-          mixins.upgrade-diff
-          mixins.v4l2loopback
-          mixins.neith-locale
-          mixins.nix-store-serve
-          
-          mixins.graphical-steam
-          
-          mixins.hardware-amdcpu
-          mixins.hardware-amdgpu
-          mixins.hardware-webcam
-          mixins.hardware-bluetooth 
-          mixins.hardware-steamdeck
-        ];
+        {
+          name = "neith-deck";
+          overlays = [ self.overlays.kernel-allow-missing ];
 
-        users.neith.modules = [
-          sops-nix.homeManagerModule
-          ./users/neith/graphical/default.nix
-        ];
+          modules = [
+            jovian-nixos.nixosModules.default
 
-        deployment = {
-          tags = with colmena-tags; [ x86_64 steam-deck desktop neith ];
-          allowLocalDeployment = true;
-        };
-      }
+            mixins.wine
+            mixins.gnupg
+            mixins.plymouth
+            mixins.wireguard
+            mixins.uwu-style
+            mixins.tailscale
+            mixins.upgrade-diff
+            mixins.v4l2loopback
+            mixins.neith-locale
+            mixins.nix-store-serve
 
-      {
-        name = "erika";
-        overlays = [ self.overlays.kernel-allow-missing ];
+            mixins.graphical-steam
 
-        modules = [
-          lanzaboote.nixosModules.lanzaboote
-          jovian-nixos.nixosModules.default
+            mixins.hardware-amdcpu
+            mixins.hardware-amdgpu
+            mixins.hardware-webcam
+            mixins.hardware-bluetooth
+            mixins.hardware-steamdeck
+          ];
 
-          mixins.tor
-          mixins.wine
-          mixins.gnupg
-          mixins.plymouth
-          mixins.tailscale
-          mixins.wireguard
-          mixins.uwu-style
-          mixins.vera-locale
-          mixins.upgrade-diff
-          mixins.v4l2loopback
-          # mixins.virtualisation
-          mixins.nix-store-serve
-          
-          mixins.graphical-steam
-          
-          mixins.restic-repository-hokma
+          users.neith.modules = [
+            sops-nix.homeManagerModule
+            ./users/neith/graphical/default.nix
+          ];
 
-          mixins.hardware-qmk
-          mixins.hardware-amdcpu
-          mixins.hardware-amdgpu
-          mixins.hardware-webcam
-          mixins.hardware-bluetooth
-          mixins.hardware-steamdeck
-          mixins.hardware-openrazer
-          mixins.hardware-home-dcp-l2530dw
-          mixins.hardware-xbox-one-controller
-        ];
+          deployment = {
+            tags = with colmena-tags; [
+              x86_64
+              steam-deck
+              desktop
+              neith
+            ];
+            allowLocalDeployment = true;
+          };
+        }
 
-        users.vera.modules = [
-          sops-nix.homeManagerModule
-          ./users/vera/graphical/default.nix
-        ];
+        {
+          name = "erika";
+          overlays = [ self.overlays.kernel-allow-missing ];
 
-        deployment = {
-          tags = with colmena-tags; [ x86_64 steam-deck desktop vera ];
-          allowLocalDeployment = true;
-        };
-      }
+          modules = [
+            lanzaboote.nixosModules.lanzaboote
+            jovian-nixos.nixosModules.default
 
-      {
-        name = "featherine";
+            mixins.tor
+            mixins.wine
+            mixins.gnupg
+            mixins.plymouth
+            mixins.tailscale
+            mixins.wireguard
+            mixins.uwu-style
+            mixins.vera-locale
+            mixins.upgrade-diff
+            mixins.v4l2loopback
+            # mixins.virtualisation
+            mixins.nix-store-serve
 
-        modules = [
-          cryolitia-nur.nixosModules.bmi260
-          lanzaboote.nixosModules.lanzaboote
-          nixos-hardware.nixosModules.gpd-win-mini-2024
-          
-          #mixins.tor
-          mixins.wine
-          mixins.alloy
-          mixins.gnupg
-          #mixins.plymouth
-          mixins.tailscale
-          mixins.wireguard
-          #mixins.uwu-style
-          mixins.vera-locale
-          mixins.upgrade-diff
-          mixins.v4l2loopback
-          #mixins.virtualisation
-          #mixins.nix-store-serve
-          mixins.only-suspend-then-hibernate
-          
-          mixins.graphical-steam
+            mixins.graphical-steam
 
-          mixins.restic-repository-hokma
+            mixins.restic-repository-hokma
 
-          mixins.hardware-qmk
-          mixins.hardware-amdcpu
-          mixins.hardware-amdgpu
-          mixins.hardware-webcam
-          mixins.hardware-bluetooth
-          mixins.hardware-openrazer
-          mixins.hardware-home-dcp-l2530dw
-          mixins.hardware-xbox-one-controller
-        ];
+            mixins.hardware-qmk
+            mixins.hardware-amdcpu
+            mixins.hardware-amdgpu
+            mixins.hardware-webcam
+            mixins.hardware-bluetooth
+            mixins.hardware-steamdeck
+            mixins.hardware-openrazer
+            mixins.hardware-home-dcp-l2530dw
+            mixins.hardware-xbox-one-controller
+          ];
 
-        users.vera.modules = [
-          sops-nix.homeManagerModule
-          ./users/vera/graphical/default.nix
-        ];
+          users.vera.modules = [
+            sops-nix.homeManagerModule
+            ./users/vera/graphical/default.nix
+          ];
 
-        deployment = {
-          tags = with colmena-tags; [ x86_64 desktop vera nightly ];
-          allowLocalDeployment = true;
-        };
-      }
+          deployment = {
+            tags = with colmena-tags; [
+              x86_64
+              steam-deck
+              desktop
+              vera
+            ];
+            allowLocalDeployment = true;
+          };
+        }
 
-      {
-        name = "asiyah";
+        {
+          name = "featherine";
 
-        modules = [
-          nixos-hardware.nixosModules.common-cpu-intel
-          nixos-hardware.nixosModules.common-gpu-intel
-          gradient-generator.nixosModules.default
+          modules = [
+            cryolitia-nur.nixosModules.bmi260
+            lanzaboote.nixosModules.lanzaboote
+            nixos-hardware.nixosModules.gpd-win-mini-2024
 
-          mixins.tor
-          mixins.wine
-          mixins.alloy
-          mixins.nginx
-          mixins.gnupg
-          mixins.podman
-          mixins.crowdsec
-          mixins.steamcmd
-          mixins.tailscale
-          mixins.wireguard
-          mixins.vera-locale
-          mixins.upgrade-diff
-          mixins.v4l2loopback
-          # mixins.virtualisation
-          mixins.nix-store-serve
-          mixins.binfmt-emulation
-          mixins.hardware-bluetooth
-          mixins.hardware-eaton-ups
-          mixins.hardware-intelgpu-vaapi
-          mixins.restic-repository-hokma
-        ];
+            #mixins.tor
+            mixins.wine
+            mixins.alloy
+            mixins.gnupg
+            #mixins.plymouth
+            mixins.tailscale
+            mixins.wireguard
+            #mixins.uwu-style
+            mixins.vera-locale
+            mixins.upgrade-diff
+            mixins.v4l2loopback
+            #mixins.virtualisation
+            #mixins.nix-store-serve
+            mixins.only-suspend-then-hibernate
 
-        users.vera.modules = [
-          sops-nix.homeManagerModule
-        ];
+            mixins.graphical-steam
 
-        deployment = {
-          tags = with colmena-tags; [ x86_64 server vera nightly ];
-          allowLocalDeployment = true;
-        };
-      }
+            mixins.restic-repository-hokma
 
-      {
-        name = "briah";
+            mixins.hardware-qmk
+            mixins.hardware-amdcpu
+            mixins.hardware-amdgpu
+            mixins.hardware-webcam
+            mixins.hardware-bluetooth
+            mixins.hardware-openrazer
+            mixins.hardware-home-dcp-l2530dw
+            mixins.hardware-xbox-one-controller
+          ];
 
-        modules = [
-          nixos-hardware.nixosModules.common-cpu-amd
+          users.vera.modules = [
+            sops-nix.homeManagerModule
+            ./users/vera/graphical/default.nix
+          ];
 
-          mixins.alloy
-          mixins.nginx
-          #mixins.podman
-          mixins.crowdsec
-          mixins.tailscale
-          mixins.wireguard
-          #mixins.vera-locale
-          #mixins.upgrade-diff
-          #mixins.restic-repository-hokma
-        ];
+          deployment = {
+            tags = with colmena-tags; [
+              x86_64
+              desktop
+              vera
+              nightly
+            ];
+            allowLocalDeployment = true;
+          };
+        }
 
-        #users.vera.modules = [
+        {
+          name = "asiyah";
+
+          modules = [
+            nixos-hardware.nixosModules.common-cpu-intel
+            nixos-hardware.nixosModules.common-gpu-intel
+            gradient-generator.nixosModules.default
+
+            mixins.tor
+            mixins.wine
+            mixins.alloy
+            mixins.nginx
+            mixins.gnupg
+            mixins.podman
+            mixins.crowdsec
+            mixins.steamcmd
+            mixins.tailscale
+            mixins.wireguard
+            mixins.vera-locale
+            mixins.upgrade-diff
+            mixins.v4l2loopback
+            # mixins.virtualisation
+            mixins.nix-store-serve
+            mixins.binfmt-emulation
+            mixins.hardware-bluetooth
+            mixins.hardware-eaton-ups
+            mixins.hardware-intelgpu-vaapi
+            mixins.restic-repository-hokma
+          ];
+
+          users.vera.modules = [
+            sops-nix.homeManagerModule
+          ];
+
+          deployment = {
+            tags = with colmena-tags; [
+              x86_64
+              server
+              vera
+              nightly
+            ];
+            allowLocalDeployment = true;
+          };
+        }
+
+        {
+          name = "briah";
+
+          modules = [
+            nixos-hardware.nixosModules.common-cpu-amd
+
+            mixins.alloy
+            mixins.nginx
+            #mixins.podman
+            mixins.crowdsec
+            mixins.tailscale
+            mixins.wireguard
+            #mixins.vera-locale
+            #mixins.upgrade-diff
+            #mixins.restic-repository-hokma
+          ];
+
+          #users.vera.modules = [
           #sops-nix.homeManagerModule
-        #];
+          #];
 
-        deployment = {
-          targetHost = addr.briah;
-          tags = with colmena-tags; [ x86_64 server vera nightly ];
-          allowLocalDeployment = true;
-        };
-      }
+          deployment = {
+            targetHost = addr.briah;
+            tags = with colmena-tags; [
+              x86_64
+              server
+              vera
+              nightly
+            ];
+            allowLocalDeployment = true;
+          };
+        }
 
-      {
-        name = "yetzirah";
+        {
+          name = "yetzirah";
 
-        modules = [
-          nixos-hardware.nixosModules.common-cpu-intel
-          nixos-hardware.nixosModules.common-gpu-intel
+          modules = [
+            nixos-hardware.nixosModules.common-cpu-intel
+            nixos-hardware.nixosModules.common-gpu-intel
 
-          mixins.alloy
-          mixins.podman
-          mixins.tailscale
-          mixins.wireguard
-          mixins.vera-locale
-          mixins.upgrade-diff
-          mixins.virtualisation
-          mixins.binfmt-emulation
-          mixins.hardware-intelgpu-vaapi
-          mixins.restic-repository-hokma
-        ];
+            mixins.alloy
+            mixins.podman
+            mixins.tailscale
+            mixins.wireguard
+            mixins.vera-locale
+            mixins.upgrade-diff
+            mixins.virtualisation
+            mixins.binfmt-emulation
+            mixins.hardware-intelgpu-vaapi
+            mixins.restic-repository-hokma
+          ];
 
-        users.vera.modules = [
-          sops-nix.homeManagerModule
-        ];
+          users.vera.modules = [
+            sops-nix.homeManagerModule
+          ];
 
-        deployment = {
-          tags = with colmena-tags; [ x86_64 server vera nightly ];
-          allowLocalDeployment = true;
-        };
-      }
+          deployment = {
+            tags = with colmena-tags; [
+              x86_64
+              server
+              vera
+              nightly
+            ];
+            allowLocalDeployment = true;
+          };
+        }
 
-      {
-        name = "GradientOS-x86_64";
-        system = "x86_64-linux";
+        {
+          name = "GradientOS-x86_64";
+          system = "x86_64-linux";
 
-        modules = [
-          ({ modulesPath, lib, ... }:
-          {
-            imports = [ (modulesPath + "/installer/cd-dvd/installation-cd-graphical-calamares-plasma6.nix") ];
-            
-            gradient.core.nixos.installer = true;
-            boot.initrd.systemd.enable = lib.mkForce false;
-          })
-        ];
+          modules = [
+            (
+              { modulesPath, lib, ... }:
+              {
+                imports = [ (modulesPath + "/installer/cd-dvd/installation-cd-graphical-calamares-plasma6.nix") ];
 
-        generators = [ "install-iso" ];
+                gradient.core.nixos.installer = true;
+                boot.initrd.systemd.enable = lib.mkForce false;
+              }
+            )
+          ];
 
-        importHost = false;
-        makeSystem = false;
-      }
+          generators = [ "install-iso" ];
 
-      {
-        name = "GradientOS-x86_64-steamdeck";
-        system = "x86_64-linux";
-        overlays = [ self.overlays.kernel-allow-missing ];
+          importHost = false;
+          makeSystem = false;
+        }
 
-        modules = [
-          jovian-nixos.nixosModules.default
-          ({ modulesPath, lib, ... }:
-          {
-            imports = [ (modulesPath + "/installer/cd-dvd/installation-cd-graphical-calamares-plasma6.nix") ];
-            
-            gradient.core.nixos.installer = true;
-            jovian.devices.steamdeck.enable = true;
-            jovian.devices.steamdeck.enableXorgRotation = false;
-            services.pulseaudio.enable = lib.mkForce false;
-            boot.initrd.systemd.enable = lib.mkForce false;
-          })
-        ];
+        {
+          name = "GradientOS-x86_64-steamdeck";
+          system = "x86_64-linux";
+          overlays = [ self.overlays.kernel-allow-missing ];
 
-        generators = [ "install-iso" ];
+          modules = [
+            jovian-nixos.nixosModules.default
+            (
+              { modulesPath, lib, ... }:
+              {
+                imports = [ (modulesPath + "/installer/cd-dvd/installation-cd-graphical-calamares-plasma6.nix") ];
 
-        importHost = false;
-        makeSystem = false;
-      }
-      
-    ];
+                gradient.core.nixos.installer = true;
+                jovian.devices.steamdeck.enable = true;
+                jovian.devices.steamdeck.enableXorgRotation = false;
+                services.pulseaudio.enable = lib.mkForce false;
+                boot.initrd.systemd.enable = lib.mkForce false;
+              }
+            )
+          ];
 
-    nixosModules = modules // (nixpkgs.lib.attrsets.mapAttrs' (name: value: { name = "mixin-" + name; inherit value; }) mixins);
+          generators = [ "install-iso" ];
 
-    overlays = {
-      default = self.overlays.gradientpkgs;
-      gradientpkgs = import ./overlays/gradientpkgs.nix;
-      gradientos = import ./overlays/gradientos.nix self;
-      home-assistant = import ./overlays/home-assistant.nix;
-      kernel-allow-missing = import ./overlays/kernel-allow-missing.nix;
-    };
+          importHost = false;
+          makeSystem = false;
+        }
 
-    apps = self.lib.forAllSystemsWithOverlays [ self.overlays.gradientpkgs self.overlays.gradientos  ] (pkgs: (import ./ansible/apps.nix pkgs));
+      ];
 
-    packages = self.lib.forAllSystemsWithOverlays [ self.overlays.gradientpkgs self.overlays.gradientos ]
-      (pkgs:
-        (self.overlays.gradientpkgs pkgs pkgs) //
-        (let hass = self.overlays.home-assistant pkgs pkgs;
-          in hass.home-assistant-custom-components-gradientos //
-             hass.home-assistant-custom-lovelace-modules-gradientos
-        )
+      nixosModules =
+        modules
+        // (nixpkgs.lib.attrsets.mapAttrs' (name: value: {
+          name = "mixin-" + name;
+          inherit value;
+        }) mixins);
+
+      overlays = {
+        default = self.overlays.gradientpkgs;
+        gradientpkgs = import ./overlays/gradientpkgs.nix;
+        gradientos = import ./overlays/gradientos.nix self;
+        home-assistant = import ./overlays/home-assistant.nix;
+        kernel-allow-missing = import ./overlays/kernel-allow-missing.nix;
+      };
+
+      apps = self.lib.forAllSystemsWithOverlays [ self.overlays.gradientpkgs self.overlays.gradientos ] (
+        pkgs: (import ./ansible/apps.nix pkgs)
       );
 
-    legacyPackages = self.lib.forAllSystemsWithOverlays [ self.overlays.gradientpkgs self.overlays.gradientos self.overlays.home-assistant  ] (pkgs: (pkgs));
+      packages =
+        self.lib.forAllSystemsWithOverlays [ self.overlays.gradientpkgs self.overlays.gradientos ]
+          (
+            pkgs:
+            (self.overlays.gradientpkgs pkgs pkgs)
+            // (
+              let
+                hass = self.overlays.home-assistant pkgs pkgs;
+              in
+              hass.home-assistant-custom-components-gradientos
+              // hass.home-assistant-custom-lovelace-modules-gradientos
+            )
+          );
 
-  };
+      legacyPackages = self.lib.forAllSystemsWithOverlays [
+        self.overlays.gradientpkgs
+        self.overlays.gradientos
+        self.overlays.home-assistant
+      ] (pkgs: (pkgs));
+
+      formatter = self.lib.forAllSystems (pkgs: pkgs.nixfmt-tree);
+
+    };
 }

@@ -1,4 +1,9 @@
-{ config, ports, pkgs, ... }:
+{
+  config,
+  ports,
+  pkgs,
+  ...
+}:
 let
   secrets = config.sops.secrets;
 in
@@ -134,7 +139,7 @@ in
             basicAuth = false;
             withCredentials = false;
             jsonData = {
-              global_queries = [];
+              global_queries = [ ];
               oauthPassThru = false;
               auth_method = "none";
             };

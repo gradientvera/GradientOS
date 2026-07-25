@@ -1,4 +1,9 @@
-{ config, lib, pkgs, ... }:
+{
+  config,
+  lib,
+  pkgs,
+  ...
+}:
 let
   cfg = config.gradient;
 in
@@ -35,56 +40,69 @@ in
       qmk-udev-rules
     ];
 
-    environment.systemPackages = with pkgs; [
-      (with dotnetCorePackages; combinePackages [
-        dotnet_8.sdk
-        dotnet_8.aspnetcore
-        dotnet_9.sdk
-        dotnet_9.aspnetcore
-      ])
-      lixPackageSets.latest.colmena
-      smartmontools
-      appimage-run
-      attic-client
-      imagemagick
-      ffmpeg-full
-      nix-weather
-      lm_sensors
-      ssh-to-age
-      distrobox
-      nfs-utils
-      powertop
-      usbutils
-      pciutils
-      nettools
-      pmutils
-      tcpdump
-      sysstat
-      python3
-      screen
-      yt-dlp
-      rsync
-      p7zip
-      sbctl # For Lanzaboote
-      just
-      sops
-      gmic
-      lsof
-      htop
-      (btop // { meta.priority = 10; })
-      file
-      cloc
-      nil
-      age
-      dig
-      eza
-      jq
-    ] ++ (if pkgs.stdenv.hostPlatform.system == "x86_64-linux" then [
-      unrar
-      rar
-    ] else if pkgs.stdenv.hostPlatform.system == "aarch64-linux" then [
+    environment.systemPackages =
+      with pkgs;
+      [
+        (
+          with dotnetCorePackages;
+          combinePackages [
+            dotnet_8.sdk
+            dotnet_8.aspnetcore
+            dotnet_9.sdk
+            dotnet_9.aspnetcore
+          ]
+        )
+        lixPackageSets.latest.colmena
+        smartmontools
+        appimage-run
+        attic-client
+        imagemagick
+        ffmpeg-full
+        nix-weather
+        lm_sensors
+        ssh-to-age
+        distrobox
+        nfs-utils
+        powertop
+        usbutils
+        pciutils
+        nettools
+        pmutils
+        tcpdump
+        sysstat
+        python3
+        screen
+        yt-dlp
+        rsync
+        p7zip
+        sbctl # For Lanzaboote
+        just
+        sops
+        gmic
+        lsof
+        htop
+        (btop // { meta.priority = 10; })
+        file
+        cloc
+        nil
+        age
+        dig
+        eza
+        jq
+      ]
+      ++ (
+        if pkgs.stdenv.hostPlatform.system == "x86_64-linux" then
+          [
+            unrar
+            rar
+          ]
+        else if pkgs.stdenv.hostPlatform.system == "aarch64-linux" then
+          [
 
-    ] else []);
+          ]
+        else
+          [ ]
+      );
   };
 
 }

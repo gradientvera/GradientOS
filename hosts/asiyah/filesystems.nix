@@ -25,14 +25,17 @@
     options = [ "zfsutil" ];
   };
 
-  fileSystems."/boot" = { 
+  fileSystems."/boot" = {
     device = "/dev/disk/by-partuuid/77de2f8b-6eea-49cc-b0d4-d13291232a45";
     fsType = "vfat";
     mountPoint = "/boot";
   };
 
   swapDevices = [
-    { device = "/dev/disk/by-partuuid/94a96e54-d944-4240-a59b-71c642a9e07e"; priority = 100; }
+    {
+      device = "/dev/disk/by-partuuid/94a96e54-d944-4240-a59b-71c642a9e07e";
+      priority = 100;
+    }
   ];
 
 }

@@ -7,7 +7,9 @@
 
     secrets = {
 
-      wireguard-private-key = { restartUnits = [ "wireguard-*" ]; };
+      wireguard-private-key = {
+        restartUnits = [ "wireguard-*" ];
+      };
 
       nix-private-key = { };
 

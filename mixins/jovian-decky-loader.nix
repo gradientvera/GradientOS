@@ -1,4 +1,9 @@
-{ config, pkgs, lib, ... }:
+{
+  config,
+  pkgs,
+  lib,
+  ...
+}:
 {
 
   # Requires enabling CEF remote debugging on the Developer menu settings to work.
@@ -21,10 +26,12 @@
     gawk
     file
   ];
-  jovian.decky-loader.extraPythonPackages = pythonPkgs: with pythonPkgs; [
-    click
-  ];
+  jovian.decky-loader.extraPythonPackages =
+    pythonPkgs: with pythonPkgs; [
+      click
+    ];
 
-  systemd.services.decky-loader.environment.LD_LIBRARY_PATH = lib.makeLibraryPath config.jovian.decky-loader.extraPackages;
+  systemd.services.decky-loader.environment.LD_LIBRARY_PATH =
+    lib.makeLibraryPath config.jovian.decky-loader.extraPackages;
 
 }

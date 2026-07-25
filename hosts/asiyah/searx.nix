@@ -1,18 +1,26 @@
-{ config, lib, pkgs, ports, ... }:
+{
+  config,
+  lib,
+  pkgs,
+  ports,
+  ...
+}:
 let
   ports = config.gradient.currentHost.ports;
-  faviconSettings = (pkgs.writeText "favicons.toml" ''
-    [favicons]
-    cfg_schema = 1
+  faviconSettings = (
+    pkgs.writeText "favicons.toml" ''
+      [favicons]
+      cfg_schema = 1
 
-    [favicons.cache]
-    db_url = "/var/cache/searxng/faviconcache.db"
-    LIMIT_TOTAL_BYTES = 10737418240 # 10 GB
-    HOLD_TIME = 5184000
+      [favicons.cache]
+      db_url = "/var/cache/searxng/faviconcache.db"
+      LIMIT_TOTAL_BYTES = 10737418240 # 10 GB
+      HOLD_TIME = 5184000
 
-    [favicons.proxy.resolver_map]
-    "duckduckgo" = "searx.favicons.resolvers.duckduckgo"
-  '');
+      [favicons.proxy.resolver_map]
+      "duckduckgo" = "searx.favicons.resolvers.duckduckgo"
+    ''
+  );
 in
 {
 
@@ -69,14 +77,19 @@ in
         pool_maxsize = 30;
         retries = 5;
         useragent_suffix = "gradient.moe";
-        source_ips = [ "0.0.0.0" "::" ];
+        source_ips = [
+          "0.0.0.0"
+          "::"
+        ];
         # Uncomment when https://github.com/NixOS/nixpkgs/issues/476192 is fixed
-        /*proxies = {
-          "all://:" = [
-            "socks5://127.0.0.1:${toString ports.proxy-vpn}"
-            "socks5://127.0.0.1:${toString ports.proxy-vpn-uk}"
-          ];
-        };*/
+        /*
+          proxies = {
+            "all://:" = [
+              "socks5://127.0.0.1:${toString ports.proxy-vpn}"
+              "socks5://127.0.0.1:${toString ports.proxy-vpn-uk}"
+            ];
+          };
+        */
       };
 
       enabled_plugins = [
@@ -95,7 +108,7 @@ in
       hostnames = {
         replace = {
           "(.*\\.)?reddit\\.com$" = "old.reddit.com";
-          "(.*\\.)?redd\\.it$"    = "old.reddit.com";
+          "(.*\\.)?redd\\.it$" = "old.reddit.com";
         };
         remove = [
           "(.*\\.)?redditmedia.com$"
@@ -119,13 +132,15 @@ in
 
       valkey = {
         url = "unix://${config.services.redis.servers.searx.unixSocket}";
-      };  
+      };
 
       # Uncomment below for TOR proxy support.
-      /*outgoing.proxies = {
-        http  = [ "socks5://127.0.0.1:${toString ports.tor}" ];
-        https = [ "socks5://127.0.0.1:${toString ports.tor}" ];
-      };*/
+      /*
+        outgoing.proxies = {
+          http  = [ "socks5://127.0.0.1:${toString ports.tor}" ];
+          https = [ "socks5://127.0.0.1:${toString ports.tor}" ];
+        };
+      */
 
     };
     limiterSettings = {
@@ -134,8 +149,8 @@ in
       };
 
       "botdetection.ip_lists" = {
-        block_ip = [];
-        pass_ip = [];
+        block_ip = [ ];
+        pass_ip = [ ];
       };
     };
   };
@@ -160,13 +175,25 @@ in
   };
 
   systemd.services.searx-init = {
-    wants = [ "searx-init-favicon.service" "network-online.target" ];
-    after = [ "searx-init-favicon.service" "network-online.target" ];
+    wants = [
+      "searx-init-favicon.service"
+      "network-online.target"
+    ];
+    after = [
+      "searx-init-favicon.service"
+      "network-online.target"
+    ];
   };
 
   systemd.services.searx = {
-    wants = [ "redis-searx.service" "network-online.target" ];
-    after = [ "redis-searx.service" "network-online.target" ];
+    wants = [
+      "redis-searx.service"
+      "network-online.target"
+    ];
+    after = [
+      "redis-searx.service"
+      "network-online.target"
+    ];
   };
 
   systemd.tmpfiles.settings."10-searxng.conf" = {

@@ -1,12 +1,14 @@
-{ fetchFromGitHub
-, home-assistant
-, buildHomeAssistantComponent
+{
+  fetchFromGitHub,
+  home-assistant,
+  buildHomeAssistantComponent,
 }:
 let
   owner = "custom-components";
   version = "0.1.12";
   pythonPkgs = home-assistant.python3Packages;
-in buildHomeAssistantComponent {
+in
+buildHomeAssistantComponent {
   inherit version owner;
   domain = "feedparser";
 

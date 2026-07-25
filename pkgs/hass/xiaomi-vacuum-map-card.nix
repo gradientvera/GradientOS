@@ -1,7 +1,8 @@
 # Can't get it to compile and I can't be arsed to fix it
 # so downloading the release it is...
-{ stdenv
-, fetchurl
+{
+  stdenv,
+  fetchurl,
 }:
 stdenv.mkDerivation rec {
   pname = "xiaomi-vacuum-map-card";

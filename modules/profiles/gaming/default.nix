@@ -1,7 +1,12 @@
-{ config, lib, pkgs, ... }:
+{
+  config,
+  lib,
+  pkgs,
+  ...
+}:
 let
   cfg = config.gradient;
-in 
+in
 {
 
   imports = [
@@ -55,21 +60,34 @@ in
 
     (lib.mkIf (cfg.profiles.gaming.openFirewall) {
       # For games and such.
-      networking.firewall.allowedTCPPortRanges = [ { from=7777; to=7787; } ];
-      networking.firewall.allowedUDPPortRanges = [ { from=7777; to=7787; } ];
+      networking.firewall.allowedTCPPortRanges = [
+        {
+          from = 7777;
+          to = 7787;
+        }
+      ];
+      networking.firewall.allowedUDPPortRanges = [
+        {
+          from = 7777;
+          to = 7787;
+        }
+      ];
     })
 
     (lib.mkIf (cfg.profiles.gaming.installGames) {
       # Conflicting definition for capSysNice behavior
-      programs.gamescope = if (config ? "jovian" && config.jovian.steam.enable) then {
-        enable = true;
-      }
-      else {
-        enable = true;
-        # Set to false because ananicy handles it anyhow plus
-        # if you set this to true you can't use it with steam lol
-        capSysNice = false;
-      };
+      programs.gamescope =
+        if (config ? "jovian" && config.jovian.steam.enable) then
+          {
+            enable = true;
+          }
+        else
+          {
+            enable = true;
+            # Set to false because ananicy handles it anyhow plus
+            # if you set this to true you can't use it with steam lol
+            capSysNice = false;
+          };
 
       programs.gamemode.enable = true;
 
@@ -83,7 +101,7 @@ in
       };
 
       services.joycond.enable = true;
-      
+
       environment.systemPackages = with pkgs; [
         space-station-14-launcher
         # satisfactorymodmanager # TODO: Broken

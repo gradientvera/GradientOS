@@ -62,21 +62,36 @@
     "/data" = {
       device = "/dev/disk/by-uuid/4bb789a6-064e-4d7e-80ea-5dd2093a04e2";
       fsType = "ext4";
-      options = [ "rw" "noatime" "comment=x-gvfs-show" "nofail" ];
+      options = [
+        "rw"
+        "noatime"
+        "comment=x-gvfs-show"
+        "nofail"
+      ];
       mountPoint = "/data";
     };
 
     "/data2" = {
       device = "/dev/disk/by-uuid/47e81cce-06cd-46e9-9717-224616fb4147";
       fsType = "ext4";
-      options = [ "rw" "noatime" "comment=x-gvfs-show" "nofail" ];
+      options = [
+        "rw"
+        "noatime"
+        "comment=x-gvfs-show"
+        "nofail"
+      ];
       mountPoint = "/data2";
     };
 
     "/home/vera/tmp" = {
       device = "tmpfs";
       fsType = "tmpfs";
-      options = [ "rw" "nodev" "nosuid" "comment=x-gvfs-show" ];
+      options = [
+        "rw"
+        "nodev"
+        "nosuid"
+        "comment=x-gvfs-show"
+      ];
       mountPoint = "/home/vera/tmp";
     };
   };

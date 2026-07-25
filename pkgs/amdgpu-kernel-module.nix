@@ -1,13 +1,20 @@
-{ pkgs
-, lib
-, patches ? []
-, kernel ? pkgs.linuxPackages_latest.kernel }:
+{
+  pkgs,
+  lib,
+  patches ? [ ],
+  kernel ? pkgs.linuxPackages_latest.kernel,
+}:
 
 # As per https://wiki.nixos.org/wiki/Linux_kernel#Patching_a_single_In-tree_kernel_module
 pkgs.stdenv.mkDerivation {
   pname = "amdgpu-kernel-module";
-  inherit (kernel) src version postPatch nativeBuildInputs;
-  
+  inherit (kernel)
+    src
+    version
+    postPatch
+    nativeBuildInputs
+    ;
+
   patches = kernel.patches ++ patches;
 
   kernel_dev = kernel.dev;

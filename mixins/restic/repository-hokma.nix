@@ -1,6 +1,4 @@
-/*
-  Don't forget to add folders to back-up on your host-specific config after importing this!
-*/
+# Don't forget to add folders to back-up on your host-specific config after importing this!
 { config, ... }:
 let
   secrets = config.sops.secrets;
@@ -12,7 +10,7 @@ in
     passwordFile = secrets.hokma-password.path;
     environmentFile = secrets.hokma-environment.path;
     repository = "azure:backup:/";
-    
+
     timerConfig = {
       OnCalendar = "Mon *-*-* 10:00:00";
       # Prevent concurrent backups, as it can lead to duplicate files
@@ -20,7 +18,7 @@ in
     };
 
     # Set these on your host!
-    paths = [];
+    paths = [ ];
 
     # Sane defaults, but feel free to override
     exclude = [
@@ -52,12 +50,15 @@ in
     ];
   };
 
-  sops.secrets = 
-  let
-    secretCfg = { restartUnits = [ "restic-backups-hokma.service" ]; };
-  in {
-    hokma-password = secretCfg;
-    hokma-environment = secretCfg;
-  };
+  sops.secrets =
+    let
+      secretCfg = {
+        restartUnits = [ "restic-backups-hokma.service" ];
+      };
+    in
+    {
+      hokma-password = secretCfg;
+      hokma-environment = secretCfg;
+    };
 
 }

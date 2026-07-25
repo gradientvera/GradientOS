@@ -1,6 +1,12 @@
-{ config, self, pkgs, ports, lib, ... }:
 {
-
+  config,
+  self,
+  pkgs,
+  ports,
+  lib,
+  ...
+}:
+{
 
   services.open-webui = {
     enable = true;
@@ -39,8 +45,15 @@
   };
 
   systemd.services.open-webui = {
-    wants = [ "redis-open-webui.service" "searx.service" ];
-    after = [ "redis-open-webui.service" "searx.service" "llama-swap.service" ];
+    wants = [
+      "redis-open-webui.service"
+      "searx.service"
+    ];
+    after = [
+      "redis-open-webui.service"
+      "searx.service"
+      "llama-swap.service"
+    ];
   };
 
 }

@@ -8,7 +8,9 @@
 
     secrets = {
 
-      wireguard-private-key = { restartUnits = [ "wireguard-*" ]; };
+      wireguard-private-key = {
+        restartUnits = [ "wireguard-*" ];
+      };
 
       # Headscale database provisioning
       headscale = {

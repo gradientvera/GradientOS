@@ -1,11 +1,26 @@
-{ config, pkgs, lib, ... }:
+{
+  config,
+  pkgs,
+  lib,
+  ...
+}:
 {
 
   systemd.services.power-profiles-daemon-hooks = {
     wantedBy = [ "multi-user.target" ];
-    wants = [ "power-profiles-daemon.service" "handheld-daemon.service" ];
-    after = [ "power-profiles-daemon.service" "handheld-daemon.service" "multi-user.target" ];
-    path = [ pkgs.power-profiles-daemon pkgs.curl ];
+    wants = [
+      "power-profiles-daemon.service"
+      "handheld-daemon.service"
+    ];
+    after = [
+      "power-profiles-daemon.service"
+      "handheld-daemon.service"
+      "multi-user.target"
+    ];
+    path = [
+      pkgs.power-profiles-daemon
+      pkgs.curl
+    ];
     script = ''
       sleepint=5
       oldstate="none"
@@ -14,7 +29,7 @@
         echo "Setting TDP to $1 W"
         curl -s --out-null -X POST --unix-socket /run/hhd/api --json "{\"tdp\":{\"qam\":{\"tdp\":$1}}}" http://127.0.0.1/api/v1/state
       }
-      
+
       settdpboost() {
         echo "Setting TDP Boost to $1"
         curl -s --out-null -X POST --unix-socket /run/hhd/api --json "{\"tdp\":{\"qam\":{\"boost\":$1}}}" http://127.0.0.1/api/v1/state

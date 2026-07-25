@@ -1,4 +1,10 @@
-{ self, config, pkgs, lib, ... }:
+{
+  self,
+  config,
+  pkgs,
+  lib,
+  ...
+}:
 let
   cfg = config.gradient.profiles.catppuccin;
 in
@@ -17,7 +23,7 @@ in
       catppuccin.enable = true;
       catppuccin.autoEnable = true;
       catppuccin.flavor = lib.mkDefault "mocha";
-      
+
       catppuccin.plymouth.enable = true;
       catppuccin.grub.enable = true;
 

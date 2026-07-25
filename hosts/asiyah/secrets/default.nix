@@ -13,13 +13,19 @@
 
     secrets = {
 
-      gradient-generator-environment = { restartUnits = [ "gradient-generator.daily-avatar.service" ]; };
+      gradient-generator-environment = {
+        restartUnits = [ "gradient-generator.daily-avatar.service" ];
+      };
 
-      wireguard-private-key = { restartUnits = [ "wireguard-*" ]; };
+      wireguard-private-key = {
+        restartUnits = [ "wireguard-*" ];
+      };
 
       nix-private-key = { };
-      
-      oauth2-proxy-secrets = { restartUnits = [ "oauth2-proxy.service" ]; };
+
+      oauth2-proxy-secrets = {
+        restartUnits = [ "oauth2-proxy.service" ];
+      };
 
       duckdns = {
         mode = "0440";
@@ -30,7 +36,10 @@
         mode = "0440";
         owner = config.users.users.searx.name or null;
         group = config.users.users.searx.group or null;
-        restartUnits = [ "searx.service" "searx-init.service" ];
+        restartUnits = [
+          "searx.service"
+          "searx-init.service"
+        ];
       };
 
       syncthing-cert = {
@@ -116,27 +125,30 @@
         group = config.users.users.mediarr.group or null;
         restartUnits = [ "podman-amule.service" ];
       };
-      
+
       mediarr-shelfmark-env = {
         mode = "0440";
         owner = config.users.users.mediarr.name or null;
         group = config.users.users.mediarr.group or null;
         restartUnits = [ "podman-shelfmark.service" ];
       };
-      
+
       mediarr-calibre-env = {
         mode = "0440";
         owner = config.users.users.mediarr.name or null;
         group = config.users.users.mediarr.group or null;
         restartUnits = [ "podman-calibre.service" ];
       };
-      
+
       cfdyndns-token = {
         restartUnits = [ "ddclient.service" ];
       };
 
       acme-cf-token = {
-        restartUnits = [ "acme-gradient.moe.service" "acme-constellation.moe.service" ];
+        restartUnits = [
+          "acme-gradient.moe.service"
+          "acme-constellation.moe.service"
+        ];
       };
 
       vaultwarden-env = {
@@ -171,7 +183,10 @@
       };
 
       forgejo-runner-token = {
-        restartUnits = [ "forgejo.service" "gitea-runner-asiyah.service" ];
+        restartUnits = [
+          "forgejo.service"
+          "gitea-runner-asiyah.service"
+        ];
         owner = config.services.forgejo.user or null;
         group = config.services.forgejo.group or null;
       };

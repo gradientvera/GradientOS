@@ -1,4 +1,9 @@
-{ config, pkgs, modulesPath, ... }:
+{
+  config,
+  pkgs,
+  modulesPath,
+  ...
+}:
 
 {
 
@@ -9,9 +14,35 @@
   hardware.facter.reportPath = ./facter.json;
 
   boot.kernelPackages = pkgs.linuxPackages_zen;
-  boot.initrd.availableKernelModules = [ "nvme" "xhci_pci" "ahci" "usbhid" "usb_storage" "sd_mod" "amdgpu" "xhci_hcd" "tpm_crb" "tpm_tis" "tpm" ];
-  boot.initrd.kernelModules = [ "amdgpu" "tpm_crb" "tpm_tis" "tpm" ];
-  boot.kernelModules = [ "amdgpu-i2c" "kvm-amd" "i2c-dev" "i2c-piix4" "it87" "tpm_crb" "tpm_tis" "tpm" ];
+  boot.initrd.availableKernelModules = [
+    "nvme"
+    "xhci_pci"
+    "ahci"
+    "usbhid"
+    "usb_storage"
+    "sd_mod"
+    "amdgpu"
+    "xhci_hcd"
+    "tpm_crb"
+    "tpm_tis"
+    "tpm"
+  ];
+  boot.initrd.kernelModules = [
+    "amdgpu"
+    "tpm_crb"
+    "tpm_tis"
+    "tpm"
+  ];
+  boot.kernelModules = [
+    "amdgpu-i2c"
+    "kvm-amd"
+    "i2c-dev"
+    "i2c-piix4"
+    "it87"
+    "tpm_crb"
+    "tpm_tis"
+    "tpm"
+  ];
   boot.kernelParams = [
     "amd_iommu=on"
     "iommu=pt"
@@ -41,4 +72,3 @@
 
   nixpkgs.hostPlatform = "x86_64-linux";
 }
-

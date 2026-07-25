@@ -1,4 +1,9 @@
-{ config, lib, pkgs, ... }:
+{
+  config,
+  lib,
+  pkgs,
+  ...
+}:
 let
   cfg = config.gradient;
   tmpFilesRule = {
@@ -10,7 +15,7 @@ let
   romPath = cfg.profiles.gaming.emulation.romPath;
   devices = cfg.profiles.gaming.emulation.sync.devices;
   ESDEDataPath = "${home}/.local/share/ES-DE";
-in 
+in
 {
 
   options = {
@@ -66,7 +71,13 @@ in
 
     gradient.profiles.gaming.emulation.sync.devices = lib.mkOption {
       type = lib.types.listOf lib.types.str;
-      default = [ "asiyah" "bernkastel" "erika" "featherine" "vera-phone" ];
+      default = [
+        "asiyah"
+        "bernkastel"
+        "erika"
+        "featherine"
+        "vera-phone"
+      ];
       description = ''
         Syncthing devices with which to share the synced folders.
       '';
@@ -292,14 +303,18 @@ in
 
     (lib.mkIf (cfg.profiles.gaming.emulation.enable) {
       # Create needed folders for ROM path etc
-      systemd.tmpfiles.settings."10-emulation.conf" = 
-      {
+      systemd.tmpfiles.settings."10-emulation.conf" = {
         "${ESDEDataPath}".d = tmpFilesRule;
         "${romPath}".d = tmpFilesRule;
-      } // (builtins.listToAttrs
-        (builtins.map
-          (f: { name = "${romPath}/${f}"; value = { d = tmpFilesRule; }; })
-          cfg.profiles.gaming.emulation.systems));
+      }
+      // (builtins.listToAttrs (
+        builtins.map (f: {
+          name = "${romPath}/${f}";
+          value = {
+            d = tmpFilesRule;
+          };
+        }) cfg.profiles.gaming.emulation.systems
+      ));
     })
 
     (lib.mkIf (cfg.profiles.gaming.emulation.installEmulators) {
@@ -321,11 +336,9 @@ in
       ];
     })
 
-    (lib.mkIf (cfg.profiles.gaming.emulation.sync.enable)
-    ({
+    (lib.mkIf (cfg.profiles.gaming.emulation.sync.enable) ({
       # Create needed folders for syncing
-      systemd.tmpfiles.settings."10-emulation.conf" = 
-      {
+      systemd.tmpfiles.settings."10-emulation.conf" = {
         # Retroarch
         "${home}/.config/retroarch".d = tmpFilesRule;
         "${home}/.config/retroarch/system".d = tmpFilesRule;
@@ -588,11 +601,12 @@ in
         # Roms folder
         "${romPath}".d = tmpFilesRule;
         "${romPath}/.stfolder".d = tmpFilesRule;
-        "${romPath}/.stignore"."f+" = tmpFilesRule // { argument = 
-          ''
+        "${romPath}/.stignore"."f+" = tmpFilesRule // {
+          argument = ''
             ${(lib.strings.concatLines (builtins.map (s: "!${s}/**") cfg.profiles.gaming.emulation.systems))}
             **
-          ''; };
+          '';
+        };
       };
     })
   ];

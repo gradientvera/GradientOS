@@ -1,4 +1,9 @@
-{ pkgs, config, lib, ... }:
+{
+  pkgs,
+  config,
+  lib,
+  ...
+}:
 
 {
 
@@ -12,8 +17,8 @@
   gradient.profiles.gaming.enable = true;
   gradient.profiles.gaming.emulation.enable = true;
   gradient.profiles.gaming.emulation.romPath = "/run/media/deck/mmcblk0p1/roms";
-  gradient.profiles.gaming.emulation.sync.devices = [];
-  
+  gradient.profiles.gaming.emulation.sync.devices = [ ];
+
   gradient.profiles.gaming.emulation.user = "neith";
   gradient.profiles.desktop.enable = true;
   gradient.profiles.catppuccin.enable = false;
@@ -33,7 +38,14 @@
       linger = true;
       description = "For the alt steam account";
       shell = pkgs.fish;
-      extraGroups = [ "networkmanager" "audio" "video" "pipewire" "scanner" "lp" ];
+      extraGroups = [
+        "networkmanager"
+        "audio"
+        "video"
+        "pipewire"
+        "scanner"
+        "lp"
+      ];
       hashedPassword = "$6$7mwTIbQIbSE9s6h5$J1Z5xG3V5kY65pgSQKulKg5UpVUnKuHnZoXmZ98IMCRNXhLHWgEAbizz8g4d1IJvDMp/pLBl4EKK.0fzcyb6N0";
     };
 

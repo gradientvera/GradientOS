@@ -1,12 +1,14 @@
-{ fetchFromGitHub
-, home-assistant
-, buildHomeAssistantComponent
+{
+  fetchFromGitHub,
+  home-assistant,
+  buildHomeAssistantComponent,
 }:
 let
   owner = "dolezsa";
   version = "2.2.5";
   pythonPkgs = home-assistant.python3Packages;
-in buildHomeAssistantComponent {
+in
+buildHomeAssistantComponent {
   inherit version owner;
   domain = "thermal_comfort";
 

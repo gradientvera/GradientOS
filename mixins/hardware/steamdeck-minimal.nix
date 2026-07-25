@@ -18,7 +18,14 @@
   fileSystems."/run/media/deck/mmcblk0p1" = {
     fsType = "ext4";
     device = "/dev/mmcblk0p1";
-    options = [ "defaults" "rw" "nofail" "x-systemd.automount" "x-systemd.device-timeout=1ms" "comment=x-gvfs-show" ];
+    options = [
+      "defaults"
+      "rw"
+      "nofail"
+      "x-systemd.automount"
+      "x-systemd.device-timeout=1ms"
+      "comment=x-gvfs-show"
+    ];
   };
 
   # Symlink old Steam Deck SD card path to new one.

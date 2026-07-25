@@ -1,4 +1,10 @@
-{ config, lib, pkgs, self, ... }:
+{
+  config,
+  lib,
+  pkgs,
+  self,
+  ...
+}:
 let
   cfg = config.gradient;
   adb = "${pkgs.android-tools}/bin/adb";
@@ -17,7 +23,7 @@ let
     rm -f ${wayvr-dashboard-location}
     ln -s ${toString wayvr-dashboard-yaml} ${wayvr-dashboard-location}
   '';
-in 
+in
 {
 
   options = {
@@ -79,7 +85,7 @@ in
         Whether to set up WiVRn.
       '';
     };
-    
+
     gradient.profiles.gaming.vr.wivrn.androidId = lib.mkOption {
       type = lib.types.str;
       default = "org.meumeu.wivrn";
@@ -99,7 +105,7 @@ in
 
     gradient.profiles.gaming.vr.steam.pressure-vessel-filesystems-rw = lib.mkOption {
       type = (lib.types.listOf lib.types.str);
-      default = [];
+      default = [ ];
       description = ''
         Paths to add to Steam's PRESSURE_VESSEL_FILESYSTEMS_RW environment variable.
       '';
@@ -113,115 +119,125 @@ in
 
       programs.steam.package = pkgs.steam.override {
         extraEnv = {
-          PRESSURE_VESSEL_FILESYSTEMS_RW = (lib.concatStringsSep ":" cfg.profiles.gaming.vr.steam.pressure-vessel-filesystems-rw);
+          PRESSURE_VESSEL_FILESYSTEMS_RW = (
+            lib.concatStringsSep ":" cfg.profiles.gaming.vr.steam.pressure-vessel-filesystems-rw
+          );
         };
       };
 
       environment.systemPackages = [
-        (let
-          mkOpenVr = name: runtimePath: pkgs.writeText name ''
-            {
-              "config" :
-              [
-                "~/.local/share/Steam/config"
-              ],
-              "external_drivers" : null,
-              "jsonid" : "vrpathreg",
-              "log" :
-              [
-                "~/.local/share/Steam/logs"
-              ],
-              "runtime" :
-              [
-                "${runtimePath}"
-              ],
-              "version" : 1
-            }
-          '';
-          steamOpenVr = mkOpenVr "steamvr.vrpath" "~/.local/share/Steam/steamapps/common/SteamVR";
-          openCompositeVr = mkOpenVr "opencomposite.vrpath" "${pkgs.opencomposite}/lib/opencomposite";
-          openCompositeUnstableVr = mkOpenVr "opencompositeUnstable.vrpath" "${pkgs-xr.opencomposite}/lib/opencomposite";
-          xrizerVr = mkOpenVr "xrizer.vrpath" "${pkgs.xrizer}/lib/xrizer";
-          xrizerUnstableVr = mkOpenVr "xrizerUnstable.vrpath" "${pkgs-xr.xrizer}/lib/xrizer";
-        in pkgs.writeScriptBin "openvr-runtime" ''
-          #!/usr/bin/env -S ${pkgs.just}/bin/just --chooser=${pkgs.fzf}/bin/fzf --justfile
+        (
+          let
+            mkOpenVr =
+              name: runtimePath:
+              pkgs.writeText name ''
+                {
+                  "config" :
+                  [
+                    "~/.local/share/Steam/config"
+                  ],
+                  "external_drivers" : null,
+                  "jsonid" : "vrpathreg",
+                  "log" :
+                  [
+                    "~/.local/share/Steam/logs"
+                  ],
+                  "runtime" :
+                  [
+                    "${runtimePath}"
+                  ],
+                  "version" : 1
+                }
+              '';
+            steamOpenVr = mkOpenVr "steamvr.vrpath" "~/.local/share/Steam/steamapps/common/SteamVR";
+            openCompositeVr = mkOpenVr "opencomposite.vrpath" "${pkgs.opencomposite}/lib/opencomposite";
+            openCompositeUnstableVr = mkOpenVr "opencompositeUnstable.vrpath" "${pkgs-xr.opencomposite}/lib/opencomposite";
+            xrizerVr = mkOpenVr "xrizer.vrpath" "${pkgs.xrizer}/lib/xrizer";
+            xrizerUnstableVr = mkOpenVr "xrizerUnstable.vrpath" "${pkgs-xr.xrizer}/lib/xrizer";
+          in
+          pkgs.writeScriptBin "openvr-runtime" ''
+            #!/usr/bin/env -S ${pkgs.just}/bin/just --chooser=${pkgs.fzf}/bin/fzf --justfile
 
-          vrpath := "~/.config/openvr/openvrpaths.vrpath"
+            vrpath := "~/.config/openvr/openvrpaths.vrpath"
 
-          alias steamvr := steam
-          alias openc := opencomposite
+            alias steamvr := steam
+            alias openc := opencomposite
 
-          @_default:
-            openvr-runtime --choose
+            @_default:
+              openvr-runtime --choose
 
-          @_link SOURCE:
-            ln -s {{SOURCE}} {{vrpath}}
+            @_link SOURCE:
+              ln -s {{SOURCE}} {{vrpath}}
 
-          @_copy SOURCE:
-            cp {{SOURCE}} {{vrpath}}
-            chmod 777 {{vrpath}}
+            @_copy SOURCE:
+              cp {{SOURCE}} {{vrpath}}
+              chmod 777 {{vrpath}}
 
-          @_clean:
-            mkdir -p $(${pkgs.coreutils}/bin/dirname {{vrpath}})
-            rm -f {{vrpath}}
+            @_clean:
+              mkdir -p $(${pkgs.coreutils}/bin/dirname {{vrpath}})
+              rm -f {{vrpath}}
 
-          clean: _clean
-            @echo "Cleaned user OpenVR runtime, will default to systemwide runtime."
+            clean: _clean
+              @echo "Cleaned user OpenVR runtime, will default to systemwide runtime."
 
-          steam: _clean (_copy "${toString steamOpenVr}")
-            @echo "Set SteamVR as the OpenVR runtime."
+            steam: _clean (_copy "${toString steamOpenVr}")
+              @echo "Set SteamVR as the OpenVR runtime."
 
-          opencomposite: _clean (_link "${toString openCompositeVr}")
-            @echo "Set OpenComposite as the OpenVR runtime."
+            opencomposite: _clean (_link "${toString openCompositeVr}")
+              @echo "Set OpenComposite as the OpenVR runtime."
 
-          opencompositeUnstable: _clean (_link "${toString openCompositeUnstableVr}")
-            @echo "Set OpenComposite (unstable) as the OpenVR runtime."
+            opencompositeUnstable: _clean (_link "${toString openCompositeUnstableVr}")
+              @echo "Set OpenComposite (unstable) as the OpenVR runtime."
 
-          xrizer: _clean (_link "${toString xrizerVr}")
-            @echo "Set XRizer as the OpenVR runtime."
+            xrizer: _clean (_link "${toString xrizerVr}")
+              @echo "Set XRizer as the OpenVR runtime."
 
-          xrizerUnstable: _clean (_link "${toString xrizerUnstableVr}")
-            @echo "Set XRizer (unstable) as the OpenVR runtime."
+            xrizerUnstable: _clean (_link "${toString xrizerUnstableVr}")
+              @echo "Set XRizer (unstable) as the OpenVR runtime."
 
-        '')
-        (let
-          monadoXr = "${pkgs.monado}/share/openxr/1/openxr_monado.json";
-          monadoUnstableXr = "${pkgs-xr.monado}/share/openxr/1/openxr_monado.json";
-          wivrnXr = "${config.services.wivrn.package}/share/openxr/1/openxr_wivrn.json";
-          steamXr = "~/.local/share/Steam/steamapps/common/SteamVR/steamxr_linux64.json";
-        in pkgs.writeScriptBin "openxr-runtime" ''
-          #!/usr/bin/env -S ${pkgs.just}/bin/just --chooser=${pkgs.fzf}/bin/fzf --justfile
+          ''
+        )
+        (
+          let
+            monadoXr = "${pkgs.monado}/share/openxr/1/openxr_monado.json";
+            monadoUnstableXr = "${pkgs-xr.monado}/share/openxr/1/openxr_monado.json";
+            wivrnXr = "${config.services.wivrn.package}/share/openxr/1/openxr_wivrn.json";
+            steamXr = "~/.local/share/Steam/steamapps/common/SteamVR/steamxr_linux64.json";
+          in
+          pkgs.writeScriptBin "openxr-runtime" ''
+            #!/usr/bin/env -S ${pkgs.just}/bin/just --chooser=${pkgs.fzf}/bin/fzf --justfile
 
-          xrpath := "~/.config/openxr/1/active_runtime.json"
-          alias steamxr := steam
-          alias steamvr := steam
+            xrpath := "~/.config/openxr/1/active_runtime.json"
+            alias steamxr := steam
+            alias steamvr := steam
 
-          @_default:
-            openxr-runtime --choose
+            @_default:
+              openxr-runtime --choose
 
-          @_link SOURCE:
-            ln -s {{SOURCE}} {{xrpath}}
+            @_link SOURCE:
+              ln -s {{SOURCE}} {{xrpath}}
 
-          @_clean:
-            mkdir -p $(${pkgs.coreutils}/bin/dirname {{xrpath}})
-            rm -f {{xrpath}}
+            @_clean:
+              mkdir -p $(${pkgs.coreutils}/bin/dirname {{xrpath}})
+              rm -f {{xrpath}}
 
-          clean: _clean
-            @echo "Cleaned user OpenXR runtime, will default to systemwide runtime."
+            clean: _clean
+              @echo "Cleaned user OpenXR runtime, will default to systemwide runtime."
 
-          steam: _clean (_link "${steamXr}")
-            @echo "Set SteamVR as the OpenXR runtime."
+            steam: _clean (_link "${steamXr}")
+              @echo "Set SteamVR as the OpenXR runtime."
 
-          monado: _clean (_link "${monadoXr}")
-            @echo "Set Monado as the OpenXR runtime."
+            monado: _clean (_link "${monadoXr}")
+              @echo "Set Monado as the OpenXR runtime."
 
-          monadoUnstable: _clean (_link "${monadoUnstableXr}")
-            @echo "Set Monado (unstable) as the OpenXR runtime."
+            monadoUnstable: _clean (_link "${monadoUnstableXr}")
+              @echo "Set Monado (unstable) as the OpenXR runtime."
 
-          wivrn: _clean (_link "${wivrnXr}")
-            @echo "Set WiVRn as the OpenXR runtime."
+            wivrn: _clean (_link "${wivrnXr}")
+              @echo "Set WiVRn as the OpenXR runtime."
 
-        '')
+          ''
+        )
       ];
 
     })
@@ -297,7 +313,9 @@ in
         defaultRuntime = cfg.profiles.gaming.vr.monado.default;
       };
 
-      gradient.profiles.gaming.vr.steam.pressure-vessel-filesystems-rw = [ "$XDG_RUNTIME_DIR/monado_comp_ipc" ];
+      gradient.profiles.gaming.vr.steam.pressure-vessel-filesystems-rw = [
+        "$XDG_RUNTIME_DIR/monado_comp_ipc"
+      ];
 
       systemd.user.services.monado.environment = {
         # Configure environment as needed here...
@@ -377,7 +395,9 @@ in
         };
       };
 
-      gradient.profiles.gaming.vr.steam.pressure-vessel-filesystems-rw = [ "$XDG_RUNTIME_DIR/wivrn/comp_ipc" ];
+      gradient.profiles.gaming.vr.steam.pressure-vessel-filesystems-rw = [
+        "$XDG_RUNTIME_DIR/wivrn/comp_ipc"
+      ];
 
     })
 

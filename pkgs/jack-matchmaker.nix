@@ -1,4 +1,8 @@
-{ lib, python3, pipewire }:
+{
+  lib,
+  python3,
+  pipewire,
+}:
 
 python3.pkgs.buildPythonApplication rec {
   pname = "jack-matchmaker";
@@ -9,6 +13,6 @@ python3.pkgs.buildPythonApplication rec {
     inherit pname version;
     sha256 = "70b8f53b0c75e8351ccdad4bf37bee8b544643604e0db1938ed749a4c0fa6ba6";
   };
-  makeWrapperArgs = ["--prefix LD_LIBRARY_PATH : ${lib.makeLibraryPath [ pipewire.jack ]}"];
+  makeWrapperArgs = [ "--prefix LD_LIBRARY_PATH : ${lib.makeLibraryPath [ pipewire.jack ]}" ];
   doCheck = false;
 }

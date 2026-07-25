@@ -10,7 +10,7 @@
   ];
 
   systemd.user.startServices = true;
-  
+
   xdg.configFile."nixpkgs/config.nix".source = ./misc/nixpkgs-config.nix;
-  
+
 }

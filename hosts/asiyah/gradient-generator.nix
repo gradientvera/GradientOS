@@ -1,7 +1,8 @@
 { config, self, ... }:
 let
   secrets = config.sops.secrets;
-in {
+in
+{
 
   gradient-generator.services.daily-avatar = {
     enable = true;
@@ -16,6 +17,7 @@ in {
     self.inputs.gradient-generator.packages.x86_64-linux.default
   ];
 
-  systemd.services."gradient-generator.daily-avatar".serviceConfig.EnvironmentFile = secrets.gradient-generator-environment.path;
+  systemd.services."gradient-generator.daily-avatar".serviceConfig.EnvironmentFile =
+    secrets.gradient-generator-environment.path;
 
 }

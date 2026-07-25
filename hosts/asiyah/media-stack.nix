@@ -1,4 +1,9 @@
-{ pkgs, config, lib, ... }:
+{
+  pkgs,
+  config,
+  lib,
+  ...
+}:
 let
   addresses = config.gradient.const.addresses;
   ports = config.gradient.currentHost.ports;
@@ -42,7 +47,8 @@ let
     calibre-web-automated
     shelfmark
   ];
-in {
+in
+{
 
   boot.kernel.sysctl = {
     "net.ipv4.ip_forward" = "1";
@@ -62,7 +68,10 @@ in {
     uid = userUid;
     homeMode = "775";
     group = config.users.groups.${groupName}.name;
-    extraGroups = [ "video" "render" ]; # QSV
+    extraGroups = [
+      "video"
+      "render"
+    ]; # QSV
   };
 
   users.groups.${groupName} = {
@@ -70,78 +79,80 @@ in {
   };
 
   # -- Folder and Permissions Setup --
-  systemd.tmpfiles.settings."10-media.conf" = let
-    rule = {
-      user = userName;
-      group = groupName;
-      mode = "0775";
+  systemd.tmpfiles.settings."10-media.conf" =
+    let
+      rule = {
+        user = userName;
+        group = groupName;
+        mode = "0775";
+      };
+    in
+    {
+      "/data/downloads".d = rule;
+      "/data/downloads/tv".d = rule;
+      "/data/downloads/movies".d = rule;
+      "/data/downloads/tv-es".d = rule;
+      "/data/downloads/movies-es".d = rule;
+      "/data/downloads/adverts".d = rule;
+      "/data/downloads/youtube".d = rule;
+      "/data/downloads/music".d = rule;
+      "/data/downloads/books".d = rule;
+      "/data/downloads/books-ingest".d = rule;
+      "/data/downloads/games".d = rule;
+      "/data/downloads/game-assets".d = rule;
+      "/data/downloads/torrents".d = rule;
+      "/data/downloads/slskd".d = rule;
+      "/data/downloads/amule-incoming".d = rule;
+      "/data/downloads/cross-seeds".d = rule;
+      "/data/downloads/cross-seeds/links".d = rule;
+      "/var/lib/${userName}".d = rule;
+      "/var/lib/${userName}/radarr".d = rule;
+      "/var/lib/${userName}/radarr-es".d = rule;
+      "/var/lib/${userName}/sonarr".d = rule;
+      "/var/lib/${userName}/sonarr-es".d = rule;
+      "/var/lib/${userName}/amule".d = rule;
+      "/var/lib/${userName}/amule/temp".d = rule;
+      "/var/lib/${userName}/amule-web-controller".d = rule;
+      "/var/lib/${userName}/amule-web-controller/data".d = rule;
+      "/var/lib/${userName}/amule-web-controller/logs".d = rule;
+      "/var/lib/${userName}/lidarr".d = rule;
+      "/var/lib/${userName}/slskd".d = rule;
+      "/var/lib/${userName}/soularr".d = rule;
+      "/var/lib/${userName}/prowlarr".d = rule;
+      "/var/lib/${userName}/bazarr".d = rule;
+      "/var/lib/${userName}/whisper".d = rule;
+      "/var/lib/${userName}/jellyseerr".d = rule;
+      "/var/lib/${userName}/unpackerr".d = rule;
+      "/var/lib/${userName}/qbittorrent".d = rule;
+      "/var/lib/${userName}/qbittorrent/incomplete".d = rule;
+      "/var/lib/${userName}/ersatztv".d = rule;
+      "/var/lib/${userName}/jellyfin".d = rule;
+      "/var/lib/${userName}/jellyfin/config".d = rule;
+      "/var/lib/${userName}/jellyfin/cache".d = rule;
+      "/var/lib/${userName}/tdarr/server".d = rule;
+      "/var/lib/${userName}/tdarr/config".d = rule;
+      "/var/lib/${userName}/tdarr/logs".d = rule;
+      "/var/lib/${userName}/tdarr/temp".d = rule;
+      "/var/lib/${userName}/gluetun".d = rule;
+      "/var/lib/${userName}/gluetun-uk".d = rule;
+      "/var/lib/${userName}/cross-seed".d = rule;
+      "/var/lib/${userName}/sabnzbd".d = rule;
+      "/var/lib/${userName}/sabnzbd/incomplete".d = rule;
+      "/var/lib/${userName}/profilarr".d = rule;
+      "/var/lib/${userName}/romm".d = rule;
+      "/var/lib/${userName}/romm/redis".d = rule;
+      "/var/lib/${userName}/romm/resources".d = rule;
+      "/var/lib/${userName}/mariadb".d = rule;
+      "/var/lib/${userName}/calibre-web-automated".d = rule;
+      "/var/lib/${userName}/shelfmark".d = rule;
+      "/var/lib/${userName}/pinchflat".d = rule;
+      "/var/lib/${userName}/.mozilla".d = rule;
+      "/var/lib/${userName}/.mozilla/firefox".d = rule;
+      "/var/lib/${userName}/modcache".d = rule;
+      "/var/lib/${userName}/threadfin".d = rule;
+      "/var/lib/${userName}/tailscale-es".d = rule;
+      "/var/lib/${userName}/tailscale-uk".d = rule;
     };
-  in {
-    "/data/downloads".d = rule;
-    "/data/downloads/tv".d = rule;
-    "/data/downloads/movies".d = rule;
-    "/data/downloads/tv-es".d = rule;
-    "/data/downloads/movies-es".d = rule;
-    "/data/downloads/adverts".d = rule;
-    "/data/downloads/youtube".d = rule;
-    "/data/downloads/music".d = rule;
-    "/data/downloads/books".d = rule;
-    "/data/downloads/books-ingest".d = rule;
-    "/data/downloads/games".d = rule;
-    "/data/downloads/game-assets".d = rule;
-    "/data/downloads/torrents".d = rule;
-    "/data/downloads/slskd".d = rule;
-    "/data/downloads/amule-incoming".d = rule;
-    "/data/downloads/cross-seeds".d = rule;
-    "/data/downloads/cross-seeds/links".d = rule;
-    "/var/lib/${userName}".d = rule;
-    "/var/lib/${userName}/radarr".d = rule;
-    "/var/lib/${userName}/radarr-es".d = rule;
-    "/var/lib/${userName}/sonarr".d = rule;
-    "/var/lib/${userName}/sonarr-es".d = rule;
-    "/var/lib/${userName}/amule".d = rule;
-    "/var/lib/${userName}/amule/temp".d = rule;
-    "/var/lib/${userName}/amule-web-controller".d = rule;
-    "/var/lib/${userName}/amule-web-controller/data".d = rule;
-    "/var/lib/${userName}/amule-web-controller/logs".d = rule;
-    "/var/lib/${userName}/lidarr".d = rule;
-    "/var/lib/${userName}/slskd".d = rule;
-    "/var/lib/${userName}/soularr".d = rule;
-    "/var/lib/${userName}/prowlarr".d = rule;
-    "/var/lib/${userName}/bazarr".d = rule;
-    "/var/lib/${userName}/whisper".d = rule;
-    "/var/lib/${userName}/jellyseerr".d = rule;
-    "/var/lib/${userName}/unpackerr".d = rule;
-    "/var/lib/${userName}/qbittorrent".d = rule;
-    "/var/lib/${userName}/qbittorrent/incomplete".d = rule;
-    "/var/lib/${userName}/ersatztv".d = rule;
-    "/var/lib/${userName}/jellyfin".d = rule;
-    "/var/lib/${userName}/jellyfin/config".d = rule;
-    "/var/lib/${userName}/jellyfin/cache".d = rule;
-    "/var/lib/${userName}/tdarr/server".d = rule;
-    "/var/lib/${userName}/tdarr/config".d = rule;
-    "/var/lib/${userName}/tdarr/logs".d = rule;
-    "/var/lib/${userName}/tdarr/temp".d = rule;
-    "/var/lib/${userName}/gluetun".d = rule;
-    "/var/lib/${userName}/gluetun-uk".d = rule;
-    "/var/lib/${userName}/cross-seed".d = rule;
-    "/var/lib/${userName}/sabnzbd".d = rule;
-    "/var/lib/${userName}/sabnzbd/incomplete".d = rule;
-    "/var/lib/${userName}/profilarr".d = rule;
-    "/var/lib/${userName}/romm".d = rule;
-    "/var/lib/${userName}/romm/redis".d = rule;
-    "/var/lib/${userName}/romm/resources".d = rule;
-    "/var/lib/${userName}/mariadb".d = rule;
-    "/var/lib/${userName}/calibre-web-automated".d = rule;
-    "/var/lib/${userName}/shelfmark".d = rule;
-    "/var/lib/${userName}/pinchflat".d = rule;
-    "/var/lib/${userName}/.mozilla".d = rule;
-    "/var/lib/${userName}/.mozilla/firefox".d = rule;
-    "/var/lib/${userName}/modcache".d = rule;
-    "/var/lib/${userName}/threadfin".d = rule;
-    "/var/lib/${userName}/tailscale-es".d = rule;
-    "/var/lib/${userName}/tailscale-uk".d = rule;
-  };
 
   services.clamav.scanner.scanDirectories = [ "/data/downloads" ]; # /var/lib already scanned by default
 
@@ -166,12 +177,13 @@ in {
         TZ = config.time.timeZone;
         PUID = toString userUid;
         PGID = toString groupGid;
-        DOCKER_MODS="linuxserver/mods:jellyfin-opencl-intel";
+        DOCKER_MODS = "linuxserver/mods:jellyfin-opencl-intel";
       };
       networks = [ "container:gluetun" ];
       devices = [ "/dev/dri:/dev/dri" ];
       extraOptions = [
-        "--mount" "type=bind,source=/data/downloads,target=/media"
+        "--mount"
+        "type=bind,source=/data/downloads,target=/media"
       ];
     };
 
@@ -181,7 +193,7 @@ in {
       parentPorts = [ "${addresses.podman-gateway}:${toString ports.flaresolverr}:8191" ];
       environment = {
         TZ = config.time.timeZone;
-        LOG_LEVEL="info";
+        LOG_LEVEL = "info";
       };
       networks = [ "container:gluetun" ];
     };
@@ -201,8 +213,10 @@ in {
       environmentFiles = [ config.sops.secrets.mediarr-iptv-env.path ];
       devices = [ "/dev/dri:/dev/dri" ];
       extraOptions = [
-        "--mount" "type=bind,source=/data/downloads,target=/media"
-        "--mount" "type=tmpfs,destination=/transcode"
+        "--mount"
+        "type=bind,source=/data/downloads,target=/media"
+        "--mount"
+        "type=tmpfs,destination=/transcode"
       ];
     };
 
@@ -243,7 +257,9 @@ in {
     radarr-es = {
       image = "lscr.io/linuxserver/radarr:latest";
       pull = "newer";
-      parentPorts = [ "${addresses.podman-gateway}:${toString ports.radarr-es}:${toString ports.radarr-es}" ];
+      parentPorts = [
+        "${addresses.podman-gateway}:${toString ports.radarr-es}:${toString ports.radarr-es}"
+      ];
       volumes = [
         "/var/lib/${userName}/radarr-es:/config"
         "/data/downloads:/downloads"
@@ -260,7 +276,9 @@ in {
     sonarr-es = {
       image = "lscr.io/linuxserver/sonarr:latest";
       pull = "newer";
-      parentPorts = [ "${addresses.podman-gateway}:${toString ports.sonarr-es}:${toString ports.sonarr-es}" ];
+      parentPorts = [
+        "${addresses.podman-gateway}:${toString ports.sonarr-es}:${toString ports.sonarr-es}"
+      ];
       volumes = [
         "/var/lib/${userName}/sonarr-es:/config"
         "/data/downloads:/downloads"
@@ -307,7 +325,9 @@ in {
     amule-web-controller = {
       image = "docker.io/g0t3nks/amule-web-controller:latest";
       pull = "newer";
-      parentPorts = [ "${addresses.podman-gateway}:${toString ports.amule-web-controller}:${toString ports.amule-web-controller}" ];
+      parentPorts = [
+        "${addresses.podman-gateway}:${toString ports.amule-web-controller}:${toString ports.amule-web-controller}"
+      ];
       volumes = [
         "/var/lib/${userName}/amule-web-controller/data:/usr/src/app/server/data"
         "/var/lib/${userName}/amule-web-controller/logs:/usr/src/app/server/logs"
@@ -352,7 +372,7 @@ in {
       environment = {
         TZ = config.time.timeZone;
         SLSKD_REMOTE_CONFIGURATION = "true";
-      };  
+      };
       networks = [ "container:gluetun" ];
     };
 
@@ -368,9 +388,12 @@ in {
         PUID = toString userUid;
         PGID = toString groupGid;
         SCRIPT_INTERVAL = "300";
-      };  
+      };
       networks = [ "container:gluetun" ];
-      dependsOn = [ "lidarr" "slskd" ];
+      dependsOn = [
+        "lidarr"
+        "slskd"
+      ];
     };
 
     prowlarr = {
@@ -485,7 +508,12 @@ in {
         QBITTORRENT_URL = "http://qbittorrent:${toString ports.qbittorrent-webui}";
       };
       environmentFiles = [ config.sops.secrets.mediarr-decluttarr-env.path ];
-      dependsOn = [ "radarr" "sonarr" "lidarr" "qbittorrent" ];
+      dependsOn = [
+        "radarr"
+        "sonarr"
+        "lidarr"
+        "qbittorrent"
+      ];
     };
 
     tdarr = {
@@ -540,7 +568,7 @@ in {
         VPN_TYPE = "wireguard";
         FIREWALL_INPUT_PORTS = builtins.concatStringsSep "," (builtins.map (p: toString p) allowedPorts);
         FIREWALL_VPN_INPUT_PORTS = "${toString ports.qbittorrent-peer},${toString ports.slskd-peer},${toString ports.amule-ed2k},${toString ports.amule-ed2k-global},${toString ports.amule-ed2k-udp}";
-        FIREWALL_OUTBOUND_SUBNETS="10.88.0.0/24,${addresses.tailscale-ipv4-cidr},${addresses.tailscale-ipv6-cidr}";
+        FIREWALL_OUTBOUND_SUBNETS = "10.88.0.0/24,${addresses.tailscale-ipv4-cidr},${addresses.tailscale-ipv6-cidr}";
         WIREGUARD_MTU = "1320";
         WIREGUARD_IMPLEMENTATION = "kernelspace";
         WIREGUARD_PERSISTENT_KEEPALIVE_INTERVAL = "15s";
@@ -560,7 +588,7 @@ in {
         "--sysctl=net.ipv6.conf.all.forwarding=1"
       ];
     };
-    
+
     gluetun-tailscale-es = {
       image = "docker.io/tailscale/tailscale:latest";
       pull = "newer";
@@ -603,7 +631,7 @@ in {
         VPN_TYPE = "wireguard";
         FIREWALL_INPUT_PORTS = builtins.concatStringsSep "," (builtins.map (p: toString p) allowedPorts);
         FIREWALL_VPN_INPUT_PORTS = "";
-        FIREWALL_OUTBOUND_SUBNETS="10.88.0.0/24,${addresses.tailscale-ipv4-cidr},${addresses.tailscale-ipv6-cidr}";
+        FIREWALL_OUTBOUND_SUBNETS = "10.88.0.0/24,${addresses.tailscale-ipv4-cidr},${addresses.tailscale-ipv6-cidr}";
         WIREGUARD_MTU = "1320";
         WIREGUARD_PERSISTENT_KEEPALIVE_INTERVAL = "15s";
         WIREGUARD_IMPLEMENTATION = "kernelspace";
@@ -624,7 +652,7 @@ in {
         "--sysctl=net.ipv6.conf.all.forwarding=1"
       ];
     };
-    
+
     gluetun-tailscale-uk = {
       image = "docker.io/tailscale/tailscale:latest";
       pull = "newer";
@@ -667,7 +695,7 @@ in {
         NO_AUTH = "true";
         GZIP = "true";
       };
-      extraOptions = [] ++ userOptions;
+      extraOptions = [ ] ++ userOptions;
     };
 
     unpackerr = {
@@ -692,11 +720,13 @@ in {
       environmentFiles = [
         config.sops.secrets.mediarr-unpackerr-env.path
       ];
-      extraOptions = [] ++ userOptions;
-      dependsOn = [ "sonarr" "radarr" "lidarr" ];
+      extraOptions = [ ] ++ userOptions;
+      dependsOn = [
+        "sonarr"
+        "radarr"
+        "lidarr"
+      ];
     };
-
-
 
     sabnzbd = {
       image = "lscr.io/linuxserver/sabnzbd:latest";
@@ -725,7 +755,10 @@ in {
       environment = {
         TZ = config.time.timeZone;
       };
-      dependsOn = [ "sonarr" "radarr" ];
+      dependsOn = [
+        "sonarr"
+        "radarr"
+      ];
     };
 
     romm = {
@@ -746,7 +779,7 @@ in {
         DB_NAME = "romm";
       };
       environmentFiles = [ config.sops.secrets.mediarr-romm-env.path ];
-      extraOptions = [] ++ userOptions;
+      extraOptions = [ ] ++ userOptions;
       dependsOn = [ "mariadb" ];
     };
 
@@ -761,7 +794,10 @@ in {
         MARIADB_DATABASE = "romm";
       };
       environmentFiles = [ config.sops.secrets.mediarr-mariadb-env.path ];
-      cmd = [ "--port" "3808" ];
+      cmd = [
+        "--port"
+        "3808"
+      ];
       extraOptions = [ ] ++ userOptions;
     };
 
@@ -787,7 +823,9 @@ in {
     shelfmark = {
       image = "ghcr.io/calibrain/shelfmark:latest";
       pull = "newer";
-      parentPorts = [ "${addresses.podman-gateway}:${toString ports.shelfmark}:${toString ports.shelfmark}" ];
+      parentPorts = [
+        "${addresses.podman-gateway}:${toString ports.shelfmark}:${toString ports.shelfmark}"
+      ];
       volumes = [
         "/var/lib/${userName}/shelfmark:/config"
         "/data/downloads/books-ingest:/ingest"
@@ -850,7 +888,8 @@ in {
       };
       devices = [ "/dev/dri:/dev/dri" ];
       extraOptions = [
-        "--mount" "type=tmpfs,destination=/tmp/threadfin"
+        "--mount"
+        "type=tmpfs,destination=/tmp/threadfin"
       ];
     };
 
@@ -862,8 +901,7 @@ in {
   ];
 
   # -- Firewall Setup --
-  networking.firewall.interfaces =
-  {
+  networking.firewall.interfaces = {
     gradientnet.allowedTCPPorts = allowedPorts;
     gradientnet.allowedUDPPorts = allowedPorts;
   };

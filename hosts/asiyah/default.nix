@@ -21,7 +21,7 @@
     ./forgejo.nix
     ./wyoming.nix
     ./duckdns.nix
-    # ./olivetin.nix # TODO: Re-enable and re-do config after https://github.com/NixOS/nixpkgs/pull/498611 
+    # ./olivetin.nix # TODO: Re-enable and re-do config after https://github.com/NixOS/nixpkgs/pull/498611
     ./postgres.nix
     ./scrutiny.nix
     ./llama-cpp.nix
@@ -65,7 +65,11 @@
     romPath = "/data/downloads/games/roms";
   };
 
-  gradient.presets.syncthing.extraGroups = [ "syncthing" "mediarr" "users" ];
+  gradient.presets.syncthing.extraGroups = [
+    "syncthing"
+    "mediarr"
+    "users"
+  ];
 
   virtualisation.podman.dockerSocket.enable = true;
 
@@ -82,5 +86,5 @@
     bernkastel = "ssh-ng://nix-ssh@bernkastel.gradient?priority=40";
     erika = "ssh-ng://nix-ssh@erika.gradient?priority=50";
   };
-  
+
 }

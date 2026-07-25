@@ -1,33 +1,47 @@
-/*
-
-  Public gradient.moe website.
-
-*/
-{ self, pkgs, lib, config, ... }:
+# Public gradient.moe website.
+{
+  self,
+  pkgs,
+  lib,
+  config,
+  ...
+}:
 let
   addresses = config.gradient.const.addresses;
   ports = config.gradient.currentHost.ports;
-  mkReverseProxy = { port, address ? "127.0.0.1", protocol ? "http", generateOwnCert ? false, rootExtraConfig ? "", vhostExtraConfig ? "", useACMEHost ? "gradient.moe", extraConfig ? {} }: {
-    useACMEHost = if (!generateOwnCert) then useACMEHost else null;
-    enableACME = generateOwnCert;
-    quic = true;
-    forceSSL = true;
-    extraConfig = ''
-      ${vhostExtraConfig}
-    '';
-    locations."/" = {
-      proxyPass = "${protocol}://${address}:${toString port}";
-      proxyWebsockets = true;
+  mkReverseProxy =
+    {
+      port,
+      address ? "127.0.0.1",
+      protocol ? "http",
+      generateOwnCert ? false,
+      rootExtraConfig ? "",
+      vhostExtraConfig ? "",
+      useACMEHost ? "gradient.moe",
+      extraConfig ? { },
+    }:
+    {
+      useACMEHost = if (!generateOwnCert) then useACMEHost else null;
+      enableACME = generateOwnCert;
+      quic = true;
+      forceSSL = true;
       extraConfig = ''
-        auth_request_set $preferredusername $upstream_http_x_auth_request_preferred_username;
-        proxy_set_header X-Username $xusername;
-
-        auth_request_set $groups $upstream_http_x_forwarded_groups;
-        proxy_set_header X-Groups $groups;
-        ${rootExtraConfig}
+        ${vhostExtraConfig}
       '';
-    };
-  } // extraConfig;
+      locations."/" = {
+        proxyPass = "${protocol}://${address}:${toString port}";
+        proxyWebsockets = true;
+        extraConfig = ''
+          auth_request_set $preferredusername $upstream_http_x_auth_request_preferred_username;
+          proxy_set_header X-Username $xusername;
+
+          auth_request_set $groups $upstream_http_x_forwarded_groups;
+          proxy_set_header X-Groups $groups;
+          ${rootExtraConfig}
+        '';
+      };
+    }
+    // extraConfig;
 in
 {
 
@@ -64,13 +78,29 @@ in
 
   # Set up reverse proxies
   services.nginx.virtualHosts = {
-    "hass.gradient.moe" = mkReverseProxy { port = ports.home-assistant; vhostExtraConfig = "proxy_buffering off;"; };
+    "hass.gradient.moe" = mkReverseProxy {
+      port = ports.home-assistant;
+      vhostExtraConfig = "proxy_buffering off;";
+    };
     # Generate let's encrypt certificate for this domain alone for kanidm purposes.
-    "identity.gradient.moe" = mkReverseProxy { port = ports.kanidm; protocol = "https"; generateOwnCert = true; };
-    "git.gradient.moe" = mkReverseProxy { port = ports.forgejo; vhostExtraConfig = "client_max_body_size 4G;"; };
-    "grafana.gradient.moe" = mkReverseProxy { port = config.services.grafana.settings.server.http_port; };
+    "identity.gradient.moe" = mkReverseProxy {
+      port = ports.kanidm;
+      protocol = "https";
+      generateOwnCert = true;
+    };
+    "git.gradient.moe" = mkReverseProxy {
+      port = ports.forgejo;
+      vhostExtraConfig = "client_max_body_size 4G;";
+    };
+    "grafana.gradient.moe" = mkReverseProxy {
+      port = config.services.grafana.settings.server.http_port;
+    };
     # Recommended settings by https://github.com/paperless-ngx/paperless-ngx/wiki/Using-a-Reverse-Proxy-with-Paperless-ngx#nginx
-    "paperless.gradient.moe" = mkReverseProxy { port = ports.paperless; vhostExtraConfig = "client_max_body_size 4G;"; rootExtraConfig = "proxy_redirect off; add_header Referrer-Policy \"strict-origin-when-cross-origin\";"; };
+    "paperless.gradient.moe" = mkReverseProxy {
+      port = ports.paperless;
+      vhostExtraConfig = "client_max_body_size 4G;";
+      rootExtraConfig = "proxy_redirect off; add_header Referrer-Policy \"strict-origin-when-cross-origin\";";
+    };
     "cache.gradient.moe" = mkReverseProxy {
       port = ports.attic;
       vhostExtraConfig = ''
@@ -82,6 +112,6 @@ in
         proxy_request_buffering on;
       '';
     };
-   };
+  };
 
 }

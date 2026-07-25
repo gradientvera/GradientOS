@@ -1,7 +1,12 @@
-{ config, pkgs, ports, ... }:
+{
+  config,
+  pkgs,
+  ports,
+  ...
+}:
 {
 
-  users.groups.hytale = {};
+  users.groups.hytale = { };
   users.users.hytale = {
     isSystemUser = true;
     home = "/var/lib/hytale";
@@ -12,7 +17,7 @@
 
   systemd.services.hytale-server = {
     description = "Hytale Server";
-    wantedBy = [  ]; # needs manual startup
+    wantedBy = [ ]; # needs manual startup
     path = [ pkgs.javaPackages.compiler.temurin-bin.jre-25 ];
     serviceConfig = {
       User = config.users.users.hytale.name;

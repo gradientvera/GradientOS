@@ -11,7 +11,7 @@
       "/home/vera/.linux-voice-assistant/wakeword-data:/app/local"
       "/home/vera/.linux-voice-assistant/configuration:/app/configuration"
       "/home/vera/.linux-voice-assistant/sounds-custom:/app/sounds/custom"
-      
+
     ];
     environment = {
       TZ = config.time.timeZone;
@@ -29,7 +29,8 @@
     podman.user = "vera";
     capabilities.SYS_NICE = true;
     extraOptions = [
-      "--group-add" "audio"
+      "--group-add"
+      "audio"
     ];
   };
 

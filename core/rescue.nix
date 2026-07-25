@@ -1,4 +1,10 @@
-{ config, lib, pkgs, self, ... }:
+{
+  config,
+  lib,
+  pkgs,
+  self,
+  ...
+}:
 let
   hostName = config.networking.hostName;
 in
@@ -11,7 +17,7 @@ in
         imports = [
           # For the hosts that need it, otherwise unused
           self.inputs.lanzaboote.nixosModules.lanzaboote
-          
+
           # Allow remote SSH
           ./openssh.nix
           ./network.nix
@@ -19,7 +25,7 @@ in
           # Could be needed
           ./secrets/default.nix
           ../hosts/${hostName}/secrets/default.nix
-          
+
           # Definitely needed
           ../users/vera/default.nix
           ../hosts/${hostName}/hardware-configuration.nix
@@ -56,5 +62,5 @@ in
       };
     };
   };
-  
+
 }

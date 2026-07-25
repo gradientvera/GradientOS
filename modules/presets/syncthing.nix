@@ -1,4 +1,9 @@
-{ config, pkgs, lib, ... }:
+{
+  config,
+  pkgs,
+  lib,
+  ...
+}:
 let
   cfg = config.gradient.presets.syncthing;
   secrets = config.sops.secrets;
@@ -26,7 +31,7 @@ in
 
     gradient.presets.syncthing.extraGroups = lib.mkOption {
       type = lib.types.listOf lib.types.str;
-      default = [];
+      default = [ ];
       description = ''
         Extra groups to add to the Syncthing service.
       '';
@@ -66,7 +71,7 @@ in
 
     gradient.presets.syncthing.folders = lib.mkOption {
       type = lib.types.attrsOf lib.types.anything;
-      default = {};
+      default = { };
       description = ''
         Syncthing folders to be added, if current host is in "devices".
       '';
@@ -89,7 +94,11 @@ in
         guiAddress = "0.0.0.0:8384";
 
         settings = {
-          devices = (builtins.removeAttrs (builtins.mapAttrs (_: value: { id = builtins.toString value; }) deviceIds) [ hostName ]);
+          devices = (
+            builtins.removeAttrs (builtins.mapAttrs (_: value: { id = builtins.toString value; }) deviceIds) [
+              hostName
+            ]
+          );
           options = {
             localAnnounceEnabled = true;
             limitBandwidthInLan = false;
@@ -101,71 +110,130 @@ in
       networking.firewall.interfaces.gradientnet.allowedTCPPorts = [ 8384 ];
 
       environment.systemPackages = [ pkgs.syncthingtray ];
-      
+
       systemd.services.syncthing.serviceConfig = {
         SupplementaryGroups = lib.concatStringsSep " " cfg.extraGroups;
-        AmbientCapabilities = ["CAP_CHOWN" "CAP_FOWNER"];
+        AmbientCapabilities = [
+          "CAP_CHOWN"
+          "CAP_FOWNER"
+        ];
         PrivateUsers = lib.mkForce false; # Needed for above capabilities to work
       };
 
-      services.syncthing.settings.folders = builtins.mapAttrs (_: v: v // { devices = builtins.filter (d: d != hostName) v.devices; })
-      (lib.attrsets.filterAttrs (name: value: builtins.any (device: device == hostName) value.devices) ({
-        default = {
-          id = "default";
-          versioning.type = "trashcan";
-          path = "~/Documents/Sync";
-          devices = [ "bernkastel" "erika" "asiyah" "vera-phone" "vera-phone-old" "work-laptop" "featherine" "ange" ];
-        };
-        music = {
-          id = "y0fft-chww4";
-          versioning.type = "trashcan";
-          path = "~/Music";
-          devices = [ "bernkastel" "erika" "asiyah" "vera-phone" "vera-phone-old" "work-laptop" "featherine" "ange" ];
-        };
-        neith-music = {
-          id = "neith-music";
-          versioning.type = "trashcan";
-          path = "~/Music";
-          devices = [ "neith-deck" "neith-phone" "hadal-rainbow" ];
-        };
-        ffxiv-config = {
-          id = "ujgmj-wkmsh";
-          versioning.type = "trashcan";
-          path = "~/.xlcore/ffxivConfig";
-          devices = [ "bernkastel" "asiyah" "erika" "featherine" ];
-        };
-        the-midnight-hall = {
-          id = "ykset-ue2ke";
-          versioning.type = "trashcan";
-          path = "~/Documents/TheMidnightHall";
-          devices = [ "bernkastel" "asiyah" "featherine" "neith-deck" "hadal-rainbow" ];
-        };
-        constellation = {
-          id = "constellation";
-          versioning.type = "trashcan";
-          path = "~/Documents/Constellation";
-          devices = [ "bernkastel" "asiyah" "featherine" "neith-deck" "hadal-rainbow" "remie" ];
-        };
-        important-documents = {
-          id = "egytl-udh2q";
-          versioning.type = "trashcan";
-          path = "~/.ImportantDocuments_encfs/";
-          devices = [ "bernkastel" "asiyah" ];
-        };
-        gradientos = {
-          id = "gradientos";
-          versioning.type = "trashcan";
-          path = "/etc/nixos";
-          devices = [ "bernkastel" "featherine" "asiyah" ];
-        };
-        wakewords = {
-          id = "wakewords";
-          versioning.type = "trashcan";
-          path = "~/.wakewords";
-          devices = [ "bernkastel" "asiyah" "vera-phone" ];
-        };
-      } // config.gradient.presets.syncthing.folders)
-      );
+      services.syncthing.settings.folders =
+        builtins.mapAttrs (_: v: v // { devices = builtins.filter (d: d != hostName) v.devices; })
+          (
+            lib.attrsets.filterAttrs (name: value: builtins.any (device: device == hostName) value.devices) (
+              {
+                default = {
+                  id = "default";
+                  versioning.type = "trashcan";
+                  path = "~/Documents/Sync";
+                  devices = [
+                    "bernkastel"
+                    "erika"
+                    "asiyah"
+                    "vera-phone"
+                    "vera-phone-old"
+                    "work-laptop"
+                    "featherine"
+                    "ange"
+                  ];
+                };
+                music = {
+                  id = "y0fft-chww4";
+                  versioning.type = "trashcan";
+                  path = "~/Music";
+                  devices = [
+                    "bernkastel"
+                    "erika"
+                    "asiyah"
+                    "vera-phone"
+                    "vera-phone-old"
+                    "work-laptop"
+                    "featherine"
+                    "ange"
+                  ];
+                };
+                neith-music = {
+                  id = "neith-music";
+                  versioning.type = "trashcan";
+                  path = "~/Music";
+                  devices = [
+                    "neith-deck"
+                    "neith-phone"
+                    "hadal-rainbow"
+                  ];
+                };
+                ffxiv-config = {
+                  id = "ujgmj-wkmsh";
+                  versioning.type = "trashcan";
+                  path = "~/.xlcore/ffxivConfig";
+                  devices = [
+                    "bernkastel"
+                    "asiyah"
+                    "erika"
+                    "featherine"
+                  ];
+                };
+                the-midnight-hall = {
+                  id = "ykset-ue2ke";
+                  versioning.type = "trashcan";
+                  path = "~/Documents/TheMidnightHall";
+                  devices = [
+                    "bernkastel"
+                    "asiyah"
+                    "featherine"
+                    "neith-deck"
+                    "hadal-rainbow"
+                  ];
+                };
+                constellation = {
+                  id = "constellation";
+                  versioning.type = "trashcan";
+                  path = "~/Documents/Constellation";
+                  devices = [
+                    "bernkastel"
+                    "asiyah"
+                    "featherine"
+                    "neith-deck"
+                    "hadal-rainbow"
+                    "remie"
+                  ];
+                };
+                important-documents = {
+                  id = "egytl-udh2q";
+                  versioning.type = "trashcan";
+                  path = "~/.ImportantDocuments_encfs/";
+                  devices = [
+                    "bernkastel"
+                    "asiyah"
+                  ];
+                };
+                gradientos = {
+                  id = "gradientos";
+                  versioning.type = "trashcan";
+                  path = "/etc/nixos";
+                  devices = [
+                    "bernkastel"
+                    "featherine"
+                    "asiyah"
+                  ];
+                };
+                wakewords = {
+                  id = "wakewords";
+                  versioning.type = "trashcan";
+                  path = "~/.wakewords";
+                  devices = [
+                    "bernkastel"
+                    "asiyah"
+                    "vera-phone"
+                  ];
+                };
+              }
+              // config.gradient.presets.syncthing.folders
+            )
+          );
     })
   ]);
 

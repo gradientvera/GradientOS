@@ -1,23 +1,24 @@
-{   lib
-  , stdenv
-  , fetchFromGitHub
+{
+  lib,
+  stdenv,
+  fetchFromGitHub,
 
   # One of "KOBO", "LINUX", "KINDLE",
   # "KINDLE_LEGACY", "CERVANTES", "REMARKABLE",
   # or "POCKETBOOK"
-  , device ? "KOBO"
+  device ? "KOBO",
 
-  , MINIMAL ? false
+  MINIMAL ? false,
 
   # The below options are only useful when MINIMAL = true
-  , DRAW ? !MINIMAL
-  , BITMAP ? !MINIMAL
-  , FONTS ? !MINIMAL
-  , IMAGE ? !MINIMAL
-  , OPENTYPE ? !MINIMAL
-  , INPUT ? !MINIMAL
-  , BUTTON_SCAN ? !MINIMAL
-  , UNIFONT ? !MINIMAL
+  DRAW ? !MINIMAL,
+  BITMAP ? !MINIMAL,
+  FONTS ? !MINIMAL,
+  IMAGE ? !MINIMAL,
+  OPENTYPE ? !MINIMAL,
+  INPUT ? !MINIMAL,
+  BUTTON_SCAN ? !MINIMAL,
+  UNIFONT ? !MINIMAL,
 }:
 let
   repo = "FBInk";
@@ -29,19 +30,20 @@ stdenv.mkDerivation {
   makeFlags = [
     # Device support
     "${device}=1"
-  ] ++ (if device == "kindle_legacy" then [ "LEGACY=1" ] else [])
-    ++ (if MINIMAL then [ "MINIMAL=1" ] else [])
-    ++ (if DRAW then [ "DRAW=1" ] else [])
-    ++ (if BITMAP then [ "BITMAP=1" ] else [])
-    ++ (if FONTS then [ "FONTS=1" ] else [])
-    ++ (if IMAGE then [ "IMAGE=1" ] else [])
-    ++ (if OPENTYPE then [ "OPENTYPE=1" ] else [])
-    ++ (if INPUT then [ "INPUT=1" ] else [])
-    ++ (if BUTTON_SCAN then [ "BUTTON_SCAN=1" ] else [])
-    ++ (if UNIFONT then [ "UNIFONT=1" ] else []);
+  ]
+  ++ (if device == "kindle_legacy" then [ "LEGACY=1" ] else [ ])
+  ++ (if MINIMAL then [ "MINIMAL=1" ] else [ ])
+  ++ (if DRAW then [ "DRAW=1" ] else [ ])
+  ++ (if BITMAP then [ "BITMAP=1" ] else [ ])
+  ++ (if FONTS then [ "FONTS=1" ] else [ ])
+  ++ (if IMAGE then [ "IMAGE=1" ] else [ ])
+  ++ (if OPENTYPE then [ "OPENTYPE=1" ] else [ ])
+  ++ (if INPUT then [ "INPUT=1" ] else [ ])
+  ++ (if BUTTON_SCAN then [ "BUTTON_SCAN=1" ] else [ ])
+  ++ (if UNIFONT then [ "UNIFONT=1" ] else [ ]);
 
   name = "${repo}-git-unstable-${date}";
-  
+
   enableParallelBuilding = true;
 
   src = fetchFromGitHub {

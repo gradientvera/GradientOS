@@ -18,12 +18,15 @@
     users.upsmon = {
       passwordFile = config.sops.secrets.upsmon-password.path;
       upsmon = "primary";
-      actions = [ "set" "fsd" ];
+      actions = [
+        "set"
+        "fsd"
+      ];
       instcmds = [ "ALL" ];
     };
 
     upsmon.monitor."Eaton".user = "upsmon";
-    
+
     upsd.listen = [
       {
         address = "0.0.0.0";

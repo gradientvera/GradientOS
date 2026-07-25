@@ -1,7 +1,10 @@
-/*
-*  Taken and modified from https://kevincox.ca/2022/12/09/valheim-server-nixos-v2/
-*/
-{ config, pkgs, lib, ... }:
+# *  Taken and modified from https://kevincox.ca/2022/12/09/valheim-server-nixos-v2/
+{
+  config,
+  pkgs,
+  lib,
+  ...
+}:
 {
   users.users.steamcmd = {
     isSystemUser = true;
@@ -11,7 +14,7 @@
     createHome = true;
   };
 
-  users.groups.steamcmd = {};
+  users.groups.steamcmd = { };
 
   systemd.services."steamcmd@" = {
     after = [ "network-online.target" ];
@@ -21,55 +24,59 @@
     };
     serviceConfig = {
       Type = "oneshot";
-      ExecStart = "${pkgs.resholve.writeScript "steam" {
-        interpreter = "${pkgs.zsh}/bin/zsh";
-        inputs = with pkgs; [
-          patchelf
-          steamcmd
-          coreutils
-        ];
-        execer = [
-          "cannot:${pkgs.steamcmd}/bin/steamcmd"
-        ];
-      } ''
-        set -eux
+      ExecStart = "${
+        pkgs.resholve.writeScript "steam"
+          {
+            interpreter = "${pkgs.zsh}/bin/zsh";
+            inputs = with pkgs; [
+              patchelf
+              steamcmd
+              coreutils
+            ];
+            execer = [
+              "cannot:${pkgs.steamcmd}/bin/steamcmd"
+            ];
+          }
+          ''
+            set -eux
 
-        instance=''${1:?Instance Missing}
-        eval 'args=(''${(@s:_:)instance})'
-        app=''${args[1]:?App ID missing}
-        beta=''${args[2]:-}
-        betapass=''${args[3]:-}
+            instance=''${1:?Instance Missing}
+            eval 'args=(''${(@s:_:)instance})'
+            app=''${args[1]:?App ID missing}
+            beta=''${args[2]:-}
+            betapass=''${args[3]:-}
 
-        dir=/var/lib/steamcmd/apps/$instance
+            dir=/var/lib/steamcmd/apps/$instance
 
-        cmds=(
-          +force_install_dir $dir
-          +login anonymous
-          +app_update $app validate
-        )
+            cmds=(
+              +force_install_dir $dir
+              +login anonymous
+              +app_update $app validate
+            )
 
-        if [[ $beta ]]; then
-          cmds+=(-beta $beta)
-          if [[ $betapass ]]; then
-            cmds+=(-betapassword $betapass)
-          fi
-        fi
+            if [[ $beta ]]; then
+              cmds+=(-beta $beta)
+              if [[ $betapass ]]; then
+                cmds+=(-betapassword $betapass)
+              fi
+            fi
 
-        cmds+=(+quit)
+            cmds+=(+quit)
 
-        steamcmd $cmds
+            steamcmd $cmds
 
-        for f in $dir/*; do
-          chmod -R ugo+rwx $f
+            for f in $dir/*; do
+              chmod -R ugo+rwx $f
 
-          if ! [[ -f $f && -x $f ]]; then
-            continue
-          fi
+              if ! [[ -f $f && -x $f ]]; then
+                continue
+              fi
 
-          # Update the interpreter to the path on NixOS.
-          patchelf --set-interpreter ${pkgs.glibc}/lib/ld-linux-x86-64.so.2 $f || true
-        done
-      ''} %i";
+              # Update the interpreter to the path on NixOS.
+              patchelf --set-interpreter ${pkgs.glibc}/lib/ld-linux-x86-64.so.2 $f || true
+            done
+          ''
+      } %i";
       PrivateTmp = true;
       Restart = "on-failure";
       StateDirectory = "steamcmd/apps/%i";
@@ -82,11 +89,14 @@
   # Some games might depend on the Steamworks SDK redistributable, so download it.
   systemd.services.steamworks-sdk = {
     wantedBy = [ "multi-user.target" ];
-    wants = [ "steamcmd@1007.service" "steamworks-sdk.timer" ];
+    wants = [
+      "steamcmd@1007.service"
+      "steamworks-sdk.timer"
+    ];
     after = [ "steamcmd@1007.service" ];
 
     serviceConfig = {
-      Type="oneshot";
+      Type = "oneshot";
       ExecStart = lib.escapeShellArgs [
         "${pkgs.coreutils}/bin/echo"
         "Done! Steamworks SDK should be downloaded now."

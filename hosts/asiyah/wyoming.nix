@@ -16,7 +16,7 @@
       uri = "tcp://0.0.0.0:${toString ports.piper-spanish}";
       zeroconf.enable = true;
     };
-    
+
     faster-whisper.servers.english = {
       enable = true;
       language = "en";

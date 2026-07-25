@@ -1,4 +1,9 @@
-{ config, pkgs, lib, ... }:
+{
+  config,
+  pkgs,
+  lib,
+  ...
+}:
 let
   cfg = config.gradient;
 in
@@ -61,7 +66,7 @@ in
 
     # Convenience
     # services.envfs.enable = true;
-    
+
     services.ananicy = {
       enable = true;
       package = pkgs.ananicy-cpp;
@@ -85,7 +90,7 @@ in
         "--actions-per-burst-max=1000"
         "--canary-cheep-msec=30000"
         "--canary-watchdog-msec=60000"
-      ];  
+      ];
     };
     security.polkit.enable = true;
     security.auditd.enable = true;
@@ -93,7 +98,7 @@ in
       # For Crowdsec
       log_group = config.users.groups.auditd.name;
     };
-    users.groups.auditd = {};
+    users.groups.auditd = { };
     services.journald.audit = true;
     security.audit.enable = true;
     security.audit.rules = [
@@ -168,7 +173,7 @@ in
     environment.shells = with pkgs; [
       fish
     ];
-    
+
     programs.fish = {
       enable = true;
       shellInit = ''
@@ -212,14 +217,14 @@ in
 
     boot.kernel.sysctl = {
       "kernel.sysrq" = "1";
-      
+
       # Enable the BBR congestion control algorithm
       "net.core.default_qdisc" = "cake";
       "net.ipv4.tcp_congestion_control" = "bbr";
-      
+
       # Enable TCP Fast Open
       "net.ipv4.tcp_fastopen" = "3";
-      
+
       # Enable MTU probing
       "net.ipv4.tcp_mtu_probing" = lib.mkDefault true;
 
@@ -240,10 +245,10 @@ in
 
       # Increase inotify watches
       "fs.inotify.max_user_instances" = "524288";
-      "fs.inotify.max_user_watches" =  "524288";
+      "fs.inotify.max_user_watches" = "524288";
 
       # -- Taken from https://github.com/CachyOS/CachyOS-Settings/blob/a4695168e264868a3cfa2b813d99f32db46e9734/usr/lib/sysctl.d/70-cachyos-settings.conf --
-      
+
       # Restricting access to kernel pointers in the proc filesystem
       "kernel.kptr_restrict" = "2";
 
@@ -300,7 +305,10 @@ in
       serviceConfig.Type = "oneshot";
       serviceConfig.RemainAfterExit = "yes";
       unitConfig.StopWhenUnneeded = "yes";
-      path = [ pkgs.coreutils pkgs.systemd ];
+      path = [
+        pkgs.coreutils
+        pkgs.systemd
+      ];
       script = "exit 0";
       postStop = ''
         echo "Restarting pci-latency service..."

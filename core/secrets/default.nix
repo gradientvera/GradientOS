@@ -1,4 +1,9 @@
-{ config, lib, self, ... }:
+{
+  config,
+  lib,
+  self,
+  ...
+}:
 let
   cfg = config.gradient;
 in
@@ -17,7 +22,7 @@ in
     };
   };
 
-  config = lib.mkMerge[
+  config = lib.mkMerge [
 
     {
       # breaks a lot of shit otherwise agh
@@ -51,7 +56,10 @@ in
           sopsFile = ./secrets.yml;
           owner = "crowdsec";
           group = "crowdsec";
-          restartUnits = [ "crowdsec.service" "crowdsec-firewall-bouncer.service" ];
+          restartUnits = [
+            "crowdsec.service"
+            "crowdsec-firewall-bouncer.service"
+          ];
         };
         crowdsec-console-token = lib.mkIf config.services.crowdsec.enable {
           sopsFile = ./secrets.yml;

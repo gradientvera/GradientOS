@@ -31,16 +31,13 @@ let
     sha256 = "sha256-5H9PRSY77oMABvgNDZ/wBayEBXJTzE9sGeAjkFAqYIQ=";
   };
 
-  nixowo-icons = pkgs.runCommandLocal "nixowo-icons" {  }
-  ''
+  nixowo-icons = pkgs.runCommandLocal "nixowo-icons" { } ''
     install -m644 ${nixowo}/NixOwO_plain.svg -D $out/share/icons/hicolor/scalable/apps/nix-snowflake.svg
   '';
-  
+
   meta.priority = 10;
 
-  nixowo-icon = pkgs.runCommandLocal "nixowo-icon"
-  { nativeBuildInputs = [ pkgs.imagemagick ]; }
-  ''
+  nixowo-icon = pkgs.runCommandLocal "nixowo-icon" { nativeBuildInputs = [ pkgs.imagemagick ]; } ''
     mkdir $out
     # convert logo to png
     convert -background none ${nixowo}/NixOwO_plain.svg logo.png

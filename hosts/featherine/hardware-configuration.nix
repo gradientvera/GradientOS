@@ -1,4 +1,10 @@
-{ config, lib, pkgs, modulesPath, ... }:
+{
+  config,
+  lib,
+  pkgs,
+  modulesPath,
+  ...
+}:
 {
 
   imports = [
@@ -8,9 +14,31 @@
   hardware.facter.reportPath = ./facter.json;
 
   boot.kernelPackages = pkgs.linuxPackages_zen;
-  boot.initrd.availableKernelModules = [ "nvme" "xhci_pci" "ahci" "thunderbolt" "usbhid" "usb_storage" "sd_mod" "amdgpu" "xhci_hcd" "tpm_crb" ];
-  boot.initrd.kernelModules = [ "kvm-amd" "amdgpu" "tpm_crb" "gpd-fan" ];
-  boot.kernelModules = [ "kvm-amd" "i2c-dev" "tpm_crb" "gpd-fan" "bmi260_i2c" ];
+  boot.initrd.availableKernelModules = [
+    "nvme"
+    "xhci_pci"
+    "ahci"
+    "thunderbolt"
+    "usbhid"
+    "usb_storage"
+    "sd_mod"
+    "amdgpu"
+    "xhci_hcd"
+    "tpm_crb"
+  ];
+  boot.initrd.kernelModules = [
+    "kvm-amd"
+    "amdgpu"
+    "tpm_crb"
+    "gpd-fan"
+  ];
+  boot.kernelModules = [
+    "kvm-amd"
+    "i2c-dev"
+    "tpm_crb"
+    "gpd-fan"
+    "bmi260_i2c"
+  ];
   boot.kernelParams = [
     "amd_iommu=on"
     "iommu=pt"
@@ -22,7 +50,7 @@
   ];
   boot.extraModulePackages = with config.boot.kernelPackages; [ ];
   boot.extraModprobeConfig = "";
-  
+
   # Let EC control decide fan speed, see https://docs.kernel.org/6.18/hwmon/gpd-fan.html
   boot.kernel.sysfs.devices.platform.gpd_fan.hwmon."hwmon[0-9]*".pwm1_enable = 2;
 

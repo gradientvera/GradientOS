@@ -1,4 +1,9 @@
-{ config, lib, ports, ... }:
+{
+  config,
+  lib,
+  ports,
+  ...
+}:
 {
 
   services.uptime-kuma = {
@@ -17,4 +22,4 @@
     };
   };
 
-} 
+}

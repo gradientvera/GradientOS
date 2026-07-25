@@ -1,8 +1,14 @@
-{ config, pkgs, lib, ... }:
+{
+  config,
+  pkgs,
+  lib,
+  ...
+}:
 let
   steam-app = "2394010";
   ports = config.gradient.currentHost.ports;
-in {
+in
+{
 
   users.users.palworld = {
     isSystemUser = true;
@@ -13,9 +19,9 @@ in {
     extraGroups = [ config.users.groups.steamcmd.name ];
   };
 
-  users.groups.palworld = {};
+  users.groups.palworld = { };
 
-  systemd.tmpfiles.rules = [ 
+  systemd.tmpfiles.rules = [
     "d ${config.users.users.palworld.home}/.steam 0755 ${config.users.users.palworld.name} ${config.users.groups.palworld.name} - -"
     "L+ ${config.users.users.palworld.home}/.steam/sdk64 - - - - /var/lib/steamcmd/apps/1007/linux64"
   ];

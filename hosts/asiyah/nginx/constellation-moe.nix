@@ -1,7 +1,12 @@
-/*
-  Public constellation.moe website.
-*/
-{ self, config, pkgs, lib, ports, ... }:
+# Public constellation.moe website.
+{
+  self,
+  config,
+  pkgs,
+  lib,
+  ports,
+  ...
+}:
 let
   addresses = config.gradient.const.addresses;
 in
@@ -21,7 +26,7 @@ in
   };
 
   services.nginx.virtualHosts = {
-  
+
     "constellation.moe" = {
       root = self.inputs.constellation-moe;
       enableACME = true;
@@ -40,7 +45,7 @@ in
       locations."/" = {
         return = "301 https://constellation.moe$request_uri";
       };
-      
+
       locations."/.well-known/discord" = {
         return = "200 dh=c6efaef2bdecf33aa37bf661e003f57442183211";
       };
@@ -49,7 +54,7 @@ in
     "remie.constellation.moe" = {
       useACMEHost = "constellation.moe";
       forceSSL = true;
-      
+
       locations."/" = {
         return = "301 https://constellation.moe$request_uri";
       };
@@ -62,7 +67,7 @@ in
     "vera.constellation.moe" = {
       useACMEHost = "constellation.moe";
       forceSSL = true;
-      
+
       locations."/" = {
         return = "301 https://constellation.moe$request_uri";
       };

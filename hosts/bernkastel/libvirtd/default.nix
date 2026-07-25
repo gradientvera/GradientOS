@@ -2,12 +2,18 @@
 let
   win10-hooks = pkgs.writeShellApplication {
     name = "win10-hooks";
-    runtimeInputs = with pkgs; [ libvirt kmod gawk lsof ];
+    runtimeInputs = with pkgs; [
+      libvirt
+      kmod
+      gawk
+      lsof
+    ];
     text = builtins.readFile ./win10-hooks.sh;
     checkPhase = "";
   };
-in {
-  
+in
+{
+
   virtualisation.libvirtd = {
     enable = true;
     onBoot = "ignore";
@@ -26,7 +32,7 @@ in {
   '';
 
   systemd.tmpfiles.settings."10-libvirtd" = {
-    
+
     "/var/lib/libvirt/vbios.rom".C = {
       argument = "${./vbios.rom}";
       repoPath = "/etc/nixos/hosts/bernkastel/libvirtd/vbios.rom";

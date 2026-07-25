@@ -1,4 +1,10 @@
-{ config, pkgs, self, lib, ... }:
+{
+  config,
+  pkgs,
+  self,
+  lib,
+  ...
+}:
 let
   ports = config.gradient.currentHost.ports;
   addresses = config.gradient.const.addresses;
@@ -14,7 +20,9 @@ in
 
   # just temporary I swear!
   disabledModules = [ "services/home-automation/home-assistant.nix" ];
-  imports = [ "${toString self.inputs.nixpkgs-master}/nixos/modules/services/home-automation/home-assistant.nix" ];
+  imports = [
+    "${toString self.inputs.nixpkgs-master}/nixos/modules/services/home-automation/home-assistant.nix"
+  ];
 
   services.home-assistant = {
     enable = true;
@@ -122,55 +130,55 @@ in
       "tts"
       "my"
     ];
-    customComponents = 
+    customComponents =
       with pkgsCustomComponents;
       with pkgsCustomComponentsGradientOS;
-    [
-      radarr-upcoming-media
-      sonarr-upcoming-media
-      mqtt-vacuum-camera
-      thermal-comfort
-      # google-find-my # TODO: fix...
-      anniversaries
-      local_openai # for the task
-      ha_mcp_tools
-      llm_intents
-      bodymiscale
-      # feedparser # TODO: fix
-      moonraker
-      home-llm # for the assistant
-      valetudo
-      ingress
-      smartir
-      frigate
-      bermuda
-      edata
-      spook
+      [
+        radarr-upcoming-media
+        sonarr-upcoming-media
+        mqtt-vacuum-camera
+        thermal-comfort
+        # google-find-my # TODO: fix...
+        anniversaries
+        local_openai # for the task
+        ha_mcp_tools
+        llm_intents
+        bodymiscale
+        # feedparser # TODO: fix
+        moonraker
+        home-llm # for the assistant
+        valetudo
+        ingress
+        smartir
+        frigate
+        bermuda
+        edata
+        spook
 
-      #auth_oidc # disable for now, not really that good
-      
-    ];
+        #auth_oidc # disable for now, not really that good
+
+      ];
     extraPackages = ps: with ps; [ psycopg2 ];
 
-    customLovelaceModules = 
+    customLovelaceModules =
       with pkgsCustomLovelaceModules;
       with pkgsCustomLovelaceModulesGradientOS;
-    [
-      zigbee2mqtt-networkmap
-      xiaomi-vacuum-map-card
-      atomic-calendar-revive
-      advanced-camera-card
-      decluttering-card
-      valetudo-map-card
-      mini-graph-card
-      # custom-sidebar
-      # auto-entities
-      sankey-chart
-      vacuum-card
-      bubble-card
-      mushroom
-      card-mod
-    ];
+      [
+        zigbee2mqtt-networkmap
+        xiaomi-vacuum-map-card
+        atomic-calendar-revive
+        advanced-camera-card
+        decluttering-card
+        valetudo-map-card
+        mini-graph-card
+        # custom-sidebar
+        # auto-entities
+        sankey-chart
+        vacuum-card
+        bubble-card
+        mushroom
+        card-mod
+      ];
 
     config = {
       # Imports/includes
@@ -194,8 +202,8 @@ in
           "https://hass.gradient.moe/"
         ];
         external_url = "https://hass.gradient.moe";
-        webrtc.ice_servers = (builtins.map (x: { url = x.urls; }) config.services.go2rtc.settings.webrtc.ice_servers)
-          ++ [];
+        webrtc.ice_servers =
+          (builtins.map (x: { url = x.urls; }) config.services.go2rtc.settings.webrtc.ice_servers) ++ [ ];
       };
 
       system_log = {
@@ -203,15 +211,18 @@ in
       };
 
       zha.zigpy_config.ota.z2m_remote_index = "https://raw.githubusercontent.com/Koenkk/zigbee-OTA/master/index.json";
-      default_config = {};
-      mobile_app = {};
-      history = {};
-      ffmpeg = {};
+      default_config = { };
+      mobile_app = { };
+      history = { };
+      ffmpeg = { };
 
       http = {
         server_port = ports.home-assistant;
         use_x_forwarded_for = true;
-        trusted_proxies = [ "${gradientnet.asiyah}" "127.0.0.1" ];
+        trusted_proxies = [
+          "${gradientnet.asiyah}"
+          "127.0.0.1"
+        ];
         ip_ban_enabled = true;
         login_attempts_threshold = 10;
       };
@@ -226,9 +237,9 @@ in
           platform = "folder";
           folder = "/var/lib/hass/www/sounds/oucher/";
         }
-      ];    
+      ];
 
-      python_script = {};
+      python_script = { };
 
       media_player = [ ];
 
@@ -241,7 +252,11 @@ in
             {
               name = "llama-cpp default model";
               json_attributes_path = "$.data.[0]";
-              json_attributes = [ "id" "created" "owned_by" ];
+              json_attributes = [
+                "id"
+                "created"
+                "owned_by"
+              ];
               value_template = "{{ value_json.data[0].status.value }}";
             }
           ];
@@ -290,12 +305,12 @@ in
           work_mode = "ingress";
           url = "http://vacuum-angela.${addresses.tailscale-domain}";
         };
-        mute = {
+        roland = {
           parent = "robot_vacuums";
-          title = "*Mute";
+          title = "Roland";
           icon = "mdi:home-floor-0";
           work_mode = "ingress";
-          url = "http://vacuum-mute.${addresses.tailscale-domain}";
+          url = "http://vacuum-roland.${addresses.tailscale-domain}";
         };
         printer_k1c = {
           title = "3D Printer K1C";
@@ -322,11 +337,20 @@ in
     };
   };
 
-  users.users.hass.extraGroups = [ "mediarr" "systemd-restart-units"  ];
+  users.users.hass.extraGroups = [
+    "mediarr"
+    "systemd-restart-units"
+  ];
 
   systemd.services.home-assistant = {
-    wants = [ "postgresql.service" "influxdb2.service" ];
-    after = [ "postgresql.service" "influxdb2.service" ];
+    wants = [
+      "postgresql.service"
+      "influxdb2.service"
+    ];
+    after = [
+      "postgresql.service"
+      "influxdb2.service"
+    ];
   };
 
   networking.firewall.allowedTCPPorts = [ ports.home-assistant ];

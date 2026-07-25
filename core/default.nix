@@ -1,7 +1,12 @@
-{ config, lib, self, ... }:
+{
+  config,
+  lib,
+  self,
+  ...
+}:
 let
   cfg = config.gradient;
-in  
+in
 {
 
   imports = [

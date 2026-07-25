@@ -16,7 +16,9 @@
   hardware.intel-gpu-tools.enable = true;
 
   # Modern driver
-  environment.sessionVariables = { LIBVA_DRIVER_NAME = "iHD"; };
+  environment.sessionVariables = {
+    LIBVA_DRIVER_NAME = "iHD";
+  };
 
   security.wrappers.btop = {
     source = "${pkgs.btop}/bin/btop";

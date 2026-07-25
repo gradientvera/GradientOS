@@ -1,4 +1,9 @@
-{ config, pkgs, lib, ... }:
+{
+  config,
+  pkgs,
+  lib,
+  ...
+}:
 let
   secrets = config.sops.secrets;
   ports = config.gradient.currentHost.ports;
@@ -20,7 +25,7 @@ in
       ldapbindaddress = "127.0.0.1:${toString ports.kanidm-ldap}";
 
       http_client_address_info.x-forward-for = [ "127.0.0.1" ];
-      
+
       online_backup.versions = 7;
 
       # Use auto-generated let's encrypt certificate
@@ -42,7 +47,7 @@ in
       idmAdminPasswordFile = secrets.kanidm-idm-admin-password.path;
       extraJsonFile = secrets.kanidm-provisioning.path;
       systems.oauth2 = {
-        
+
         constellation-oauth2-proxy = {
           public = true;
           displayName = "Constellation Internal Services";
@@ -57,7 +62,7 @@ in
               "profile"
               "groups"
             ];
-          };  
+          };
         };
 
         home-assistant = {
@@ -76,7 +81,7 @@ in
               "profile"
               "groups"
             ];
-          };  
+          };
         };
 
         forgejo = {
@@ -94,7 +99,7 @@ in
               "profile"
               "groups"
             ];
-          };  
+          };
         };
 
         # https://kanidm.github.io/kanidm/stable/integrations/oauth2/examples.html#grafana

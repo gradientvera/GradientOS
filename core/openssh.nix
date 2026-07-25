@@ -1,27 +1,28 @@
 { lib, ... }:
 let
   ssh-pub-keys = import ../misc/ssh-pub-keys.nix;
-in {
+in
+{
 
   programs.mosh.enable = true;
-  
+
   programs.ssh = {
     startAgent = true;
     hostKeyAlgorithms = [ "ssh-ed25519" ];
 
     extraConfig = ''
-Host *.gradient *.gradient.moe *.constellation.moe
-  IdentityFile /etc/ssh/ssh_host_ed25519_key
-  IdentityFile ~/.ssh/id_ed25519
-'';
+      Host *.gradient *.gradient.moe *.constellation.moe
+        IdentityFile /etc/ssh/ssh_host_ed25519_key
+        IdentityFile ~/.ssh/id_ed25519
+    '';
   };
 
   # Enable the OpenSSH daemon.
   services.openssh = {
-    
+
     enable = true;
     openFirewall = true;
-    
+
     settings = {
       PasswordAuthentication = false;
       KbdInteractiveAuthentication = false;
@@ -72,7 +73,7 @@ Host *.gradient *.gradient.moe *.constellation.moe
 
   users.users.root.openssh.authorizedKeys.keys = with ssh-pub-keys; [
     vera
-    
+
     # Ugh I hate that I have to do this
     forgejo-deployment
   ];

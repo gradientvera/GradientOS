@@ -1,4 +1,9 @@
-{ config, lib, pkgs, ... }:
+{
+  config,
+  lib,
+  pkgs,
+  ...
+}:
 let
   cfg = config.gradient;
 in
@@ -15,43 +20,47 @@ in
   };
 
   config = lib.mkIf (cfg.profiles.audio.enable && cfg.profiles.audio.rnnoise.enable) {
-      services.pipewire.extraLadspaPackages = [ pkgs.rnnoise-plugin ];
-      services.pipewire.extraConfig.pipewire."00-rnnoise.conf" = {
-        "context.modules" = [
-        {   "name" = "libpipewire-module-filter-chain";
-            "args" = {
-                "node.description" =  "Noise Canceling source";
-                "media.name" =  "Noise Canceling source";
-                "filter.graph" = {
-                    "nodes" = [
-                        {
-                            "type" = "ladspa";
-                            "name" = "rnnoise";
-                            "plugin" = "librnnoise_ladspa";
-                            "label" = "noise_suppressor_stereo";
-                            "control" = {
-                                "VAD Threshold (%)" = 50.0;
-                                "VAD Grace Period (ms)" = 1000;
-                                "Retroactive VAD Grace (ms)" = 100;
-                            };
-                        }
-                    ];
-                };
-                "audio.position" = [ "FL" "FR" ];
-                "capture.props" = {
-                    "node.name" =  "capture.rnnoise_source";
-                    "node.passive" = true;
-                    "audio.rate" = 48000;
-                };
-                "playback.props" = {
-                    "node.name" =  "rnnoise_source";
-                    "media.class" = "Audio/Source";
-                    "media.role" = "Communication";
-                    "audio.rate" = 48000;
-                };
+    services.pipewire.extraLadspaPackages = [ pkgs.rnnoise-plugin ];
+    services.pipewire.extraConfig.pipewire."00-rnnoise.conf" = {
+      "context.modules" = [
+        {
+          "name" = "libpipewire-module-filter-chain";
+          "args" = {
+            "node.description" = "Noise Canceling source";
+            "media.name" = "Noise Canceling source";
+            "filter.graph" = {
+              "nodes" = [
+                {
+                  "type" = "ladspa";
+                  "name" = "rnnoise";
+                  "plugin" = "librnnoise_ladspa";
+                  "label" = "noise_suppressor_stereo";
+                  "control" = {
+                    "VAD Threshold (%)" = 50.0;
+                    "VAD Grace Period (ms)" = 1000;
+                    "Retroactive VAD Grace (ms)" = 100;
+                  };
+                }
+              ];
             };
+            "audio.position" = [
+              "FL"
+              "FR"
+            ];
+            "capture.props" = {
+              "node.name" = "capture.rnnoise_source";
+              "node.passive" = true;
+              "audio.rate" = 48000;
+            };
+            "playback.props" = {
+              "node.name" = "rnnoise_source";
+              "media.class" = "Audio/Source";
+              "media.role" = "Communication";
+              "audio.rate" = 48000;
+            };
+          };
         }
-        ];
-      };
+      ];
+    };
   };
 }

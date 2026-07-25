@@ -9,7 +9,7 @@ in
 
   imports = [
     ./podman.nix
-  ]; 
+  ];
 
   users.users.tdarr = {
     isSystemUser = true;
@@ -25,36 +25,36 @@ in
   users.groups.tdarr = {
     gid = groupGid;
   };
-  
+
   boot.kernelModules = [ "nfs" ];
 
   fileSystems =
-  let
-    nfsOptions = [
-      "nfsvers=4.2"
-      "_netdev"
-      "noauto"
-      "x-systemd.automount"
-      "x-systemd.mount-timeout=10"
-      "x-systemd.idle-timeout=1min"
-      "timeo=14"
-      "nofail"
-      "noatime"
-    ];
-  in
-  {
-    "/var/lib/tdarr" = {
-      device = "${addresses.gradientnet.asiyah}:/export/mediarr/tdarr/";
-      fsType = "nfs";
-      options = nfsOptions;
-    };
+    let
+      nfsOptions = [
+        "nfsvers=4.2"
+        "_netdev"
+        "noauto"
+        "x-systemd.automount"
+        "x-systemd.mount-timeout=10"
+        "x-systemd.idle-timeout=1min"
+        "timeo=14"
+        "nofail"
+        "noatime"
+      ];
+    in
+    {
+      "/var/lib/tdarr" = {
+        device = "${addresses.gradientnet.asiyah}:/export/mediarr/tdarr/";
+        fsType = "nfs";
+        options = nfsOptions;
+      };
 
-    "/asiyahMedia" = {
-      device = "${addresses.gradientnet.asiyah}:/export/downloads/";
-      fsType = "nfs";
-      options = nfsOptions;
+      "/asiyahMedia" = {
+        device = "${addresses.gradientnet.asiyah}:/export/downloads/";
+        fsType = "nfs";
+        options = nfsOptions;
+      };
     };
-  };
 
   virtualisation.oci-containers.containers.tdarrNode = {
     image = "ghcr.io/haveagitgat/tdarr_node:latest";
@@ -82,8 +82,14 @@ in
   };
 
   systemd.services.podman-tdarrNode = {
-    after = [ "var-lib-tdarr.mount" "asiyahMedia.mount" ];
-    bindsTo = [ "var-lib-tdarr.mount" "asiyahMedia.mount" ];
+    after = [
+      "var-lib-tdarr.mount"
+      "asiyahMedia.mount"
+    ];
+    bindsTo = [
+      "var-lib-tdarr.mount"
+      "asiyahMedia.mount"
+    ];
   };
 
 }

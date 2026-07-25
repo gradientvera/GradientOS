@@ -1,6 +1,7 @@
-{ lib
-, pkgsCross
-, gradient-ansible-lib
+{
+  lib,
+  pkgsCross,
+  gradient-ansible-lib,
 }:
 let
   alib = gradient-ansible-lib;
@@ -9,38 +10,110 @@ let
   lixPkg = pkgsAarch64Musl.pkgsStatic.lixPackageSets.latest.lix;
   sshPubKeys = import ../misc/ssh-pub-keys.nix;
 
-  installNixPackageStatic = pkg: alib.tasks.block { name = "Installing Nix static package ${lib.getName pkg}"; } [
-    (alib.tasks.nixCopyClosureWithRoot { inherit pkg; rootDest = "/data/nix-roots"; remoteProgram = "/opt/bin/nix-store"; })
-    (alib.tasks.ansibleBuiltinFile { name = "Ensure existing ${lib.getName pkg} binary does not exist"; } { path = "/opt/bin/${baseNameOf (lib.getExe pkg)}"; state = "absent"; })
-    (alib.tasks.nixMakeSymlinkToMainExe { inherit pkg; destPath = "/opt/bin"; })
-  ];
-  installNixPackagesStatic = pkgList: alib.tasks.block { name = "Installing Nix static packages"; } (map (p: installNixPackageStatic p) pkgList);
-  installNixPackageCustomStatic = pkg: binPath: destName: alib.tasks.block { name = "Installing Nix static package ${lib.getName pkg} as ${destName}"; } [
-    (alib.tasks.nixCopyClosureWithRoot { inherit pkg; rootDest = "/data/nix-roots"; remoteProgram = "/opt/bin/nix-store"; })
-    (alib.tasks.ansibleBuiltinFile { name = "Ensure existing ${baseNameOf destName} binary does not exist"; } { path = "/opt/bin/${destName}"; state = "absent"; })
-    (alib.tasks.nixMakeSymlinkCustom { inherit pkg; srcPath = binPath; destPath = "/opt/bin/${destName}"; })
-  ];
+  installNixPackageStatic =
+    pkg:
+    alib.tasks.block { name = "Installing Nix static package ${lib.getName pkg}"; } [
+      (alib.tasks.nixCopyClosureWithRoot {
+        inherit pkg;
+        rootDest = "/data/nix-roots";
+        remoteProgram = "/opt/bin/nix-store";
+      })
+      (alib.tasks.ansibleBuiltinFile
+        { name = "Ensure existing ${lib.getName pkg} binary does not exist"; }
+        {
+          path = "/opt/bin/${baseNameOf (lib.getExe pkg)}";
+          state = "absent";
+        }
+      )
+      (alib.tasks.nixMakeSymlinkToMainExe {
+        inherit pkg;
+        destPath = "/opt/bin";
+      })
+    ];
+  installNixPackagesStatic =
+    pkgList:
+    alib.tasks.block { name = "Installing Nix static packages"; } (
+      map (p: installNixPackageStatic p) pkgList
+    );
+  installNixPackageCustomStatic =
+    pkg: binPath: destName:
+    alib.tasks.block { name = "Installing Nix static package ${lib.getName pkg} as ${destName}"; } [
+      (alib.tasks.nixCopyClosureWithRoot {
+        inherit pkg;
+        rootDest = "/data/nix-roots";
+        remoteProgram = "/opt/bin/nix-store";
+      })
+      (alib.tasks.ansibleBuiltinFile
+        { name = "Ensure existing ${baseNameOf destName} binary does not exist"; }
+        {
+          path = "/opt/bin/${destName}";
+          state = "absent";
+        }
+      )
+      (alib.tasks.nixMakeSymlinkCustom {
+        inherit pkg;
+        srcPath = binPath;
+        destPath = "/opt/bin/${destName}";
+      })
+    ];
 
-  installNixPackageGlibc = pkg: alib.tasks.block { name = "Installing Nix package ${lib.getName pkg}"; } [
-    (alib.tasks.nixCopyClosureWithRoot { inherit pkg; rootDest = "/data/nix-roots"; remoteProgram = "/opt/bin/nix-store"; })
-    (alib.tasks.ansibleBuiltinFile { name = "Ensure existing ${lib.getName pkg} binary does not exist"; } { path = "/opt/bin/${baseNameOf (lib.getExe pkg)}"; state = "absent"; })
-    (alib.tasks.nixMakeSymlinkToMainExeGlibc { inherit pkg; glibc = pkgsAarch64Glibc.glibc; destPath = "/opt/bin"; })
-  ];
-  installNixPackagesGlibc = pkgList: alib.tasks.block { name = "Installing Nix packages"; } (map (p: installNixPackageGlibc p) pkgList);
-  installNixPackageCustomGlibc = pkg: binPath: destName: alib.tasks.block { name = "Installing Nix package ${lib.getName pkg} as ${destName}"; } [
-    (alib.tasks.nixCopyClosureWithRoot { inherit pkg; rootDest = "/data/nix-roots"; remoteProgram = "/opt/bin/nix-store"; })
-    (alib.tasks.ansibleBuiltinFile { name = "Ensure existing ${baseNameOf destName} binary does not exist"; } { path = "/opt/bin/${destName}"; state = "absent"; })
-    (alib.tasks.nixMakeSymlinkCustomGlibc { inherit pkg; glibc = pkgsAarch64Glibc.glibc; srcPath = binPath; destPath = "/opt/bin/${destName}"; })
-  ];
+  installNixPackageGlibc =
+    pkg:
+    alib.tasks.block { name = "Installing Nix package ${lib.getName pkg}"; } [
+      (alib.tasks.nixCopyClosureWithRoot {
+        inherit pkg;
+        rootDest = "/data/nix-roots";
+        remoteProgram = "/opt/bin/nix-store";
+      })
+      (alib.tasks.ansibleBuiltinFile
+        { name = "Ensure existing ${lib.getName pkg} binary does not exist"; }
+        {
+          path = "/opt/bin/${baseNameOf (lib.getExe pkg)}";
+          state = "absent";
+        }
+      )
+      (alib.tasks.nixMakeSymlinkToMainExeGlibc {
+        inherit pkg;
+        glibc = pkgsAarch64Glibc.glibc;
+        destPath = "/opt/bin";
+      })
+    ];
+  installNixPackagesGlibc =
+    pkgList:
+    alib.tasks.block { name = "Installing Nix packages"; } (map (p: installNixPackageGlibc p) pkgList);
+  installNixPackageCustomGlibc =
+    pkg: binPath: destName:
+    alib.tasks.block { name = "Installing Nix package ${lib.getName pkg} as ${destName}"; } [
+      (alib.tasks.nixCopyClosureWithRoot {
+        inherit pkg;
+        rootDest = "/data/nix-roots";
+        remoteProgram = "/opt/bin/nix-store";
+      })
+      (alib.tasks.ansibleBuiltinFile
+        { name = "Ensure existing ${baseNameOf destName} binary does not exist"; }
+        {
+          path = "/opt/bin/${destName}";
+          state = "absent";
+        }
+      )
+      (alib.tasks.nixMakeSymlinkCustomGlibc {
+        inherit pkg;
+        glibc = pkgsAarch64Glibc.glibc;
+        srcPath = binPath;
+        destPath = "/opt/bin/${destName}";
+      })
+    ];
 
-  makeNixSymlink = name: alib.tasks.ansibleBuiltinFile { name = "Adding ${name} symlink"; } {
-    path = "/opt/bin/${name}";
-    src = "nix";
-    force = true;
-    owner = "root";
-    group = "root";
-    state = "link";
-  };
+  makeNixSymlink =
+    name:
+    alib.tasks.ansibleBuiltinFile { name = "Adding ${name} symlink"; } {
+      path = "/opt/bin/${name}";
+      src = "nix";
+      force = true;
+      owner = "root";
+      group = "root";
+      state = "link";
+    };
   copyExecutable = name: src: dest: {
     inherit name;
     "ansible.builtin.copy" = {
@@ -64,7 +137,8 @@ let
       mode = "0644";
     };
   };
-in with alib.tasks;
+in
+with alib.tasks;
 [
   {
     name = "Robot Vacuums play";
@@ -74,38 +148,46 @@ in with alib.tasks;
     };
     hosts = [ "vacuums" ];
     tasks = [
-      (copySshAuthorizedKeys "Copy SSH authorized keys to persistent data"
-        "/mnt/misc/authorized_keys")
+      (copySshAuthorizedKeys "Copy SSH authorized keys to persistent data" "/mnt/misc/authorized_keys")
 
-      (copySshAuthorizedKeys "Copy SSH authorized keys to temporary home"
-        "/tmp/.ssh/authorized_keys")
+      (copySshAuthorizedKeys "Copy SSH authorized keys to temporary home" "/tmp/.ssh/authorized_keys")
 
-      (copyExecutable "Copy Gradient Postboot Script"
-        ../misc/vacuum/gradient_postboot.sh "/data/gradient_postboot.sh")
-
-      (copyExecutable "Copy Gradient Provision Script"
-        ../misc/vacuum/gradient_provision.sh "/data/gradient_provision.sh"
+      (copyExecutable "Copy Gradient Postboot Script" ../misc/vacuum/gradient_postboot.sh
+        "/data/gradient_postboot.sh"
       )
 
-      (copyExecutable "Copy Gradient Profile Script"
-        ../misc/vacuum/gradient_shutdown.sh "/data/gradient_shutdown.sh")
+      (copyExecutable "Copy Gradient Provision Script" ../misc/vacuum/gradient_provision.sh
+        "/data/gradient_provision.sh"
+      )
 
-      (copyExecutable "Copy Gradient Shutdown Script"
-        ../misc/vacuum/gradient_profile.sh "/data/gradient_profile.sh")
+      (copyExecutable "Copy Gradient Profile Script" ../misc/vacuum/gradient_shutdown.sh
+        "/data/gradient_shutdown.sh"
+      )
 
-      (copyExecutable "Copy Gradient Publish Photo Script"
-        ../misc/vacuum/gradient_publish_photo.sh "/data/gradient_publish_photo.sh")
+      (copyExecutable "Copy Gradient Shutdown Script" ../misc/vacuum/gradient_profile.sh
+        "/data/gradient_profile.sh"
+      )
 
-      (copyExecutable "Copy Gradient Sops Setup Script"
-        ../misc/vacuum/gradient_sops_setup.sh "/data/gradient_sops_setup.sh")
+      (copyExecutable "Copy Gradient Publish Photo Script" ../misc/vacuum/gradient_publish_photo.sh
+        "/data/gradient_publish_photo.sh"
+      )
 
-      (ansibleBuiltinFile { name = "Create Oucher Directories"; } { path = "/data/oucher/ogg"; state = "directory"; recurse = true; owner = "root"; group = "root"; mode = "0777"; })
+      (copyExecutable "Copy Gradient Sops Setup Script" ../misc/vacuum/gradient_sops_setup.sh
+        "/data/gradient_sops_setup.sh"
+      )
 
-      (copyExecutable "Copy Oucher Script"
-        ../misc/vacuum/oucher.sh "/data/oucher/oucher.sh")
+      (ansibleBuiltinFile { name = "Create Oucher Directories"; } {
+        path = "/data/oucher/ogg";
+        state = "directory";
+        recurse = true;
+        owner = "root";
+        group = "root";
+        mode = "0777";
+      })
 
-      (opkg { }
-      {
+      (copyExecutable "Copy Oucher Script" ../misc/vacuum/oucher.sh "/data/oucher/oucher.sh")
+
+      (opkg { } {
         state = "present";
         update_cache = true;
         executable = "/opt/bin/opkg";
@@ -141,23 +223,45 @@ in with alib.tasks;
       (ansibleBuiltinStat { register = "lixStat"; } { path = "/opt/bin/nix"; })
 
       # If Nix binary does not exist yet, copy the binary over.
-      (installPackageExe { pkg = lixPkg; dest = "/opt/bin/nix"; taskArgs = { when = "not (lixStat.stat.exists | default(false))"; }; })
+      (installPackageExe {
+        pkg = lixPkg;
+        dest = "/opt/bin/nix";
+        taskArgs = {
+          when = "not (lixStat.stat.exists | default(false))";
+        };
+      })
 
-      # Recreate Nix GC roots folder 
-      (ansibleBuiltinFile { name = "Remove GC roots folder"; } { path = "/data/nix-roots"; state = "absent"; })
-      (ansibleBuiltinFile { name = "Create GC roots folder"; } { path = "/data/nix-roots"; state = "directory"; owner = "root"; group = "root"; mode = "0777"; })
+      # Recreate Nix GC roots folder
+      (ansibleBuiltinFile { name = "Remove GC roots folder"; } {
+        path = "/data/nix-roots";
+        state = "absent";
+      })
+      (ansibleBuiltinFile { name = "Create GC roots folder"; } {
+        path = "/data/nix-roots";
+        state = "directory";
+        owner = "root";
+        group = "root";
+        mode = "0777";
+      })
 
       # Install Nix packages with GC roots and symlinks to /opt/bin
-      (installNixPackagesStatic 
-      (with pkgsAarch64Musl; [
-        lixPkg
-        sops
-        ssh-to-age
-      ]))
-      (installNixPackagesGlibc (with pkgsAarch64Glibc; [
-        # Faster compiles
-        (ffmpeg-headless.overrideAttrs (_: { doCheck = false; }))
-      ]))
+      (installNixPackagesStatic (
+        with pkgsAarch64Musl;
+        [
+          lixPkg
+          sops
+          ssh-to-age
+        ]
+      ))
+      (installNixPackagesGlibc (
+        with pkgsAarch64Glibc;
+        [
+          # Faster compiles
+          (ffmpeg-headless.overrideAttrs (_: {
+            doCheck = false;
+          }))
+        ]
+      ))
 
       (installNixPackageCustomGlibc pkgsAarch64Glibc.v4l-utils "/bin/v4l2-ctl" "v4l2-ctl")
       (installNixPackageCustomGlibc pkgsAarch64Glibc.v4l-utils "/bin/media-ctl" "media-ctl")

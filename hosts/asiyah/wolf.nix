@@ -1,4 +1,9 @@
-{ config, ports, pkgs, ... }:
+{
+  config,
+  ports,
+  pkgs,
+  ...
+}:
 {
 
   systemd.tmpfiles.settings."99-wolf.conf" = {
@@ -50,11 +55,13 @@
     };
     extraOptions = [
       "--ipc=host"
-      "--security-opt" "label=disable"
-      "--device-cgroup-rule" "c 13:* rmw"
+      "--security-opt"
+      "label=disable"
+      "--device-cgroup-rule"
+      "c 13:* rmw"
     ];
   };
-  
+
   # As per https://games-on-whales.github.io/wolf/stable/user/quickstart.html#_virtual_devices_support
   services.udev.extraRules = ''
     # Allows Wolf to acces /dev/uinput (only needed for joypad support)
@@ -83,13 +90,29 @@
   };
 
   networking.firewall.interfaces.gradientnet = {
-    allowedTCPPorts = [ ports.wolf-http ports.wolf-https ports.wolf-rtsp ];
-    allowedUDPPorts = [ ports.wolf-control ports.wolf-video-ping ports.wolf-audio-ping ];
+    allowedTCPPorts = [
+      ports.wolf-http
+      ports.wolf-https
+      ports.wolf-rtsp
+    ];
+    allowedUDPPorts = [
+      ports.wolf-control
+      ports.wolf-video-ping
+      ports.wolf-audio-ping
+    ];
   };
 
   networking.firewall.interfaces.tailscale0 = {
-    allowedTCPPorts = [ ports.wolf-http ports.wolf-https ports.wolf-rtsp ];
-    allowedUDPPorts = [ ports.wolf-control ports.wolf-video-ping ports.wolf-audio-ping ];
+    allowedTCPPorts = [
+      ports.wolf-http
+      ports.wolf-https
+      ports.wolf-rtsp
+    ];
+    allowedUDPPorts = [
+      ports.wolf-control
+      ports.wolf-video-ping
+      ports.wolf-audio-ping
+    ];
   };
 
 }

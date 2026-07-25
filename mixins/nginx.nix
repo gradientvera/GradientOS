@@ -28,7 +28,7 @@
 
     commonHttpConfig = ''
       resolver 127.0.0.1 valid=5s;
-      
+
       log_format combinedwithfqdn '$host:$server_port $remote_addr - $remote_user [$time_local] '
                                   '"$request" $status $body_bytes_sent '
                                   '"$http_referer" "$http_user_agent"';

@@ -8,7 +8,9 @@
 
     secrets = {
 
-      wireguard-private-key = { restartUnits = [ "wireguard-*" ]; };
+      wireguard-private-key = {
+        restartUnits = [ "wireguard-*" ];
+      };
 
       nix-private-key = { };
 
@@ -23,7 +25,7 @@
         sopsFile = ./syncthing-key.pem;
         restartUnits = [ "syncthing.service" ];
       };
-      
+
     };
   };
 

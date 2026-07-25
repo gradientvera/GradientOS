@@ -1,17 +1,39 @@
-{ config, lib, pkgs, modulesPath, ... }:
+{
+  config,
+  lib,
+  pkgs,
+  modulesPath,
+  ...
+}:
 
 {
-  imports =
-    [ (modulesPath + "/installer/scan/not-detected.nix")
-    ];
+  imports = [
+    (modulesPath + "/installer/scan/not-detected.nix")
+  ];
 
   hardware.facter.reportPath = ./facter.json;
 
   # Stable for ZFS
   boot.kernelPackages = pkgs.linuxPackages_xanmod;
-  boot.initrd.availableKernelModules = [ "xhci_pci" "ehci_pci" "ahci" "nvme" "usbhid" "usb_storage" "sd_mod" "xhci_hcd" ];
+  boot.initrd.availableKernelModules = [
+    "xhci_pci"
+    "ehci_pci"
+    "ahci"
+    "nvme"
+    "usbhid"
+    "usb_storage"
+    "sd_mod"
+    "xhci_hcd"
+  ];
   boot.initrd.kernelModules = [ ];
-  boot.kernelModules = [ "kvm-intel" "nfs" "corsair-psu" "iTCO_wdt" "xt_multiport" "tcp_bbr" ];
+  boot.kernelModules = [
+    "kvm-intel"
+    "nfs"
+    "corsair-psu"
+    "iTCO_wdt"
+    "xt_multiport"
+    "tcp_bbr"
+  ];
   boot.extraModulePackages = [ ];
 
   boot.kernelParams = [
@@ -21,7 +43,7 @@
 
   # We've got enough RAM to do this LET'S GOOO
   boot.tmp.useTmpfs = true;
-  boot.tmp.tmpfsSize = "75%"; 
+  boot.tmp.tmpfsSize = "75%";
 
   # Enables DHCP on each ethernet and wireless interface. In case of scripted networking
   # (the default) this is the recommended approach. When using systemd-networkd it's

@@ -1,7 +1,8 @@
 { config, ... }:
 let
   ports = config.gradient.currentHost.ports;
-in {
+in
+{
 
   virtualisation.oci-containers.containers.memory-repository = {
     # AAAAAAAAAAAAa!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
@@ -12,7 +13,9 @@ in {
     pull = "newer";
     ports = [ "127.0.0.1:${toString ports.trilium}:8080" ];
     volumes = [ "/data/trilium:/home/node/trilium-data" ];
-    environment = { TZ = config.time.timeZone; };
+    environment = {
+      TZ = config.time.timeZone;
+    };
   };
 
 }

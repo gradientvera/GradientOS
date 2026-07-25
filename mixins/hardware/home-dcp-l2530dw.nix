@@ -4,7 +4,10 @@
 
   services.printing = {
     enable = true;
-    drivers = [ pkgs.brlaser pkgs.ptouch-driver ];
+    drivers = [
+      pkgs.brlaser
+      pkgs.ptouch-driver
+    ];
   };
 
   hardware.sane = {
