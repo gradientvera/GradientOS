@@ -33,7 +33,32 @@ echo "MCU PID is $PID"
 FILE_TEMP=/tmp/oucher_tmp.ogg
 FILE=/tmp/oucher.ogg
 
+API="http://127.0.0.1:80/api/v2/robot"
+
+do_not_disturb() {
+	# Skip if the robot doesn't support Do Not Disturb.
+	curl -s "$API/capabilities" | jq -e 'index("DoNotDisturbCapability")' > /dev/null 2>&1 || return 1
+
+	# Get DND config, check whether it's enabled or not.
+	DND=$(curl -s "$API/capabilities/DoNotDisturbCapability")
+	[ "$(echo "$DND" | jq -r '.enabled')" = "true" ] || return 1
+
+	# Variables in minutes since midnight.
+	START=$(echo "$DND" | jq -r '.start.hour * 60 + .start.minute')
+	END=$(echo "$DND" | jq -r '.end.hour * 60 + .end.minute')
+	NOW=$((10#$(date +%H) * 60 + 10#$(date +%M)))
+
+	# Check whether we're in DND period or not.
+	[ $(( (NOW - START + 1440) % 1440 )) -lt $(( (END - START + 1440) % 1440 )) ]
+}
+
 while true; do
+	if do_not_disturb; then
+		# DND, do nothing, check back in a minute.
+		sleep 60
+		continue
+	fi
+
 	# For protocol see https://github.com/alufers/dreame_mcu_protocol/tree/master
 	# Relevant for us:
 	# < is start message

@@ -66,7 +66,7 @@ while true; do
     else
         if [ -z "$VIDEO_PID" ]; then
             echo "Robot not docked, starting video_monitor..."
-            setsid sh -c 'LD_PRELOAD="$STREAMER_DIR/vacuumstreamer.so" "$STREAMER_DIR/video_monitor"' &
+            LD_PRELOAD="$STREAMER_DIR/vacuumstreamer.so" $STREAMER_DIR/video_monitor &
             sleep 10
             if ! pidof video_monitor > /dev/null 2>&1; then
                 echo "video_monitor failed to start, waiting before retrying..."
