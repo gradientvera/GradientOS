@@ -20,8 +20,15 @@ in
 
   users.groups.project-zomboid = { };
 
+  # To send console commands: `echo "command here lol" > /run/project-zomboid.stdin`
+  systemd.sockets.project-zomboid = {
+    partOf = [ "project-zomboid.service" ];
+    socketConfig.ListenFIFO = "%t/project-zomboid.stdin";
+  };
+
   systemd.services.project-zomboid = {
-    wantedBy = [ "multi-user.target" ];
+    # Have to start it manually
+    wantedBy = [ ];
 
     # Install the game before launching.
     wants = [ "steamcmd@${steam-app}.service" ];
@@ -37,6 +44,10 @@ in
         "--steamport1 ${toString ports.project-zomboid-steam-1}"
         "--steamport2 ${toString ports.project-zomboid-steam-2}"
       ];
+      Sockets = "project-zomboid.socket";
+      StandardInput = "socket";
+      StandardOutput = "journal";
+      StandardError = "journal";
       Nice = "-5";
       PrivateTmp = true;
       Restart = "always";

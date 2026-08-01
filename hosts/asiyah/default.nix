@@ -42,7 +42,7 @@
     #./libvirtd/default.nix # Unused, removed SSD for now
     ./redbot-stardream.nix
     ./gradient-generator.nix
-    # ./project-zomboid-server.nix
+    ./project-zomboid-server.nix
     ./hardware-configuration.nix
     ./trilium-memory-repository.nix
   ];
