@@ -40,7 +40,7 @@ in
       sendLoadingState = false;
       logToStdout = "both"; # log proxy and upstream processes
       startPort = 20000; # port allocation start
-      globalTTL = 0; # by default, never unload models
+      globalTTL = 120; # by default, unload models after 2 minutes
 
       models =
         let
@@ -111,7 +111,7 @@ in
         };
 
       hooks.on_startup.preload = [
-        "Bonsai-27B-GPU"
+        # "Bonsai-27B-GPU"
       ];
     };
   };
