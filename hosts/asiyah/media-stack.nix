@@ -852,6 +852,7 @@ in
         METADATA_PROVIDER = "hardcover";
         HARDCOVER_ENABLED = "true";
         OPENLIBRARY_ENABLED = "true";
+        GOOGLEBOOKS_ENABLED = "true";
       };
       networks = [ "container:gluetun" ];
     };
