@@ -148,6 +148,9 @@ in
       DefaultLimitNOFILE = "32768:2097152";
     };
 
+    # Allow users to set password in a stateful manner
+    users.mutableUsers = true;
+
     security.pam.loginLimits = [
       {
         domain = "*";
