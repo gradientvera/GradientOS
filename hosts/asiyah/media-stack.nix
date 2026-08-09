@@ -589,32 +589,34 @@ in
       ];
     };
 
-    gluetun-tailscale-es = {
-      image = "docker.io/tailscale/tailscale:latest";
-      pull = "newer";
-      volumes = [
-        "/run/current-system/kernel-modules/lib/modules:/lib/modules:ro"
-        "/var/lib/${userName}/tailscale-es:/var/lib/tailscale"
-        "${config.sops.secrets.tailscale-auth-key.path}:/ts.key:ro"
-      ];
-      environment = {
-        TZ = config.time.timeZone;
-        TS_STATE_DIR = "/var/lib/tailscale";
-        TS_AUTHKEY = "file:/ts.key";
-        TS_HOSTNAME = "vpn-es";
-        # TS_DEBUG_FIREWALL_MODE = "nftables";
-        TS_TAILSCALED_EXTRA_ARGS = "--no-logs-no-support";
-        TS_EXTRA_ARGS = "--advertise-exit-node --login-server=https://headscale.constellation.moe";
-        TS_AUTH_ONCE = "false";
-        TS_USERSPACE = "true"; # "false";
+    /*
+      gluetun-tailscale-es = {
+        image = "docker.io/tailscale/tailscale:latest";
+        pull = "newer";
+        volumes = [
+          "/run/current-system/kernel-modules/lib/modules:/lib/modules:ro"
+          "/var/lib/${userName}/tailscale-es:/var/lib/tailscale"
+          "${config.sops.secrets.tailscale-auth-key.path}:/ts.key:ro"
+        ];
+        environment = {
+          TZ = config.time.timeZone;
+          TS_STATE_DIR = "/var/lib/tailscale";
+          TS_AUTHKEY = "file:/ts.key";
+          TS_HOSTNAME = "vpn-es";
+          # TS_DEBUG_FIREWALL_MODE = "nftables";
+          TS_TAILSCALED_EXTRA_ARGS = "--no-logs-no-support";
+          TS_EXTRA_ARGS = "--advertise-exit-node --login-server=https://headscale.constellation.moe";
+          TS_AUTH_ONCE = "false";
+          TS_USERSPACE = "true"; # "false";
+        };
+        privileged = true;
+        capabilities.NET_ADMIN = true;
+        capabilities.NET_RAW = true;
+        capabilities.SYS_MODULE = true;
+        devices = [ "/dev/net/tun:/dev/net/tun" ];
+        networks = [ "container:gluetun" ];
       };
-      privileged = true;
-      capabilities.NET_ADMIN = true;
-      capabilities.NET_RAW = true;
-      capabilities.SYS_MODULE = true;
-      devices = [ "/dev/net/tun:/dev/net/tun" ];
-      networks = [ "container:gluetun" ];
-    };
+    */
 
     gluetun-uk = {
       image = "docker.io/qmcgaw/gluetun:latest";
@@ -653,32 +655,34 @@ in
       ];
     };
 
-    gluetun-tailscale-uk = {
-      image = "docker.io/tailscale/tailscale:latest";
-      pull = "newer";
-      volumes = [
-        "/run/current-system/kernel-modules/lib/modules:/lib/modules:ro"
-        "/var/lib/${userName}/tailscale-uk:/var/lib/tailscale"
-        "${config.sops.secrets.tailscale-auth-key.path}:/ts.key:ro"
-      ];
-      environment = {
-        TZ = config.time.timeZone;
-        TS_STATE_DIR = "/var/lib/tailscale";
-        TS_AUTHKEY = "file:/ts.key";
-        TS_HOSTNAME = "vpn-uk";
-        # TS_DEBUG_FIREWALL_MODE = "nftables";
-        TS_TAILSCALED_EXTRA_ARGS = "--no-logs-no-support";
-        TS_EXTRA_ARGS = "--advertise-exit-node --login-server=https://headscale.constellation.moe";
-        TS_AUTH_ONCE = "false";
-        TS_USERSPACE = "true"; # "false";
+    /*
+      gluetun-tailscale-uk = {
+        image = "docker.io/tailscale/tailscale:latest";
+        pull = "newer";
+        volumes = [
+          "/run/current-system/kernel-modules/lib/modules:/lib/modules:ro"
+          "/var/lib/${userName}/tailscale-uk:/var/lib/tailscale"
+          "${config.sops.secrets.tailscale-auth-key.path}:/ts.key:ro"
+        ];
+        environment = {
+          TZ = config.time.timeZone;
+          TS_STATE_DIR = "/var/lib/tailscale";
+          TS_AUTHKEY = "file:/ts.key";
+          TS_HOSTNAME = "vpn-uk";
+          # TS_DEBUG_FIREWALL_MODE = "nftables";
+          TS_TAILSCALED_EXTRA_ARGS = "--no-logs-no-support";
+          TS_EXTRA_ARGS = "--advertise-exit-node --login-server=https://headscale.constellation.moe";
+          TS_AUTH_ONCE = "false";
+          TS_USERSPACE = "true"; # "false";
+        };
+        privileged = true;
+        capabilities.NET_ADMIN = true;
+        capabilities.NET_RAW = true;
+        capabilities.SYS_MODULE = true;
+        devices = [ "/dev/net/tun:/dev/net/tun" ];
+        networks = [ "container:gluetun-uk" ];
       };
-      privileged = true;
-      capabilities.NET_ADMIN = true;
-      capabilities.NET_RAW = true;
-      capabilities.SYS_MODULE = true;
-      devices = [ "/dev/net/tun:/dev/net/tun" ];
-      networks = [ "container:gluetun-uk" ];
-    };
+    */
 
     mikochi = {
       image = "docker.io/zer0tonin/mikochi:latest";

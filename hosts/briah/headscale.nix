@@ -15,8 +15,9 @@ in
     address = "127.0.0.1";
     port = ports.headscale;
 
+    settings.node.expiry = 0;
+
     settings.oidc = {
-      expiry = 0;
       pkce.enabled = true;
       client_id = "headscale";
       issuer = "https://identity.gradient.moe/oauth2/openid/headscale";

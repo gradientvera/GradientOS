@@ -18,16 +18,9 @@ let
 in
 {
 
-  # just temporary I swear!
-  disabledModules = [ "services/home-automation/home-assistant.nix" ];
-  imports = [
-    "${toString self.inputs.nixpkgs-master}/nixos/modules/services/home-automation/home-assistant.nix"
-  ];
-
   services.home-assistant = {
     enable = true;
-    package = pkgs.master.home-assistant;
-    # TODO: remove, this is temporary to fix something
+    package = pkgs.home-assistant;
     lovelaceConfigWritable = true;
     extraComponents = [
       "homeassistant_alerts"
