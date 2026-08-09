@@ -12,6 +12,13 @@ provision() {
 
   echo "Initializing gradient_provision..."
 
+  if [[ -x "/usr/bin/cpu.sh" ]]; then
+      echo "Forcibly disabling powersave mode..."
+      /usr/bin/cpu.sh deverpon || true
+      sleep 1
+      /usr/bin/cpu.sh cpuerpoff || true
+  fi
+
   cd /tmp
 
   mkdir -p /opt
@@ -184,6 +191,13 @@ EOF
 
   echo "Synchronizing APK cache..."
   apk cache -v sync
+
+  if [[ -x "/usr/bin/cpu.sh" ]]; then
+    echo "Letting firmware decide powersave mode again..."
+    /usr/bin/cpu.sh cpuerpoff || true
+    sleep 1
+    /usr/bin/cpu.sh deverpoff || true
+  fi
 
   /usr/bin/speak "Gradient provision complete!" -v en --stdout | /bin/aplay
   echo "Gradient provision complete!"
