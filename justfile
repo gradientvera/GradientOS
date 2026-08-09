@@ -13,31 +13,11 @@ check:
 
 # funny hehe
 vacuum:
-    rsync -e 'ssh -p 222' -avzP --chmod=0760 --chown=root:root ./misc/vacuum/ root@vacuum-angela:/data
-    rsync -e 'ssh -p 222' -avzP --chmod=0760 --chown=root:root ./misc/vacuum/ root@vacuum-roland:/data
+    just deploy-vacuum vacuum-angela
+    just deploy-vacuum vacuum-roland
 
-vacuum-local:
-    rsync -e 'ssh -p 222' -avzP --chmod=0760 --chown=root:root ./misc/vacuum/ root@valetudo-leanunfinishedjellyfish.local:/data
-    rsync -e 'ssh -p 222' -avzP --chmod=0760 --chown=root:root ./misc/vacuum/ root@valetudo-ironcladrashmink.local:/data
-
-vacuumstreamer IP:
-    #! /usr/bin/env nix-shell
-    #! nix-shell -i bash -p git podman openssh gnused
-    rm -rf ./vacuumstreamer
-    git clone "https://github.com/brunsy/vacuumstreamer.git"
-    cd vacuumstreamer
-    git reset --hard "83d99b8d151190f8e860415eab735401f552b33c"
-    podman build -t vacuumstreamer .
-    sed -i -e 's/vacuumstreamer sh/localhost\/vacuumstreamer:latest sh/g' -e 's/docker/podman/g' build.sh
-    VACUUM_ROBOT_IP={{IP}} ./build.sh
-    ssh -p 222 root@{{IP}} 'mkdir -p /data/vacuumstreamer/video_monitor-conf' 
-    cp -r "./dist/ava/conf/video_monitor" "./video_monitor-conf"
-    scp -P 222 -r "./video_monitor-conf" "root@{{IP}}:/data/vacuumstreamer"
-    scp -P 222 "./video_monitor" "root@{{IP}}:/data/vacuumstreamer/video_monitor"
-    scp -P 222 "./vacuumstreamer.so" "root@{{IP}}:/data/vacuumstreamer/vacuumstreamer.so"
-    ssh -p 222 root@{{IP}} 'chmod +x /data/vacuumstreamer/video_monitor'
-    cd ..
-    rm -rf ./vacuumstreamer
+deploy-vacuum IP:
+    rsync -e 'ssh -p 222' -avzP --chmod=0760 --chown=root:root --exclude='*.md' ./misc/vacuum/ root@{{IP}}:/data
 
 [group('deployment')]
 update-inputs:

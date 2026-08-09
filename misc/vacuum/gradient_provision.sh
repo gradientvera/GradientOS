@@ -123,15 +123,6 @@ provision() {
   export SOPS_AGE_KEY_FILE="/data/age/keys.txt"
   export SOPS_SECRETS_FILE="/data/secrets/secrets.yml"
 
-  # Publish camera photos to MQTT
-  if [[ -x "/data/gradient_publish_photo.sh" ]]; then
-    echo "Initializing gradient_publish_photo daemon..."
-    echo "Installing dependencies for gradient_publish_photo..."
-    apk add mosquitto-clients imagemagick curl
-    pkill gradient_publish_photo.sh || true
-    /data/gradient_publish_photo.sh &
-  fi
-
   # Oucher script
   if [[ -x "/data/oucher.sh" ]]; then
     echo "Initializing Oucher daemon..."
