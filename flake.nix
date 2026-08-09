@@ -61,11 +61,6 @@
       inputs.flake-compat.follows = "flake-compat";
     };
 
-    cryolitia-nur = {
-      url = "github:Cryolitia/nur-packages/master";
-      inputs.nixpkgs.follows = "nixpkgs";
-    };
-
     catppuccin = {
       url = "github:catppuccin/nix";
       inputs.nixpkgs.follows = "nixpkgs";
@@ -120,7 +115,6 @@
       jovian-nixos,
       sops-nix,
       nixos-hardware,
-      cryolitia-nur,
       lanzaboote,
       ...
     }:
@@ -161,8 +155,6 @@
             mixins.graphical-steam
 
             mixins.restic-repository-hokma
-
-            mixins.container-linux-voice-assistant
 
             mixins.hardware-qmk
             mixins.hardware-wacom
@@ -293,7 +285,6 @@
           name = "featherine";
 
           modules = [
-            cryolitia-nur.nixosModules.bmi260
             lanzaboote.nixosModules.lanzaboote
             nixos-hardware.nixosModules.gpd-win-mini-2024
 
