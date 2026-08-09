@@ -152,48 +152,6 @@ in
           };
         };
 
-        vacuum-angela = {
-          enabled = false;
-          webui_url = "http://vacuum-angela";
-          live.stream_name = "vacuum-angela";
-          live.streams = {
-            "Main Stream" = "vacuum-angela";
-          };
-          ffmpeg.output_args.record = "preset-record-generic-audio-aac";
-          ffmpeg.inputs = [
-            {
-              path = "rtsp://127.0.0.1:${toString ports.go2rtc-rtsp}/vacuum-angela?timeout=60";
-              input_args = "preset-rtsp-restream";
-              roles = [
-                "detect"
-                "audio"
-                "record"
-              ];
-            }
-          ];
-        };
-
-        vacuum-roland = {
-          enabled = false;
-          webui_url = "http://vacuum-roland";
-          live.stream_name = "vacuum-roland";
-          live.streams = {
-            "Main Stream" = "vacuum-roland";
-          };
-          ffmpeg.output_args.record = "preset-record-generic-audio-aac";
-          ffmpeg.inputs = [
-            {
-              path = "rtsp://127.0.0.1:${toString ports.go2rtc-rtsp}/vacuum-roland?timeout=60";
-              input_args = "preset-rtsp-restream";
-              roles = [
-                "detect"
-                "audio"
-                "record"
-              ];
-            }
-          ];
-        };
-
       };
     };
   };
@@ -222,12 +180,6 @@ in
         eufy-e220-hallway_sub = [
           "rtsp://thingino:thingino@${localAddresses.eufy-e220-hallway-ip}/ch1#timeout=60"
           "ffmpeg:eufy-e220-hallway_sub#audio=opus"
-        ];
-        vacuum-angela = [
-          "tcp://vacuum-angela:6969"
-        ];
-        vacuum-roland = [
-          "tcp://vacuum-roland:6969"
         ];
       };
     };
