@@ -133,13 +133,10 @@ in
         thermal-comfort
         # google-find-my # TODO: fix...
         anniversaries
-        local_openai # for the task
-        ha_mcp_tools
-        llm_intents
         bodymiscale
+        browser-mod
         # feedparser # TODO: fix
         moonraker
-        home-llm # for the assistant
         valetudo
         ingress
         smartir
@@ -164,11 +161,12 @@ in
         decluttering-card
         valetudo-map-card
         mini-graph-card
-        # custom-sidebar
+        custom-sidebar
         # auto-entities
         sankey-chart
         vacuum-card
         bubble-card
+        kiosk-mode
         mushroom
         card-mod
       ];
