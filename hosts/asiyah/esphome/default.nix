@@ -30,6 +30,7 @@ in
       "/var/lib/esphome/smart-air-freshener.yaml".C = mkDevice "smart-air-freshener.yaml";
       "/var/lib/esphome/espbell-lite.yaml".C = mkDevice "espbell-lite.yaml";
       "/var/lib/esphome/gas-canister-scale.yaml".C = mkDevice "gas-canister-scale.yaml";
+      "/var/lib/esphome/petkit-fresh-element-solo.yaml".C = mkDevice "petkit-fresh-element-solo.yaml";
     };
 
   # If you remove the below sops nixos eats your face
