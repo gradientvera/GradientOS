@@ -86,7 +86,7 @@ in
     "zigbee.asiyah.gradient.moe" = mkInternalVHost { port = ports.zigbee2mqtt; };
     "hass.asiyah.gradient.moe" = mkInternalVHost { port = ports.home-assistant; };
     "jellyfin.asiyah.gradient.moe" = mkInternalVHost { port = ports.jellyfin-http; };
-    "uptime.asiyah.gradient.moe" = mkInternalVHost { port = ports.uptime-kuma; };
+    "uptime.asiyah.gradient.moe" = mkInternalVHost { port = ports.gatus; };
     "k1c.asiyah.gradient.moe" = mkInternalVHost {
       dynamicAddress = localAddresses.printer-k1c;
       port = 80;

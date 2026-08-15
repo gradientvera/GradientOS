@@ -91,18 +91,18 @@
   forgejo = 3000;
   forgejo-cache = 3001;
   forgejo-ssh = 222;
+  attic = 8060;
   immich = 8072;
   openwebrx = 8073;
-  nut = 3493;
+  olivetin = 8075;
+  crowdsec-lapi = 8076;
   open-webui = 8100;
+  nut = 3493;
   llama-swap = 11435;
-  uptime-kuma = 4003;
-  attic = 8060;
+  gatus = 4003;
   wgautomesh-gossip = 1666;
   wgautomesh-external = 33723;
-  crowdsec-lapi = 8076;
   crowdsec-metrics = 6060;
-  olivetin = 8075;
 
   # Wyoming
   piper-english = 10200;

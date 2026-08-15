@@ -10,6 +10,7 @@
     ./numad.nix
     ./radio.nix
     ./attic.nix
+    ./gatus.nix
     ./crafty.nix
     ./zigbee.nix
     ./immich.nix
@@ -32,7 +33,6 @@
     ./filesystems.nix
     ./vaultwarden.nix
     ./media-stack.nix
-    ./uptime-kuma.nix
     ./victorialogs.nix
     ./nginx/default.nix
     ./home-assistant.nix

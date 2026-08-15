@@ -50,7 +50,7 @@ let
     pkg:
     (pkg.override {
       withOpenASAR = true;
-      withVencord = true;
+      withVencord = false; # prone to breaking shit
       withTTS = true;
     }).overrideAttrs
       (prevAttrs: {

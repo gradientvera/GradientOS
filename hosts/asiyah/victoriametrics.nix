@@ -25,7 +25,7 @@ in
           metrics_path = "/metrics";
           static_configs = [
             {
-              targets = [ "127.0.0.1:${toString ports.uptime-kuma}" ];
+              targets = [ "127.0.0.1:${toString ports.gatus}" ];
             }
           ];
         }

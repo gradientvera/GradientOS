@@ -188,13 +188,7 @@ in
             "Status" = {
               description = "Status page for Constellation Internal Services.";
               href = "https://status.constellation.moe/";
-              icon = "sh-uptime-kuma.svg";
-              siteMonitor = "http://127.0.0.1:${toString ports.uptime-kuma}";
-              widget = {
-                type = "uptimekuma";
-                url = "http://127.0.0.1:${toString ports.uptime-kuma}";
-                slug = "internal-constellation-services";
-              };
+              icon = "sh-gatus.svg";
             };
           }
         ];

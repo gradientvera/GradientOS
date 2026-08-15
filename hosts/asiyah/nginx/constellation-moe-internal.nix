@@ -114,7 +114,7 @@ in
 
   services.nginx.virtualHosts = {
     "homepage.constellation.moe" = mkReverseProxy { port = ports.constellation-homepage; };
-    "status.constellation.moe" = mkReverseProxy { port = ports.uptime-kuma; };
+    "status.constellation.moe" = mkReverseProxy { port = ports.gatus; };
     "ersatztv.constellation.moe" = mkReverseProxy {
       port = ports.ersatztv;
       address = addresses.podman-gateway;
