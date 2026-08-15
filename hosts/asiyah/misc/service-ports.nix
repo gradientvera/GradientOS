@@ -91,6 +91,7 @@
   forgejo = 3000;
   forgejo-cache = 3001;
   forgejo-ssh = 222;
+  immich = 8072;
   openwebrx = 8073;
   nut = 3493;
   open-webui = 8100;

@@ -247,6 +247,14 @@ in
       port = ports.threadfin;
       address = addresses.podman-gateway;
     };
+    "immich.constellation.moe" = mkReverseProxy {
+      port = ports.immich;
+      vhostExtraConfig = ''
+        client_max_body_size 50G;
+        client_body_buffer_size 1024k;
+        proxy_request_buffering off;
+      '';
+    };
   };
 
   # TODO: Figure out a way to automate the below list eugh

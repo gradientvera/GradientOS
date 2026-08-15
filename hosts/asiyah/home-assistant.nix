@@ -87,6 +87,7 @@ in
       "camera"
       "radarr"
       "folder"
+      "immich"
       "sonarr"
       "ollama"
       "stream"

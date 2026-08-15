@@ -165,6 +165,38 @@ in
           };
         };
 
+        # See https://docs.immich.app/administration/oauth/
+        immich = {
+          public = true;
+          displayName = "Immich";
+          originLanding = "https://immich.constellation.moe/auth/login?autoLaunch=1";
+          originUrl = [
+            "app.immich:///oauth-callback"
+            "https://immich.constellation.moe/auth/login"
+            "https://immich.constellation.moe/user-settings"
+          ];
+          enableLocalhostRedirects = false;
+          enableLegacyCrypto = true; # Needs RS256 apparently...
+          preferShortUsername = true;
+          scopeMaps = {
+            "users" = [
+              "openid"
+              "email"
+              "profile"
+              "groups"
+            ];
+          };
+          claimMaps = {
+            "immich_role" = {
+              joinType = "array";
+              valuesByGroup = {
+                immich-admins = [ "admin" ];
+                immich-users = [ "user" ];
+              };
+            };
+          };
+        };
+
       };
     };
   };

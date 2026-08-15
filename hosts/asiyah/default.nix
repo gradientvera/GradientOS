@@ -12,6 +12,7 @@
     ./attic.nix
     ./crafty.nix
     ./zigbee.nix
+    ./immich.nix
     ./clamav.nix
     ./kanidm.nix
     ./hytale.nix

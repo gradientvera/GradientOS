@@ -260,6 +260,14 @@ in
               };
             };
           }
+          {
+            "Immich" = {
+              description = "A self-hosted photo and video management solution.";
+              href = "https://immich.constellation.moe/";
+              icon = "sh-immich.svg";
+              server = "asiyah";
+            };
+          }
         ];
       }
       {

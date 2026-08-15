@@ -66,6 +66,25 @@ in
       };
     };
 
+    virtualHosts."immich.constellation.moe" = {
+      forceSSL = true;
+      sslCertificate = "/var/lib/acme/constellation.moe/fullchain.pem";
+      sslCertificateKey = "/var/lib/acme/constellation.moe/key.pem";
+      sslTrustedCertificate = "/var/lib/acme/constellation.moe/chain.pem";
+      locations."/" = {
+        proxyPass = "https://${gradientnet.asiyah}:${toString asiyahPorts.nginx-ssl}";
+        proxyWebsockets = true;
+        extraConfig = ''
+          client_max_body_size 50G;
+          client_body_buffer_size 1024k;
+          proxy_request_buffering off;
+          proxy_read_timeout 600s;
+          proxy_send_timeout 600s;
+          send_timeout 600s;
+        '';
+      };
+    };
+
     virtualHosts."gradient.moe" = {
       # Only specify ONCE!
       reuseport = true;
