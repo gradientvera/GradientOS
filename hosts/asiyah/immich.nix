@@ -19,7 +19,7 @@ in
     redis.enable = true;
     database.createDB = true;
     machine-learning.enable = true;
-    accelerationDevices = [ "/dev/dri/renderD128" ];
+    accelerationDevices = null;
     # See https://docs.immich.app/install/config-file
     settings = {
       server.externalDomain = "https://${domain}";
@@ -36,6 +36,17 @@ in
         defaultStorageQuota = null;
       };
       passwordLogin.enabled = "false";
+      ffmpeg = {
+        accel = "vaapi";
+        acceptedVideoCodecs = [
+          "h264"
+          "hevc"
+          "av1"
+        ];
+        targetResolution = "1080";
+        targetVideoCodec = "av1";
+        targetAudioCodec = "opus";
+      };
     };
   };
 
@@ -43,5 +54,8 @@ in
     "video"
     "render"
   ];
+
+  # Backup my media please.
+  services.restic.backups.hokma.paths = [ mediaLocation ];
 
 }
