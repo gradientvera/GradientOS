@@ -7,7 +7,6 @@
   ];
 
   home.packages = with pkgs; [
-    master.discord-canary
     lxqt.pavucontrol-qt
     kdePackages.okular
     bitwarden-desktop
@@ -16,12 +15,13 @@
     telegram-desktop
     kdePackages.kate
     element-desktop
-    master.tenacity # unstable was broken
-    master.discord
+    discord-canary
     qbittorrent
     glabels-qt
     chromium
     inkscape
+    tenacity
+    discord
     firefox
     vesktop
     krita
