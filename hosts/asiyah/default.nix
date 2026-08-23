@@ -4,6 +4,7 @@
   imports = [
     ./mqtt.nix
     ./wolf.nix
+    ./trmnl.nix
     ./searx.nix
     ./redis.nix
     ./alloy.nix

@@ -1,27 +1,32 @@
-{ config, ... }:
+{ config, ports, ... }:
 let
-  ports = config.gradient.currentHost.ports;
+  directory = "/var/lib/trmnl";
 in
 {
 
-  virtualisation.oci-containers.containers.trmnl = {
-    image = "ghcr.io/usetrmnl/byos_hanami:latest";
-    pull = "newer";
-    ports = [ "${toString ports.trmnl}:2300" ];
-    environment = {
-      TZ = config.time.timeZone;
-      API_URI = "http://192.168.1.48:${toString ports.trmnl}";
-      DATABASE_URL = "postgres://trmnl@host.containers.internal/trmnl";
-    };
-    extraOptions = [
-      "--ip" "10.88.0.9"
-    ];
-    labels = { "io.containers.autoupdate" = "registry"; };
+  systemd.tmpfiles.settings."99-trmnl".${directory}.d = {
+    mode = "750";
+    user = "nobody";
+    group = "nogroup";
   };
 
-  systemd.services.podman-trmnl = {
-    after = [ "postgresql.service" ];
-    wants = [ "postgresql.service" ];
+  virtualisation.oci-containers.containers.trmnl = {
+    image = "docker.io/wojooo/inker:latest";
+    pull = "newer";
+    ports = [ "0.0.0.0:${toString ports.trmnl}:80" ];
+    environment = {
+      TZ = config.time.timeZone;
+      ADMIN_PIN = "1111";
+      CORS_ORIGINS = "*";
+    };
+    volumes = [
+      "${directory}:/app/uploads"
+    ];
+    extraOptions = [
+    ];
+    labels = {
+      "io.containers.autoupdate" = "registry";
+    };
   };
 
   networking.firewall.allowedTCPPorts = [
