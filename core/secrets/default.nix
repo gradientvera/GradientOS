@@ -31,6 +31,9 @@ in
 
     (lib.mkIf cfg.core.secrets.enable ({
       sops.secrets = {
+        hokma-repository = {
+          sopsFile = ./secrets.yml;
+        };
         hokma-password = {
           sopsFile = ./secrets.yml;
         };
@@ -70,6 +73,9 @@ in
         huggingface-readonly-token = lib.mkIf config.services.llama-swap.enable {
           sopsFile = ./secrets.yml;
           restartUnits = [ "llama-swap.service" ];
+        };
+        backups-ssh-priv = {
+          sopsFile = ./secrets.yml;
         };
         attic-token = {
           sopsFile = ./secrets.yml;

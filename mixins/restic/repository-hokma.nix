@@ -7,14 +7,21 @@ in
 
   services.restic.backups.hokma = {
     initialize = true;
+    repositoryFile = secrets.hokma-repository.path;
     passwordFile = secrets.hokma-password.path;
     environmentFile = secrets.hokma-environment.path;
-    repository = "azure:backup:/";
+    extraOptions = [
+      # Force ipv4 (ipv6 does not seem to work?), accept new host keys, use backups SSH private key
+      "sftp.args='-4 -o StrictHostKeyChecking=accept-new -i ${config.sops.secrets.backups-ssh-priv.path}'"
+    ];
 
     timerConfig = {
       OnCalendar = "Mon *-*-* 10:00:00";
-      # Prevent concurrent backups, as it can lead to duplicate files
-      RandomizedDelaySec = "12h";
+      Persistent = true;
+      # Try to prevent concurrent backups, as it can lead to duplicate files
+      RandomizedDelaySec = "168h";
+      # Always the same random delay depending on machine ID etc
+      FixedRandomDelay = true;
     };
 
     # Set these on your host!
@@ -53,10 +60,13 @@ in
   sops.secrets =
     let
       secretCfg = {
+        owner = config.services.restic.backups.hokma.user;
         restartUnits = [ "restic-backups-hokma.service" ];
       };
     in
     {
+      backups-ssh-priv = secretCfg;
+      hokma-repository = secretCfg;
       hokma-password = secretCfg;
       hokma-environment = secretCfg;
     };
