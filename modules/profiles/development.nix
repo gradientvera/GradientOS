@@ -22,6 +22,7 @@ in
 
   config = lib.mkIf cfg.profiles.development.enable {
     environment.systemPackages = with pkgs; [
+      jetbrains-rider-steam-run
       jetbrains.rust-rover
       jetbrains.rider
       sqlitebrowser

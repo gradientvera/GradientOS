@@ -27,6 +27,8 @@ final: prev: {
 
   moonraker-timelapse = prev.callPackage ../pkgs/moonraker-timelapse.nix { };
 
+  jetbrains-rider-steam-run = prev.callPackage ../pkgs/rider-steam-run.nix { };
+
   ryubing-canary = prev.callPackage ../pkgs/ryubing-canary.nix { };
 
   starsector-gamescope-wrap = prev.callPackage ../pkgs/starsector-gamescope-wrap.nix { };
