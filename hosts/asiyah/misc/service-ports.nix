@@ -93,6 +93,7 @@
   forgejo-ssh = 222;
   attic = 8060;
   immich = 8072;
+  trmnl = 2300;
   openwebrx = 8073;
   olivetin = 8075;
   crowdsec-lapi = 8076;
