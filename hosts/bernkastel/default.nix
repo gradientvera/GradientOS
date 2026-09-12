@@ -9,6 +9,7 @@ in
     ./programs.nix
     ./filesystems.nix
     ./secrets/default.nix
+    ./llama-cpp.nix
     # ./libvirtd/default.nix
     ./hardware-configuration.nix
   ];

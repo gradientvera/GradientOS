@@ -7,4 +7,6 @@
 
   linux-voice-assistant = 6053;
 
+  llama-swap = 11435;
+
 }
