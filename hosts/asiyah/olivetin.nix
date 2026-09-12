@@ -13,7 +13,7 @@ let
     "echo \"\" > ${systemdUnitsFile}\n"
     + builtins.concatStringsSep "\n" (
       builtins.map (u: ''
-        echo "{\"unit\": \"${u}\", \"description\": \"$(systemctl show ${u} -P Description)\", \"status\": \"$(systemctl show ${u} -P SubState)\"}" >> ${systemdUnitsFile}
+        echo "{\"unit\": \"${u}\", \"title\": \"$(systemctl show ${u} -P Description)\", \"description\": \"$(systemctl show ${u} -P Description)\", \"status\": \"$(systemctl show ${u} -P SubState)\"}" >> ${systemdUnitsFile}
       '') systemdUnits
     );
 in
@@ -21,6 +21,7 @@ in
 
   services.olivetin = {
     enable = true;
+    package = pkgs.olivetin-3k;
     path = [
       pkgs.jq
       pkgs.gnused
@@ -32,8 +33,8 @@ in
       ListenAddressSingleHTTPFrontend = "127.0.0.1:${toString ports.olivetin}";
 
       authHttpHeaderUsername = "X-Username";
-      authHttpHeaderUsergroup = "X-Groups";
-      authHttpHeaderUsergroupSep = ",";
+      authHttpHeaderUserGroup = "X-Groups";
+      authHttpHeaderUserGroupSep = ",";
 
       actions = [
         {
@@ -92,7 +93,7 @@ in
           shell = "journalctl --no-hostname --no-pager --since=\"1 day ago\" --output=short-iso --boot=0 -xu {{ systemd_unit.unit }}";
           icon = ''<iconify-icon icon="zondicons:book-reference"></iconify-icon>'';
           entity = "systemd_unit";
-          popupOnStart = "execution-dialog";
+          onclick = "execution-dialog";
           timeout = 60;
         }
         {
@@ -126,7 +127,7 @@ in
             }
             # Generic Actions
             {
-              title = "{{ systemd_unit.description }}";
+              title = "{{ .CurrentEntity.description }}";
               type = "fieldset";
               entity = "systemd_unit";
               contents = [
