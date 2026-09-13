@@ -34,6 +34,10 @@
       url = "git+ssh://git@github.com/gradientvera/gradient.moe";
     };
 
+    adyton = {
+      url = "git+ssh://git@ssh.gradient.moe:222/vera/adyton.git";
+    };
+
     constellation-moe = {
       url = "git+ssh://git@github.com/ConstellationNRV/constellation.moe";
       flake = false;
@@ -111,6 +115,7 @@
     {
       self,
       nixpkgs,
+      adyton,
       gradient-generator,
       jovian-nixos,
       sops-nix,
@@ -135,6 +140,8 @@
 
           modules = [
             lanzaboote.nixosModules.lanzaboote
+
+            adyton.nixosModules.bernkastel
 
             mixins.wine
             mixins.gnupg
@@ -340,6 +347,8 @@
             nixos-hardware.nixosModules.common-cpu-intel
             nixos-hardware.nixosModules.common-gpu-intel
             gradient-generator.nixosModules.default
+
+            adyton.nixosModules.asiyah
 
             mixins.tor
             mixins.wine

@@ -220,6 +220,16 @@ in
                     "asiyah"
                   ];
                 };
+                adyton = {
+                  id = "adyton";
+                  versioning.type = "trashcan";
+                  path = "/home/vera/Projects/adyton";
+                  devices = [
+                    "bernkastel"
+                    "featherine"
+                    "asiyah"
+                  ];
+                };
                 wakewords = {
                   id = "wakewords";
                   versioning.type = "trashcan";

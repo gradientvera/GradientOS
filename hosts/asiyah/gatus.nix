@@ -10,6 +10,8 @@
         port = ports.gatus;
       };
 
+      # Alert endpoints below fire generic webhook alerts; the webhook
+      # destination is configured by adyton's sentinel module (private room).
       ui = {
         title = "Health Dashboard | Constellation Services";
         header = "Constellation";
@@ -37,6 +39,9 @@
             "[CERTIFICATE_EXPIRATION] > 48h"
             "[DOMAIN_EXPIRATION] > 48h"
           ];
+          alerts = [
+            { type = "webhook"; }
+          ];
         }
 
         {
@@ -49,6 +54,9 @@
             "[CERTIFICATE_EXPIRATION] > 48h"
             "[DOMAIN_EXPIRATION] > 48h"
           ];
+          alerts = [
+            { type = "webhook"; }
+          ];
         }
 
         {
@@ -58,6 +66,9 @@
           conditions = [
             "[STATUS] == 200"
             "[BODY] == Healthy"
+          ];
+          alerts = [
+            { type = "webhook"; }
           ];
         }
       ];
