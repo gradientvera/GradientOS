@@ -56,6 +56,9 @@
     # Fix bluetooth? See https://discuss.cachyos.org/t/bluetooth-connection-disconnection-cycling/20027/32
     "usbcore.autosuspend=-1"
     "btusb.enable_autosuspend=n"
+
+    # Maybe fix 10G network card being missing on boot sometimes.
+    "pcie_aspm=off"
   ];
   boot.extraModulePackages = with config.boot.kernelPackages; [ amdgpu-i2c ];
   boot.extraModprobeConfig = ''
