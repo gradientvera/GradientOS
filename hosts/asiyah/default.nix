@@ -27,7 +27,6 @@
     ./olivetin.nix
     ./postgres.nix
     ./scrutiny.nix
-    ./llama-cpp.nix
     ./paperless.nix
     ./cloudflare.nix
     ./open-webui.nix
