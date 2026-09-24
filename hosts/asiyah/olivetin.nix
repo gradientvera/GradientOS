@@ -7,6 +7,7 @@
 let
   systemdUnits = [
     "hytale-server.service"
+    "project-zomboid.service"
   ];
   systemdUnitsFile = "/run/olivetin/systemd_units.json";
   systemdUnitsFileGenerate =
@@ -36,6 +37,48 @@ in
       authHttpHeaderUserGroup = "X-Groups";
       authHttpHeaderUserGroupSep = ",";
 
+      defaultPermissions = {
+        view = true;
+        exec = true;
+        logs = false;
+      };
+
+      accessControlLists = [
+        {
+          name = "vera";
+          matchUsernames = [ "vera" ];
+          permissions = {
+            view = true;
+            exec = true;
+            logs = true;
+          };
+          addToEveryAction = true;
+        }
+        {
+          name = "neith";
+          matchUsernames = [ "neith" ];
+          permissions = {
+            view = true;
+            exec = true;
+            logs = true;
+          };
+        }
+        {
+          name = "constellation";
+          matchUsergroups = [ "constellation" ];
+          matchUsernames = [
+            "neith"
+            "remie"
+            "vera"
+          ];
+          permissions = {
+            view = true;
+            exec = true;
+            logs = true;
+          };
+        }
+      ];
+
       actions = [
         {
           title = "Restart Media Stack";
@@ -49,6 +92,7 @@ in
           title = "Restart Auth Services";
           shell = "systemctl restart kanidm.service oauth2-proxy.service";
           icon = ''<iconify-icon icon="bx:key" width="24" height="24"></iconify-icon>'';
+          acls = [ "constellation" ];
           maxConcurrent = 1;
           timeout = 300; # 5 mins
         }
@@ -58,6 +102,20 @@ in
           icon = ''<iconify-icon icon="bxs:bot" width="24" height="24"></iconify-icon>'';
           maxConcurrent = 1;
           timeout = 300; # 5 mins
+        }
+        {
+          title = "Wake-On-Lan Bernkastel";
+          shell = "${toString pkgs.wakeonlan}/bin/wakeonlan -i '192.168.1.255' '3c:78:95:5d:1a:ed'";
+          acls = [ "vera" ];
+          maxConcurrent = 1;
+          timeout = 30;
+        }
+        {
+          title = "Wake-On-Lan Hadal-Rainbow";
+          shell = "${toString pkgs.wakeonlan}/bin/wakeonlan -i '192.168.1.255' '30:56:0f::07:05:ca'";
+          acls = [ "neith" ];
+          maxConcurrent = 1;
+          timeout = 30;
         }
 
         # Systemd Unit Actions
@@ -102,6 +160,7 @@ in
           hidden = true;
           execOnStartup = true;
           execOnCron = [ "*/1 * * * *" ];
+          acls = [ "constellation" ];
         }
       ];
 
@@ -109,6 +168,7 @@ in
         {
           file = systemdUnitsFile;
           name = "systemd_unit";
+          acls = [ "users" ];
         }
       ];
 
@@ -123,6 +183,14 @@ in
                 { title = "Restart Media Stack"; }
                 { title = "Restart Auth Services"; }
                 { title = "Restart Discord Bot"; }
+              ];
+            }
+            {
+              title = "Infra";
+              type = "fieldset";
+              contents = [
+                { title = "Wake-On-Lan Bernkastel"; }
+                { title = "Wake-On-Lan Hadal-Rainbow"; }
               ];
             }
             # Generic Actions
