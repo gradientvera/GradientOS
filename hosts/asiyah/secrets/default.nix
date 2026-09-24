@@ -192,12 +192,12 @@
       };
 
       paperless-env = {
-        restartUnits = [ "paperless.service" ];
+        restartUnits = [ "paperless-web.service" ];
         owner = if config.services.paperless.enable then config.services.paperless.user else null;
       };
 
       paperless-admin-password = {
-        restartUnits = [ "paperless.service" ];
+        restartUnits = [ "paperless-web.service" ];
         owner = if config.services.paperless.enable then config.services.paperless.user else null;
       };
 
