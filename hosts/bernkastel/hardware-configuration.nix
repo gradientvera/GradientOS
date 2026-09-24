@@ -56,9 +56,6 @@
     # Fix bluetooth? See https://discuss.cachyos.org/t/bluetooth-connection-disconnection-cycling/20027/32
     "usbcore.autosuspend=-1"
     "btusb.enable_autosuspend=n"
-
-    # Maybe fix 10G network card being missing on boot sometimes.
-    "pcie_aspm=off"
   ];
   boot.extraModulePackages = with config.boot.kernelPackages; [ amdgpu-i2c ];
   boot.extraModprobeConfig = ''
@@ -71,6 +68,35 @@
     serviceConfig.Type = "oneshot";
     serviceConfig.RemainAfterExit = "yes";
     script = "echo GPP0 > /proc/acpi/wakeup";
+  };
+
+  # Network card (AQC113) is sometimes missing on boot
+  # Shitty workaround but hey it works!
+  systemd.services.nic-watchdog = {
+    wantedBy = [ "multi-user.target" ];
+    after = [ "multi-user.target" ];
+    serviceConfig.User = "root";
+    serviceConfig.Type = "oneshot";
+    path = with pkgs; [ pciutils coreutils systemd ];
+    script =
+      let
+        state = "/var/lib/nic-watchdog.count";
+      in
+      ''
+        if lspci -d 1d6a:: 2>/dev/null | grep -q .; then
+          rm -f ${state}
+          exit 0
+        fi
+        n=$(cat ${state} 2>/dev/null || echo 0)
+        if [ "$n" -ge 2 ]; then
+          echo "NIC still missing after 2 auto-reboots! Not rebooting again..."
+          exit 1
+        fi
+        echo $((n + 1)) > ${state}
+        echo "NIC missing at boot (attempt $((n + 1))/2), rebooting in 10 seconds (cancel: systemctl stop nic-watchdog)"
+        sleep 10
+        systemctl reboot
+      '';
   };
 
   nixpkgs.hostPlatform = "x86_64-linux";
