@@ -60,6 +60,9 @@ in
     SUBSYSTEM=="usb", ATTRS{idVendor}=="0489", ATTRS{idProduct}=="e10d", TAG+="uaccess"
   '';
 
+  # fix suspend
+  systemd.sleep.settings.Sleep.SuspendState = "mem";
+
   systemd.tmpfiles.settings."10-amdgpu-x3d.conf" = {
     "/sys/bus/platform/drivers/amd_x3d_vcache/AMDI0101:00/amd_x3d_mode".w = {
       argument = "cache";
