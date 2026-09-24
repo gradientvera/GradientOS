@@ -6,11 +6,11 @@
         "nixpkgs": "nixpkgs"
       },
       "locked": {
-        "lastModified": 1789633814,
-        "narHash": "sha256-InA/QjatEVtnK+d2M9Q723T9Wrl4vYivEGqsxOYS3Vo=",
+        "lastModified": 1790245279,
+        "narHash": "sha256-Z5cVGMmyHyLg5xAM92c3oge7q162dL+DmdfpoiY8MC4=",
         "ref": "refs/heads/main",
-        "rev": "aa7952811ba41176cba5eb4dfb81e9e1cb5b0dbe",
-        "revCount": 184,
+        "rev": "a39e64f6b7d9ef7fe24e99954c534a3915061a34",
+        "revCount": 264,
         "type": "git",
         "url": "ssh://git@ssh.gradient.moe:222/vera/adyton.git"
       },

@@ -77,7 +77,11 @@
     after = [ "multi-user.target" ];
     serviceConfig.User = "root";
     serviceConfig.Type = "oneshot";
-    path = with pkgs; [ pciutils coreutils systemd ];
+    path = with pkgs; [
+      pciutils
+      coreutils
+      systemd
+    ];
     script =
       let
         state = "/var/lib/nic-watchdog.count";
