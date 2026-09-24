@@ -29,7 +29,6 @@
     ./scrutiny.nix
     ./paperless.nix
     ./cloudflare.nix
-    ./open-webui.nix
     ./filesystems.nix
     ./vaultwarden.nix
     ./media-stack.nix
