@@ -112,7 +112,7 @@ in
         }
         {
           title = "Wake-On-Lan Hadal-Rainbow";
-          shell = "${toString pkgs.wakeonlan}/bin/wakeonlan -i '192.168.1.255' '30:56:0f::07:05:ca'";
+          shell = "${toString pkgs.wakeonlan}/bin/wakeonlan -i '192.168.1.255' '30:56:0f:07:05:ca'";
           acls = [ "neith" ];
           maxConcurrent = 1;
           timeout = 30;
