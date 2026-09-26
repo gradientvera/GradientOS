@@ -119,7 +119,6 @@ in
       "mcp"
       "sql"
       "nut"
-      "vlc"
       "mpd"
       "tts"
       "my"

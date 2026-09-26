@@ -99,7 +99,7 @@ in
       log_group = config.users.groups.auditd.name;
     };
     users.groups.auditd = { };
-    services.journald.audit = true;
+    services.journald.settings.Journal.Audit = true;
     security.audit.enable = true;
     security.audit.rules = [
       # Very spammy, not very useful

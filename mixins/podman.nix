@@ -17,10 +17,12 @@
 
   virtualisation.containers = {
     enable = true;
-    registries.search = [
-      "docker.io"
-      "ghcr.io"
-    ];
+    registries.settings = {
+      registry = [
+        { location = "docker.io"; }
+        { location = "ghcr.io"; }
+      ];
+    };
   };
 
   # Allow accesing published ports...
