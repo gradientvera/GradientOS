@@ -101,6 +101,47 @@
     '';
   };
 
+  systemd.services.touchpad-fix = {
+    description = "Retry i2c_hid_acpi probe for the Hantick HTIX5288 touchpad";
+    wantedBy = [ "multi-user.target" ];
+    after = [ "multi-user.target" ];
+    serviceConfig = {
+      type = "oneshot";
+      RemainAfterExit = true;
+    };
+    path = [ pkgs.kmod ];
+    script = ''
+      expected_size=482
+      tries=10
+
+      bound() {
+        desc=$(ls /sys/bus/hid/devices/*0911:5288*/report_descriptor 2>/dev/null | head -1)
+        [ -n "$desc" ] && [ "$(wc -c < "$desc" 2>/dev/null)" -eq "$expected_size" ]
+      }
+
+      if bound; then
+        echo "HTIX5288 touchpad bound cleanly at boot"
+        exit 0
+      fi
+
+      attempt=1
+      while [ "$attempt" -le "$tries" ]; do
+        echo "HTIX5288 not bound (or bad descriptor), reload attempt $attempt/$tries"
+        rmmod i2c_hid_acpi 2>/dev/null || true
+        modprobe i2c_hid_acpi || true
+        sleep 1
+        if bound; then
+          echo "HTIX5288 touchpad bound after $attempt reload(s)"
+          exit 0
+        fi
+        attempt=$((attempt + 1))
+      done
+
+      echo "WARNING: HTIX5288 touchpad failed to bind after $tries attempts"
+      exit 0
+    '';
+  };
+
   nixpkgs.hostPlatform = "x86_64-linux";
 
 }
