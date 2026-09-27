@@ -6,6 +6,7 @@
 }:
 let
   systemdUnits = [
+    "palworld.service"
     "hytale-server.service"
     "project-zomboid.service"
   ];
@@ -160,7 +161,6 @@ in
           hidden = true;
           execOnStartup = true;
           execOnCron = [ "*/1 * * * *" ];
-          acls = [ "constellation" ];
         }
       ];
 
@@ -168,7 +168,6 @@ in
         {
           file = systemdUnitsFile;
           name = "systemd_unit";
-          acls = [ "users" ];
         }
       ];
 
