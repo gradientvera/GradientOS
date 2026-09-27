@@ -6,7 +6,6 @@
     kdePackages.kolourpaint
     lxqt.pavucontrol-qt
     kdePackages.okular
-    gimp-with-plugins
     kdePackages.kate
     telegram-desktop
     discord-canary
@@ -18,6 +17,7 @@
     discord
     firefox
     spotify
+    gimp
     anki
     vlc
     mpv

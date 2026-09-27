@@ -10,7 +10,6 @@
     lxqt.pavucontrol-qt
     kdePackages.okular
     bitwarden-desktop
-    gimp-with-plugins
     libreoffice-fresh
     telegram-desktop
     kdePackages.kate
@@ -25,6 +24,7 @@
     firefox
     vesktop
     krita
+    gimp
     vmpk
     peek
     vlc
