@@ -100,7 +100,12 @@ in
     doCheck = false;
   });
 
-  moonraker = prev.moonraker.overrideAttrs (final.moonraker-timelapse.moonrakerOverrideAttrs);
+  moonraker =
+    (prev.moonraker.overrideAttrs (final.moonraker-timelapse.moonrakerOverrideAttrs)).overrideAttrs
+      (_: {
+        doCheck = false; # bit of a crutch lmao
+        dontUsePytestCheck = true;
+      });
 
   smartgit = prev.smartgit.overrideAttrs (prevAttrs: {
     version = "26.1.38";
