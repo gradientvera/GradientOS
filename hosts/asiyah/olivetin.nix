@@ -6,17 +6,44 @@
 }:
 let
   systemdUnits = [
-    "palworld.service"
-    "hytale-server.service"
-    "project-zomboid.service"
+    {
+      name = "Palworld Server";
+      unit = "palworld.service";
+    }
+    {
+      name = "Hytale Server";
+      unit = "hytale-server.service";
+    }
+    {
+      name = "Project Zomboid Server";
+      unit = "project-zomboid.service";
+      stdin = "project-zomboid.stdin";
+    }
+    {
+      name = "All The Mons (Lili) Server";
+      unit = "all-the-mons-lili-server.service";
+      stdin = "all-the-mons-lili-server.stdin";
+    }
   ];
   systemdUnitsFile = "/run/olivetin/systemd_units.json";
   systemdUnitsFileGenerate =
     "echo \"\" > ${systemdUnitsFile}\n"
     + builtins.concatStringsSep "\n" (
-      builtins.map (u: ''
-        echo "{\"unit\": \"${u}\", \"title\": \"$(systemctl show ${u} -P Description)\", \"description\": \"$(systemctl show ${u} -P Description)\", \"status\": \"$(systemctl show ${u} -P SubState)\"}" >> ${systemdUnitsFile}
-      '') systemdUnits
+      builtins.map (
+        {
+          unit,
+          name ? null, # overrides the human-friendly title/description from the systemd service definition
+          stdin ? null, # relative path to stdin socket from "/run/"
+          ...
+        }:
+        let
+          stdinPath = if stdin != null then "/run/${stdin}" else "";
+          displayName = if name != null then name else "$(systemctl show ${unit} -P Description)";
+        in
+        ''
+          echo "{\"unit\": \"${unit}\", \"title\": \"${displayName}\", \"description\": \"${displayName}\", \"status\": \"$(systemctl show ${unit} -P SubState)\", \"stdin\": \"${stdinPath}\"}" >> ${systemdUnitsFile}
+        ''
+      ) systemdUnits
     );
 in
 {
@@ -156,6 +183,48 @@ in
           timeout = 60;
         }
         {
+          title = "Send console command to {{ systemd_unit.description }}";
+          exec = [
+            "${pkgs.bash}/bin/bash"
+            "-c"
+            ''
+              if [ ! -p "$2" ]; then
+                echo "This service has no console stdin socket."
+                exit 1
+              fi
+              if ! systemctl is-active --quiet "$3"; then
+                echo "Service is not running."
+                exit 1
+              fi
+              if printf "%s\\n" "$1" > "$2"; then
+                echo "Sent: $1"
+              else
+                echo "Failed to write to console stdin."
+                exit 1
+              fi
+            ''
+            "olivetin-console-write"
+            "{{ .Arguments.command }}"
+            "{{ systemd_unit.stdin }}"
+            "{{ systemd_unit.unit }}"
+          ];
+          icon = ''<iconify-icon icon="mdi:console"></iconify-icon>'';
+          entity = "systemd_unit";
+          arguments = [
+            {
+              name = "command";
+              title = "Console command";
+              type = "raw_string_multiline";
+              description = "Sent to the server's stdin, e.g. say hi";
+            }
+          ];
+          # hidden for units whose "stdin" field is empty in the entity JSON
+          enabledExpression = ''{{ if ne .CurrentEntity.stdin "" }}true{{ else }}false{{ end }}'';
+          maxConcurrent = 1;
+          timeout = 30;
+          triggers = [ "Update services file" ];
+        }
+        {
           title = "Update services file";
           shell = systemdUnitsFileGenerate;
           hidden = true;
@@ -206,6 +275,7 @@ in
                 { title = "Restart {{ systemd_unit.description }}"; }
                 { title = "Stop {{ systemd_unit.description }}"; }
                 { title = "Read {{ systemd_unit.description }} logs"; }
+                { title = "Send console command to {{ systemd_unit.description }}"; }
               ];
             }
           ];

@@ -148,8 +148,9 @@
   crafty = 8444;
   crafty-dynmap = 8125;
   crafty-server-start = 25500;
-  minecraft = 25565;
   crafty-server-end = 25600;
+  minecraft = 25565;
+  minecraft-all-the-mons-lili = 25565;
   hytale = 5520;
 
 }

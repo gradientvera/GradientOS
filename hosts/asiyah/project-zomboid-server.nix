@@ -24,6 +24,7 @@ in
   systemd.sockets.project-zomboid = {
     partOf = [ "project-zomboid.service" ];
     socketConfig.ListenFIFO = "%t/project-zomboid.stdin";
+    SocketMode = "0666";
   };
 
   systemd.services.project-zomboid = {

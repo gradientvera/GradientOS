@@ -44,6 +44,7 @@
     ./gradient-generator.nix
     ./project-zomboid-server.nix
     ./hardware-configuration.nix
+    ./all-the-mons-lili-server.nix
     ./trilium-memory-repository.nix
   ];
 
