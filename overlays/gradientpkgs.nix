@@ -25,7 +25,7 @@ final: prev: {
 
   jack-matchmaker = prev.callPackage ../pkgs/jack-matchmaker.nix { };
 
-  moonraker-timelapse = prev.callPackage ../pkgs/moonraker-timelapse.nix { };
+  # moonraker-timelapse = prev.callPackage ../pkgs/moonraker-timelapse.nix { }; # todo: fix
 
   jetbrains-rider-steam-run = prev.callPackage ../pkgs/jetbrains-rider-steam-run.nix { };
 

@@ -136,7 +136,7 @@ in
         bodymiscale
         browser-mod
         # feedparser # TODO: fix
-        moonraker
+        # moonraker # TODO: fix...
         valetudo
         ingress
         smartir
