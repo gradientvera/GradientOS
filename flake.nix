@@ -59,10 +59,9 @@
     };
 
     colmena = {
-      url = "github:nix-community/colmena";
+      url = "github:nix-community/colmena/v0.5.0";
       inputs.nixpkgs.follows = "nixpkgs";
       inputs.stable.follows = "nixpkgs-stable";
-      inputs.flake-compat.follows = "flake-compat";
     };
 
     catppuccin = {
@@ -148,7 +147,7 @@
             mixins.alloy
             mixins.podman
             #mixins.plymouth
-            mixins.autofirma
+            #mixins.autofirma # TODO: Fix
             mixins.tailscale
             mixins.wireguard
             mixins.uwu-style

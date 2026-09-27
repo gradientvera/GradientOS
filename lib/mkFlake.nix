@@ -36,7 +36,7 @@ in
       }) configurations
     );
 
-  colmena =
+  colmenaHive = self.inputs.colmena.lib.makeHive (
     nixpkgsLib.lists.foldr (a: b: (nixpkgsLib.attrsets.recursiveUpdate a b))
       {
         meta = {
@@ -48,7 +48,8 @@ in
         map (x: lib.gradientosSystemColmena x) (
           builtins.filter (x: x.makeSystem or true) gradientosConfigurations
         )
-      );
+      )
+  );
 
   packages =
     let

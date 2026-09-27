@@ -1,5 +1,6 @@
 {
   config,
+  self,
   lib,
   pkgs,
   ...
@@ -52,7 +53,7 @@ in
             dotnet_9.aspnetcore
           ]
         )
-        lixPackageSets.latest.colmena
+        lixPackageSets.git.colmena
         smartmontools
         appimage-run
         attic-client
