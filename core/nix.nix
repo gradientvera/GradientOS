@@ -39,7 +39,7 @@ in
   config = lib.mkMerge [
     (lib.mkIf cfg.core.nix.enable {
       nix = {
-        package = pkgs.lix;
+        package = pkgs.lixPackageSets.git.lix;
 
         settings = {
           cores = 0;
