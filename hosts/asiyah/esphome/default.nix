@@ -5,7 +5,7 @@ in
 {
 
   services.esphome = {
-    enable = true;
+    enable = false; # TODO: Fix
     usePing = true;
     address = "0.0.0.0";
     port = ports.esphome;
