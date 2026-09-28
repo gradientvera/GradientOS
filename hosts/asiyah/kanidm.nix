@@ -55,12 +55,11 @@ in
           originUrl = "https://polycule.constellation.moe/oauth2/callback";
           enableLocalhostRedirects = true;
           scopeMaps = {
-            # Only allow constellation group members to access
-            "constellation" = [
+            "users" = [
               "openid"
               "email"
               "profile"
-              "groups"
+              "groups_name"
             ];
           };
         };

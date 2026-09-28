@@ -49,6 +49,12 @@ in
   services.nginx.virtualHosts."polycule.constellation.moe" = {
     useACMEHost = "constellation.moe";
     forceSSL = true;
+    extraConfig = ''
+      # fix issues with oauth2 proxy
+      proxy_buffer_size 32k;
+      proxy_buffers 4 64k;
+      proxy_busy_buffers_size 64k;
+    '';
     locations."/" = {
       return = "301 https://homepage.constellation.moe$request_uri";
     };
@@ -258,40 +264,49 @@ in
   };
 
   # TODO: Figure out a way to automate the below list eugh
-  services.oauth2-proxy.nginx.virtualHosts = {
-    "homepage.constellation.moe" = { };
-    "status.constellation.moe" = { };
-    "polycule.constellation.moe" = { };
-    # "jellyfin.constellation.moe" = {}; # Use built-in auth
-    "ersatztv.constellation.moe" = { };
-    # "iptv.constellation.moe" = {}; # Use built-in auth
-    # "jellyseerr.constellation.moe" = {}; # Use built-in auth
-    "radarr.constellation.moe" = { };
-    "sonarr.constellation.moe" = { };
-    "radarr-es.constellation.moe" = { };
-    "sonarr-es.constellation.moe" = { };
-    "amule.constellation.moe" = { };
-    "amuleui.constellation.moe" = { };
-    "lidarr.constellation.moe" = { };
-    "slskd.constellation.moe" = { };
-    "bazarr.constellation.moe" = { };
-    "prowlarr.constellation.moe" = { };
-    "profilarr.constellation.moe" = { };
-    "tdarr.constellation.moe" = { };
-    "torrent.constellation.moe" = { };
-    "sabnzbd.constellation.moe" = { };
-    "romm.constellation.moe" = { };
-    "search.constellation.moe" = { };
-    "files.constellation.moe" = { };
-    "calibre.constellation.moe" = { };
-    "shelfmark.constellation.moe" = { };
-    "radio.constellation.moe" = { };
-    "k1c.constellation.moe" = { };
-    "pinchflat.constellation.moe" = { };
-    "crafty.constellation.moe" = { };
-    "craftydynmap.constellation.moe" = { };
-    "olivetin.constellation.moe" = { };
-    "threadfin.constellation.moe" = { };
-  };
+  services.oauth2-proxy.nginx.virtualHosts =
+    let
+      constellation-only = {
+        allowed_groups = [ "constellation" ];
+      };
+      everyone = {
+        allowed_groups = null;
+      };
+    in
+    {
+      "homepage.constellation.moe" = constellation-only;
+      "status.constellation.moe" = everyone;
+      "polycule.constellation.moe" = constellation-only;
+      # "jellyfin.constellation.moe" = {}; # Use built-in auth
+      "ersatztv.constellation.moe" = constellation-only;
+      # "iptv.constellation.moe" = {}; # Use built-in auth
+      # "jellyseerr.constellation.moe" = {}; # Use built-in auth
+      "radarr.constellation.moe" = constellation-only;
+      "sonarr.constellation.moe" = constellation-only;
+      "radarr-es.constellation.moe" = constellation-only;
+      "sonarr-es.constellation.moe" = constellation-only;
+      "amule.constellation.moe" = constellation-only;
+      "amuleui.constellation.moe" = constellation-only;
+      "lidarr.constellation.moe" = constellation-only;
+      "slskd.constellation.moe" = constellation-only;
+      "bazarr.constellation.moe" = constellation-only;
+      "prowlarr.constellation.moe" = constellation-only;
+      "profilarr.constellation.moe" = constellation-only;
+      "tdarr.constellation.moe" = constellation-only;
+      "torrent.constellation.moe" = constellation-only;
+      "sabnzbd.constellation.moe" = constellation-only;
+      "romm.constellation.moe" = constellation-only;
+      "search.constellation.moe" = constellation-only;
+      "files.constellation.moe" = constellation-only;
+      "calibre.constellation.moe" = constellation-only;
+      "shelfmark.constellation.moe" = constellation-only;
+      "radio.constellation.moe" = constellation-only;
+      "k1c.constellation.moe" = constellation-only;
+      "pinchflat.constellation.moe" = constellation-only;
+      "crafty.constellation.moe" = constellation-only;
+      "craftydynmap.constellation.moe" = constellation-only;
+      "olivetin.constellation.moe" = everyone;
+      "threadfin.constellation.moe" = constellation-only;
+    };
 
 }

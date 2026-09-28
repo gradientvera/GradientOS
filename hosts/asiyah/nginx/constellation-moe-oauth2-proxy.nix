@@ -26,6 +26,7 @@ in
     oidcIssuerUrl = "https://identity.gradient.moe/oauth2/openid/constellation-oauth2-proxy";
     profileURL = "https://identity.gradient.moe/oauth2/openid/constellation-oauth2-proxy/userinfo";
     extraConfig.code-challenge-method = "S256";
+    scope = "openid email profile groups_name"; # keep in sync with scopes in kanidm
 
     # Needed for things that use header auth.
     setXauthrequest = true;
