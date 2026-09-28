@@ -209,7 +209,7 @@ in
   ];
 
   # Keep restarting kanidm no matter what
-  systemd.services.kanidm.startLimitIntervalSec = lib.mkForce 0;
+  systemd.services.kanidm.startLimitIntervalSec = lib.mkForce 5;
   systemd.services.kanidm.startLimitBurst = lib.mkForce 0;
   systemd.services.kanidm.serviceConfig.Restart = lib.mkForce "always";
 

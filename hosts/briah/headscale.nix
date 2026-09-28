@@ -93,7 +93,7 @@ in
   '';
 
   # Keep restarting Headscale no matter what
-  systemd.services.headscale.startLimitIntervalSec = lib.mkForce 0;
+  systemd.services.headscale.startLimitIntervalSec = lib.mkForce 5;
   systemd.services.headscale.startLimitBurst = lib.mkForce 0;
   systemd.services.headscale.serviceConfig.Restart = lib.mkForce "always";
 

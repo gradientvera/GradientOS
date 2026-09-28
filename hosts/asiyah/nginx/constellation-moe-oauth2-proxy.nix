@@ -58,7 +58,7 @@ in
       "network-online.target"
     ];
     # Keep restarting OAuth2-Proxy no matter what
-    startLimitIntervalSec = lib.mkForce 0;
+    startLimitIntervalSec = lib.mkForce 5;
     startLimitBurst = lib.mkForce 0;
     serviceConfig.Restart = lib.mkForce "always";
   };

@@ -39,7 +39,7 @@
   };
 
   # Keep restarting nginx no matter what
-  systemd.services.nginx.startLimitIntervalSec = lib.mkForce 0;
+  systemd.services.nginx.startLimitIntervalSec = lib.mkForce 5;
   systemd.services.nginx.startLimitBurst = lib.mkForce 0;
   systemd.services.nginx.serviceConfig.Restart = lib.mkForce "always";
 
