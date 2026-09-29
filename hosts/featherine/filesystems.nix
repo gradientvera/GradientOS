@@ -98,6 +98,7 @@ in
     serviceConfig.Type = "oneshot";
     serviceConfig.RemainAfterExit = "yes";
     unitConfig.StopWhenUnneeded = "yes";
+    serviceConfig.TimeoutStopSec = "3min";
     path = [ pkgs.cryptsetup ];
     script = ''
       cryptsetup luksSuspend /dev/mapper/luks-${auroraUuid}
