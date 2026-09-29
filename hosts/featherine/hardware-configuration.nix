@@ -37,7 +37,7 @@
     "i2c-dev"
     "tpm_crb"
     "gpd-fan"
-    "bmi260_i2c"
+    "bmi270_i2c"
   ];
   boot.kernelParams = [
     "amd_iommu=on"
@@ -63,6 +63,9 @@
   # Touchpad and gamepad "mouse mode"
   services.udev.extraRules = ''
     SUBSYSTEM=="usb", ATTRS{idVendor}=="2f24", ATTRS{idProduct}=="0135", MODE="0666", GROUP="plugdev"
+
+    # The HTIX5288 touchpad sometimes wakes up the mini laptop :(
+    ACTION=="add|change", SUBSYSTEM=="i2c", KERNEL=="i2c-HTIX5288:00", ATTR{power/wakeup}="disabled"
   '';
 
   # Gyro control
@@ -79,6 +82,7 @@
   '';
 
   # As per https://github.com/aarron-lee/gpd-win-tricks/tree/main/win4-suspend-mods
+  # Use new bmi270 modules
   systemd.services.gpd-sleep-fix = {
     wantedBy = [ "sleep.target" ];
     before = [ "sleep.target" ];
@@ -88,15 +92,15 @@
     unitConfig.StopWhenUnneeded = "yes";
     path = [ pkgs.kmod ];
     script = ''
-      echo "Unloading bmi260 modules..."
-      modprobe -r bmi260_i2c
-      modprobe -r bmi260_core
+      echo "Unloading bmi270 modules..."
+      modprobe -r bmi270_i2c
+      modprobe -r bmi270_core
       echo "Done unloading modules!"
     '';
     postStop = ''
-      echo "Loading bmi260 modules..."
-      modprobe bmi260_i2c
-      modprobe bmi260_core
+      echo "Loading bmi270 modules..."
+      modprobe bmi270_i2c
+      modprobe bmi270_core
       echo "Done loading modules!"
     '';
   };
