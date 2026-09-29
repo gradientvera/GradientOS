@@ -901,6 +901,12 @@ in
 
   };
 
+  # stop fucking lagging the whole server ree
+  systemd.services.podman-tdarr.serviceConfig = {
+    CPUWeight = 20;
+    IOWeight = 20;
+  };
+
   sops.secrets.tailscale-auth-key.restartUnits = [
     "podman-gluetun-tailscale-es.service"
     "podman-gluetun-tailscale-uk.service"
