@@ -146,6 +146,32 @@
     '';
   };
 
+  systemd.services.touchpad-resume-fix = {
+    wantedBy = [ "sleep.target" ];
+    before = [ "sleep.target" ];
+    serviceConfig = {
+      User = "root";
+      Type = "oneshot";
+      RemainAfterExit = true;
+    };
+    unitConfig.StopWhenUnneeded = true;
+    path = [ pkgs.kmod ];
+    script = "true";
+    postStop = ''
+      for attempt in 1 2 3 4 5; do
+        rmmod i2c_hid_acpi 2>/dev/null || true
+        modprobe i2c_hid_acpi || true
+        sleep 1
+        if ls /sys/bus/hid/devices/*0911:5288*/report_descriptor >/dev/null 2>&1; then
+          echo "HTIX5288 re-probed after resume (attempt $attempt)"
+          exit 0
+        fi
+      done
+      echo "WARNING: HTIX5288 did not come back after resume"
+      exit 0
+    '';
+  };
+
   nixpkgs.hostPlatform = "x86_64-linux";
 
 }
