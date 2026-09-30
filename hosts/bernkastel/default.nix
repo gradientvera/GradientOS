@@ -8,6 +8,7 @@ in
     ./backups.nix
     ./programs.nix
     ./filesystems.nix
+    ./moonshine.nix
     ./secrets/default.nix
     # ./libvirtd/default.nix
     ./hardware-configuration.nix
