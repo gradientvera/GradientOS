@@ -33,7 +33,7 @@ apply OPERATION HOST:
     @if [ "{{HOST}}" = "local" ]; then \
         just apply-local {{OPERATION}}; \
     else \
-        colmena apply {{OPERATION}} --on={{HOST}} --evaluator=streaming --build-on-target; \
+        colmena apply {{OPERATION}} --on={{HOST}} --build-on-target; \
     fi;
 
 [group('deployment')]
