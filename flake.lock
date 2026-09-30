@@ -6,11 +6,11 @@
         "nixpkgs": "nixpkgs"
       },
       "locked": {
-        "lastModified": 1790689845,
-        "narHash": "sha256-X/Ku9ZR9Dt69xDQJ9LWEwihl91GminZ+9mGns8fxgDQ=",
+        "lastModified": 1790778481,
+        "narHash": "sha256-XkU7gsBm0xkbbRLYaFGYSGg2DeEd/AbNsf55GfvLsTo=",
         "ref": "refs/heads/main",
-        "rev": "d1b7b7d80d832f870383827811440ddd58a924b7",
-        "revCount": 390,
+        "rev": "73cd9ad3a858dcc820f3a63c36b2f257c4076ddd",
+        "revCount": 442,
         "type": "git",
         "url": "ssh://git@ssh.gradient.moe:222/vera/adyton.git"
       },
@@ -169,22 +169,6 @@
         "owner": "ipetkov",
         "repo": "crane",
         "type": "github"
-      }
-    },
-    "crp3092": {
-      "flake": false,
-      "locked": {
-        "lastModified": 1735580479,
-        "narHash": "sha256-If/0ICjXWP7ZZK2DUJxnt0CEJTMYIsPVIbjKJqio4yE=",
-        "ref": "refs/heads/main",
-        "rev": "70607f875e227e99eb0c89b0726d1e2f95d48458",
-        "revCount": 4,
-        "type": "git",
-        "url": "ssh://git@github.com/CRP3092/Portafolio.git"
-      },
-      "original": {
-        "type": "git",
-        "url": "ssh://git@github.com/CRP3092/Portafolio.git"
       }
     },
     "flake-compat": {
@@ -1089,7 +1073,6 @@
         "catppuccin": "catppuccin",
         "colmena": "colmena",
         "constellation-moe": "constellation-moe",
-        "crp3092": "crp3092",
         "flake-compat": "flake-compat_2",
         "gradient-generator": "gradient-generator",
         "gradient-moe": "gradient-moe",

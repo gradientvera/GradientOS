@@ -84,11 +84,6 @@
       # inputs.nixpkgs.follows = "nixpkgs";
     };
 
-    crp3092 = {
-      url = "git+ssh://git@github.com/CRP3092/Portafolio.git";
-      flake = false;
-    };
-
     ai-robots-txt = {
       url = "github:ai-robots-txt/ai.robots.txt";
       flake = false;
