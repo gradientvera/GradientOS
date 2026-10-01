@@ -6,6 +6,7 @@
 }:
 let
   addresses = config.gradient.const.addresses;
+  tailnetAddresses = config.gradient.const.wireguard.addresses.tailnet;
   ports = config.gradient.currentHost.ports;
 in
 {
@@ -43,13 +44,22 @@ in
       ];
       noise.private_key_path = config.sops.secrets.headscale-noise-key.path;
       database.type = "sqlite";
-      dns.base_domain = addresses.tailscale-domain;
-      dns.nameservers.global = [
-        "1.1.1.1"
-        "1.0.0.1"
-        "8.8.8.8"
-        "8.8.4.4"
-      ];
+      dns = {
+        base_domain = addresses.tailscale-domain;
+        nameservers.global = [
+          "1.1.1.1"
+          "1.0.0.1"
+          "8.8.8.8"
+          "8.8.4.4"
+        ];
+        extra_records = [
+          {
+            name = "jellyfin.constellation.moe";
+            type = "A";
+            value = tailnetAddresses.asiyah;
+          }
+        ];
+      };
       policy = {
         mode = "file";
         path = pkgs.writeText "policy.json" (

@@ -13,4 +13,12 @@
     atziluth = "192.168.24.48";
     briah = "192.168.24.128";
   };
+  # It's "wireguard", in a way...!
+  tailnet = {
+    briah = "100.64.0.1";
+    asiyah = "100.64.0.2";
+    bernkastel = "100.64.0.3";
+    featherine = "100.64.0.4";
+    # etc etc
+  };
 }
